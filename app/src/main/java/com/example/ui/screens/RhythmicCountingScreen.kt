@@ -355,28 +355,6 @@ fun RhythmicCountingScreen(
                             fontWeight = FontWeight.Medium
                         )
                     }
-
-                    Button(
-                        onClick = { copyIndexHtmlFromAssets(context) },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFFDE047),
-                            contentColor = Color(0xFF0F172A)
-                        ),
-                        shape = RoundedCornerShape(10.dp),
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
-                        modifier = Modifier.testTag("copy_github_html_button")
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ContentCopy,
-                            contentDescription = "GitHub index.html Kopyala",
-                            modifier = Modifier.size(15.dp)
-                        )
-                        Text(
-                            text = " GitHub Kodu",
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.ExtraBold
-                        )
-                    }
                 }
             }
 

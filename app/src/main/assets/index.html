@@ -48,6 +48,22 @@
       padding-bottom: 24px;
     }
 
+    #copyCodeBtn,
+    #downloadHtmlBtn,
+    [id*="copyCode"],
+    [id*="downloadHtml"],
+    .copy-btn,
+    .dl-btn {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      width: 0 !important;
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
     header {
       background: rgba(30, 41, 59, 0.95);
       backdrop-filter: blur(8px);
@@ -352,11 +368,21 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+      user-select: none;
     }
 
-    .option-btn:hover {
-      border-color: var(--primary);
-      background: #1e293b;
+    .option-btn:focus,
+    .option-btn:focus-visible {
+      outline: none !important;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .option-btn:hover {
+        border-color: var(--primary);
+        background: #1e293b;
+      }
     }
 
     .option-btn.correct {
@@ -642,18 +668,40 @@
       font-size: 26px;
       font-weight: 900;
       border-radius: 18px;
-      border: 3px solid #38bdf8;
-      background: linear-gradient(135deg, #1e293b, #0f172a);
-      color: #fff;
+      border: 3px solid #38bdf8 !important;
+      background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+      color: #fff !important;
       cursor: pointer;
-      transition: all 0.2s ease;
       box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+      -webkit-touch-callout: none !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      transition: transform 0.1s ease;
     }
 
-    .rhythm-bubble-choice:hover, .rhythm-bubble-choice:active {
-      transform: scale(1.07);
-      border-color: #fde047;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    /* Asla tıklanmış/seçilmiş kalmasın, tüm seçenekler her zaman aynı varsayılan görünümde kalsın */
+    .rhythm-bubble-choice:focus,
+    .rhythm-bubble-choice:focus-visible,
+    .rhythm-bubble-choice:focus-within,
+    .rhythm-bubble-choice:active,
+    .rhythm-bubble-choice:visited {
+      outline: none !important;
+      border: 3px solid #38bdf8 !important;
+      background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+      color: #fff !important;
+      transform: none !important;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    /* Dokunmatik ekranlarda imleç veya seçili kalma olmasın, yalnızca fareli masaüstünde hafif gezinme */
+    @media (hover: hover) and (pointer: fine) {
+      .rhythm-bubble-choice:hover {
+        border: 3px solid #38bdf8 !important;
+        background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+        transform: translateY(-2px);
+      }
     }
 
     .rhythm-choice-modal-overlay {
@@ -1337,8 +1385,15 @@
       rhythmPracticeChoices = [correctNum, ...Array.from(distractors)].sort((a, b) => a - b);
     }
 
-    function handleChildCountChoice(chosenNum) {
+    function handleChildCountChoice(chosenNum, btnElem) {
       recordActivity();
+      if (btnElem && typeof btnElem.blur === 'function') btnElem.blur();
+      if (document.activeElement && typeof document.activeElement.blur === 'function') {
+        document.activeElement.blur();
+      }
+      if (window.getSelection) {
+        try { window.getSelection().removeAllRanges(); } catch (e) {}
+      }
       const info = rhythmData[rhythmActiveMode];
       const currentItem = info.steps[rhythmPracticeTargetStep - 1];
       if (!currentItem) return;
@@ -1908,7 +1963,11 @@
 
                 <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:10px;">
                   ${rhythmPracticeChoices.map(numChoice => `
-                    <button class="rhythm-bubble-choice" onclick="handleChildCountChoice(${numChoice})">
+                    <button type="button" class="rhythm-bubble-choice"
+                            onpointerdown="this.blur()"
+                            onpointerup="this.blur()"
+                            ontouchend="this.blur()"
+                            onclick="this.blur(); handleChildCountChoice(${numChoice}, this)">
                       ${numChoice}
                     </button>
                   `).join('')}
