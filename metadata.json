@@ -1,6 +1,6 @@
 {
-  "name": "LingoDays",
-  "description": "İngilizce günleri sesli, ipuçlu ve çoktan seçmeli pratiklerle kolayca öğrenin.",
+  "name": "LingoDay",
+  "description": "2. Sınıf İngilizce (1-6. Üniteler) ve 3'er & 4'er Ritmik Sayma Eğitimi",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

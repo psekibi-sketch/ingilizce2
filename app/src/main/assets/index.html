@@ -3,7 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>LingoDays - 2. Sınıf İngilizce (1-6. Üniteler & Konu Testleri: Günler, Okul Araçları, 20 Soruluk Sınav)</title>
+  <title>LingoDay</title>
+  <meta name="apple-mobile-web-app-title" content="LingoDay">
+  <meta name="application-name" content="LingoDay">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#6366f1">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
   <style>
     :root {
       --bg: #0f172a;
@@ -35,7 +45,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: 75px;
+      padding-bottom: 24px;
     }
 
     header {
@@ -126,26 +136,26 @@
       max-width: 900px;
       margin: 10px auto 0;
       display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      scrollbar-width: thin;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-start;
+      padding-bottom: 2px;
     }
 
     .nav-tab {
       background: #0f172a;
       border: 1px solid var(--border);
       color: var(--muted);
-      padding: 8px 14px;
-      border-radius: 12px;
+      padding: 7px 11px;
+      border-radius: 10px;
       font-size: 12px;
       font-weight: 600;
       white-space: nowrap;
       cursor: pointer;
       transition: all 0.2s;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .nav-tab.active {
@@ -453,54 +463,6 @@
       font-weight: bold;
     }
 
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(15, 23, 42, 0.98);
-      backdrop-filter: blur(10px);
-      border-top: 1px solid var(--border);
-      display: flex;
-      overflow-x: auto;
-      overflow-y: hidden;
-      white-space: nowrap;
-      padding: 6px 8px;
-      gap: 4px;
-      z-index: 100;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .bottom-nav::-webkit-scrollbar {
-      display: none;
-    }
-
-    .b-nav-item {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex: 0 0 auto;
-      min-width: 58px;
-      padding: 4px 6px;
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 700;
-      background: none;
-      border: none;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.2s ease;
-    }
-
-    .b-nav-item.active {
-      color: var(--primary);
-    }
-
-    .b-nav-item .b-icon {
-      font-size: 18px;
-    }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
@@ -746,54 +708,6 @@
   <!-- MAIN CONTENT CONTAINER -->
   <main id="appContent"></main>
 
-  <!-- BOTTOM MOBILE NAVIGATION -->
-  <nav class="bottom-nav">
-    <button class="b-nav-item active" onclick="switchMainTab('menu')" id="bnav_menu">
-      <span class="b-icon">🏠</span>
-      <span>Menü</span>
-    </button>
-    <button class="b-nav-item" onclick="switchMainTab('rhythmic')" id="bnav_rhythmic" style="color:#f472b6;">
-      <span class="b-icon">🚀</span>
-      <span>3'er & 4'er</span>
-    </button>
-    <button class="b-nav-item" onclick="switchMainTab('unit1')" id="bnav_unit1">
-      <span class="b-icon">👋</span>
-      <span>1. Ünite</span>
-    </button>
-    <button class="b-nav-item" onclick="switchMainTab('unit2')" id="bnav_unit2">
-      <span class="b-icon">🏫</span>
-      <span>2. Ünite</span>
-    </button>
-    <button class="b-nav-item" onclick="switchMainTab('unit3')" id="bnav_unit3">
-      <span class="b-icon">👤</span>
-      <span>3. Ünite</span>
-    </button>
-    <button class="b-nav-item" onclick="switchMainTab('unit4')" id="bnav_unit4">
-      <span class="b-icon">👨‍👩‍👧‍👦</span>
-      <span>4. Ünite</span>
-    </button>
-    <button class="b-nav-item" onclick="switchMainTab('unit5')" id="bnav_unit5">
-      <span class="b-icon">🏡</span>
-      <span>5. Ünite</span>
-    </button>
-    <button class="b-nav-item" onclick="switchMainTab('unit6')" id="bnav_unit6">
-      <span class="b-icon">🌆</span>
-      <span>6. Ünite</span>
-    </button>
-    <button class="b-nav-item" onclick="switchMainTab('quiz')" id="bnav_quiz">
-      <span class="b-icon">📝</span>
-      <span>Testler</span>
-    </button>
-    <button class="b-nav-item" onclick="switchMainTab('days_sort')" id="bnav_days_sort">
-      <span class="b-icon">📅</span>
-      <span>Sıralama</span>
-    </button>
-    <button class="b-nav-item" onclick="switchMainTab('flashcards')" id="bnav_flashcards">
-      <span class="b-icon">🃏</span>
-      <span>Kartlar</span>
-    </button>
-  </nav>
-
   <script>
     
     /* ========================================================
@@ -954,10 +868,6 @@
       document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
       const activeNavTab = document.getElementById(`tab_${tabId}`);
       if (activeNavTab) activeNavTab.classList.add('active');
-
-      document.querySelectorAll('.b-nav-item').forEach(b => b.classList.remove('active'));
-      const activeBNav = document.getElementById(`bnav_${tabId}`);
-      if (activeBNav) activeBNav.classList.add('active');
 
       if (tabId === 'menu') {
         document.getElementById('subHeaderTitle').textContent = '2. Sınıf - Tüm Üniteler, 3\'er & 4\'er Ritmik Sayma ve Sınav';
@@ -1165,21 +1075,23 @@
       }
     };
 
-    let rhythmActiveMode = 3;
-    let rhythmActiveStage = 'learn';
-    let rhythmTeachSpeechStyle = 'short';
+    let rhythmActiveMode = 3;          // 3 veya 4
+    let rhythmActiveStage = 'learn';   // 'learn' (1. Öğret & Say), 'practice' (2. Çocuk Saysın), 'exam' (3. Sınav)
+    let rhythmTeachSpeechStyle = 'short'; // 'short' (Sadece 3, 6, 9...) veya 'mult' (1 tane 3, 3 eder...)
     let rhythmAutoPlaying = false;
-    let rhythmCurrentHighlightStep = 0;
+    let rhythmCurrentHighlightStep = 0; // 1..10
     let rhythmTeachCompletedOnce = false;
     let rhythmAutoTimer = null;
 
-    let rhythmPracticeTargetStep = 1;
+    // 2. Aşama (Çocuğun Sayması) State
+    let rhythmPracticeTargetStep = 1;  // 1..10 (sıradaki çocuğun söyleyeceği adım)
     let rhythmPracticeWrongFeedback = '';
     let rhythmPracticeCompleted = false;
     let rhythmPracticeChoices = [];
     let rhythmVoiceListening = false;
 
-    let rhythmExamFilter = 'both';
+    // 3. Aşama (Sınav) State
+    let rhythmExamFilter = 'both'; // '3', '4', 'both'
     let rhythmExamQuestions = [];
     let rhythmExamIndex = 0;
     let rhythmExamScore = 0;
@@ -1200,6 +1112,7 @@
 
     function openRhythmicCountingModule() {
       renderRhythmicCounting();
+      // Kullanıcı girdiğinde önce otomatik olarak öğretsin ve sesli saysın!
       if (rhythmActiveStage === 'learn' && !rhythmAutoPlaying) {
         setTimeout(() => {
           if (currentMainTab === 'rhythmic' && rhythmActiveStage === 'learn') {
@@ -1270,6 +1183,7 @@
       rhythmCurrentHighlightStep = 1;
       renderRhythmicCounting();
 
+      const info = rhythmData[rhythmActiveMode];
       const introText = rhythmActiveMode === 3
         ? "Haydi 3'er 3'er 30'a kadar beraber sayalım ve öğrenelim!"
         : "Haydi 4'er 4'er 40'a kadar beraber sayalım ve öğrenelim!";
@@ -1295,6 +1209,7 @@
       rhythmCurrentHighlightStep = stepIndex;
       renderRhythmicCounting();
 
+      // Aktif kartı ekranda görünür tut
       const activeEl = document.getElementById(`rhythm_card_${stepIndex}`);
       if (activeEl && activeEl.scrollIntoView) {
         activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1320,6 +1235,7 @@
       speakTurkish(`${item.tr}. ${item.explain}`, 0.92);
     }
 
+    // 2. AŞAMA: SIRA SENDE (ÇOCUĞUN SAYMASI)
     function initRhythmPractice() {
       rhythmPracticeTargetStep = 1;
       rhythmPracticeWrongFeedback = '';
@@ -1432,6 +1348,7 @@
       }
     }
 
+    // 3. AŞAMA: RİTMİK SAYMA VE ÇARPIM TABLOSUNA HAZIRLIK SINAVI
     function buildRhythmQuestionsForMode(filterMode) {
       const q3 = [
         {
@@ -1537,6 +1454,7 @@
 
       if (filterMode === '3') return q3;
       if (filterMode === '4') return q4;
+      // Karışık 10 soru
       return [q3[0], q4[0], q3[1], q4[1], q3[2], q4[2], q3[3], q4[3], q3[4], q4[4]];
     }
 
@@ -1603,15 +1521,15 @@
 
     function renderRhythmicCounting() {
       const info = rhythmData[rhythmActiveMode];
+
+      // Üst mod seçici (3'er vs 4'er) ve 3 Aşama sekmeleri
       let stageContentHtml = '';
 
       if (rhythmActiveStage === 'learn') {
+        // 1. AŞAMA: ÖĞRETMEN SESLİ SAYAR VE ÖĞRETİR
         const cardsHtml = info.steps.map(item => {
           const isSpeakingNow = rhythmCurrentHighlightStep === item.step;
           const isDone = rhythmCurrentHighlightStep > item.step || rhythmTeachCompletedOnce;
-          const groupBoxes = Array.from({ length: item.step }).map(() =>
-            `<span style="display:inline-block;background:rgba(255,255,255,0.08);padding:2px 5px;border-radius:6px;margin:1px;font-size:13px;">${info.emoji.repeat(info.stepSize)}</span>`
-          ).join('');
 
           return `
             <div id="rhythm_card_${item.step}" class="rhythm-step-card ${isSpeakingNow ? 'speaking-now' : (isDone ? 'counted-done' : '')}" onclick="speakSingleRhythmCard(${item.step})">
@@ -1625,7 +1543,6 @@
               <div style="font-size:15px;font-weight:800;color:#fde047;margin-bottom:2px;">"${item.tr}"</div>
               <div style="font-size:11px;color:#94a3b8;margin-bottom:4px;">🇬🇧 ${item.en}</div>
               <div class="rhythm-mult-badge">${item.mult} (${item.explain})</div>
-              <div style="margin-top:6px;line-height:1.3;">${groupBoxes}</div>
             </div>
           `;
         }).join('');
@@ -1658,6 +1575,7 @@
               </div>
             </div>
 
+            <!-- Hızlı Tam Dizi Şeridi -->
             <div style="background:#0f172a;border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;">
               ${info.steps.map(s => `
                 <span onclick="speakSingleRhythmCard(${s.step})" style="cursor:pointer;padding:6px 12px;border-radius:10px;font-weight:900;font-size:16px;background:${rhythmCurrentHighlightStep === s.step ? '#fde047' : 'rgba(255,255,255,0.07)'};color:${rhythmCurrentHighlightStep === s.step ? '#0f172a' : '#fff'};border:1px solid ${rhythmCurrentHighlightStep === s.step ? '#f59e0b' : 'rgba(255,255,255,0.12)'};">
@@ -1666,10 +1584,12 @@
               `).join('<span style="color:#64748b;font-weight:900;">➔</span>')}
             </div>
 
+            <!-- 10 Basamak Görsel Kartlar -->
             <div class="rhythm-grid">
               ${cardsHtml}
             </div>
 
+            <!-- 2. Aşamaya Geçiş Çağrısı -->
             <div style="margin-top:20px;background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(6,182,212,0.22));border:2px solid #10b981;border-radius:16px;padding:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
               <div>
                 <div style="font-size:16px;font-weight:900;color:#6ee7b7;">🗣️ Öğrendin mi? Şimdi Sıra Sende!</div>
@@ -1682,6 +1602,7 @@
           </div>
         `;
       } else if (rhythmActiveStage === 'practice') {
+        // 2. AŞAMA: ÇOCUĞUN SIRAYLA SAYMASI
         const currentTarget = info.steps[rhythmPracticeTargetStep - 1];
         const trailHtml = info.steps.map(item => {
           const isCounted = rhythmPracticeCompleted || item.step < rhythmPracticeTargetStep;
@@ -1713,13 +1634,6 @@
             </div>
           `;
         } else {
-          const visualGroups = Array.from({ length: currentTarget.step }).map((_, idx) =>
-            `<div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:8px 10px;text-align:center;">
-              <div style="font-size:10px;color:#94a3b8;font-weight:700;">${idx + 1}. Grup</div>
-              <div style="font-size:20px;letter-spacing:2px;">${info.emoji.repeat(info.stepSize)}</div>
-            </div>`
-          ).join('');
-
           stageContentHtml = `
             <div class="card" style="border:2px solid #10b981;background:linear-gradient(145deg, rgba(30,41,59,0.96), rgba(15,23,42,0.98));">
               <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
@@ -1732,24 +1646,23 @@
                 <button class="action-btn" style="background:#334155;font-size:12px;" onclick="initRhythmPractice()">🔄 Baştan Başlat</button>
               </div>
 
+              <!-- Basamak İzleme Yolu -->
               <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:18px;">
                 ${trailHtml}
               </div>
 
+              <!-- Aktif Soru & Çocuğun Sayma Alanı -->
               <div style="background:#0f172a;border:2px dashed #fde047;border-radius:18px;padding:20px;text-align:center;">
                 <div style="font-size:13px;font-weight:800;color:#fde047;margin-bottom:6px;">
                   🚀 ${currentTarget.step}. BASAMAK (${currentTarget.step} tane ${info.stepSize} = ${currentTarget.step} × ${info.stepSize})
                 </div>
-                <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:12px;">
+                <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:16px;">
                   ${currentTarget.step === 1
                     ? `İlk sayımız kaçtır? Yüksek sesle söyle ve aşağıdan seç!`
                     : `${info.steps[currentTarget.step - 2].num} sayısından sonra ${info.stepSize} eklersek sıradaki sayı kaç olur?`}
                 </div>
 
-                <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;">
-                  ${visualGroups}
-                </div>
-
+                <!-- Sesle Söyleme + Baloncuk Seçenekleri -->
                 <div style="margin-bottom:14px;">
                   <button class="action-btn" style="background:${rhythmVoiceListening ? '#ef4444' : '#8b5cf6'};color:#fff;font-size:14px;padding:12px 20px;margin-bottom:10px;" onclick="startChildVoiceCount()">
                     ${rhythmVoiceListening ? '🎙️ Dinleniyor... Şimdi Söyle!' : '🎙️ Mikrofona Yüksek Sesle Söyle'}
@@ -1775,6 +1688,7 @@
           `;
         }
       } else if (rhythmActiveStage === 'exam') {
+        // 3. AŞAMA: RİTMİK SAYMA VE ÇARPIM TABLOSUNA HAZIRLIK SINAVI
         const totalQ = rhythmExamQuestions.length;
         if (rhythmExamIndex >= totalQ) {
           if (rhythmExamScore > rhythmBestExamScore) {
@@ -1857,6 +1771,7 @@
       }
 
       const fullHtml = `
+        <!-- 3'ER VE 4'ER MOD SEÇİCİ -->
         <div class="rhythm-mode-switch">
           <button class="rhythm-mode-btn ${rhythmActiveMode === 3 ? 'active-3' : ''}" onclick="switchRhythmMode(3)">
             <span style="font-size:26px;">🍓</span>
@@ -1874,6 +1789,7 @@
           </button>
         </div>
 
+        <!-- 3 AŞAMALI PEDAGOJİK AKIŞ SEKMELERİ -->
         <div class="rhythm-stage-tabs">
           <button class="rhythm-stage-tab ${rhythmActiveStage === 'learn' ? 'active' : ''}" onclick="switchRhythmStage('learn')">
             <span style="font-size:22px;">🎓 1. Aşama</span>
@@ -1894,6 +1810,7 @@
 
       document.getElementById('appContent').innerHTML = fullHtml;
     }
+
 
     /* ========================================================
        2.1. UNIT 1: WORDS & GREETINGS (SAYFA 9 - 16)

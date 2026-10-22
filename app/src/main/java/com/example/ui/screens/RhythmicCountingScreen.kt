@@ -678,13 +678,6 @@ fun RhythmicCountingScreen(
                                                     fontWeight = FontWeight.ExtraBold
                                                 )
                                             }
-
-                                            Text(
-                                                text = List(item.step) { emojiGroup }.joinToString(" "),
-                                                fontSize = 11.sp,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier.padding(top = 6.dp)
-                                            )
                                         }
                                     }
                                 }
@@ -879,13 +872,6 @@ fun RhythmicCountingScreen(
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
                                     textAlign = TextAlign.Center
-                                )
-
-                                Text(
-                                    text = List(currentTarget.step) { emojiGroup }.joinToString("   "),
-                                    fontSize = 18.sp,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier.padding(vertical = 4.dp)
                                 )
 
                                 Row(
