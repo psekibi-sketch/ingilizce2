@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Calendar Body Base -->
+    <path
+        android:fillColor="#1E293B"
+        android:pathData="M31,31 h46 c4.4,0 8,3.6 8,8 v36 c0,4.4 -3.6,8 -8,8 H31 c-4.4,0 -8,-3.6 -8,-8 V39 c0,-4.4 3.6,-8 8,-8 z" />
+    <!-- Calendar Top Header (Sky Blue) -->
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M31,31 h46 c4.4,0 8,3.6 8,8 v10 H23 V39 c0,-4.4 3.6,-8 8,-8 z" />
+    <!-- Calendar Rings -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M37,25 h4 c1.1,0 2,0.9 2,2 v8 c0,1.1 -0.9,2 -2,2 h-4 c-1.1,0 -2,-0.9 -2,-2 v-8 c0,-1.1 0.9,-2 2,-2 z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M67,25 h4 c1.1,0 2,0.9 2,2 v8 c0,1.1 -0.9,2 -2,2 h-4 c-1.1,0 -2,-0.9 -2,-2 v-8 c0,-1.1 0.9,-2 2,-2 z" />
+    <!-- Big Letter "D" or Checkmark in the center -->
+    <path
+        android:fillColor="#22C55E"
+        android:pathData="M49,69.5 L39.5,60 L43,56.5 L49,62.5 L65,46.5 L68.5,50 z" />
+    <!-- Sparkle / Star in top-right -->
+    <path
+        android:fillColor="#FACC15"
+        android:pathData="M78,24 L80,28 L84,30 L80,32 L78,36 L76,32 L72,30 L76,28 z" />
+</vector>

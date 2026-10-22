@@ -1,0 +1,6 @@
+{
+  "name": "LingoDays",
+  "description": "İngilizce günleri sesli, ipuçlu ve çoktan seçmeli pratiklerle kolayca öğrenin.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
