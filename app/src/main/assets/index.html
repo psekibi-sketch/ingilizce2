@@ -657,6 +657,44 @@
       background: linear-gradient(135deg, #2563eb, #1d4ed8);
     }
 
+    .rhythm-choice-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .rhythm-choice-modal {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 2px solid #f59e0b;
+      border-radius: 24px;
+      padding: 26px 20px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 30px rgba(245,158,11,0.3);
+    }
+
+    .score-badge-circle {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 4px solid #fde047;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(16, 185, 129, 0.2));
+      margin: 10px auto;
+      box-shadow: 0 0 25px rgba(253, 224, 71, 0.35);
+    }
+
     @media (max-width: 600px) {
       .rhythm-stage-tabs {
         grid-template-columns: 1fr;
@@ -664,18 +702,25 @@
       .rhythm-grid {
         grid-template-columns: repeat(2, 1fr);
       }
+      .header-widgets .sound-btn {
+        padding: 5px 8px;
+        font-size: 11px;
+      }
     }
   </style>
 </head>
 <body>
 
   <!-- HEADER -->
-  <header>
+  <header id="mainAppHeader">
     <div class="header-top">
-      <div class="logo-group" onclick="switchMainTab('menu')" style="cursor:pointer;" title="Ana Menüye Dön">
-        <div class="logo-icon">📚</div>
-        <div class="title-area">
-          <h1>LingoDays 2. Sınıf</h1>
+      <div class="logo-group">
+        <button id="headerHomeBtn" onclick="switchMainTab('menu')" title="Ana Menüye Dön" style="display:none;background:linear-gradient(135deg, #6366f1, #06b6d4);color:#fff;border:none;border-radius:12px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(99,102,241,0.35);">
+          🏠 Ana Menü
+        </button>
+        <div class="logo-icon" onclick="switchMainTab('menu')" style="cursor:pointer;" title="Ana Menüye Dön">📚</div>
+        <div class="title-area" onclick="switchMainTab('menu')" style="cursor:pointer;">
+          <h1 id="headerMainTitle">LingoDay</h1>
           <p id="subHeaderTitle">Tüm 6 Ünite • 3'er & 4'er Ritmik Sayma • Sınav</p>
         </div>
       </div>
@@ -688,8 +733,8 @@
         <button class="sound-btn" id="soundToggleBtn" onclick="toggleSound()" title="Sesi Aç/Kapat">🔊</button>
       </div>
     </div>
-    <!-- MAIN NAV SCROLL (DOĞRU SIRALI 1'den 6'ya KADAR TÜM ÜNİTELER + RİTMİK SAYMA + 20 SORULU SINAV) -->
-    <div class="nav-scroll">
+    <!-- MAIN NAV SCROLL (Yalnızca Ana Menüde görünür, bir derse/sınava girilince ekran yer kaplamasın diye gizlenir) -->
+    <div class="nav-scroll" id="mainNavScroll">
       <button class="nav-tab active" onclick="switchMainTab('menu')" id="tab_menu">🏠 Ana Menü</button>
       <button class="nav-tab" onclick="switchMainTab('rhythmic')" id="tab_rhythmic" style="border-color:#f472b6;color:#fbcfe8;background:linear-gradient(135deg, rgba(236,72,153,0.28), rgba(124,58,237,0.28));font-weight:800;">🚀 3'er & 4'er Ritmik Sayma</button>
       <button class="nav-tab" onclick="switchMainTab('unit1')" id="tab_unit1">👋 1. Ünite (9-16)</button>
@@ -868,6 +913,17 @@
       document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
       const activeNavTab = document.getElementById(`tab_${tabId}`);
       if (activeNavTab) activeNavTab.classList.add('active');
+
+      // Bir derse veya teste girildiğinde ekran yer kaplamasın diye üst sekmeler gizlenir, Ana Menü butonu görünür!
+      const navScroll = document.getElementById('mainNavScroll') || document.querySelector('.nav-scroll');
+      const headerHomeBtn = document.getElementById('headerHomeBtn');
+      if (tabId === 'menu') {
+        if (navScroll) navScroll.style.display = 'flex';
+        if (headerHomeBtn) headerHomeBtn.style.display = 'none';
+      } else {
+        if (navScroll) navScroll.style.display = 'none';
+        if (headerHomeBtn) headerHomeBtn.style.display = 'inline-flex';
+      }
 
       if (tabId === 'menu') {
         document.getElementById('subHeaderTitle').textContent = '2. Sınıf - Tüm Üniteler, 3\'er & 4\'er Ritmik Sayma ve Sınav';
@@ -1090,6 +1146,17 @@
     let rhythmPracticeChoices = [];
     let rhythmVoiceListening = false;
 
+    // 1. Aşama Sayma Bitiş Seçim Modalı
+    let rhythmTeachChoiceDialog = false;
+
+    // 2. Aşama İstatistik & Parmak Hesabı Ölçüm State'i
+    let rhythmPracticeStartTime = null;
+    let rhythmPracticeEndTime = null;
+    let rhythmPracticeDuration = 0; // saniye
+    let rhythmPracticeTotalMistakes = 0;
+    let rhythmCurrentStepAttempts = 1; // aktif adımda kaçıncı deneme
+    let rhythmPracticeStepStats = []; // [{ step, num, tr, attempts, mistakes }]
+
     // 3. Aşama (Sınav) State
     let rhythmExamFilter = 'both'; // '3', '4', 'both'
     let rhythmExamQuestions = [];
@@ -1201,8 +1268,9 @@
         rhythmAutoPlaying = false;
         rhythmCurrentHighlightStep = 0;
         rhythmTeachCompletedOnce = true;
+        rhythmTeachChoiceDialog = true; // Sayma bitti uyarısı / modalı
         renderRhythmicCounting();
-        speakTurkish("Harika dinledin! Şimdi sıra sende! İkinci aşamaya bas ve sen say!", 0.95);
+        speakTurkish("Harika dinledin! Sayma tamamlandı. Tekrar sayayım mı, yoksa sonraki aşamaya geçelim mi?", 0.95);
         return;
       }
 
@@ -1235,15 +1303,21 @@
       speakTurkish(`${item.tr}. ${item.explain}`, 0.92);
     }
 
-    // 2. AŞAMA: SIRA SENDE (ÇOCUĞUN SAYMASI)
+    // 2. AŞAMA: SIRA SENDE (ÇOCUĞUN SAYMASI & SÜRE/PARMAK HESABI ANALİZİ)
     function initRhythmPractice() {
       rhythmPracticeTargetStep = 1;
       rhythmPracticeWrongFeedback = '';
       rhythmPracticeCompleted = false;
+      rhythmPracticeStartTime = Date.now();
+      rhythmPracticeEndTime = null;
+      rhythmPracticeDuration = 0;
+      rhythmPracticeTotalMistakes = 0;
+      rhythmCurrentStepAttempts = 1;
+      rhythmPracticeStepStats = [];
       generateRhythmPracticeChoices();
       renderRhythmicCounting();
       const info = rhythmData[rhythmActiveMode];
-      speakTurkish(`Şimdi sıra sende! ${info.stepSize}'er ${info.stepSize}'er ${info.maxNumber} sayısına kadar sen say! İlk sayımız kaç? Yüksek sesle söyle ve seç!`, 0.95);
+      speakTurkish(`Şimdi sıra sende! ${info.stepSize}'er ${info.stepSize}'er ${info.maxNumber}'a kadar sen sayıyorsun! İlk sayımız kaç? Yüksek sesle söyle ve seç!`, 0.95);
     }
 
     function generateRhythmPracticeChoices() {
@@ -1277,11 +1351,25 @@
       if (!currentItem) return;
 
       if (chosenNum === currentItem.num) {
+        // Doğru seçim: Bu adımın kaçıncı denemede doğru bilindiğini kaydet
+        rhythmPracticeStepStats.push({
+          step: currentItem.step,
+          num: currentItem.num,
+          tr: currentItem.tr,
+          attempts: rhythmCurrentStepAttempts,
+          mistakes: rhythmCurrentStepAttempts - 1
+        });
+        rhythmCurrentStepAttempts = 1;
         rhythmPracticeWrongFeedback = '';
+
         if (rhythmPracticeTargetStep >= info.steps.length) {
+          // TÜM SAYILAR AÇILDI! BAŞARI VE SÜRE HESAPLAMA
+          rhythmPracticeEndTime = Date.now();
+          rhythmPracticeDuration = Math.max(1, Math.round((rhythmPracticeEndTime - rhythmPracticeStartTime) / 1000));
           rhythmPracticeCompleted = true;
           renderRhythmicCounting();
-          speakTurkish(`${currentItem.tr}! Tebrikler şampiyon! ${info.stepSize}'er ritmik saymayı ${info.maxNumber}'a kadar eksiksiz tamamladın! Şimdi sınava geçebilirsin!`, 0.94);
+          const stats = calculateRhythmPracticeScore(rhythmPracticeDuration, rhythmPracticeTotalMistakes);
+          speakTurkish(`${currentItem.tr}! Harikasın şampiyon, tamamladın! Süren ${rhythmPracticeDuration} saniye, puanın 100 üzerinden ${stats.totalScore}! ${stats.voiceFeedback}`, 0.94);
         } else {
           rhythmPracticeTargetStep++;
           generateRhythmPracticeChoices();
@@ -1289,10 +1377,78 @@
           speakTurkish(`Aferin, ${currentItem.tr}! Sıradaki sayı kaç?`, 0.95);
         }
       } else {
-        rhythmPracticeWrongFeedback = `❌ ${chosenNum} değil! İpucu: ${rhythmPracticeTargetStep} tane ${info.stepSize} (${rhythmPracticeTargetStep} × ${info.stepSize}) kaç eder? Kutudaki ${info.emoji} gruplarını sayabilirsin!`;
+        rhythmPracticeTotalMistakes++;
+        rhythmCurrentStepAttempts++;
+        rhythmPracticeWrongFeedback = `❌ ${chosenNum} değil! İpucu: ${rhythmPracticeTargetStep} tane ${info.stepSize} (${rhythmPracticeTargetStep} × ${info.stepSize}) kaç eder?`;
         renderRhythmicCounting();
         speakTurkish(`Tekrar dene! ${rhythmPracticeTargetStep} tane ${info.stepSize} kaç eder?`, 0.95);
       }
+    }
+
+    // PEDAGOJİK PARMAK HESABI VE HIZ ANALİZ MOTORU
+    function calculateRhythmPracticeScore(durationSec, totalMistakes) {
+      // 10 basamak için ezbere süre: 18 - 25 saniye (basamak başı ~2 saniye)
+      // Parmakla sayıyorsa basamak başı 5-8 saniye (toplam > 50-60 saniye) sürer.
+      let speedScore = 50;
+      let fingerCountingStatus = '';
+      let fingerCountingIcon = '⚡';
+      let fingerCountingColor = '#10b981';
+      let voiceFeedback = '';
+      let pedagojikNot = '';
+
+      if (durationSec <= 22) {
+        speedScore = 50;
+        fingerCountingStatus = 'YILDIRIM EZBER (Parmak Hesabı YOK!)';
+        fingerCountingIcon = '⚡';
+        fingerCountingColor = '#10b981';
+        voiceFeedback = 'Harika! Parmak hesabı yapmadan şarkı gibi ezbere bildin!';
+        pedagojikNot = 'Mükemmel akıcılık! Sayılar hafızaya tam yerleşmiş, parmak hesabı yapmadan yıldırım gibi bitirdin.';
+      } else if (durationSec <= 32) {
+        speedScore = 44;
+        fingerCountingStatus = 'ÇOK HIZLI (Parmak Hesabı Yok)';
+        fingerCountingIcon = '👏';
+        fingerCountingColor = '#38bdf8';
+        voiceFeedback = 'Çok hızlısın! Parmak hesabı yapmadan gayet akıcı tamamladın.';
+        pedagojikNot = 'Çok iyi! Neredeyse hiç duraksamadan, ritmi bozmadan akıcı bir şekilde tamamlandı.';
+      } else if (durationSec <= 48) {
+        speedScore = 30;
+        fingerCountingStatus = 'ORTA HIZ (Hafif Parmak Hesabı Şüphesi)';
+        fingerCountingIcon = '✋';
+        fingerCountingColor = '#f59e0b';
+        voiceFeedback = 'Bitirdin ama bazı sayılarda parmakla saydın gibi! Pratikle hızlanacaksın.';
+        pedagojikNot = 'Ortalama basamak süresi 3-4 saniyeyi bulduğu için bazı adımlarda parmak hesabı yapılmış olabilir. Birkaç tekrarla tamamen ezbere geçilebilir.';
+      } else if (durationSec <= 65) {
+        speedScore = 18;
+        fingerCountingStatus = 'YAVAŞ (Parmak Hesabı Yapılıyor)';
+        fingerCountingIcon = '🐢';
+        fingerCountingColor = '#f97316';
+        voiceFeedback = 'Parmakla tek tek saydığın için süre uzadı. Hedefimiz parmaksız ezber!';
+        pedagojikNot = 'Basamak başı 5-6 saniye sürüyor; çocuk sayıları zihinden ekleyerek veya parmakla sayarak buluyor. Hedefimiz ritmi şarkı gibi parmaksız ezberletmek.';
+      } else {
+        speedScore = 8;
+        fingerCountingStatus = 'YOĞUN PARMAK HESABI TESPİT EDİLDİ';
+        fingerCountingIcon = '🖐️';
+        fingerCountingColor = '#ef4444';
+        voiceFeedback = 'Parmak hesabı tespit edildi! Haydi testi başa alıp tekrar deneyelim!';
+        pedagojikNot = 'Süre 65 saniyenin üzerinde; sayıları ezberden değil parmakla tek tek sayarak buluyor. 1. Aşamayı bir kez daha dinleyip testi baştan alması çok faydalı olacaktır.';
+      }
+
+      // Hata puanı: 50 puan üzerinden, her hata -6 puan
+      const mistakePenalty = totalMistakes * 6;
+      const accuracyScore = Math.max(0, 50 - mistakePenalty);
+      const totalScore = Math.max(10, Math.min(100, speedScore + accuracyScore));
+
+      return {
+        speedScore,
+        accuracyScore,
+        totalScore,
+        fingerCountingStatus,
+        fingerCountingIcon,
+        fingerCountingColor,
+        voiceFeedback,
+        pedagojikNot,
+        idealDuration: 20
+      };
     }
 
     function startChildVoiceCount() {
@@ -1548,6 +1704,25 @@
         }).join('');
 
         stageContentHtml = `
+          ${rhythmTeachChoiceDialog ? `
+            <div class="rhythm-choice-modal-overlay">
+              <div class="rhythm-choice-modal">
+                <div style="font-size:46px;margin-bottom:8px;">🎉🎓</div>
+                <h3 style="font-size:22px;color:#fde047;margin-bottom:6px;">${info.title} Tamamlandı!</h3>
+                <p style="font-size:15px;color:#cbd5e1;margin-bottom:20px;line-height:1.5;">
+                  Öğretmen ${info.maxNumber}'a kadar saymayı bitirdi. <strong>Tekrar sayayım mı</strong>, yoksa <strong>sonraki aşamaya geçip sen mi sayacaksın?</strong>
+                </p>
+                <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                  <button class="action-btn" style="background:#3b82f6;color:#fff;padding:12px 20px;font-size:14px;font-weight:800;" onclick="rhythmTeachChoiceDialog=false;startRhythmAutoTeach()">
+                    🔄 Tekrar Say
+                  </button>
+                  <button class="action-btn" style="background:#10b981;color:#fff;padding:12px 24px;font-size:14px;font-weight:900;box-shadow:0 6px 18px rgba(16,185,129,0.35);" onclick="rhythmTeachChoiceDialog=false;switchRhythmStage('practice')">
+                    🗣️ Sonraki Aşamaya Geç (Sen Say) ➔
+                  </button>
+                </div>
+              </div>
+            </div>
+          ` : ''}
           <div class="card" style="border:2px solid ${info.accentColor};background:linear-gradient(145deg, rgba(30,41,59,0.96), rgba(15,23,42,0.98));">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
               <div>
@@ -1616,23 +1791,92 @@
         }).join('');
 
         if (rhythmPracticeCompleted) {
+          const stats = calculateRhythmPracticeScore(rhythmPracticeDuration, rhythmPracticeTotalMistakes);
+          const firstTryCount = rhythmPracticeStepStats.filter(s => s.mistakes === 0).length;
+          const durationColor = rhythmPracticeDuration <= 25 ? '#10b981' : (rhythmPracticeDuration <= 45 ? '#f59e0b' : '#ef4444');
+
           stageContentHtml = `
-            <div class="card" style="text-align:center;padding:28px;border:2px solid #10b981;background:linear-gradient(145deg, rgba(16,185,129,0.18), rgba(15,23,42,0.96));">
-              <div style="font-size:64px;margin-bottom:10px;">🏆🎉</div>
-              <h3 style="font-size:24px;color:#6ee7b7;margin-bottom:8px;">Harikasın! ${info.title} Tamamlandı!</h3>
-              <p style="font-size:15px;color:#e2e8f0;margin-bottom:18px;">
-                ${info.steps.map(s => s.num).join(' - ')} sayılarını sırayla eksiksiz saydın!
+            <div class="card" style="border:3px solid ${stats.fingerCountingColor};background:linear-gradient(145deg, rgba(30,41,59,0.98), rgba(15,23,42,0.99));padding:24px;text-align:center;">
+              <div style="font-size:52px;margin-bottom:8px;">${stats.fingerCountingIcon} 🎉</div>
+              <div style="display:inline-block;padding:6px 16px;border-radius:999px;font-size:12px;font-weight:900;background:rgba(255,255,255,0.06);border:2px solid ${stats.fingerCountingColor};color:${stats.fingerCountingColor};margin-bottom:12px;">
+                ${stats.fingerCountingStatus}
+              </div>
+
+              <div class="score-badge-circle" style="border-color:${stats.fingerCountingColor};">
+                <div style="font-size:10px;color:#94a3b8;font-weight:700;">BAŞARI PUANI</div>
+                <div style="font-size:36px;font-weight:900;color:#fff;line-height:1;">${stats.totalScore}</div>
+                <div style="font-size:10px;color:#fde047;font-weight:800;margin-top:2px;">/ 100 PUAN</div>
+              </div>
+
+              <h3 style="font-size:22px;color:#fff;margin:12px 0 6px;">Tebrikler! ${info.title} 2. Aşamayı Bitirdin!</h3>
+              <p style="font-size:14px;color:#cbd5e1;max-width:540px;margin:0 auto 20px;">
+                ${stats.pedagojikNot}
               </p>
-              <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:12px;">
-                <button class="action-btn" style="background:#3b82f6;padding:12px 20px;font-size:14px;" onclick="initRhythmPractice()">
-                  🔄 Tekrar Baştan Say
-                </button>
-                <button class="action-btn" style="background:#f59e0b;color:#0f172a;padding:12px 24px;font-size:15px;font-weight:900;" onclick="switchRhythmStage('exam')">
-                  🏆 3. Aşamaya Geç: Ritmik Sayma Sınavı ➔
-                </button>
+
+              <!-- 4 İSTATİSTİK KUTUCUĞU -->
+              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:10px;margin-bottom:20px;">
+                <div style="background:#0f172a;border:1px solid var(--border);border-radius:14px;padding:12px;">
+                  <div style="font-size:11px;color:#94a3b8;">⏱️ Tamamlama Süresi</div>
+                  <div style="font-size:22px;font-weight:900;color:${durationColor};">${rhythmPracticeDuration} saniye</div>
+                  <div style="font-size:10px;color:#64748b;">(Parmaksız Hedef: ~20 sn)</div>
+                </div>
+                <div style="background:#0f172a;border:1px solid var(--border);border-radius:14px;padding:12px;">
+                  <div style="font-size:11px;color:#94a3b8;">⚡ Adım Başı Hız</div>
+                  <div style="font-size:22px;font-weight:900;color:#38bdf8;">${(rhythmPracticeDuration / 10).toFixed(1)} sn</div>
+                  <div style="font-size:10px;color:#64748b;">(Adım başı ortalama)</div>
+                </div>
+                <div style="background:#0f172a;border:1px solid var(--border);border-radius:14px;padding:12px;">
+                  <div style="font-size:11px;color:#94a3b8;">❌ Toplam Yanlış</div>
+                  <div style="font-size:22px;font-weight:900;color:${rhythmPracticeTotalMistakes === 0 ? '#10b981' : '#ef4444'};">${rhythmPracticeTotalMistakes} defa</div>
+                  <div style="font-size:10px;color:#64748b;">(${firstTryCount} / 10 ilk seferde bildi)</div>
+                </div>
+                <div style="background:#0f172a;border:1px solid var(--border);border-radius:14px;padding:12px;">
+                  <div style="font-size:11px;color:#94a3b8;">🎯 Doğruluk Skoru</div>
+                  <div style="font-size:22px;font-weight:900;color:#fde047;">${stats.accuracyScore} / 50</div>
+                  <div style="font-size:10px;color:#64748b;">(Hız Puanı: ${stats.speedScore} / 50)</div>
+                </div>
+              </div>
+
+              <!-- ADIM ADIM PERFORMANS TABLOSU -->
+              <div style="background:#0f172a;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:20px;text-align:left;">
+                <div style="font-size:13px;font-weight:800;color:#fde047;margin-bottom:10px;text-align:center;">
+                  📋 10 Basamakta Kaçıncı Denemede Doğruyu Seçti?
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+                  ${rhythmPracticeStepStats.map(s => `
+                    <div style="background:${s.mistakes === 0 ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.18)'};border:1px solid ${s.mistakes === 0 ? '#10b981' : '#ef4444'};border-radius:10px;padding:6px 10px;font-size:12px;text-align:center;min-width:65px;">
+                      <div style="font-weight:900;font-size:15px;color:#fff;">${s.num}</div>
+                      <div style="font-size:10px;color:${s.mistakes === 0 ? '#6ee7b7' : '#fca5a5'};font-weight:700;">
+                        ${s.attempts}. deneme ${s.mistakes === 0 ? '✅' : '⚠️'}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- YENİDEN DENEME & GEÇİŞ BUTONLARI -->
+              <div style="background:rgba(255,255,255,0.04);border-radius:16px;padding:16px;margin-bottom:14px;">
+                <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:6px;">
+                  🔄 Yeniden Denemek İster misin?
+                </div>
+                <p style="font-size:12px;color:#94a3b8;margin-bottom:14px;">
+                  Hedef parmak hesabı yapmadan süreyi 20 saniyenin altına indirmek ve 100 tam puan almak!
+                </p>
+                <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:10px;">
+                  <button class="action-btn" style="background:#3b82f6;color:#fff;font-size:14px;padding:12px 20px;font-weight:800;" onclick="initRhythmPractice()">
+                    🔄 Yeniden Dene (Testi Başa Al)
+                  </button>
+                  <button class="action-btn" style="background:#10b981;color:#fff;font-size:14px;padding:12px 22px;font-weight:900;" onclick="switchRhythmStage('exam')">
+                    🏆 3. Aşamaya Geç: Sınavı Başlat ➔
+                  </button>
+                  <button class="action-btn" style="background:#334155;color:#cbd5e1;font-size:13px;padding:12px 16px;" onclick="switchRhythmStage('learn')">
+                    🎓 1. Aşamadan Tekrar Dinle
+                  </button>
+                </div>
               </div>
             </div>
           `;
+        }
         } else {
           stageContentHtml = `
             <div class="card" style="border:2px solid #10b981;background:linear-gradient(145deg, rgba(30,41,59,0.96), rgba(15,23,42,0.98));">

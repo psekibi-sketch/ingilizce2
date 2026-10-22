@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -42,6 +43,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -216,11 +218,17 @@ fun RhythmicCountingScreen(
     var isAutoCounting by remember { mutableStateOf(true) }
     var currentHighlightStep by remember { mutableIntStateOf(1) }
     var teachWithMultiplication by remember { mutableStateOf(false) }
+    var showTeachFinishedDialog by remember { mutableStateOf(false) }
 
-    // 2. Aşama (Çocuğun sayması) state
+    // 2. Aşama (Çocuğun sayması & Süre/Parmak hesabı analizi) state
     var practiceStep by remember { mutableIntStateOf(1) }
     var practiceCompleted by remember { mutableStateOf(false) }
     var practiceWrongFeedback by remember { mutableStateOf("") }
+    var practiceStartTime by remember { mutableLongStateOf(0L) }
+    var practiceDurationSeconds by remember { mutableLongStateOf(0L) }
+    var practiceMistakes by remember { mutableIntStateOf(0) }
+    var practiceCurrentAttempts by remember { mutableIntStateOf(1) }
+    val practiceStepRecords = remember { mutableStateListOf<Triple<Int, Int, Int>>() }
 
     // 3. Aşama (Sınav) state
     var examFilter by remember { mutableStateOf("both") } // "3", "4", "both"
@@ -254,9 +262,49 @@ fun RhythmicCountingScreen(
             }
             if (isAutoCounting && activeStage == 1) {
                 isAutoCounting = false
-                viewModel.speakTurkish("Harika dinledin! Şimdi ikinci aşamaya bas ve sen say!")
+                showTeachFinishedDialog = true
+                viewModel.speakTurkish("Harika dinledin! Sayma tamamlandı. Tekrar sayayım mı yoksa sonraki aşamaya geçelim mi?")
             }
         }
+    }
+
+    if (showTeachFinishedDialog) {
+        AlertDialog(
+            onDismissRequest = { showTeachFinishedDialog = false },
+            title = { Text("🎉 Sayma Tamamlandı!", fontWeight = FontWeight.Bold) },
+            text = { Text("Öğretmen saymayı bitirdi. Tekrar sayayım mı yoksa sonraki aşamaya geçip sen mi sayacaksın?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showTeachFinishedDialog = false
+                        activeStage = 2
+                        practiceStep = 1
+                        practiceCompleted = false
+                        practiceWrongFeedback = ""
+                        practiceStartTime = System.currentTimeMillis()
+                        practiceDurationSeconds = 0L
+                        practiceMistakes = 0
+                        practiceCurrentAttempts = 1
+                        practiceStepRecords.clear()
+                        viewModel.speakTurkish("Şimdi sıra sende! İlk sayımız kaç?")
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = EmeraldSuccess)
+                ) {
+                    Text("🗣️ Sen Say (2. Aşama)")
+                }
+            },
+            dismissButton = {
+                OutlinedButton(
+                    onClick = {
+                        showTeachFinishedDialog = false
+                        currentHighlightStep = 1
+                        isAutoCounting = true
+                    }
+                ) {
+                    Text("🔄 Tekrar Say")
+                }
+            }
+        )
     }
 
     Box(
@@ -436,6 +484,11 @@ fun RhythmicCountingScreen(
                         practiceStep = 1
                         practiceCompleted = false
                         practiceWrongFeedback = ""
+                        practiceStartTime = System.currentTimeMillis()
+                        practiceDurationSeconds = 0L
+                        practiceMistakes = 0
+                        practiceCurrentAttempts = 1
+                        practiceStepRecords.clear()
                         viewModel.speakTurkish("Şimdi sıra sende! Sırayla sayalım, ilk sayımız kaç?")
                     },
                     modifier = Modifier
@@ -692,6 +745,11 @@ fun RhythmicCountingScreen(
                                 practiceStep = 1
                                 practiceCompleted = false
                                 practiceWrongFeedback = ""
+                                practiceStartTime = System.currentTimeMillis()
+                                practiceDurationSeconds = 0L
+                                practiceMistakes = 0
+                                practiceCurrentAttempts = 1
+                                practiceStepRecords.clear()
                                 viewModel.speakTurkish("Şimdi sıra sende! İlk sayımız kaç? Yüksek sesle söyle ve seç!")
                             },
                             colors = ButtonDefaults.buttonColors(
@@ -799,39 +857,96 @@ fun RhythmicCountingScreen(
                         }
 
                         if (practiceCompleted) {
-                            Text(
-                                text = "🏆🎉 Tebrikler Şampiyon!",
-                                color = Color(0xFFFDE047),
-                                fontSize = 22.sp,
-                                fontWeight = FontWeight.Black
-                            )
-                            Text(
-                                text = activeSteps.joinToString(" - ") { "${it.num}" } + " sayılarını eksiksiz saydın!",
-                                color = Color.White,
-                                fontSize = 14.sp,
-                                textAlign = TextAlign.Center
-                            )
-                            Button(
-                                onClick = {
-                                    activeStage = 3
-                                    examIndex = 0
-                                    examScore = 0
-                                    examStreak = 0
-                                    examAnswered = false
-                                    examWrongOptions.clear()
-                                },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFFF59E0B),
-                                    contentColor = Color(0xFF0F172A)
-                                ),
-                                shape = RoundedCornerShape(12.dp),
-                                modifier = Modifier.fillMaxWidth()
+                            val speedScore = when {
+                                practiceDurationSeconds <= 22 -> 50
+                                practiceDurationSeconds <= 32 -> 44
+                                practiceDurationSeconds <= 48 -> 30
+                                practiceDurationSeconds <= 65 -> 18
+                                else -> 8
+                            }
+                            val mistakePenalty = practiceMistakes * 6
+                            val accuracyScore = (50 - mistakePenalty).coerceAtLeast(0)
+                            val totalScore = (speedScore + accuracyScore).coerceIn(10, 100)
+                            val (statusText, statusColor) = when {
+                                practiceDurationSeconds <= 22 -> "⚡ YILDIRIM EZBER (Parmak Hesabı YOK!)" to Color(0xFF10B981)
+                                practiceDurationSeconds <= 32 -> "👏 ÇOK HIZLI (Parmak Hesabı Yok)" to Color(0xFF38BDF8)
+                                practiceDurationSeconds <= 48 -> "✋ ORTA HIZ (Hafif Parmak Hesabı)" to Color(0xFFF59E0B)
+                                else -> "🐢 PARMAK HESABI TESPİT EDİLDİ" to Color(0xFFEF4444)
+                            }
+
+                            Card(
+                                colors = CardDefaults.cardColors(containerColor = Slate900),
+                                shape = RoundedCornerShape(16.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .border(2.dp, statusColor, RoundedCornerShape(16.dp))
                             ) {
-                                Text(
-                                    text = "🏆 3. Aşamaya Geç: Ritmik Sayma Sınavı ➔",
-                                    fontWeight = FontWeight.Black,
-                                    fontSize = 14.sp
-                                )
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                                ) {
+                                    Text(
+                                        text = statusText,
+                                        color = statusColor,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Black
+                                    )
+                                    Text(
+                                        text = "$totalScore / 100 PUAN",
+                                        color = Color(0xFFFDE047),
+                                        fontSize = 32.sp,
+                                        fontWeight = FontWeight.Black
+                                    )
+                                    Text(
+                                        text = "⏱️ Süre: $practiceDurationSeconds sn (İdeal: ~20 sn) | ❌ Hata: $practiceMistakes defa",
+                                        color = Color.White,
+                                        fontSize = 13.sp
+                                    )
+
+                                    Button(
+                                        onClick = {
+                                            practiceStep = 1
+                                            practiceCompleted = false
+                                            practiceWrongFeedback = ""
+                                            practiceStartTime = System.currentTimeMillis()
+                                            practiceDurationSeconds = 0L
+                                            practiceMistakes = 0
+                                            practiceCurrentAttempts = 1
+                                            practiceStepRecords.clear()
+                                        },
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2563EB)),
+                                        shape = RoundedCornerShape(12.dp),
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text("🔄 Yeniden Dene (Testi Başa Al)", fontWeight = FontWeight.Bold)
+                                    }
+
+                                    Button(
+                                        onClick = {
+                                            activeStage = 3
+                                            examIndex = 0
+                                            examScore = 0
+                                            examStreak = 0
+                                            examAnswered = false
+                                            examWrongOptions.clear()
+                                        },
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(0xFFF59E0B),
+                                            contentColor = Color(0xFF0F172A)
+                                        ),
+                                        shape = RoundedCornerShape(12.dp),
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text(
+                                            text = "🏆 3. Aşamaya Geç: Ritmik Sayma Sınavı ➔",
+                                            fontWeight = FontWeight.Black,
+                                            fontSize = 14.sp
+                                        )
+                                    }
+                                }
                             }
                         } else {
                             val currentTarget = activeSteps[practiceStep - 1]
@@ -883,13 +998,18 @@ fun RhythmicCountingScreen(
                                             onClick = {
                                                 if (numChoice == currentTarget.num) {
                                                     practiceWrongFeedback = ""
+                                                    practiceStepRecords.add(Triple(currentTarget.step, currentTarget.num, practiceCurrentAttempts))
+                                                    practiceCurrentAttempts = 1
                                                     viewModel.speakTurkish("Aferin, ${currentTarget.tr}!")
                                                     if (practiceStep >= activeSteps.size) {
+                                                        practiceDurationSeconds = ((System.currentTimeMillis() - practiceStartTime) / 1000).coerceAtLeast(1)
                                                         practiceCompleted = true
                                                     } else {
                                                         practiceStep++
                                                     }
                                                 } else {
+                                                    practiceMistakes++
+                                                    practiceCurrentAttempts++
                                                     practiceWrongFeedback = "❌ $numChoice değil! ${currentTarget.step} tane $rhythmMode kaç eder? Tekrar sayalım!"
                                                     viewModel.speakTurkish("Tekrar dene! ${currentTarget.step} tane $rhythmMode kaç eder?")
                                                 }
