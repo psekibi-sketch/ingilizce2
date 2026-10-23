@@ -1,6 +1,6 @@
 {
-  "version": "2.6.1",
+  "version": "2.6.2",
   "name": "Lingo Ders Arkadaşım",
-  "timestamp": 1729673200000,
-  "release": "2026-10-23-voice-announcements-fix"
+  "timestamp": 1729675300000,
+  "release": "2026-10-23-pwa-install-prompt-auto"
 }

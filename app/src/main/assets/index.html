@@ -945,6 +945,9 @@
         <div class="timer-badge" id="studyTimerBadge" title="10 saniye hareketsiz kalırsanız durur">
           ⏱️ <span id="studyTimerText">00:00</span>
         </div>
+        <button class="sound-btn" id="installAppHeaderBtn" onclick="triggerPwaInstallPrompt(true)" title="Uygulamayı Ana Ekrana Ekle" style="display:none;font-size:12px;width:auto;padding:0 10px;border-radius:12px;background:rgba(16,185,129,0.18);border:1px solid rgba(16,185,129,0.4);color:#34d399;font-weight:800;">
+          📲 <span style="font-size:11px;">Ekle</span>
+        </button>
         <button class="sound-btn" id="updateAppQuickBtn" onclick="manualCheckForUpdates(true)" title="Yeni Sürümü Kontrol Et & Yenile" style="font-size:12px;width:auto;padding:0 10px;border-radius:12px;background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3);color:#38bdf8;font-weight:700;">
           🔄 <span style="font-size:11px;">Yenile</span>
         </button>
@@ -965,6 +968,9 @@
         <div style="font-size:11px;color:#64748b;margin-top:2px;">Önce Öğretir, Çocuk Sayar, Sınav Yapar • MEB Müfredatına Uygun</div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <button id="installAppFooterBtn" onclick="triggerPwaInstallPrompt(true)" class="action-btn" style="display:none;background:#10b981;color:#fff;font-size:11px;padding:7px 12px;font-weight:900;" title="Telefonunuza uygulama olarak ekleyin">
+          📲 Ana Ekrana Ekle
+        </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
           🔄 Sürümü Yenile (v2.6)
         </button>
@@ -7788,7 +7794,7 @@
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.6.1';
+    const CURRENT_APP_VERSION = '2.6.2';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
@@ -7970,9 +7976,224 @@
       }
     }, 2 * 60 * 1000);
 
-    // Başlangıçta kayıt ve denetim
+    /* ========================================================
+       ANA EKRANA EKLE (ADD TO HOME SCREEN) AKILLI YÖNETİCİSİ
+       - Yeni cihaz veya tarayıcıda açıldığında kullanıcıyı karşılar
+       - Android / Chrome için yerel native kurulum penceresini tetikler
+       - iOS / Safari için 3 adımlı Türkçe görsel rehber sunar
+       - Ana ekrandan zaten açılmışsa (standalone) kullanıcıyı rahatsız etmez
+    ======================================================== */
+    let deferredInstallPrompt = null;
+
+    // Cihazın Standalone (Ana Ekrandan Uygulama Olarak Açılıp Açılmadığını) Kontrol Et
+    function isRunningStandalone() {
+      return (
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true ||
+        document.referrer.includes('android-app://')
+      );
+    }
+
+    // iOS Cihazı Tespiti
+    function isIosDevice() {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      return /iphone|ipad|ipod/.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    }
+
+    // Chrome/Android Kurulum Olayını Yakala
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      updateInstallButtonsVisibility();
+      console.log('[PWA] beforeinstallprompt olayı yakalandı.');
+    });
+
+    // Uygulama başarıyla kurulduğunda
+    window.addEventListener('appinstalled', () => {
+      console.log('[PWA] Uygulama başarıyla ana ekrana kuruldu.');
+      deferredInstallPrompt = null;
+      dismissInstallModal(false);
+      hideInstallButtons();
+      showUpdateToast('🎉 Tebrikler! Lingo Ders Arkadaşım ana ekranınıza eklendi.');
+    });
+
+    function updateInstallButtonsVisibility() {
+      if (isRunningStandalone()) {
+        hideInstallButtons();
+        return;
+      }
+      const headerBtn = document.getElementById('installAppHeaderBtn');
+      const footerBtn = document.getElementById('installAppFooterBtn');
+      if (headerBtn) headerBtn.style.display = 'inline-flex';
+      if (footerBtn) footerBtn.style.display = 'inline-block';
+    }
+
+    function hideInstallButtons() {
+      const headerBtn = document.getElementById('installAppHeaderBtn');
+      const footerBtn = document.getElementById('installAppFooterBtn');
+      if (headerBtn) headerBtn.style.display = 'none';
+      if (footerBtn) footerBtn.style.display = 'none';
+    }
+
+    // Otomatik Karşılama Kontrolü (Yeni cihazda açıldığında 2.4 saniye sonra tetiklenir)
+    function checkAutoInstallPrompt() {
+      if (isRunningStandalone()) {
+        console.log('[PWA] Uygulama zaten ana ekrandan çalışıyor, kurulum uyarısı gizlendi.');
+        hideInstallButtons();
+        return;
+      }
+
+      updateInstallButtonsVisibility();
+
+      // Kullanıcı daha önce "Daha Sonra" demiş mi ve üzerinden 24 saat geçmiş mi?
+      const dismissedUntil = localStorage.getItem('lingo_install_dismissed_until');
+      if (dismissedUntil && Date.now() < parseInt(dismissedUntil)) {
+        return;
+      }
+
+      // Yeni cihazda veya tarayıcıda ilk kez açıldığında kullanıcıya sor
+      setTimeout(() => {
+        if (!isRunningStandalone() && !document.getElementById('pwaInstallModal')) {
+          showPwaInstallModal();
+        }
+      }, 2400);
+    }
+
+    function showPwaInstallModal() {
+      if (isRunningStandalone() || document.getElementById('pwaInstallModal')) return;
+
+      const modal = document.createElement('div');
+      modal.id = 'pwaInstallModal';
+      modal.className = 'rhythm-choice-modal-overlay';
+      modal.innerHTML = `
+        <div class="card" style="max-width:440px;width:92%;text-align:center;padding:26px 20px;border:2px solid #10b981;box-shadow:0 16px 40px rgba(0,0,0,0.85);background:#0f172a;animation:fadeIn 0.3s ease;">
+          <div style="font-size:52px;margin-bottom:8px;line-height:1;">📱⭐</div>
+          <h3 style="font-size:20px;color:#fff;font-weight:900;margin-bottom:8px;">Ana Ekrana Ekle</h3>
+          <p style="font-size:13px;color:#cbd5e1;line-height:1.5;margin-bottom:20px;">
+            <strong>Lingo Ders Arkadaşım</strong>'ı telefonunun ana ekranına uygulama gibi eklemek ister misin?
+            <br><span style="color:#38bdf8;font-size:12px;">✨ Tek dokunuşla tam ekran açılır, internetsiz ve hızlı çalışır!</span>
+          </p>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button onclick="confirmInstallApp()" class="action-btn" style="background:#10b981;color:#fff;font-size:15px;padding:12px;font-weight:900;border-radius:14px;box-shadow:0 4px 16px rgba(16,185,129,0.4);display:flex;align-items:center;justify-content:center;gap:8px;">
+              📲 Evet, Ana Ekrana Ekle
+            </button>
+            <button onclick="dismissInstallModal(true)" style="background:transparent;border:none;color:#94a3b8;font-size:13px;padding:8px;cursor:pointer;font-weight:600;">
+              Daha Sonra Hatırlat
+            </button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    // Kullanıcı "Evet, Ekle" Butonuna Bastığında
+    async function confirmInstallApp() {
+      recordActivity();
+      
+      // 1. Android / Chrome / Edge için yerel tarayıcı kurulum penceresi varsa doğrudan aç
+      if (deferredInstallPrompt) {
+        try {
+          deferredInstallPrompt.prompt();
+          const { outcome } = await deferredInstallPrompt.userChoice;
+          console.log('[PWA] Kurulum tercihi:', outcome);
+          if (outcome === 'accepted') {
+            deferredInstallPrompt = null;
+            dismissInstallModal(false);
+            hideInstallButtons();
+            showUpdateToast('🎉 Harika! Uygulama ana ekranınıza ekleniyor...');
+            return;
+          }
+        } catch (e) {
+          console.warn('[PWA Prompt Hatası]', e);
+        }
+      }
+
+      // 2. iOS Safari (Apple güvenlik gereği JS ile doğrudan ekleyemez, 3 adımlı görsel rehber sunar)
+      if (isIosDevice()) {
+        showIosInstallGuide();
+        return;
+      }
+
+      // 3. Diğer tarayıcılar (Samsung Internet, mobil Chrome genel)
+      showGeneralInstallGuide();
+    }
+
+    function showIosInstallGuide() {
+      const modal = document.getElementById('pwaInstallModal');
+      if (!modal) return;
+      modal.innerHTML = `
+        <div class="card" style="max-width:440px;width:92%;text-align:center;padding:24px 20px;border:2px solid #38bdf8;box-shadow:0 16px 40px rgba(0,0,0,0.85);background:#0f172a;animation:fadeIn 0.3s ease;">
+          <div style="font-size:46px;margin-bottom:6px;">🍎📲</div>
+          <h3 style="font-size:19px;color:#fff;font-weight:900;margin-bottom:6px;">iPhone / iPad Ana Ekrana Ekleme</h3>
+          <p style="font-size:12px;color:#94a3b8;margin-bottom:16px;">
+            Apple Safari'de aşağıdaki 3 basit adımı uygulayarak saniyeler içinde ekleyebilirsiniz:
+          </p>
+          <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px;margin-bottom:18px;text-align:left;font-size:13px;color:#e2e8f0;line-height:1.6;">
+            <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
+              <span style="font-size:22px;">1️⃣</span>
+              <div>Safari'nin en altındaki <strong>Paylaş</strong> simgesine (<strong style="color:#38bdf8;">📤</strong> veya <strong>⎋</strong>) dokunun.</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
+              <span style="font-size:22px;">2️⃣</span>
+              <div>Menüyü aşağı kaydırıp <strong>"Ana Ekrana Ekle"</strong> (<strong style="color:#10b981;">➕</strong>) seçeneğine dokunun.</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <span style="font-size:22px;">3️⃣</span>
+              <div>Sağ üst köşedeki mavi <strong>"Ekle"</strong> butonuna basın. Artık tam bir uygulama gibi ana ekranınızda hazır!</div>
+            </div>
+          </div>
+          <button onclick="dismissInstallModal(false)" class="action-btn" style="background:#10b981;color:#fff;width:100%;font-size:14px;padding:11px;font-weight:900;border-radius:12px;">
+            Tamam, Anladım ✓
+          </button>
+        </div>
+      `;
+    }
+
+    function showGeneralInstallGuide() {
+      const modal = document.getElementById('pwaInstallModal');
+      if (!modal) return;
+      modal.innerHTML = `
+        <div class="card" style="max-width:440px;width:92%;text-align:center;padding:24px 20px;border:2px solid #38bdf8;box-shadow:0 16px 40px rgba(0,0,0,0.85);background:#0f172a;animation:fadeIn 0.3s ease;">
+          <div style="font-size:46px;margin-bottom:6px;">📲⭐</div>
+          <h3 style="font-size:19px;color:#fff;font-weight:900;margin-bottom:6px;">Ana Ekrana Nasıl Eklenir?</h3>
+          <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px;margin-bottom:18px;text-align:left;font-size:13px;color:#e2e8f0;line-height:1.6;">
+            <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;">
+              <span style="font-size:20px;">1️⃣</span>
+              <div>Tarayıcınızın sağ üstündeki <strong>üç nokta menüsüne (⋮)</strong> dokunun.</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <span style="font-size:20px;">2️⃣</span>
+              <div><strong>"Uygulamayı Yükle"</strong> veya <strong>"Ana Ekrana Ekle"</strong> seçeneğini seçin.</div>
+            </div>
+          </div>
+          <button onclick="dismissInstallModal(false)" class="action-btn" style="background:#10b981;color:#fff;width:100%;font-size:14px;padding:11px;font-weight:900;border-radius:12px;">
+            Tamam, Kapat ✓
+          </button>
+        </div>
+      `;
+    }
+
+    function dismissInstallModal(snooze = false) {
+      const modal = document.getElementById('pwaInstallModal');
+      if (modal) modal.remove();
+      if (snooze) {
+        localStorage.setItem('lingo_install_dismissed_until', String(Date.now() + 24 * 60 * 60 * 1000));
+      }
+    }
+
+    function triggerPwaInstallPrompt(forceOpen = false) {
+      recordActivity();
+      if (isRunningStandalone()) {
+        showUpdateToast('✨ Uygulama zaten ana ekranınızdan açılmış durumda!');
+        return;
+      }
+      showPwaInstallModal();
+    }
+
+    // Başlangıçta kayıt, denetim ve Ana Ekrana Ekle kontrolü
     registerServiceWorker();
     checkVersionManifest(true);
+    checkAutoInstallPrompt();
 
     // Başlangıçta tüm ünitelerin göründüğü ana menüyü yükle
     switchMainTab('menu');
