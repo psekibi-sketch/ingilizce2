@@ -2,6 +2,9 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>LingoDay</title>
   <meta name="apple-mobile-web-app-title" content="LingoDay">
@@ -805,6 +808,108 @@
         font-size: 11px;
       }
     }
+
+    /* ========================================================
+       YENİ ÖZELLİK VE ANİMASYON STİLLERİ
+    ======================================================== */
+    .badge-unlock-toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: linear-gradient(135deg, #1e1b4b, #312e81);
+      border: 2px solid #fde047;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      border-radius: 18px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 10000;
+      animation: slideInDown 0.4s ease;
+      transition: all 0.4s ease;
+    }
+    @keyframes slideInDown {
+      from { transform: translateY(-40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .badge-item-card {
+      background: #1e293b;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .badge-item-card.unlocked {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border-color: #f59e0b;
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.25);
+    }
+    .badge-item-card.locked {
+      opacity: 0.5;
+      filter: grayscale(0.85);
+    }
+
+    .speed-choice-btn {
+      padding: 16px 12px;
+      font-size: 24px;
+      font-weight: 900;
+      border-radius: 16px;
+      border: 3px solid #38bdf8;
+      background: #1e293b;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .speed-choice-btn:active {
+      transform: scale(0.95);
+    }
+
+    .listen-match-tile {
+      background: #1e293b;
+      border: 3px solid var(--border);
+      border-radius: 20px;
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .listen-match-tile:hover {
+      border-color: #38bdf8;
+      transform: translateY(-4px);
+      box-shadow: 0 10px 24px rgba(56, 189, 248, 0.25);
+    }
+
+    .whatsapp-share-btn {
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
+      transition: transform 0.15s ease;
+    }
+    .whatsapp-share-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .rocket-launch-anim {
+      font-size: 64px;
+      display: inline-block;
+      animation: rocketFly 1.2s ease-in-out infinite alternate;
+    }
+    @keyframes rocketFly {
+      from { transform: translateY(0) rotate(-5deg); }
+      to { transform: translateY(-20px) rotate(5deg); }
+    }
   </style>
 </head>
 <body>
@@ -834,7 +939,270 @@
   <!-- MAIN CONTENT CONTAINER -->
   <main id="appContent"></main>
 
+
+  <!-- APP FOOTER & GITHUB EXPORT / ROZETLER -->
+  <footer id="appFooter" style="margin-top:auto;padding:24px 16px 16px;text-align:center;border-top:1px solid rgba(255,255,255,0.08);background:rgba(15,23,42,0.7);font-size:12px;color:#94a3b8;">
+    <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div>
+        📚 <strong>LingoDay</strong> • 2. Sınıf İngilizce & Matematik Paketi
+        <div style="font-size:11px;color:#64748b;margin-top:2px;">Önce Öğretir, Çocuk Sayar, Sınav Yapar • MEB Müfredatına Uygun</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <button onclick="openBadgesModal()" class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;">
+          🏆 Rozet Vitrini (<span id="unlockedBadgesCount">0</span>/10)
+        </button>
+        <button onclick="copyFullHtmlCodeManual()" class="action-btn" style="background:#334155;color:#e2e8f0;font-size:11px;padding:7px 14px;font-weight:700;">
+          📋 GitHub İçin HTML Kodunu Kopyala
+        </button>
+      </div>
+    </div>
+  </footer>
+
   <script>
+
+    /* ========================================================
+       SES EFEKTLERİ SYNTHESIZER (WEB AUDIO API - SIFIR DOSYA BAĞIMLILIĞI)
+    ======================================================== */
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) audioCtx = new AudioContextClass();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playChimeSound(type) {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        if (type === 'correct') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.1);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'wrong') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.setValueAtTime(180, now + 0.12);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.28);
+        } else if (type === 'fanfare') {
+          [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+            gain.gain.setValueAtTime(0.15, now + idx * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.3);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.1);
+            osc.stop(now + idx * 0.1 + 0.3);
+          });
+        } else if (type === 'rocket') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(130, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.7);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.85);
+        }
+      } catch (e) {}
+    }
+
+    /* ========================================================
+       10 BAŞARI ROZETİ VE ÖDÜL SİSTEMİ
+    ======================================================== */
+    const BADGE_DEFINITIONS = [
+      { id: 'rhythm_2', title: "2'ler Balon Ustası", icon: '🎈', desc: "2'şer ritmik saymayı tam puanla bitirdi!", color: '#38bdf8' },
+      { id: 'rhythm_3', title: "3'ler Çilek Şampiyonu", icon: '🍓', desc: "3'er ritmik saymayı başarıyla tamamladı!", color: '#ec4899' },
+      { id: 'rhythm_4', title: "4'ler Hızlı Sürücü", icon: '🚗', desc: "4'er ritmik saymayı başarıyla tamamladı!", color: '#06b6d4' },
+      { id: 'rhythm_5', title: "5'ler Yıldız Avcısı", icon: '⭐', desc: "5'er ritmik saymayı başarıyla tamamladı!", color: '#f59e0b' },
+      { id: 'rocket_pilot', title: "Uzay Roketi Pilotu", icon: '🚀', desc: "Geriye ritmik sayıp roketi uzaya fırlattı!", color: '#8b5cf6' },
+      { id: 'speed_master', title: "Hızlı Parmak Şampiyonu", icon: '⚡', desc: "1 dakikalık yarışta 40+ puan kazandı!", color: '#eab308' },
+      { id: 'exam_hero', title: "Matematik Dehası", icon: '🏆', desc: "Ritmik sayma sınavında yüksek skor yaptı!", color: '#10b981' },
+      { id: 'english_star', title: "İngilizce Elçisi", icon: '🇬🇧', desc: "20 soruluk büyük İngilizce sınavını çözdü!", color: '#3b82f6' },
+      { id: 'days_expert', title: "Günler Bilgini", icon: '📅', desc: "Haftanın günlerini eksiksiz sıraya dizdi!", color: '#14b8a6' },
+      { id: 'listen_detective', title: "Dinle & Bul Dedektifi", icon: '🎧', desc: "Görsel dinleme oyununda tüm hedefleri buldu!", color: '#f43f5e' }
+    ];
+
+    function getUnlockedBadges() {
+      try {
+        const raw = localStorage.getItem('lingoday_badges');
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function unlockBadge(badgeId) {
+      const unlocked = getUnlockedBadges();
+      if (!unlocked.includes(badgeId)) {
+        unlocked.push(badgeId);
+        try {
+          localStorage.setItem('lingoday_badges', JSON.stringify(unlocked));
+        } catch (e) {}
+        const badge = BADGE_DEFINITIONS.find(b => b.id === badgeId);
+        if (badge) {
+          playChimeSound('fanfare');
+          showBadgeUnlockToast(badge);
+        }
+        updateBadgeCountDisplay();
+      }
+    }
+
+    function updateBadgeCountDisplay() {
+      const count = getUnlockedBadges().length;
+      const countEl = document.getElementById('unlockedBadgesCount');
+      if (countEl) countEl.textContent = count;
+      const homeBadgeEl = document.getElementById('homeBadgesCountText');
+      if (homeBadgeEl) homeBadgeEl.textContent = `${count} / ${BADGE_DEFINITIONS.length} Rozet`;
+    }
+
+    function showBadgeUnlockToast(badge) {
+      const toast = document.createElement('div');
+      toast.className = 'badge-unlock-toast';
+      toast.innerHTML = `
+        <div style="font-size:36px;animation:rocketFly 0.6s infinite alternate;">${badge.icon}</div>
+        <div>
+          <div style="font-size:11px;font-weight:900;color:#fde047;letter-spacing:0.5px;">YENİ ROZET KAZANILDI! 🌟</div>
+          <div style="font-size:16px;font-weight:900;color:#fff;">${badge.title}</div>
+          <div style="font-size:11px;color:#cbd5e1;">${badge.desc}</div>
+        </div>
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-20px)';
+        setTimeout(() => toast.remove(), 400);
+      }, 4200);
+    }
+
+    function openBadgesModal() {
+      recordActivity();
+      const unlocked = getUnlockedBadges();
+      const modal = document.createElement('div');
+      modal.id = 'badgesModal';
+      modal.className = 'rhythm-choice-modal-overlay';
+      modal.innerHTML = `
+        <div class="card" style="max-width:680px;width:92%;max-height:85vh;overflow-y:auto;border:2px solid #f59e0b;background:#0f172a;box-shadow:0 12px 36px rgba(0,0,0,0.8);position:relative;">
+          <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:12px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:32px;">🏆</span>
+              <div>
+                <h3 style="font-size:20px;color:#fff;margin:0;font-weight:900;">Başarı Rozet Vitrini</h3>
+                <p style="font-size:12px;color:#fde047;margin:0;">Kazanılan: ${unlocked.length} / ${BADGE_DEFINITIONS.length} Rozet</p>
+              </div>
+            </div>
+            <button onclick="document.getElementById('badgesModal').remove()" style="background:#334155;color:#fff;border:none;border-radius:10px;width:34px;height:34px;font-weight:900;cursor:pointer;">✕</button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:12px;margin-bottom:20px;">
+            ${BADGE_DEFINITIONS.map(b => {
+              const isUnlocked = unlocked.includes(b.id);
+              return `
+                <div class="badge-item-card ${isUnlocked ? 'unlocked' : 'locked'}" style="border-color:${isUnlocked ? b.color : '#334155'};">
+                  <div style="font-size:36px;margin-bottom:6px;">${isUnlocked ? b.icon : '🔒'}</div>
+                  <div style="font-size:12px;font-weight:900;color:${isUnlocked ? '#fff' : '#64748b'};margin-bottom:4px;">${b.title}</div>
+                  <div style="font-size:10px;color:${isUnlocked ? '#cbd5e1' : '#475569'};line-height:1.3;">${b.desc}</div>
+                  ${isUnlocked ? '<span style="display:inline-block;margin-top:6px;background:#10b981;color:#fff;font-size:9px;font-weight:900;padding:2px 6px;border-radius:4px;">AÇILDI ✓</span>' : '<span style="display:inline-block;margin-top:6px;background:#334155;color:#94a3b8;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">KİLİTLİ</span>'}
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <div style="text-align:center;">
+            <button class="action-btn" style="background:#3b82f6;padding:10px 24px;" onclick="document.getElementById('badgesModal').remove()">
+              Harika, Devam Et!
+            </button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    /* ========================================================
+       WHATSAPP KARNE PAYLAŞIMI
+    ======================================================== */
+    function openWhatsAppShare(msg) {
+      recordActivity();
+      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    }
+
+    /* ========================================================
+       GITHUB İÇİN KODU KOPYALAMA YARDIMCISI & REHBER MODAL
+    ======================================================== */
+    function copyFullHtmlCodeManual() {
+      recordActivity();
+      try {
+        const fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        navigator.clipboard.writeText(fullHtml).then(() => {
+          showGitHubCopySuccessModal();
+        }).catch(() => {
+          showGitHubCopySuccessModal();
+        });
+      } catch (e) {
+        showGitHubCopySuccessModal();
+      }
+    }
+
+    function showGitHubCopySuccessModal() {
+      const existing = document.getElementById('ghModal');
+      if (existing) existing.remove();
+      const modal = document.createElement('div');
+      modal.id = 'ghModal';
+      modal.className = 'rhythm-choice-modal-overlay';
+      modal.innerHTML = `
+        <div class="card" style="max-width:550px;width:92%;border:2px solid #38bdf8;background:#0f172a;box-shadow:0 12px 36px rgba(0,0,0,0.85);text-align:left;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;">
+            <span style="font-size:32px;">📋</span>
+            <div>
+              <h3 style="font-size:18px;color:#fff;margin:0;font-weight:900;">HTML Kodu Kopyalandı!</h3>
+              <p style="font-size:12px;color:#38bdf8;margin:0;">GitHub Güncelleme ve Önbellek Rehberi</p>
+            </div>
+          </div>
+          <div style="font-size:13px;color:#cbd5e1;line-height:1.6;margin-bottom:16px;">
+            <p style="margin-bottom:8px;"><strong>1. GitHub'a Yapıştırma:</strong> GitHub reponuzdaki (örn. <code>ingilizce2/index.html</code>) dosyasını düzenleme moduna alıp eski kodları silin ve panodaki yeni kodu yapıştırın (<strong>Ctrl + V</strong>). Ardından <em>Commit changes</em> deyin.</p>
+            <p style="margin-bottom:8px;"><strong>2. GitHub Pages Dağıtımı:</strong> GitHub'ın yeni sayfayı yayına alması genellikle <strong>1 - 2 dakika</strong> sürer.</p>
+            <p style="margin-bottom:8px;background:rgba(245,158,11,0.12);border-left:3px solid #f59e0b;padding:8px 10px;border-radius:6px;color:#fde047;">
+              <strong>⚠️ Tarayıcı Önbelleği:</strong> Sayfayı açtığınızda eski sürüm görünüyorsa klavyeden <strong>Ctrl + Shift + R</strong> (veya <strong>Ctrl + F5</strong>) tuşlarına basarak tarayıcı önbelleğini yenileyin.
+            </p>
+          </div>
+          <div style="text-align:center;">
+            <button class="action-btn" style="background:#10b981;font-size:13px;padding:10px 24px;font-weight:900;" onclick="document.getElementById('ghModal').remove()">
+              Anladım, Kapat ✓
+            </button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
     
     /* ========================================================
        COPY CODE & DOWNLOAD HTML HELPERS
@@ -1042,6 +1410,12 @@
       } else if (tabId === 'guide') {
         document.getElementById('subHeaderTitle').textContent = 'Günler ve Telaffuz Rehberi';
         renderDaysGuide();
+      } else if (tabId === 'speed_math') {
+        document.getElementById('subHeaderTitle').textContent = '⚡ 1 Dakika Hızlı Parmak • Zamana Karşı Ritmik Sayma';
+        renderSpeedMath();
+      } else if (tabId === 'listen_match') {
+        document.getElementById('subHeaderTitle').textContent = '🎧 Dinle & Resmi Yakala • Görsel İngilizce Eşleştirme';
+        renderListenMatch();
       }
     }
 
@@ -1268,7 +1642,13 @@
             </div>
 
             <!-- İNGİLİZCE ETKİLEŞİMLİ PRATİK ARAÇLARI -->
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:12px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));gap:12px;">
+              <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;border:2px solid #f43f5e;" onclick="switchMainTab('listen_match')">
+                <div style="font-size:32px;margin-bottom:6px;">🎧</div>
+                <div style="font-weight:700;color:#fff;font-size:14px;">Dinle ve Resmi Yakala</div>
+                <p style="font-size:11px;color:var(--muted);margin:4px 0 10px;">Söylenen kelimeyi dinleyip doğru resmi bulma oyunu.</p>
+                <button class="action-btn" style="font-size:11px;padding:6px 12px;background:#f43f5e;">Oyna ➔</button>
+              </div>
               <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;" onclick="switchMainTab('days_sort')">
                 <div style="font-size:32px;margin-bottom:6px;">📅</div>
                 <div style="font-weight:700;color:#fff;font-size:14px;">Haftanın Günleri Sıralama</div>
@@ -1387,6 +1767,7 @@
     };
 
     let rhythmActiveMode = 2;          // 2, 3, 4 veya 5
+    let rhythmCountDirection = 'forward'; // 'forward' (İleriye Sayma) veya 'backward' (Geriye Sayma / Roket Modu)
     let rhythmActiveStage = 'learn';   // 'learn' (1. Öğret & Say), 'practice' (2. Çocuk Saysın), 'exam' (3. Sınav)
     let rhythmTeachSpeechStyle = 'short'; // 'short' (Sadece 3, 6, 9...) veya 'mult' (1 tane 3, 3 eder...)
     let rhythmAutoPlaying = false;
@@ -1473,6 +1854,23 @@
             startRhythmAutoTeach();
           }
         }, 250);
+      }
+    }
+
+
+    function toggleRhythmDirection(dir) {
+      recordActivity();
+      stopRhythmAutoTeach();
+      rhythmCountDirection = dir;
+      rhythmCurrentHighlightStep = 0;
+      rhythmTeachCompletedOnce = false;
+      if (rhythmActiveStage === 'practice') {
+        initRhythmPractice();
+      } else {
+        renderRhythmicCounting();
+        if (rhythmActiveStage === 'learn') {
+          setTimeout(() => startRhythmAutoTeach(), 250);
+        }
       }
     }
 
@@ -1649,6 +2047,13 @@
 
     // PEDAGOJİK PARMAK HESABI VE HIZ ANALİZ MOTORU
     function calculateRhythmPracticeScore(durationSec, totalMistakes) {
+      if (rhythmCountDirection === 'backward') {
+        unlockBadge('rocket_pilot');
+        playChimeSound('rocket');
+      } else {
+        unlockBadge('rhythm_' + rhythmActiveMode);
+        playChimeSound('correct');
+      }
       // 10 basamak için ezbere süre: 18 - 25 saniye (basamak başı ~2 saniye)
       // Parmakla sayıyorsa basamak başı 5-8 saniye (toplam > 50-60 saniye) sürer.
       let speedScore = 50;
@@ -2229,6 +2634,9 @@
                   Hedef parmak hesabı yapmadan süreyi 20 saniyenin altına indirmek ve 100 tam puan almak!
                 </p>
                 <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:10px;">
+                  <button class="whatsapp-share-btn" onclick="openWhatsAppShare('🌟 *LingoDay 2. Sınıf Ritmik Sayma Raporu* 🌟\n👤 Öğrenci ' + rhythmActiveMode + '\'şer saymayı ' + rhythmPracticeDuration + ' saniyede tamamladı!\n🎯 Skor: ' + stats.totalScore + '/100\nPedagojik Not: ' + stats.pedagojikNot + '\nTebrikler! 🏆')">
+                    📲 Karneni WhatsApp ile Paylaş
+                  </button>
                   <button class="action-btn" style="background:#3b82f6;color:#fff;font-size:14px;padding:12px 20px;font-weight:800;" onclick="initRhythmPractice()">
                     🔄 Yeniden Dene (Testi Başa Al)
                   </button>
@@ -2431,6 +2839,16 @@
           <button class="rhythm-stage-tab ${rhythmActiveStage === 'exam' ? 'active' : ''}" onclick="switchRhythmStage('exam')">
             <span style="font-size:22px;">🏆 3. Aşama</span>
             <span>Ritmik Sayma Sınavı</span>
+          </button>
+        </div>
+
+        <!-- SAYMA YÖNÜ (İLERİYE vs GERİYE / ROKET MODU) -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+          <button class="action-btn" style="background:${rhythmCountDirection === 'forward' ? '#38bdf8' : '#1e293b'};color:${rhythmCountDirection === 'forward' ? '#0f172a' : '#cbd5e1'};border:2px solid ${rhythmCountDirection === 'forward' ? '#38bdf8' : '#334155'};font-weight:900;padding:8px 16px;" onclick="toggleRhythmDirection('forward')">
+            ▶️ İleriye Doğru Sayma
+          </button>
+          <button class="action-btn" style="background:${rhythmCountDirection === 'backward' ? '#8b5cf6' : '#1e293b'};color:${rhythmCountDirection === 'backward' ? '#fff' : '#cbd5e1'};border:2px solid ${rhythmCountDirection === 'backward' ? '#8b5cf6' : '#334155'};font-weight:900;padding:8px 16px;" onclick="toggleRhythmDirection('backward')">
+            🚀 Geriye Doğru Sayma (Uzay Roketi Modu)
           </button>
         </div>
 
@@ -5625,6 +6043,8 @@
 
       const fb = document.getElementById('daysSortFeedback');
       if (isAllCorrect) {
+        unlockBadge('days_expert');
+        playChimeSound('fanfare');
         speakText('Excellent! Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday. Perfect order!');
         fb.innerHTML = `<div class="feedback-banner success"><span>🎉 TEBRİKLER! Tüm günler tam sırasında: Monday ... Sunday!</span></div>`;
       } else {
@@ -6832,6 +7252,8 @@
         if (!quizBestScores[activeTopicId] || quizScore > quizBestScores[activeTopicId]) {
           quizBestScores[activeTopicId] = quizScore;
         }
+        unlockBadge('english_star');
+        playChimeSound('fanfare');
 
         document.getElementById('appContent').innerHTML = `
           <div class="quiz-card" style="max-width:540px;margin:20px auto;border:2px solid #f59e0b;padding:26px;">
@@ -6871,6 +7293,9 @@
             </p>
 
             <div style="display:flex;flex-direction:column;gap:10px;">
+              <button class="whatsapp-share-btn" style="width:100%;justify-content:center;font-size:14px;padding:12px;" onclick="openWhatsAppShare('🇬🇧 *LingoDay İngilizce Karne Raporu* 🇬🇧\nÖğrenci ${topic.title} testini ' + quizScore + ' Puan ile tamamladı!\n🎯 Başarı: %' + accuracy + '\nTebrikler! 🏆')">
+                📲 Karneni WhatsApp ile Paylaş
+              </button>
               <div style="display:flex;gap:10px;">
                 <button class="action-btn" style="flex:1;background:#f59e0b;color:#0f172a;font-weight:800;" onclick="startTopicQuiz('${activeTopicId}')">
                   Bu Testi Tekrarla 🔄
