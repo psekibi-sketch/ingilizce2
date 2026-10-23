@@ -1419,7 +1419,7 @@
       }
     }
 
-    let currentHomeSubject = 'all'; // 'all', 'math', 'english'
+    let currentHomeSubject = 'home'; // 'home' (sadece 2 ana başlık portalı), 'math', 'english'
 
     function selectHomeSubject(subj) {
       recordActivity();
@@ -1448,8 +1448,9 @@
         { mode: 5, icon: '⭐', title: "5'er Ritmik Sayma", range: "5'ten 50'ye Kadar", mult: "5 × 1 = 5 ... 10 × 5 = 50", color: "#f59e0b", badge: "5'er Sayma" }
       ];
 
-      const showMath = currentHomeSubject === 'all' || currentHomeSubject === 'math';
-      const showEnglish = currentHomeSubject === 'all' || currentHomeSubject === 'english';
+      const showMath = currentHomeSubject === 'math';
+      const showEnglish = currentHomeSubject === 'english';
+      const isHomeOnly = currentHomeSubject === 'home';
 
       const html = `
         <!-- EN ÜST: 2 ANA BAŞLIK SEÇİCİ HUB (İNGİLİZCE & MATEMATİK) -->
@@ -1461,8 +1462,8 @@
             </div>
             <!-- FİLTRELEME BUTONLARI -->
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button class="subject-pill-btn ${currentHomeSubject === 'all' ? 'active-all' : ''}" onclick="selectHomeSubject('all')">
-                ✨ Tüm Dersler
+              <button class="subject-pill-btn ${currentHomeSubject === 'home' ? 'active-all' : ''}" onclick="selectHomeSubject('home')">
+                🏠 Ana Ders Menüsü
               </button>
               <button class="subject-pill-btn ${currentHomeSubject === 'math' ? 'active-math' : ''}" onclick="selectHomeSubject('math')">
                 🔢 Matematik
@@ -1508,6 +1509,11 @@
                1. ANA BAŞLIK: MATEMATİK DERSİ
           ======================================================== -->
           <div style="margin-bottom:28px;">
+            <div style="margin-bottom:14px;">
+              <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:8px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('home')">
+                ⬅️ Ana Ders Menüsüne Dön
+              </button>
+            </div>
             <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid rgba(236,72,153,0.3);">
               <div style="display:flex;align-items:center;gap:10px;">
                 <span style="font-size:28px;">🔢</span>
@@ -1592,6 +1598,11 @@
                2. ANA BAŞLIK: İNGİLİZCE DERSİ
           ======================================================== -->
           <div style="margin-bottom:24px;">
+            <div style="margin-bottom:14px;">
+              <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:8px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('home')">
+                ⬅️ Ana Ders Menüsüne Dön
+              </button>
+            </div>
             <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid rgba(59,130,246,0.3);">
               <div style="display:flex;align-items:center;gap:10px;">
                 <span style="font-size:28px;">🇬🇧</span>

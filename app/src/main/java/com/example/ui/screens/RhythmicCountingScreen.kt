@@ -453,6 +453,21 @@ fun RhythmicCountingScreen(
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // Ana Menüye Dön Butonu
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Button(
+                    onClick = { viewModel.selectTab(com.example.ui.AppTab.HOME) },
+                    colors = ButtonDefaults.buttonColors(containerColor = Slate800, contentColor = Color.White),
+                    shape = RoundedCornerShape(10.dp),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Text("🏠 Ana Ders Menüsüne Dön", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                }
+            }
+
             // ÜST BAŞLIK VE GITHUB KODU KOPYALA BUTONU
             Card(
                 colors = CardDefaults.cardColors(containerColor = Slate800),

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.Calculate
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Quiz
 import androidx.compose.material.icons.filled.Sort
@@ -41,6 +42,7 @@ import com.example.ui.QuizViewModel
 import com.example.ui.components.SettingsSheet
 import com.example.ui.screens.DaysGuideScreen
 import com.example.ui.screens.FlashcardsScreen
+import com.example.ui.screens.HomeScreen
 import com.example.ui.screens.LessonsScreen
 import com.example.ui.screens.OrderingScreen
 import com.example.ui.screens.QuizScreen
@@ -73,9 +75,9 @@ fun MainAppContainer(viewModel: QuizViewModel) {
     var isSettingsOpen by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
 
-    // Geri tuşu: Lessons dışındaysa Lessons'a dön
-    BackHandler(enabled = uiState.activeTab != AppTab.LESSONS) {
-        viewModel.selectTab(AppTab.LESSONS)
+    // Geri tuşu: Home dışındaysa Home'a dön
+    BackHandler(enabled = uiState.activeTab != AppTab.HOME) {
+        viewModel.selectTab(AppTab.HOME)
     }
 
     Scaffold(
@@ -92,12 +94,12 @@ fun MainAppContainer(viewModel: QuizViewModel) {
                 tonalElevation = 8.dp,
                 modifier = Modifier.testTag("bottom_nav_bar")
             ) {
-                // 1. Dersler (Kitap Sayfaları - MEB 2. Sınıf)
+                // 1. Ana Menü (2 Ana Başlık: Matematik & İngilizce Portalı)
                 NavigationBarItem(
-                    selected = uiState.activeTab == AppTab.LESSONS,
-                    onClick = { viewModel.selectTab(AppTab.LESSONS) },
-                    icon = { Icon(imageVector = Icons.Default.MenuBook, contentDescription = "Dersler") },
-                    label = { Text("Dersler", fontWeight = FontWeight.Bold, fontSize = 10.sp) },
+                    selected = uiState.activeTab == AppTab.HOME,
+                    onClick = { viewModel.selectTab(AppTab.HOME) },
+                    icon = { Icon(imageVector = Icons.Default.Home, contentDescription = "Ana Menü") },
+                    label = { Text("Ana Menü", fontWeight = FontWeight.Bold, fontSize = 10.sp) },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = SkyPrimary,
                         selectedTextColor = SkyPrimary,
@@ -105,7 +107,7 @@ fun MainAppContainer(viewModel: QuizViewModel) {
                         unselectedTextColor = Slate400,
                         indicatorColor = SkyPrimary.copy(alpha = 0.15f)
                     ),
-                    modifier = Modifier.testTag("nav_item_lessons")
+                    modifier = Modifier.testTag("nav_item_home")
                 )
 
                 // 2. Matematik (2, 3, 4, 5'er Ritmik Sayma)
@@ -124,11 +126,27 @@ fun MainAppContainer(viewModel: QuizViewModel) {
                     modifier = Modifier.testTag("nav_item_rhythmic")
                 )
 
-                // 3. Ödev & Test
+                // 3. İngilizce Dersleri (Kitap Sayfaları - MEB 2. Sınıf)
+                NavigationBarItem(
+                    selected = uiState.activeTab == AppTab.LESSONS,
+                    onClick = { viewModel.selectTab(AppTab.LESSONS) },
+                    icon = { Icon(imageVector = Icons.Default.MenuBook, contentDescription = "İngilizce") },
+                    label = { Text("İngilizce", fontWeight = FontWeight.Bold, fontSize = 10.sp) },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = SkyPrimary,
+                        selectedTextColor = SkyPrimary,
+                        unselectedIconColor = Slate400,
+                        unselectedTextColor = Slate400,
+                        indicatorColor = SkyPrimary.copy(alpha = 0.15f)
+                    ),
+                    modifier = Modifier.testTag("nav_item_lessons")
+                )
+
+                // 4. Testler & Sınavlar
                 NavigationBarItem(
                     selected = uiState.activeTab == AppTab.QUIZ,
                     onClick = { viewModel.selectTab(AppTab.QUIZ) },
-                    icon = { Icon(imageVector = Icons.Default.Quiz, contentDescription = "Ödev & Test") },
+                    icon = { Icon(imageVector = Icons.Default.Quiz, contentDescription = "Testler") },
                     label = { Text("Testler", fontWeight = FontWeight.Bold, fontSize = 10.sp) },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = SkyPrimary,
@@ -139,42 +157,17 @@ fun MainAppContainer(viewModel: QuizViewModel) {
                     ),
                     modifier = Modifier.testTag("nav_item_quiz")
                 )
-
-                // 4. Sıralama Ödevi (Okul ödevi: günleri sıralı saymak)
-                NavigationBarItem(
-                    selected = uiState.activeTab == AppTab.ORDERING,
-                    onClick = { viewModel.selectTab(AppTab.ORDERING) },
-                    icon = { Icon(imageVector = Icons.Default.Sort, contentDescription = "Sıralama") },
-                    label = { Text("Sıralama", fontWeight = FontWeight.Bold, fontSize = 10.sp) },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = SkyPrimary,
-                        selectedTextColor = SkyPrimary,
-                        unselectedIconColor = Slate400,
-                        unselectedTextColor = Slate400,
-                        indicatorColor = SkyPrimary.copy(alpha = 0.15f)
-                    ),
-                    modifier = Modifier.testTag("nav_item_ordering")
-                )
-
-                // 5. Kelime Kartları
-                NavigationBarItem(
-                    selected = uiState.activeTab == AppTab.FLASHCARDS,
-                    onClick = { viewModel.selectTab(AppTab.FLASHCARDS) },
-                    icon = { Icon(imageVector = Icons.Default.Style, contentDescription = "Kartlar") },
-                    label = { Text("Kartlar", fontWeight = FontWeight.Bold, fontSize = 10.sp) },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = SkyPrimary,
-                        selectedTextColor = SkyPrimary,
-                        unselectedIconColor = Slate400,
-                        unselectedTextColor = Slate400,
-                        indicatorColor = SkyPrimary.copy(alpha = 0.15f)
-                    ),
-                    modifier = Modifier.testTag("nav_item_flashcards")
-                )
             }
         }
     ) { innerPadding ->
         when (uiState.activeTab) {
+            AppTab.HOME -> {
+                HomeScreen(
+                    onSelectMath = { viewModel.selectTab(AppTab.RHYTHMIC) },
+                    onSelectEnglish = { viewModel.selectTab(AppTab.LESSONS) },
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
             AppTab.LESSONS -> {
                 LessonsScreen(
                     uiState = uiState,

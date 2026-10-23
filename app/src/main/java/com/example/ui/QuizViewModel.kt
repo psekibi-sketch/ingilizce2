@@ -19,16 +19,17 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 enum class AppTab {
-    LESSONS,     // Dersler (Okul Kitabı 2. Sınıf - Sayfa 17-24)
-    RHYTHMIC,    // 3'er (30'a) & 4'er (40'a) Ritmik Sayma ve Çarpım Tablosuna Hazırlık
-    QUIZ,        // Ödev & Test
+    HOME,        // Ana Menü: 2 Ana Başlık (Matematik ve İngilizce)
+    LESSONS,     // İngilizce Dersleri (1-6. Üniteler)
+    RHYTHMIC,    // Matematik (2, 3, 4, 5'er Ritmik Sayma & Çarpım Tablosu)
+    QUIZ,        // Testler
     ORDERING,    // Sıralama Ödevi (Haftanın Günleri Sıralı)
     FLASHCARDS,  // Kelime Kartları
     GUIDE        // Günler & Eşyalar Rehberi
 }
 
 data class QuizUiState(
-    val activeTab: AppTab = AppTab.LESSONS,
+    val activeTab: AppTab = AppTab.HOME,
     val selectedThemeNumber: Int = 2,
     val selectedPageNumber: Int = 17,
     // Active Study Timer (10 saniye hareketsizlikte duran sayaç)
