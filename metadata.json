@@ -1,5 +1,5 @@
 {
-  "name": "LingoDay",
+  "name": "Lingo Ders Arkadaşım",
   "description": "2. Sınıf İngilizce (1-6. Üniteler) ve Matematik 2, 3, 4, 5'er Ritmik Sayma Paketi",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

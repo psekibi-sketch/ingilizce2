@@ -87,7 +87,7 @@ fun QuizScreen(
             ) {
                 Column {
                     Text(
-                        text = "LingoDays",
+                        text = "Lingo Ders Arkadaşım",
                         color = Color.White,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.ExtraBold,

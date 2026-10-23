@@ -1,7 +1,7 @@
 {
-  "name": "LingoDay",
-  "short_name": "LingoDay",
-  "description": "2. Sınıf İngilizce & 3'er ve 4'er Ritmik Sayma Eğitimi",
+  "name": "Lingo Ders Arkadaşım",
+  "short_name": "Ders Arkadaşım",
+  "description": "2. Sınıf İngilizce (1-6. Üniteler) ve Matematik 2, 3, 4, 5'er Ritmik Sayma Paketi",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
