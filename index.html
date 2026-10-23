@@ -1935,9 +1935,21 @@
       renderRhythmicCounting();
 
       const info = rhythmData[rhythmActiveMode];
-      const introText = rhythmActiveMode === 3
-        ? "Haydi 3'er 3'er 30'a kadar beraber sayalım ve öğrenelim!"
-        : "Haydi 4'er 4'er 40'a kadar beraber sayalım ve öğrenelim!";
+      let introText = "";
+      if (rhythmCountDirection === 'backward') {
+        const modeSay = (rhythmActiveMode === 2) ? "2'şer 2'şer" :
+                         (rhythmActiveMode === 3) ? "3'er 3'er" :
+                         (rhythmActiveMode === 4) ? "4'er 4'er" : "5'er 5'er";
+        introText = `Roket Modu! Haydi ${info.maxNumber}'den geriye doğru ${modeSay} sayalım ve roketi fırlatalım!`;
+      } else {
+        const introMap = {
+          2: "Haydi 2'şer 2'şer 20'ye kadar beraber sayalım ve öğrenelim!",
+          3: "Haydi 3'er 3'er 30'a kadar beraber sayalım ve öğrenelim!",
+          4: "Haydi 4'er 4'er 40'a kadar beraber sayalım ve öğrenelim!",
+          5: "Haydi 5'er 5'er 50'ye kadar beraber sayalım ve öğrenelim!"
+        };
+        introText = introMap[rhythmActiveMode] || `Haydi ${rhythmActiveMode}'er ${info.maxNumber}'ye kadar beraber sayalım ve öğrenelim!`;
+      }
 
       speakTurkish(introText, 0.95, () => {
         if (!rhythmAutoPlaying) return;
@@ -2001,7 +2013,10 @@
       generateRhythmPracticeChoices();
       renderRhythmicCounting();
       const info = rhythmData[rhythmActiveMode];
-      speakTurkish(`Şimdi sıra sende! ${info.stepSize}'er ${info.stepSize}'er ${info.maxNumber}'a kadar sen sayıyorsun! İlk sayımız kaç? Yüksek sesle söyle ve seç!`, 0.95);
+      const modeSay = (rhythmActiveMode === 2) ? "2'şer 2'şer" :
+                      (rhythmActiveMode === 3) ? "3'er 3'er" :
+                      (rhythmActiveMode === 4) ? "4'er 4'er" : "5'er 5'er";
+      speakTurkish(`Şimdi sıra sende! ${modeSay} ${info.maxNumber}'e kadar sen sayıyorsun! İlk sayımız kaç? Yüksek sesle söyle ve seç!`, 0.95);
     }
 
     function generateRhythmPracticeChoices() {
@@ -2756,10 +2771,12 @@
               <p style="font-size:14px;color:#cbd5e1;margin-bottom:18px;">
                 İlk Denemede Doğru: <strong>${rhythmExamFirstTry} / ${totalQ}</strong> • En Yüksek Seri: <strong>🔥 ${rhythmExamBestStreak}</strong>
               </p>
-              <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:10px;">
-                <button class="action-btn" style="background:#ec4899;" onclick="initRhythmExam('3')">🍓 3'er Sınavını Tekrar Çöz</button>
-                <button class="action-btn" style="background:#06b6d4;" onclick="initRhythmExam('4')">🚗 4'er Sınavını Tekrar Çöz</button>
-                <button class="action-btn" style="background:#f59e0b;color:#0f172a;font-weight:900;" onclick="initRhythmExam('both')">🏆 3'er & 4'er Karışık Sınav</button>
+              <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:8px;">
+                <button class="action-btn" style="background:#0284c7;font-size:12px;padding:8px 12px;" onclick="initRhythmExam('2')">🎈 2'şer Sınavı</button>
+                <button class="action-btn" style="background:#ec4899;font-size:12px;padding:8px 12px;" onclick="initRhythmExam('3')">🍓 3'er Sınavı</button>
+                <button class="action-btn" style="background:#06b6d4;font-size:12px;padding:8px 12px;" onclick="initRhythmExam('4')">🚗 4'er Sınavı</button>
+                <button class="action-btn" style="background:#f59e0b;font-size:12px;padding:8px 12px;" onclick="initRhythmExam('5')">⭐ 5'er Sınavı</button>
+                <button class="action-btn" style="background:#10b981;color:#fff;font-size:12px;padding:8px 14px;font-weight:900;" onclick="initRhythmExam('all')">🏆 Karışık Sınav (2, 3, 4, 5)</button>
               </div>
             </div>
           `;
@@ -7771,7 +7788,7 @@
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.6.0';
+    const CURRENT_APP_VERSION = '2.6.1';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
