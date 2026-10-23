@@ -88,6 +88,19 @@ data class RhythmExamQuestion(
     val speakPrompt: String
 )
 
+private val rhythmSteps2 = listOf(
+    RhythmStepItem(1, 2, "İki", "Two", "1 × 2 = 2", "1 tane 2, 2 eder", "İki! Bir tane iki, iki eder."),
+    RhythmStepItem(2, 4, "Dört", "Four", "2 × 2 = 4", "2 tane 2, 4 eder", "Dört! İki tane iki, dört eder."),
+    RhythmStepItem(3, 6, "Altı", "Six", "3 × 2 = 6", "3 tane 2, 6 eder", "Altı! Üç tane iki, altı eder."),
+    RhythmStepItem(4, 8, "Sekiz", "Eight", "4 × 2 = 8", "4 tane 2, 8 eder", "Sekiz! Dört tane iki, sekiz eder."),
+    RhythmStepItem(5, 10, "On", "Ten", "5 × 2 = 10", "5 tane 2, 10 eder", "On! Beş tane iki, on eder."),
+    RhythmStepItem(6, 12, "On iki", "Twelve", "6 × 2 = 12", "6 tane 2, 12 eder", "On iki! Altı tane iki, on iki eder."),
+    RhythmStepItem(7, 14, "On dört", "Fourteen", "7 × 2 = 14", "7 tane 2, 14 eder", "On dört! Yedi tane iki, on dört eder."),
+    RhythmStepItem(8, 16, "On altı", "Sixteen", "8 × 2 = 16", "8 tane 2, 16 eder", "On altı! Sekiz tane iki, on altı eder."),
+    RhythmStepItem(9, 18, "On sekiz", "Eighteen", "9 × 2 = 18", "9 tane 2, 18 eder", "On sekiz! Dokuz tane iki, on sekiz eder."),
+    RhythmStepItem(10, 20, "Yirmi", "Twenty", "10 × 2 = 20", "10 tane 2, 20 eder", "Yirmi! On tane iki, yirmi eder. Tebrikler!")
+)
+
 private val rhythmSteps3 = listOf(
     RhythmStepItem(1, 3, "Üç", "Three", "1 × 3 = 3", "1 tane 3, 3 eder", "Üç! Bir tane üç, üç eder."),
     RhythmStepItem(2, 6, "Altı", "Six", "2 × 3 = 6", "2 tane 3, 6 eder", "Altı! İki tane üç, altı eder."),
@@ -112,6 +125,62 @@ private val rhythmSteps4 = listOf(
     RhythmStepItem(8, 32, "Otuz iki", "Thirty-two", "8 × 4 = 32", "8 tane 4, 32 eder", "Otuz iki! Sekiz tane dört, otuz iki eder."),
     RhythmStepItem(9, 36, "Otuz altı", "Thirty-six", "9 × 4 = 36", "9 tane 4, 36 eder", "Otuz altı! Dokuz tane dört, otuz altı eder."),
     RhythmStepItem(10, 40, "Kırk", "Forty", "10 × 4 = 40", "10 tane 4, 40 eder", "Kırk! On tane dört, kırk eder. Süpersin!")
+)
+
+private val rhythmSteps5 = listOf(
+    RhythmStepItem(1, 5, "Beş", "Five", "1 × 5 = 5", "1 tane 5, 5 eder", "Beş! Bir tane beş, beş eder."),
+    RhythmStepItem(2, 10, "On", "Ten", "2 × 5 = 10", "2 tane 5, 10 eder", "On! İki tane beş, on eder."),
+    RhythmStepItem(3, 15, "On beş", "Fifteen", "3 × 5 = 15", "3 tane 5, 15 eder", "On beş! Üç tane beş, on beş eder."),
+    RhythmStepItem(4, 20, "Yirmi", "Twenty", "4 × 5 = 20", "4 tane 5, 20 eder", "Yirmi! Dört tane beş, yirmi eder."),
+    RhythmStepItem(5, 25, "Yirmi beş", "Twenty-five", "5 × 5 = 25", "5 tane 5, 25 eder", "Yirmi beş! Beş tane beş, yirmi beş eder."),
+    RhythmStepItem(6, 30, "Otuz", "Thirty", "6 × 5 = 30", "6 tane 5, 30 eder", "Otuz! Altı tane beş, otuz eder."),
+    RhythmStepItem(7, 35, "Otuz beş", "Thirty-five", "7 × 5 = 35", "7 tane 5, 35 eder", "Otuz beş! Yedi tane beş, otuz beş eder."),
+    RhythmStepItem(8, 40, "Kırk", "Forty", "8 × 5 = 40", "8 tane 5, 40 eder", "Kırk! Sekiz tane beş, kırk eder."),
+    RhythmStepItem(9, 45, "Kırk beş", "Forty-five", "9 × 5 = 45", "9 tane 5, 45 eder", "Kırk beş! Dokuz tane beş, kırk beş eder."),
+    RhythmStepItem(10, 50, "Elli", "Fifty", "10 × 5 = 50", "10 tane 5, 50 eder", "Elli! On tane beş, elli eder. Harikasın!")
+)
+
+private val examQuestions2 = listOf(
+    RhythmExamQuestion(
+        badge = "🎈 2'ŞER İLERİYE SAYMA",
+        visual = "2 ➔ 4 ➔ 6 ➔ 8 ➔ ❓",
+        prompt = "2'şer 2'şer ritmik sayarken 8'den hemen sonra hangi sayı gelir?",
+        correct = "10 (On)",
+        options = listOf("9 (Dokuz)", "10 (On)", "11 (On bir)", "12 (On iki)"),
+        speakPrompt = "İkişer ikişer sayarken sekizden hemen sonra hangi sayı gelir?"
+    ),
+    RhythmExamQuestion(
+        badge = "🎈 ÇARPIM TABLOSUNA HAZIRLIK",
+        visual = "🎈🎈 | 🎈🎈 | 🎈🎈 | 🎈🎈",
+        prompt = "Her grupta 2 balon var. 4 grupta toplam kaç balon olur? (4 × 2)",
+        correct = "8 (Sekiz)",
+        options = listOf("6 (Altı)", "7 (Yedi)", "8 (Sekiz)", "10 (On)"),
+        speakPrompt = "Dört tane iki kaç eder?"
+    ),
+    RhythmExamQuestion(
+        badge = "🎈 ARADAKİ EKSİK SAYI",
+        visual = "10 ➔ 12 ➔ ❓ ➔ 16 ➔ 18",
+        prompt = "2'şer saymada 12 ile 16 arasındaki soru işaretli sayı kaçtır?",
+        correct = "14 (On dört)",
+        options = listOf("13 (On üç)", "14 (On dört)", "15 (On beş)", "17 (On yedi)"),
+        speakPrompt = "On iki ile on altı arasındaki sayı kaçtır?"
+    ),
+    RhythmExamQuestion(
+        badge = "🎈 ÇARPIM HAZIRLIĞI (7 × 2)",
+        visual = "🎈🎈 × 7 Demet",
+        prompt = "7 tane 2 kaç eder? (2'şer sayarken 7. sırada söylediğimiz sayı)",
+        correct = "14 (On dört)",
+        options = listOf("12 (On iki)", "14 (On dört)", "16 (On altı)", "18 (On sekiz)"),
+        speakPrompt = "Yedi tane iki kaç eder?"
+    ),
+    RhythmExamQuestion(
+        badge = "🎈 SON BASAMAK (10 × 2)",
+        visual = "12 ➔ 14 ➔ 16 ➔ 18 ➔ ❓",
+        prompt = "2'şer sayarken 18'den hemen sonra ulaştığımız 10. sayı (10 × 2) kaçtır?",
+        correct = "20 (Yirmi)",
+        options = listOf("19 (On dokuz)", "20 (Yirmi)", "22 (Yirmi iki)", "24 (Yirmi dört)"),
+        speakPrompt = "On sekizden sonra hangi sayı gelir?"
+    )
 )
 
 private val examQuestions3 = listOf(
@@ -200,6 +269,49 @@ private val examQuestions4 = listOf(
     )
 )
 
+private val examQuestions5 = listOf(
+    RhythmExamQuestion(
+        badge = "⭐ 5'ER İLERİYE SAYMA",
+        visual = "5 ➔ 10 ➔ 15 ➔ 20 ➔ ❓",
+        prompt = "5'er 5'er ritmik sayarken 20'den hemen sonra hangi sayı gelir?",
+        correct = "25 (Yirmi beş)",
+        options = listOf("22 (Yirmi iki)", "24 (Yirmi dört)", "25 (Yirmi beş)", "30 (Otuz)"),
+        speakPrompt = "Beşer beşer sayarken yirmiden hemen sonra hangi sayı gelir?"
+    ),
+    RhythmExamQuestion(
+        badge = "⭐ ÇARPIM TABLOSUNA HAZIRLIK",
+        visual = "⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐",
+        prompt = "Her kutuda 5 yıldız var. 3 kutuda toplam kaç yıldız olur? (3 × 5)",
+        correct = "15 (On beş)",
+        options = listOf("10 (On)", "12 (On iki)", "15 (On beş)", "20 (Yirmi)"),
+        speakPrompt = "Üç tane beş kaç eder?"
+    ),
+    RhythmExamQuestion(
+        badge = "⭐ ARADAKİ EKSİK SAYI",
+        visual = "25 ➔ 30 ➔ ❓ ➔ 40 ➔ 45",
+        prompt = "5'er saymada 30 ile 40 arasındaki soru işaretli sayı kaçtır?",
+        correct = "35 (Otuz beş)",
+        options = listOf("32 (Otuz iki)", "34 (Otuz dört)", "35 (Otuz beş)", "36 (Otuz altı)"),
+        speakPrompt = "Otuz ile kırk arasındaki sayı kaçtır?"
+    ),
+    RhythmExamQuestion(
+        badge = "⭐ ÇARPIM HAZIRLIĞI (6 × 5)",
+        visual = "⭐⭐⭐⭐⭐ × 6 Takım",
+        prompt = "6 tane 5 kaç eder? (5'er sayarken 6. sırada söylediğimiz sayı)",
+        correct = "30 (Otuz)",
+        options = listOf("25 (Yirmi beş)", "28 (Yirmi sekiz)", "30 (Otuz)", "35 (Otuz beş)"),
+        speakPrompt = "Altı tane beş kaç eder?"
+    ),
+    RhythmExamQuestion(
+        badge = "⭐ SON BASAMAK (10 × 5)",
+        visual = "30 ➔ 35 ➔ 40 ➔ 45 ➔ ❓",
+        prompt = "5'er sayarken 45'ten hemen sonra gelen 10. sayı (10 × 5) kaçtır?",
+        correct = "50 (Elli)",
+        options = listOf("46 (Kırk altı)", "48 (Kırk sekiz)", "50 (Elli)", "55 (Elli beş)"),
+        speakPrompt = "Kırk beşten sonra hangi sayı gelir?"
+    )
+)
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RhythmicCountingScreen(
@@ -238,17 +350,37 @@ fun RhythmicCountingScreen(
     var examAnswered by remember { mutableStateOf(false) }
     val examWrongOptions = remember { mutableStateListOf<String>() }
 
-    val activeSteps = if (rhythmMode == 3) rhythmSteps3 else rhythmSteps4
-    val emojiGroup = if (rhythmMode == 3) "🍓🍓🍓" else "🚗🚗🚗🚗"
-    val accentColor = if (rhythmMode == 3) Color(0xFFEC4899) else Color(0xFF06B6D4)
+    val activeSteps = when (rhythmMode) {
+        2 -> rhythmSteps2
+        3 -> rhythmSteps3
+        4 -> rhythmSteps4
+        5 -> rhythmSteps5
+        else -> rhythmSteps3
+    }
+    val emojiGroup = when (rhythmMode) {
+        2 -> "🎈🎈"
+        3 -> "🍓🍓🍓"
+        4 -> "🚗🚗🚗🚗"
+        5 -> "⭐⭐⭐⭐⭐"
+        else -> "🍓🍓🍓"
+    }
+    val accentColor = when (rhythmMode) {
+        2 -> Color(0xFF10B981)
+        3 -> Color(0xFFEC4899)
+        4 -> Color(0xFF06B6D4)
+        5 -> Color(0xFFF59E0B)
+        else -> Color(0xFFEC4899)
+    }
 
     // 1. Aşamada otomatik sesli öğretme ve sayma döngüsü
     LaunchedEffect(rhythmMode, activeStage, isAutoCounting, teachWithMultiplication) {
         if (activeStage == 1 && isAutoCounting) {
-            val intro = if (rhythmMode == 3) {
-                "Haydi 3'er 3'er 30'a kadar beraber sayalım!"
-            } else {
-                "Haydi 4'er 4'er 40'a kadar beraber sayalım!"
+            val intro = when (rhythmMode) {
+                2 -> "Haydi 2'şer 2'şer 20'ye kadar beraber sayalım!"
+                3 -> "Haydi 3'er 3'er 30'a kadar beraber sayalım!"
+                4 -> "Haydi 4'er 4'er 40'a kadar beraber sayalım!"
+                5 -> "Haydi 5'er 5'er 50'ye kadar beraber sayalım!"
+                else -> "Haydi ritmik sayalım!"
             }
             viewModel.speakTurkish(intro)
             delay(2300)
@@ -343,9 +475,9 @@ fun RhythmicCountingScreen(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "🚀 3'er & 4'er Ritmik Sayma",
+                            text = "🚀 Matematik: 2, 3, 4 ve 5'er Ritmik Sayma",
                             color = Color.White,
-                            fontSize = 18.sp,
+                            fontSize = 17.sp,
                             fontWeight = FontWeight.ExtraBold
                         )
                         Text(
@@ -358,79 +490,61 @@ fun RhythmicCountingScreen(
                 }
             }
 
-            // 3'ER VE 4'ER MOD SEÇİCİ
+            // 2, 3, 4 VE 5'ER MOD SEÇİCİ (4 BUTON)
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                val is3 = rhythmMode == 3
-                Button(
-                    onClick = {
-                        rhythmMode = 3
-                        practiceStep = 1
-                        practiceCompleted = false
-                        practiceWrongFeedback = ""
-                        if (activeStage == 1) {
-                            currentHighlightStep = 1
-                            isAutoCounting = true
+                listOf(
+                    Triple(2, "🎈 2'şer", Color(0xFF10B981)),
+                    Triple(3, "🍓 3'er", Color(0xFFEC4899)),
+                    Triple(4, "🚗 4'er", Color(0xFF06B6D4)),
+                    Triple(5, "⭐ 5'er", Color(0xFFF59E0B))
+                ).forEach { (mode, label, col) ->
+                    val isSelected = rhythmMode == mode
+                    val maxNum = mode * 10
+                    Button(
+                        onClick = {
+                            rhythmMode = mode
+                            practiceStep = 1
+                            practiceCompleted = false
+                            practiceWrongFeedback = ""
+                            if (activeStage == 1) {
+                                currentHighlightStep = 1
+                                isAutoCounting = true
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isSelected) col else Slate800,
+                            contentColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 6.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp)
+                            .border(
+                                width = 2.dp,
+                                color = if (isSelected) Color.White.copy(alpha = 0.8f) else Slate700,
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                            .testTag("mode_${mode}s_button")
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = label,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                textAlign = TextAlign.Center
+                            )
+                            Text(
+                                text = "$mode➔$maxNum",
+                                fontSize = 10.sp,
+                                color = if (isSelected) Color.White.copy(alpha = 0.9f) else Slate400,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (is3) Color(0xFFEC4899) else Slate800,
-                        contentColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(14.dp),
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(56.dp)
-                        .border(
-                            width = 2.dp,
-                            color = if (is3) Color(0xFFFDA4AF) else Slate700,
-                            shape = RoundedCornerShape(14.dp)
-                        )
-                        .testTag("mode_3s_button")
-                ) {
-                    Text(
-                        text = "🍓 3'er Sayma\n(3 ➔ 30)",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        textAlign = TextAlign.Center
-                    )
-                }
-
-                val is4 = rhythmMode == 4
-                Button(
-                    onClick = {
-                        rhythmMode = 4
-                        practiceStep = 1
-                        practiceCompleted = false
-                        practiceWrongFeedback = ""
-                        if (activeStage == 1) {
-                            currentHighlightStep = 1
-                            isAutoCounting = true
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (is4) Color(0xFF06B6D4) else Slate800,
-                        contentColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(14.dp),
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(56.dp)
-                        .border(
-                            width = 2.dp,
-                            color = if (is4) Color(0xFF7DD3FC) else Slate700,
-                            shape = RoundedCornerShape(14.dp)
-                        )
-                        .testTag("mode_4s_button")
-                ) {
-                    Text(
-                        text = "🚗 4'er Sayma\n(4 ➔ 40)",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        textAlign = TextAlign.Center
-                    )
+                    }
                 }
             }
 
@@ -1030,9 +1144,11 @@ fun RhythmicCountingScreen(
             if (activeStage == 3) {
                 val examQuestions = remember(examFilter) {
                     when (examFilter) {
+                        "2" -> examQuestions2
                         "3" -> examQuestions3
                         "4" -> examQuestions4
-                        else -> (examQuestions3 + examQuestions4)
+                        "5" -> examQuestions5
+                        else -> (examQuestions2 + examQuestions3 + examQuestions4 + examQuestions5)
                     }
                 }
 
@@ -1047,17 +1163,36 @@ fun RhythmicCountingScreen(
                         modifier = Modifier.padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        // Sınav Filtresi (3'er / 4'er / Karışık) ve Puan
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        // Sınav Filtresi (2'şer / 3'er / 4'er / 5'er / Karışık) ve Puan
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "🎯 Soru Filtresi:",
+                                    color = Slate400,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "⭐ $examScore Puan  🔥 $examStreak",
+                                    color = Color(0xFFFDE047),
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.ExtraBold
+                                )
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
                                 listOf(
+                                    "2" to "🎈 2'şer",
                                     "3" to "🍓 3'er",
                                     "4" to "🚗 4'er",
-                                    "both" to "🏆 Karışık"
+                                    "5" to "⭐ 5'er",
+                                    "both" to "🏆 Tümü"
                                 ).forEach { (key, label) ->
                                     val selected = examFilter == key
                                     Button(
@@ -1073,20 +1208,14 @@ fun RhythmicCountingScreen(
                                             containerColor = if (selected) Color(0xFFF59E0B) else Slate900,
                                             contentColor = if (selected) Color(0xFF0F172A) else Color.White
                                         ),
-                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
-                                        shape = RoundedCornerShape(8.dp)
+                                        contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
+                                        shape = RoundedCornerShape(8.dp),
+                                        modifier = Modifier.weight(1f)
                                     ) {
-                                        Text(label, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+                                        Text(label, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, maxLines = 1)
                                     }
                                 }
                             }
-
-                            Text(
-                                text = "⭐ $examScore Puan  🔥 $examStreak",
-                                color = Color(0xFFFDE047),
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.ExtraBold
-                            )
                         }
 
                         if (examIndex >= examQuestions.size) {

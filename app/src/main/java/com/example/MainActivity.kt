@@ -108,12 +108,12 @@ fun MainAppContainer(viewModel: QuizViewModel) {
                     modifier = Modifier.testTag("nav_item_lessons")
                 )
 
-                // 2. 3'er & 4'er Ritmik Sayma (Çarpım Tablosuna Hazırlık)
+                // 2. Matematik (2, 3, 4, 5'er Ritmik Sayma)
                 NavigationBarItem(
                     selected = uiState.activeTab == AppTab.RHYTHMIC,
                     onClick = { viewModel.selectTab(AppTab.RHYTHMIC) },
-                    icon = { Icon(imageVector = Icons.Default.Calculate, contentDescription = "3'er & 4'er Ritmik Sayma") },
-                    label = { Text("3'er & 4'er", fontWeight = FontWeight.ExtraBold, fontSize = 10.sp) },
+                    icon = { Icon(imageVector = Icons.Default.Calculate, contentDescription = "Matematik Ritmik Sayma") },
+                    label = { Text("Matematik", fontWeight = FontWeight.ExtraBold, fontSize = 10.sp) },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Color(0xFFF472B6),
                         selectedTextColor = Color(0xFFF472B6),

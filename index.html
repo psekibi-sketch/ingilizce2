@@ -519,7 +519,7 @@
 
     .rhythm-mode-switch {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
       gap: 12px;
       margin-bottom: 16px;
     }
@@ -530,7 +530,7 @@
       border: 2px solid var(--border);
       background: #0f172a;
       color: #fff;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       cursor: pointer;
       display: flex;
@@ -538,6 +538,13 @@
       justify-content: center;
       gap: 10px;
       transition: all 0.2s ease;
+    }
+
+    .rhythm-mode-btn.active-2 {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      border-color: #bae6fd;
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+      transform: translateY(-2px);
     }
 
     .rhythm-mode-btn.active-3 {
@@ -552,6 +559,50 @@
       border-color: #7dd3fc;
       box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
       transform: translateY(-2px);
+    }
+
+    .rhythm-mode-btn.active-5 {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border-color: #fde68a;
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* 2 ANA BAŞLIK SEÇİM BUTONLARI */
+    .subject-pill-btn {
+      padding: 9px 18px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      border: 2px solid var(--border);
+      background: #0f172a;
+      color: #cbd5e1;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .subject-pill-btn.active-math {
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      color: #fff;
+      border-color: #f472b6;
+      box-shadow: 0 6px 18px rgba(236, 72, 153, 0.35);
+    }
+
+    .subject-pill-btn.active-english {
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      color: #fff;
+      border-color: #38bdf8;
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+    }
+
+    .subject-pill-btn.active-all {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border-color: #34d399;
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
     }
 
     .rhythm-stage-tabs {
@@ -768,7 +819,7 @@
         <div class="logo-icon" onclick="switchMainTab('menu')" style="cursor:pointer;" title="Ana Menüye Dön">📚</div>
         <div class="title-area" onclick="switchMainTab('menu')" style="cursor:pointer;">
           <h1 id="headerMainTitle">LingoDay</h1>
-          <p id="subHeaderTitle">Tüm 6 Ünite • 3'er & 4'er Ritmik Sayma • Sınav</p>
+          <p id="subHeaderTitle">2. Sınıf • İngilizce & Matematik Paketi</p>
         </div>
       </div>
       <div class="header-widgets">
@@ -956,10 +1007,10 @@
       }
 
       if (tabId === 'menu') {
-        document.getElementById('subHeaderTitle').textContent = '2. Sınıf - Tüm Üniteler, 3\'er & 4\'er Ritmik Sayma ve Sınav';
+        document.getElementById('subHeaderTitle').textContent = '2. Sınıf • İngilizce & Matematik Paketi';
         renderUnitsOverview();
       } else if (tabId === 'rhythmic') {
-        document.getElementById('subHeaderTitle').textContent = '🚀 3\'er (30\'a Kadar) ve 4\'er (40\'a Kadar) Ritmik Sayma • Çarpım Tablosuna Hazırlık';
+        document.getElementById('subHeaderTitle').textContent = '🔢 2, 3, 4 ve 5\'er Ritmik Sayma • Çarpım Tablosuna Hazırlık';
         openRhythmicCountingModule();
       } else if (tabId === 'unit1') {
         document.getElementById('subHeaderTitle').textContent = `1. Ünite: Words & Greetings (Sayfa ${currentUnit1Page})`;
@@ -994,8 +1045,17 @@
       }
     }
 
+    let currentHomeSubject = 'all'; // 'all', 'math', 'english'
+
+    function selectHomeSubject(subj) {
+      recordActivity();
+      currentHomeSubject = subj;
+      renderUnitsOverview();
+    }
+
     /* ========================================================
        2.0. UNITS OVERVIEW / MAIN MENU (ANA MENÜ)
+       2 ANA BAŞLIK: 🇬🇧 İNGİLİZCE ve 🔢 MATEMATİK
     ======================================================== */
     function renderUnitsOverview() {
       const unitsData = [
@@ -1007,93 +1067,229 @@
         { id: 'unit6', num: '6. Ünite', title: 'Life in the City', pages: 'Sayfa 49 - 56', icon: '🌆', desc: 'Şehir mekanları (school, park, hospital, zoo, museum, cinema) ve dünya.', color: '#06b6d4' }
       ];
 
+      const mathModules = [
+        { mode: 2, icon: '🎈', title: "2'şer Ritmik Sayma", range: "2'den 20'ye Kadar", mult: "2 × 1 = 2 ... 10 × 2 = 20", color: "#38bdf8", badge: "2'şer Sayma" },
+        { mode: 3, icon: '🍓', title: "3'er Ritmik Sayma", range: "3'ten 30'a Kadar", mult: "3 × 1 = 3 ... 10 × 3 = 30", color: "#ec4899", badge: "3'er Sayma" },
+        { mode: 4, icon: '🚗', title: "4'er Ritmik Sayma", range: "4'ten 40'a Kadar", mult: "4 × 1 = 4 ... 10 × 4 = 40", color: "#06b6d4", badge: "4'er Sayma" },
+        { mode: 5, icon: '⭐', title: "5'er Ritmik Sayma", range: "5'ten 50'ye Kadar", mult: "5 × 1 = 5 ... 10 × 5 = 50", color: "#f59e0b", badge: "5'er Sayma" }
+      ];
+
+      const showMath = currentHomeSubject === 'all' || currentHomeSubject === 'math';
+      const showEnglish = currentHomeSubject === 'all' || currentHomeSubject === 'english';
+
       const html = `
-        <!-- YENİ ÖZELLİK: 3'ER (30'A KADAR) VE 4'ER (40'A KADAR) RİTMİK SAYMA & ÇARPIM TABLOSUNA HAZIRLIK -->
-        <div class="rhythm-hero-banner" style="cursor:pointer;" onclick="switchMainTab('rhythmic')">
-          <div style="display:flex;flex-direction:column;gap:14px;width:100%;">
-            <div style="display:flex;align-items:center;gap:14px;width:100%;">
-              <div style="font-size:46px;background:rgba(255,255,255,0.16);padding:12px;border-radius:18px;border:2px solid rgba(255,255,255,0.3);animation:bounceIcon 2s infinite;flex-shrink:0;">🚀</div>
-              <div style="flex:1;min-width:0;">
-                <div style="display:inline-flex;align-items:center;gap:6px;background:#fde047;color:#0f172a;font-size:11px;font-weight:900;padding:3px 10px;border-radius:999px;margin-bottom:6px;">
-                  ⭐ YENİ ÖDEV • ÇARPIM TABLOSUNA HAZIRLIK
+        <!-- EN ÜST: 2 ANA BAŞLIK SEÇİCİ HUB (İNGİLİZCE & MATEMATİK) -->
+        <div style="margin-bottom:20px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
+            <div>
+              <span style="font-size:11px;font-weight:900;background:rgba(255,255,255,0.08);color:#94a3b8;padding:3px 10px;border-radius:999px;letter-spacing:0.5px;">DERS SEÇİMİ</span>
+              <h2 style="font-size:22px;color:#fff;margin-top:4px;font-weight:900;">📚 LingoDay • 2. Sınıf Dersleri</h2>
+            </div>
+            <!-- FİLTRELEME BUTONLARI -->
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="subject-pill-btn ${currentHomeSubject === 'all' ? 'active-all' : ''}" onclick="selectHomeSubject('all')">
+                ✨ Tüm Dersler
+              </button>
+              <button class="subject-pill-btn ${currentHomeSubject === 'math' ? 'active-math' : ''}" onclick="selectHomeSubject('math')">
+                🔢 Matematik
+              </button>
+              <button class="subject-pill-btn ${currentHomeSubject === 'english' ? 'active-english' : ''}" onclick="selectHomeSubject('english')">
+                🇬🇧 İngilizce
+              </button>
+            </div>
+          </div>
+
+          <!-- 2 BÜYÜK DERS KARTI (PORTALLAR) -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:14px;">
+            <!-- MATEMATİK DERSİ BÜYÜK KARTI -->
+            <div class="card" style="margin-bottom:0;border:2px solid ${currentHomeSubject === 'math' ? '#ec4899' : '#8b5cf6'};background:linear-gradient(135deg, rgba(139,92,246,0.22), rgba(236,72,153,0.18));cursor:pointer;transition:all 0.2s;" onclick="selectHomeSubject('math')">
+              <div style="display:flex;align-items:center;gap:14px;">
+                <div style="font-size:42px;background:rgba(255,255,255,0.12);padding:10px;border-radius:16px;">🔢</div>
+                <div style="flex:1;">
+                  <span style="background:#ec4899;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">YENİ ÖDEV & DERS</span>
+                  <h3 style="font-size:20px;font-weight:900;color:#fff;margin:3px 0;">MATEMATİK DERSİ</h3>
+                  <p style="font-size:12px;color:#fce7f3;margin:0;">2'şer, 3'er, 4'er, 5'er Ritmik Sayma • Çarpım Tablosu • Sınav</p>
                 </div>
-                <h3 style="font-size:22px;color:#fff;margin-bottom:4px;font-weight:900;line-height:1.3;">3'er (30'a Kadar) & 4'er (40'a Kadar) Ritmik Sayma</h3>
-                <p style="font-size:14px;color:#fce7f3;line-height:1.5;margin:0;">
-                  <strong>1. Önce Öğretmen Sesli Sayar ve Öğretir</strong> ➔ <strong>2. Sonra Sıra Sende (Çocuk Sayar)</strong> ➔ <strong>3. Puanlı Ritmik Sayma Sınavı!</strong>
-                </p>
+                <div style="font-size:20px;color:#fde047;">➔</div>
               </div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:10px;width:100%;padding-top:6px;border-top:1px solid rgba(255,255,255,0.15);">
-              <button class="action-btn" style="background:#fde047;color:#0f172a;font-weight:900;font-size:14px;padding:12px 18px;box-shadow:0 6px 16px rgba(0,0,0,0.25);" onclick="event.stopPropagation();selectRhythmStepAndOpen(3, 'learn');">
-                🍓 3'er Sayma (3➔30)
-              </button>
-              <button class="action-btn" style="background:#38bdf8;color:#0f172a;font-weight:900;font-size:14px;padding:12px 18px;box-shadow:0 6px 16px rgba(0,0,0,0.25);" onclick="event.stopPropagation();selectRhythmStepAndOpen(4, 'learn');">
-                🚗 4'er Sayma (4➔40)
-              </button>
-              <button class="action-btn" style="background:#10b981;color:#fff;font-weight:900;font-size:14px;padding:12px 18px;box-shadow:0 6px 16px rgba(0,0,0,0.25);" onclick="event.stopPropagation();selectRhythmStepAndOpen(3, 'exam');">
-                🏆 Ritmik Sınav
-              </button>
+
+            <!-- İNGİLİZCE DERSİ BÜYÜK KARTI -->
+            <div class="card" style="margin-bottom:0;border:2px solid ${currentHomeSubject === 'english' ? '#38bdf8' : '#2563eb'};background:linear-gradient(135deg, rgba(37,99,235,0.22), rgba(6,182,212,0.18));cursor:pointer;transition:all 0.2s;" onclick="selectHomeSubject('english')">
+              <div style="display:flex;align-items:center;gap:14px;">
+                <div style="font-size:42px;background:rgba(255,255,255,0.12);padding:10px;border-radius:16px;">🇬🇧</div>
+                <div style="flex:1;">
+                  <span style="background:#2563eb;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">TÜM 6 ÜNİTE</span>
+                  <h3 style="font-size:20px;font-weight:900;color:#fff;margin:3px 0;">İNGİLİZCE DERSİ</h3>
+                  <p style="font-size:12px;color:#bae6fd;margin:0;">Sayfa 9-56 • 20 Sorulu Büyük Sınav • Kelimeler & Günler</p>
+                </div>
+                <div style="font-size:20px;color:#38bdf8;">➔</div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- 20 SORULU BÜYÜK SINAV VURGULU KART -->
-        <div class="card" style="margin-bottom:20px;background:linear-gradient(135deg, rgba(245,158,11,0.15), rgba(30,41,59,0.9));border:2px solid #f59e0b;cursor:pointer;" onclick="switchMainTab('quiz')">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-            <div style="display:flex;align-items:center;gap:14px;">
-              <div style="font-size:40px;">🏆</div>
-              <div>
-                <div style="display:inline-block;background:#f59e0b;color:#0f172a;font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;margin-bottom:4px;">İLK YAPTIĞIMIZ PUANLI SINAV</div>
-                <h3 style="font-size:18px;color:#fde047;margin-bottom:4px;">20 Sorulu Puanlı Büyük Sınav & Konu Testleri</h3>
-                <p style="font-size:12px;color:#cbd5e1;">Puan kazandıran (+10 Puan), seri çarpanlı (🔥 Seri), sesli dinleme ve hata hakkı veren sınav.</p>
+        ${showMath ? `
+          <!-- ========================================================
+               1. ANA BAŞLIK: MATEMATİK DERSİ
+          ======================================================== -->
+          <div style="margin-bottom:28px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid rgba(236,72,153,0.3);">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:28px;">🔢</span>
+                <div>
+                  <h3 style="font-size:20px;color:#fff;font-weight:900;margin:0;">1. ANA BAŞLIK: MATEMATİK</h3>
+                  <p style="font-size:12px;color:#fce7f3;margin:0;">2'şer, 3'er, 4'er ve 5'er Ritmik Sayma • Çarpım Tablosuna Hazırlık Ödevi</p>
+                </div>
               </div>
+              <button class="action-btn" style="background:#ec4899;font-size:12px;font-weight:800;padding:7px 14px;" onclick="switchMainTab('rhythmic')">
+                Tüm Matematik Sayfası ➔
+              </button>
             </div>
-            <button class="action-btn" style="background:#f59e0b;color:#0f172a;white-space:nowrap;font-weight:800;" onclick="event.stopPropagation();switchMainTab('quiz');">Sınava Başla ➔</button>
-          </div>
-        </div>
 
-        <!-- TÜM 6 ÜNİTE KARTLARI (1'DEN 6'YA SIRALI) -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:14px;margin-bottom:20px;">
-          ${unitsData.map(u => `
-            <div class="card" style="margin-bottom:0;border:1px solid var(--border);transition:all 0.2s;cursor:pointer;" onclick="switchMainTab('${u.id}')">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <div style="font-size:32px;background:rgba(255,255,255,0.05);padding:8px;border-radius:12px;">${u.icon}</div>
-                  <div>
-                    <span style="font-size:11px;font-weight:700;color:${u.color};">${u.num} • ${u.pages}</span>
-                    <h4 style="font-size:16px;color:#fff;margin-top:2px;">${u.title}</h4>
+            <!-- 4 ADET RİTMİK SAYMA KARTI (2, 3, 4, 5) -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(270px, 1fr));gap:14px;margin-bottom:16px;">
+              ${mathModules.map(m => `
+                <div class="card" style="margin-bottom:0;border:2px solid ${m.color};background:linear-gradient(145deg, rgba(30,41,59,0.95), rgba(15,23,42,0.98));">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <div style="font-size:36px;background:rgba(255,255,255,0.06);padding:8px;border-radius:14px;">${m.icon}</div>
+                      <div>
+                        <span style="font-size:11px;font-weight:900;color:${m.color};background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:6px;">
+                          ${m.badge}
+                        </span>
+                        <h4 style="font-size:18px;color:#fff;font-weight:900;margin:3px 0 1px;">${m.title}</h4>
+                        <div style="font-size:11px;color:#94a3b8;">${m.range}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="font-size:11px;color:#cbd5e1;background:rgba(255,255,255,0.04);padding:6px 10px;border-radius:8px;margin-bottom:12px;">
+                    ✖️ <strong>Çarpım:</strong> ${m.mult}
+                  </div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                    <button class="action-btn" style="background:${m.color};color:#0f172a;font-weight:900;font-size:12px;padding:8px 6px;" onclick="selectRhythmStepAndOpen(${m.mode}, 'learn')">
+                      🎧 1. Aşama: Öğren
+                    </button>
+                    <button class="action-btn" style="background:#10b981;color:#fff;font-weight:900;font-size:12px;padding:8px 6px;" onclick="selectRhythmStepAndOpen(${m.mode}, 'practice')">
+                      🗣️ 2. Aşama: Sen Say
+                    </button>
                   </div>
                 </div>
+              `).join('')}
+            </div>
+
+            <!-- MATEMATİK RİTMİK SAYMA SINAVI VURGULU KART -->
+            <div class="card" style="margin-bottom:0;background:linear-gradient(135deg, rgba(245,158,11,0.18), rgba(30,41,59,0.95));border:2px solid #f59e0b;">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+                <div style="display:flex;align-items:center;gap:14px;">
+                  <div style="font-size:40px;">🏆</div>
+                  <div>
+                    <div style="display:inline-block;background:#f59e0b;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;margin-bottom:4px;">
+                      MATEMATİK PUANLI SINAVI
+                    </div>
+                    <h4 style="font-size:18px;color:#fde047;margin:0 0 4px;font-weight:900;">10 Soruluk Ritmik Sayma & Çarpım Tablosu Sınavı</h4>
+                    <p style="font-size:12px;color:#cbd5e1;margin:0;">2'şer, 3'er, 4'er veya 5'er ritmik sayma sorularıyla hızını ve puanını ölç!</p>
+                  </div>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  <button class="action-btn" style="background:#0284c7;font-size:12px;font-weight:800;padding:8px 12px;" onclick="selectRhythmStepAndOpen(2, 'exam'); initRhythmExam('2');">
+                    🎈 2'şer
+                  </button>
+                  <button class="action-btn" style="background:#ec4899;font-size:12px;font-weight:800;padding:8px 12px;" onclick="selectRhythmStepAndOpen(3, 'exam'); initRhythmExam('3');">
+                    🍓 3'er
+                  </button>
+                  <button class="action-btn" style="background:#06b6d4;font-size:12px;font-weight:800;padding:8px 12px;" onclick="selectRhythmStepAndOpen(4, 'exam'); initRhythmExam('4');">
+                    🚗 4'er
+                  </button>
+                  <button class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:12px;font-weight:900;padding:8px 12px;" onclick="selectRhythmStepAndOpen(5, 'exam'); initRhythmExam('5');">
+                    ⭐ 5'er
+                  </button>
+                  <button class="action-btn" style="background:#10b981;font-size:12px;font-weight:900;padding:8px 14px;" onclick="selectRhythmStepAndOpen(2, 'exam'); initRhythmExam('all');">
+                    🎯 Karışık Sınav ➔
+                  </button>
+                </div>
               </div>
-              <p style="font-size:12px;color:var(--muted);line-height:1.4;margin-bottom:12px;min-height:34px;">${u.desc}</p>
-              <button class="action-btn" style="width:100%;background:${u.color};font-size:13px;padding:8px;" onclick="event.stopPropagation();switchMainTab('${u.id}');">
-                Derslere Başla ➔
+            </div>
+          </div>
+        ` : ''}
+
+        ${showEnglish ? `
+          <!-- ========================================================
+               2. ANA BAŞLIK: İNGİLİZCE DERSİ
+          ======================================================== -->
+          <div style="margin-bottom:24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid rgba(59,130,246,0.3);">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:28px;">🇬🇧</span>
+                <div>
+                  <h3 style="font-size:20px;color:#fff;font-weight:900;margin:0;">2. ANA BAŞLIK: İNGİLİZCE</h3>
+                  <p style="font-size:12px;color:#bae6fd;margin:0;">2. Sınıf Tüm 6 Ünite • Sayfa 9'dan 56'ya Kadar Müfredat & Testler</p>
+                </div>
+              </div>
+              <button class="action-btn" style="background:#2563eb;font-size:12px;font-weight:800;padding:7px 14px;" onclick="switchMainTab('unit1')">
+                1. Üniteden Başla ➔
               </button>
             </div>
-          `).join('')}
-        </div>
 
-        <!-- DİĞER MODLAR -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:12px;">
-          <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;" onclick="switchMainTab('days_sort')">
-            <div style="font-size:32px;margin-bottom:6px;">📅</div>
-            <div style="font-weight:700;color:#fff;font-size:14px;">Haftanın Günleri Sıralama</div>
-            <p style="font-size:11px;color:var(--muted);margin:4px 0 10px;">Pazartesi'den Pazar'a günleri doğru sıraya dizme oyunu.</p>
-            <button class="action-btn" style="font-size:11px;padding:6px 12px;background:#3b82f6;">Oyna</button>
+            <!-- 20 SORULU BÜYÜK İNGİLİZCE SINAVI KARTI -->
+            <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg, rgba(37,99,235,0.18), rgba(30,41,59,0.95));border:2px solid #3b82f6;cursor:pointer;" onclick="switchMainTab('quiz')">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:14px;">
+                  <div style="font-size:40px;">📝</div>
+                  <div>
+                    <div style="display:inline-block;background:#3b82f6;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;margin-bottom:4px;">İNGİLİZCE BÜYÜK SINAVI</div>
+                    <h4 style="font-size:18px;color:#93c5fd;margin:0 0 4px;font-weight:900;">20 Sorulu Puanlı Büyük Sınav & Konu Testleri</h4>
+                    <p style="font-size:12px;color:#cbd5e1;margin:0;">Puan kazandıran (+10 Puan), seri çarpanlı (🔥 Seri), sesli dinleme ve hata hakkı veren sınav.</p>
+                  </div>
+                </div>
+                <button class="action-btn" style="background:#2563eb;color:#fff;white-space:nowrap;font-weight:800;" onclick="event.stopPropagation();switchMainTab('quiz');">İngilizce Sınavına Gir ➔</button>
+              </div>
+            </div>
+
+            <!-- TÜM 6 ÜNİTE KARTLARI (1'DEN 6'YA SIRALI) -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:14px;margin-bottom:16px;">
+              ${unitsData.map(u => `
+                <div class="card" style="margin-bottom:0;border:1px solid var(--border);transition:all 0.2s;cursor:pointer;" onclick="switchMainTab('${u.id}')">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <div style="font-size:32px;background:rgba(255,255,255,0.05);padding:8px;border-radius:12px;">${u.icon}</div>
+                      <div>
+                        <span style="font-size:11px;font-weight:700;color:${u.color};">${u.num} • ${u.pages}</span>
+                        <h4 style="font-size:16px;color:#fff;margin-top:2px;">${u.title}</h4>
+                      </div>
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:var(--muted);line-height:1.4;margin-bottom:12px;min-height:34px;">${u.desc}</p>
+                  <button class="action-btn" style="width:100%;background:${u.color};font-size:13px;padding:8px;" onclick="event.stopPropagation();switchMainTab('${u.id}');">
+                    Derslere Başla ➔
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- İNGİLİZCE ETKİLEŞİMLİ PRATİK ARAÇLARI -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:12px;">
+              <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;" onclick="switchMainTab('days_sort')">
+                <div style="font-size:32px;margin-bottom:6px;">📅</div>
+                <div style="font-weight:700;color:#fff;font-size:14px;">Haftanın Günleri Sıralama</div>
+                <p style="font-size:11px;color:var(--muted);margin:4px 0 10px;">Pazartesi'den Pazar'a günleri doğru sıraya dizme oyunu.</p>
+                <button class="action-btn" style="font-size:11px;padding:6px 12px;background:#3b82f6;">Oyna</button>
+              </div>
+              <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;" onclick="switchMainTab('flashcards')">
+                <div style="font-size:32px;margin-bottom:6px;">🃏</div>
+                <div style="font-weight:700;color:#fff;font-size:14px;">Sesli Kelime Kartları</div>
+                <p style="font-size:11px;color:var(--muted);margin:4px 0 10px;">Tüm 6 ünitenin resimli ve sesli telaffuz kartları.</p>
+                <button class="action-btn" style="font-size:11px;padding:6px 12px;background:#8b5cf6;">İncele</button>
+              </div>
+              <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;" onclick="switchMainTab('guide')">
+                <div style="font-size:32px;margin-bottom:6px;">📖</div>
+                <div style="font-weight:700;color:#fff;font-size:14px;">Günler Rehberi</div>
+                <p style="font-size:11px;color:var(--muted);margin:4px 0 10px;">Tüm günlerin telaffuzları, ipuçları ve bilgileri.</p>
+                <button class="action-btn" style="font-size:11px;padding:6px 12px;background:#10b981;">Aç</button>
+              </div>
+            </div>
           </div>
-          <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;" onclick="switchMainTab('flashcards')">
-            <div style="font-size:32px;margin-bottom:6px;">🃏</div>
-            <div style="font-weight:700;color:#fff;font-size:14px;">Sesli Kelime Kartları</div>
-            <p style="font-size:11px;color:var(--muted);margin:4px 0 10px;">Tüm 6 ünitenin resimli ve sesli telaffuz kartları.</p>
-            <button class="action-btn" style="font-size:11px;padding:6px 12px;background:#8b5cf6;">İncele</button>
-          </div>
-          <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;" onclick="switchMainTab('guide')">
-            <div style="font-size:32px;margin-bottom:6px;">📖</div>
-            <div style="font-weight:700;color:#fff;font-size:14px;">Günler Rehberi</div>
-            <p style="font-size:11px;color:var(--muted);margin:4px 0 10px;">Tüm günlerin telaffuzları, ipuçları ve bilgileri.</p>
-            <button class="action-btn" style="font-size:11px;padding:6px 12px;background:#10b981;">Aç</button>
-          </div>
-        </div>
+        ` : ''}
       `;
 
       document.getElementById('appContent').innerHTML = html;
@@ -1104,6 +1300,27 @@
              (ÇARPIM TABLOSUNA HAZIRLIK: 1. ÖĞRET & SAY ➔ 2. ÇOCUK SAYSIN ➔ 3. SINAV)
     ======================================================== */
     const rhythmData = {
+      2: {
+        stepSize: 2,
+        maxNumber: 20,
+        title: "2'şer 2'şer 20'ye Kadar Ritmik Sayma",
+        subtitle: "2 × 1 = 2'den 2 × 10 = 20'ye Çarpım Tablosuna Hazırlık",
+        emoji: "🎈",
+        groupLabel: "İkili Balon Grubu",
+        accentColor: "#38bdf8",
+        steps: [
+          { step: 1, num: 2, tr: "İki", en: "Two", mult: "1 × 2 = 2", explain: "1 tane 2, 2 eder", speakTeach: "İki! Bir tane iki, iki eder." },
+          { step: 2, num: 4, tr: "Dört", en: "Four", mult: "2 × 2 = 4", explain: "2 tane 2, 4 eder", speakTeach: "Dört! İki tane iki, dört eder." },
+          { step: 3, num: 6, tr: "Altı", en: "Six", mult: "3 × 2 = 6", explain: "3 tane 2, 6 eder", speakTeach: "Altı! Üç tane iki, altı eder." },
+          { step: 4, num: 8, tr: "Sekiz", en: "Eight", mult: "4 × 2 = 8", explain: "4 tane 2, 8 eder", speakTeach: "Sekiz! Dört tane iki, sekiz eder." },
+          { step: 5, num: 10, tr: "On", en: "Ten", mult: "5 × 2 = 10", explain: "5 tane 2, 10 eder", speakTeach: "On! Beş tane iki, on eder." },
+          { step: 6, num: 12, tr: "On iki", en: "Twelve", mult: "6 × 2 = 12", explain: "6 tane 2, 12 eder", speakTeach: "On iki! Altı tane iki, on iki eder." },
+          { step: 7, num: 14, tr: "On dört", en: "Fourteen", mult: "7 × 2 = 14", explain: "7 tane 2, 14 eder", speakTeach: "On dört! Yedi tane iki, on dört eder." },
+          { step: 8, num: 16, tr: "On altı", en: "Sixteen", mult: "8 × 2 = 16", explain: "8 tane 2, 16 eder", speakTeach: "On altı! Sekiz tane iki, on altı eder." },
+          { step: 9, num: 18, tr: "On sekiz", en: "Eighteen", mult: "9 × 2 = 18", explain: "9 tane 2, 18 eder", speakTeach: "On sekiz! Dokuz tane iki, on sekiz eder." },
+          { step: 10, num: 20, tr: "Yirmi", en: "Twenty", mult: "10 × 2 = 20", explain: "10 tane 2, 20 eder", speakTeach: "Yirmi! On tane iki, yirmi eder. Süpersin!" }
+        ]
+      },
       3: {
         stepSize: 3,
         maxNumber: 30,
@@ -1145,10 +1362,31 @@
           { step: 9, num: 36, tr: "Otuz altı", en: "Thirty-six", mult: "9 × 4 = 36", explain: "9 tane 4, 36 eder", speakTeach: "Otuz altı! Dokuz tane dört, otuz altı eder." },
           { step: 10, num: 40, tr: "Kırk", en: "Forty", mult: "10 × 4 = 40", explain: "10 tane 4, 40 eder", speakTeach: "Kırk! On tane dört, kırk eder. Süpersin!" }
         ]
+      },
+      5: {
+        stepSize: 5,
+        maxNumber: 50,
+        title: "5'er 5'er 50'ye Kadar Ritmik Sayma",
+        subtitle: "5 × 1 = 5'ten 5 × 10 = 50'ye Çarpım Tablosuna Hazırlık",
+        emoji: "⭐",
+        groupLabel: "Beşli Yıldız Grubu",
+        accentColor: "#f59e0b",
+        steps: [
+          { step: 1, num: 5, tr: "Beş", en: "Five", mult: "1 × 5 = 5", explain: "1 tane 5, 5 eder", speakTeach: "Beş! Bir tane beş, beş eder." },
+          { step: 2, num: 10, tr: "On", en: "Ten", mult: "2 × 5 = 10", explain: "2 tane 5, 10 eder", speakTeach: "On! İki tane beş, on eder." },
+          { step: 3, num: 15, tr: "On beş", en: "Fifteen", mult: "3 × 5 = 15", explain: "3 tane 5, 15 eder", speakTeach: "On beş! Üç tane beş, on beş eder." },
+          { step: 4, num: 20, tr: "Yirmi", en: "Twenty", mult: "4 × 5 = 20", explain: "4 tane 5, 20 eder", speakTeach: "Yirmi! Dört tane beş, yirmi eder." },
+          { step: 5, num: 25, tr: "Yirmi beş", en: "Twenty-five", mult: "5 × 5 = 25", explain: "5 tane 5, 25 eder", speakTeach: "Yirmi beş! Beş tane beş, yirmi beş eder." },
+          { step: 6, num: 30, tr: "Otuz", en: "Thirty", mult: "6 × 5 = 30", explain: "6 tane 5, 30 eder", speakTeach: "Otuz! Altı tane beş, otuz eder." },
+          { step: 7, num: 35, tr: "Otuz beş", en: "Thirty-five", mult: "7 × 5 = 35", explain: "7 tane 5, 35 eder", speakTeach: "Otuz beş! Yedi tane beş, otuz beş eder." },
+          { step: 8, num: 40, tr: "Kırk", en: "Forty", mult: "8 × 5 = 40", explain: "8 tane 5, 40 eder", speakTeach: "Kırk! Sekiz tane beş, kırk eder." },
+          { step: 9, num: 45, tr: "Kırk beş", en: "Forty-five", mult: "9 × 5 = 45", explain: "9 tane 5, 45 eder", speakTeach: "Kırk beş! Dokuz tane beş, kırk beş eder." },
+          { step: 10, num: 50, tr: "Elli", en: "Fifty", mult: "10 × 5 = 50", explain: "10 tane 5, 50 eder", speakTeach: "Elli! On tane beş, elli eder. Harikasın!" }
+        ]
       }
     };
 
-    let rhythmActiveMode = 3;          // 3 veya 4
+    let rhythmActiveMode = 2;          // 2, 3, 4 veya 5
     let rhythmActiveStage = 'learn';   // 'learn' (1. Öğret & Say), 'practice' (2. Çocuk Saysın), 'exam' (3. Sınav)
     let rhythmTeachSpeechStyle = 'short'; // 'short' (Sadece 3, 6, 9...) veya 'mult' (1 tane 3, 3 eder...)
     let rhythmAutoPlaying = false;
@@ -1530,6 +1768,57 @@
 
     // 3. AŞAMA: RİTMİK SAYMA VE ÇARPIM TABLOSUNA HAZIRLIK SINAVI
     function buildRhythmQuestionsForMode(filterMode) {
+      const q2 = [
+        {
+          badge: "🎈 2'ŞER İLERİYE SAYMA",
+          visual: "2 ➔ 4 ➔ 6 ➔ 8 ➔ ❓",
+          prompt: "2'şer 2'şer ritmik sayarken 8'den hemen sonra hangi sayı gelir?",
+          correct: "10 (On)",
+          options: ["9 (Dokuz)", "10 (On)", "11 (On bir)", "12 (On iki)"],
+          speakPrompt: "İkişer ikişer sayarken sekizden hemen sonra hangi sayı gelir?"
+        },
+        {
+          badge: "🎈 ÇARPIM TABLOSUNA HAZIRLIK",
+          visual: "🎈🎈 | 🎈🎈 | 🎈🎈",
+          prompt: "Her grupta 2 balon var. 3 grupta toplam kaç balon olur? (3 × 2)",
+          correct: "6 (Altı)",
+          options: ["4 (Dört)", "5 (Beş)", "6 (Altı)", "8 (Sekiz)"],
+          speakPrompt: "Üç tane iki kaç eder?"
+        },
+        {
+          badge: "🎈 ARADAKİ EKSİK SAYI",
+          visual: "10 ➔ 12 ➔ ❓ ➔ 16 ➔ 18",
+          prompt: "2'şer ritmik saymada 12 ile 16 arasındaki soru işaretli sayı kaçtır?",
+          correct: "14 (On dört)",
+          options: ["13 (On üç)", "14 (On dört)", "15 (On beş)", "17 (On yedi)"],
+          speakPrompt: "On iki ile on altı arasındaki sayı kaçtır?"
+        },
+        {
+          badge: "🎈 ÇARPIM HAZIRLIĞI (7 × 2)",
+          visual: "🎈🎈 × 7 Grup",
+          prompt: "7 tane 2 kaç eder? (2'şer sayarken 7. adımda söylediğimiz sayı)",
+          correct: "14 (On dört)",
+          options: ["12 (On iki)", "14 (On dört)", "16 (On altı)", "18 (On sekiz)"],
+          speakPrompt: "Yedi tane iki kaç eder?"
+        },
+        {
+          badge: "🎈 SON BASAMAK (10 × 2)",
+          visual: "14 ➔ 16 ➔ 18 ➔ ❓",
+          prompt: "2'şer sayarken 18'den sonra ulaştığımız 10. sayı (10 tane 2) kaçtır?",
+          correct: "20 (Yirmi)",
+          options: ["19 (On dokuz)", "20 (Yirmi)", "22 (Yirmi iki)", "24 (Yirmi dört)"],
+          speakPrompt: "On sekizden sonra hangi sayı gelir?"
+        },
+        {
+          badge: "🎈 HANGİSİ 2'ŞER SAYMADA YOKTUR?",
+          visual: "2 - 4 - 6 - 8 - 10 - 12 - 14 - 16 - 18 - 20",
+          prompt: "2'şer 2'şer 20'ye kadar sayarken hangisini SÖYLEMEYİZ?",
+          correct: "15 (On beş)",
+          options: ["8 (Sekiz)", "12 (On iki)", "15 (On beş)", "18 (On sekiz)"],
+          speakPrompt: "İkişer ikişer sayarken hangisini söylemeyiz?"
+        }
+      ];
+
       const q3 = [
         {
           badge: "🍓 3'ER İLERİYE SAYMA",
@@ -1632,10 +1921,63 @@
         }
       ];
 
+      const q5 = [
+        {
+          badge: "⭐ 5'ER İLERİYE SAYMA",
+          visual: "5 ➔ 10 ➔ 15 ➔ ❓",
+          prompt: "5'er 5'er ritmik sayarken 15'ten hemen sonra hangi sayı gelir?",
+          correct: "20 (Yirmi)",
+          options: ["18 (On sekiz)", "19 (On dokuz)", "20 (Yirmi)", "25 (Yirmi beş)"],
+          speakPrompt: "Beşer beşer sayarken on beşten hemen sonra hangi sayı gelir?"
+        },
+        {
+          badge: "⭐ ÇARPIM TABLOSUNA HAZIRLIK",
+          visual: "⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐",
+          prompt: "Her kutuda 5 yıldız var. 3 kutuda toplam kaç yıldız olur? (3 × 5)",
+          correct: "15 (On beş)",
+          options: ["10 (On)", "12 (On iki)", "15 (On beş)", "20 (Yirmi)"],
+          speakPrompt: "Üç tane beş kaç eder?"
+        },
+        {
+          badge: "⭐ ARADAKİ EKSİK SAYI",
+          visual: "20 ➔ 25 ➔ ❓ ➔ 35 ➔ 40",
+          prompt: "5'er ritmik saymada 25 ile 35 arasındaki boşluğa hangi sayı gelmelidir?",
+          correct: "30 (Otuz)",
+          options: ["28 (Yirmi sekiz)", "30 (Otuz)", "32 (Otuz iki)", "35 (Otuz beş)"],
+          speakPrompt: "Yirmi beş ile otuz beş arasındaki sayı kaçtır?"
+        },
+        {
+          badge: "⭐ ÇARPIM HAZIRLIĞI (6 × 5)",
+          visual: "⭐⭐⭐⭐⭐ × 6 Kutu",
+          prompt: "6 tane 5 kaç eder? (5'er sayarken 6. sırada söylediğimiz sayı)",
+          correct: "30 (Otuz)",
+          options: ["25 (Yirmi beş)", "30 (Otuz)", "35 (Otuz beş)", "40 (Kırk)"],
+          speakPrompt: "Altı tane beş kaç eder?"
+        },
+        {
+          badge: "⭐ SON BASAMAK (10 × 5)",
+          visual: "35 ➔ 40 ➔ 45 ➔ ❓",
+          prompt: "5'er sayarken 45'ten sonra ulaştığımız 10. sayı (10 tane 5) kaçtır?",
+          correct: "50 (Elli)",
+          options: ["48 (Kırk sekiz)", "50 (Elli)", "55 (Elli beş)", "60 (Altmış)"],
+          speakPrompt: "Kırk beşten sonra hangi sayı gelir?"
+        },
+        {
+          badge: "⭐ HANGİSİ 5'ER SAYMADA YOKTUR?",
+          visual: "5 - 10 - 15 - 20 - 25 - 30 - 35 - 40 - 45 - 50",
+          prompt: "5'er 5'er 50'ye kadar sayarken hangisini SÖYLEMEYİZ?",
+          correct: "24 (Yirmi dört)",
+          options: ["15 (On beş)", "20 (Yirmi)", "24 (Yirmi dört)", "35 (Otuz beş)"],
+          speakPrompt: "Beşer beşer sayarken hangisini söylemeyiz?"
+        }
+      ];
+
+      if (filterMode === '2') return q2;
       if (filterMode === '3') return q3;
       if (filterMode === '4') return q4;
-      // Karışık 10 soru
-      return [q3[0], q4[0], q3[1], q4[1], q3[2], q4[2], q3[3], q4[3], q3[4], q4[4]];
+      if (filterMode === '5') return q5;
+      // Karışık 10 soru (2, 3, 4, 5)
+      return [q2[0], q3[0], q4[0], q5[0], q2[1], q3[1], q4[1], q5[1], q2[2], q5[2]];
     }
 
     function initRhythmExam(filterMode = 'both') {
@@ -1988,9 +2330,11 @@
             <div class="card" style="border:2px solid #f59e0b;">
               <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
                 <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                  <button class="action-btn" style="background:${rhythmExamFilter === '3' ? '#ec4899' : '#334155'};font-size:12px;padding:7px 12px;" onclick="initRhythmExam('3')">🍓 Sadece 3'er Sınavı</button>
-                  <button class="action-btn" style="background:${rhythmExamFilter === '4' ? '#06b6d4' : '#334155'};font-size:12px;padding:7px 12px;" onclick="initRhythmExam('4')">🚗 Sadece 4'er Sınavı</button>
-                  <button class="action-btn" style="background:${rhythmExamFilter === 'both' ? '#f59e0b' : '#334155'};color:${rhythmExamFilter === 'both' ? '#0f172a' : '#fff'};font-size:12px;padding:7px 12px;" onclick="initRhythmExam('both')">🏆 3'er & 4'er Karışık</button>
+                  <button class="action-btn" style="background:${rhythmExamFilter === '2' ? '#0284c7' : '#334155'};font-size:12px;padding:7px 12px;" onclick="initRhythmExam('2')">🎈 2'şer Sınavı</button>
+                  <button class="action-btn" style="background:${rhythmExamFilter === '3' ? '#ec4899' : '#334155'};font-size:12px;padding:7px 12px;" onclick="initRhythmExam('3')">🍓 3'er Sınavı</button>
+                  <button class="action-btn" style="background:${rhythmExamFilter === '4' ? '#06b6d4' : '#334155'};font-size:12px;padding:7px 12px;" onclick="initRhythmExam('4')">🚗 4'er Sınavı</button>
+                  <button class="action-btn" style="background:${rhythmExamFilter === '5' ? '#f59e0b' : '#334155'};font-size:12px;padding:7px 12px;" onclick="initRhythmExam('5')">⭐ 5'er Sınavı</button>
+                  <button class="action-btn" style="background:${rhythmExamFilter === 'all' || rhythmExamFilter === 'both' ? '#10b981' : '#334155'};color:#fff;font-size:12px;padding:7px 12px;" onclick="initRhythmExam('all')">🏆 Karışık (2, 3, 4, 5)</button>
                 </div>
                 <div style="display:flex;gap:10px;align-items:center;">
                   <span style="background:rgba(245,158,11,0.2);color:#fde047;padding:5px 10px;border-radius:8px;font-weight:800;font-size:13px;">⭐ Puan: ${rhythmExamScore}</span>
@@ -2042,20 +2386,34 @@
       }
 
       const fullHtml = `
-        <!-- 3'ER VE 4'ER MOD SEÇİCİ -->
+        <!-- 2, 3, 4 VE 5'ER MOD SEÇİCİ -->
         <div class="rhythm-mode-switch">
+          <button class="rhythm-mode-btn ${rhythmActiveMode === 2 ? 'active-2' : ''}" onclick="switchRhythmMode(2)">
+            <span style="font-size:26px;">🎈</span>
+            <div style="text-align:left;">
+              <div>2'şer Ritmik Sayma</div>
+              <div style="font-size:11px;font-weight:600;opacity:0.9;">2'den 20'ye (2 × 1 ... 2 × 10)</div>
+            </div>
+          </button>
           <button class="rhythm-mode-btn ${rhythmActiveMode === 3 ? 'active-3' : ''}" onclick="switchRhythmMode(3)">
             <span style="font-size:26px;">🍓</span>
             <div style="text-align:left;">
-              <div>3'er 3'er Ritmik Sayma</div>
-              <div style="font-size:11px;font-weight:600;opacity:0.9;">3'ten 30'a Kadar (3 × 1 ... 3 × 10)</div>
+              <div>3'er Ritmik Sayma</div>
+              <div style="font-size:11px;font-weight:600;opacity:0.9;">3'ten 30'a (3 × 1 ... 3 × 10)</div>
             </div>
           </button>
           <button class="rhythm-mode-btn ${rhythmActiveMode === 4 ? 'active-4' : ''}" onclick="switchRhythmMode(4)">
             <span style="font-size:26px;">🚗</span>
             <div style="text-align:left;">
-              <div>4'er 4'er Ritmik Sayma</div>
-              <div style="font-size:11px;font-weight:600;opacity:0.9;">4'ten 40'a Kadar (4 × 1 ... 4 × 10)</div>
+              <div>4'er Ritmik Sayma</div>
+              <div style="font-size:11px;font-weight:600;opacity:0.9;">4'ten 40'a (4 × 1 ... 4 × 10)</div>
+            </div>
+          </button>
+          <button class="rhythm-mode-btn ${rhythmActiveMode === 5 ? 'active-5' : ''}" onclick="switchRhythmMode(5)">
+            <span style="font-size:26px;">⭐</span>
+            <div style="text-align:left;">
+              <div>5'er Ritmik Sayma</div>
+              <div style="font-size:11px;font-weight:600;opacity:0.9;">5'ten 50'ye (5 × 1 ... 5 × 10)</div>
             </div>
           </button>
         </div>
