@@ -972,7 +972,7 @@
           📲 Ana Ekrana Ekle
         </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
-          🔄 Sürümü Yenile (v2.7)
+          🔄 Sürümü Yenile (v2.7.1)
         </button>
         <button onclick="openBadgesModal()" class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;">
           🏆 Rozet Vitrini (<span id="unlockedBadgesCount">0</span>/12)
@@ -1662,11 +1662,16 @@
                     </div>
                   </div>
                   <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
-                    Onluk taban bloklarıyla modelleme, adım adım eldeli toplama, interaktif işlem tahtası ve zihinden toplama ipuçları.
+                    Onluk taban bloklarıyla modelleme, adım adım eldeli toplama ve hemen dersin altındaki interaktif işlem tahtası.
                   </p>
-                  <button class="action-btn" style="width:100%;background:#10b981;font-size:13px;font-weight:900;padding:8px;" onclick="event.stopPropagation();switchMainTab('math_addition')">
-                    Toplama Dersine Başla ➔
-                  </button>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <button class="action-btn" style="width:100%;background:#10b981;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_addition');window.scrollTo({top:0,behavior:'smooth'})">
+                      📖 1. Konu Anlatımı
+                    </button>
+                    <button class="action-btn" style="width:100%;background:#06b6d4;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_addition');setTimeout(()=>scrollToInteractiveBoard('interactiveAdditionSection'),150)">
+                      ✏️ 2. İnteraktif Tahta
+                    </button>
+                  </div>
                 </div>
 
                 <!-- 2. ÇIKARMA İŞLEMİ KARTI -->
@@ -1684,11 +1689,16 @@
                     </div>
                   </div>
                   <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
-                    Küçük sayıdan büyük sayı çıkmadığında komşudan onluk alma animasyonu, terimler ve adım adım çıkarma tahtası.
+                    Küçük sayıdan büyük sayı çıkmadığında komşudan onluk alma animasyonu, terimler ve hemen dersin altındaki çıkarma tahtası.
                   </p>
-                  <button class="action-btn" style="width:100%;background:#ef4444;font-size:13px;font-weight:900;padding:8px;" onclick="event.stopPropagation();switchMainTab('math_subtraction')">
-                    Çıkarma Dersine Başla ➔
-                  </button>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <button class="action-btn" style="width:100%;background:#ef4444;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_subtraction');window.scrollTo({top:0,behavior:'smooth'})">
+                      📖 1. Konu Anlatımı
+                    </button>
+                    <button class="action-btn" style="width:100%;background:#06b6d4;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_subtraction');setTimeout(()=>scrollToInteractiveBoard('interactiveSubtractionSection'),150)">
+                      ✏️ 2. İnteraktif Tahta
+                    </button>
+                  </div>
                 </div>
 
                 <!-- 3. HİKAYELİ PROBLEMLER KARTI -->
@@ -3185,9 +3195,76 @@
     function setMathStage(stage, module) {
       recordActivity();
       mathActiveStage = stage;
-      if (module === 'addition') renderMathAddition();
-      else if (module === 'subtraction') renderMathSubtraction();
-      else if (module === 'problems') renderMathProblems();
+      if (module === 'addition') {
+        renderMathAddition();
+        if (stage === 'practice') {
+          setTimeout(() => scrollToInteractiveBoard('interactiveAdditionSection'), 120);
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      } else if (module === 'subtraction') {
+        renderMathSubtraction();
+        if (stage === 'practice') {
+          setTimeout(() => scrollToInteractiveBoard('interactiveSubtractionSection'), 120);
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      } else if (module === 'problems') {
+        renderMathProblems();
+      }
+    }
+
+    function scrollToInteractiveBoard(sectionId) {
+      const el = document.getElementById(sectionId);
+      if (el && el.scrollIntoView) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function jumpToAdditionBoard(type) {
+      recordActivity();
+      additionPracticeType = type;
+      mathActiveStage = 'practice';
+      additionCurrentProblem = generateAdditionProblem(additionPracticeType === 'with_carry');
+      additionCurrentStep = 'ones';
+      additionUserOnes = '';
+      additionUserTens = '';
+      additionCarryActive = false;
+      const boardEl = document.getElementById('interactiveAdditionSection');
+      if (boardEl) {
+        boardEl.innerHTML = buildAdditionBoardHtml();
+        scrollToInteractiveBoard('interactiveAdditionSection');
+      } else {
+        renderMathAddition();
+        setTimeout(() => scrollToInteractiveBoard('interactiveAdditionSection'), 120);
+      }
+      const p = additionCurrentProblem;
+      speakTurkish("Şimdi sıra sende! " + p.n1 + " artı " + p.n2 + " işlemini adım adım çözelim. Önce birler basamağı: " + p.ones1 + " artı " + p.ones2 + " kaç eder?");
+    }
+
+    function jumpToSubtractionBoard(type) {
+      recordActivity();
+      subtractionPracticeType = type;
+      mathActiveStage = 'practice';
+      subtractionCurrentProblem = generateSubtractionProblem(subtractionPracticeType === 'with_borrow');
+      subtractionCurrentStep = subtractionCurrentProblem.needsBorrow ? 'borrow_check' : 'ones';
+      subtractionHasBorrowed = false;
+      subtractionUserOnes = '';
+      subtractionUserTens = '';
+      const boardEl = document.getElementById('interactiveSubtractionSection');
+      if (boardEl) {
+        boardEl.innerHTML = buildSubtractionBoardHtml();
+        scrollToInteractiveBoard('interactiveSubtractionSection');
+      } else {
+        renderMathSubtraction();
+        setTimeout(() => scrollToInteractiveBoard('interactiveSubtractionSection'), 120);
+      }
+      const p = subtractionCurrentProblem;
+      if (p.needsBorrow) {
+        speakTurkish("Şimdi sıra sende! " + p.n1 + " eksi " + p.n2 + " işlemini çözelim. Dikkat! " + p.ones1 + " den " + p.ones2 + " çıkmaz, önce komşudan 1 onluk almalısın!");
+      } else {
+        speakTurkish("Şimdi sıra sende! " + p.n1 + " eksi " + p.n2 + " işlemini çözelim. Önce birler basamağı: " + p.ones1 + " eksi " + p.ones2 + " kaç eder?");
+      }
     }
 
     // TOPLAMA İŞLEMİ ÜRETİCİSİ
@@ -3266,7 +3343,131 @@
       };
     }
 
-    /* TOPLAMA EKRANI RENDER */
+    /* İNTERAKTİF TOPLAMA TAHTASI HTML ÜRETİCİSİ */
+    function buildAdditionBoardHtml() {
+      const prob = additionCurrentProblem;
+      const onesDone = additionCurrentStep === 'tens' || additionCurrentStep === 'done';
+      const isDone = additionCurrentStep === 'done';
+
+      const visualBlocks1 = '🟦'.repeat(prob.tens1) + ' ' + '🟨'.repeat(prob.ones1);
+      const visualBlocks2 = '🟦'.repeat(prob.tens2) + ' ' + '🟨'.repeat(prob.ones2);
+
+      return `
+        <div class="card" style="border:3px solid #10b981;background:linear-gradient(145deg, rgba(16,185,129,0.12), rgba(15,23,42,0.98));box-shadow:0 12px 32px rgba(16,185,129,0.2);text-align:center;padding:22px 16px;">
+          <!-- TAHTA BAŞLIĞI -->
+          <div style="display:inline-flex;align-items:center;gap:8px;background:#10b981;color:#0f172a;font-size:12px;font-weight:900;padding:5px 14px;border-radius:999px;margin-bottom:10px;letter-spacing:0.5px;">
+            ✏️ 2. BÖLÜM • İNTERAKTİF TOPLAMA TAHTASI
+          </div>
+          <h3 style="font-size:22px;color:#fff;font-weight:900;margin:0 0 6px;">
+            Şimdi Sıra Sende! İşlemi Adım Adım Çöz
+          </h3>
+          <p style="font-size:13px;color:#cbd5e1;margin:0 0 16px;">
+            İster <strong>Eldesiz</strong> ister <strong>Eldeli</strong> toplama seçerek tahtadaki işlemleri çözebilirsin:
+          </p>
+
+          <!-- BÜYÜK MOD SEÇİCİ BUTONLAR -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:10px;max-width:560px;margin:0 auto 16px;">
+            <button class="action-btn" style="background:${additionPracticeType === 'no_carry' ? '#10b981' : '#1e293b'};color:${additionPracticeType === 'no_carry' ? '#0f172a' : '#e2e8f0'};border:2px solid #10b981;font-size:14px;font-weight:900;padding:12px 10px;border-radius:14px;" onclick="setAdditionPracticeType('no_carry')">
+              🟢 Eldesiz Toplama
+            </button>
+            <button class="action-btn" style="background:${additionPracticeType === 'with_carry' ? '#ef4444' : '#1e293b'};color:#fff;border:2px solid #ef4444;font-size:14px;font-weight:900;padding:12px 10px;border-radius:14px;" onclick="setAdditionPracticeType('with_carry')">
+              🔴 Eldeli Toplama
+            </button>
+            <button class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:14px;font-weight:900;padding:12px 10px;border-radius:14px;" onclick="nextAdditionProblem()">
+              🔄 Yeni Soru Getir
+            </button>
+          </div>
+
+          <!-- PUAN VE SESLİ OKUMA -->
+          <div style="display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+            <span style="background:rgba(16,185,129,0.2);color:#34d399;padding:6px 14px;border-radius:10px;font-weight:900;font-size:13px;">⭐ Puan: ${additionScore}</span>
+            <span style="background:rgba(245,158,11,0.2);color:#fde047;padding:6px 14px;border-radius:10px;font-weight:900;font-size:13px;">🔥 Seri: ${additionStreak}</span>
+            <button class="sound-btn" style="width:auto;padding:6px 12px;font-size:12px;font-weight:800;border-radius:10px;" onclick="speakTurkish('${prob.n1} artı ${prob.n2} işlemini çözelim. Önce birler basamağındaki ${prob.ones1} ile ${prob.ones2} yi topla!')">
+              🔊 Soruyu Dinle
+            </button>
+          </div>
+
+          <!-- GÖRSEL ONLUK & BİRLİK MODELİ -->
+          <div style="max-width:420px;margin:0 auto 14px;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:13px;text-align:left;">
+            <div style="font-size:11px;color:#94a3b8;font-weight:800;margin-bottom:4px;">🧱 ONLUK (🟦) VE BİRLİK (🟨) MODELİ:</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <strong style="color:#fff;">${prob.n1} =</strong>
+              <span style="font-size:15px;letter-spacing:2px;">${visualBlocks1}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong style="color:#fff;">${prob.n2} =</strong>
+              <span style="font-size:15px;letter-spacing:2px;">${visualBlocks2}</span>
+            </div>
+          </div>
+
+          <!-- İŞLEM TAHTASI -->
+          <div style="max-width:340px;margin:0 auto 18px;background:#0f172a;border:3px solid #334155;border-radius:18px;padding:20px;position:relative;box-shadow:inset 0 4px 12px rgba(0,0,0,0.5);">
+            <div style="display:flex;justify-content:flex-end;gap:22px;margin-bottom:8px;padding-right:20px;font-size:14px;">
+              <div style="width:52px;height:30px;display:flex;align-items:center;justify-content:center;">
+                ${additionCarryActive ? '<span style="background:#ef4444;color:#fff;border-radius:999px;padding:3px 10px;font-weight:900;font-size:13px;box-shadow:0 0 12px rgba(239,68,68,0.6);">+1 Elde</span>' : '<span style="color:#94a3b8;font-size:12px;font-weight:800;">ONLUK</span>'}
+              </div>
+              <div style="width:52px;height:30px;display:flex;align-items:center;justify-content:center;color:#38bdf8;font-size:12px;font-weight:800;">
+                BİRLİK
+              </div>
+            </div>
+
+            <div style="font-family:monospace;font-size:40px;font-weight:900;line-height:1.3;letter-spacing:18px;text-align:right;padding-right:20px;">
+              <div style="color:#fff;">${prob.n1}</div>
+              <div style="color:#fff;position:relative;">
+                <span style="position:absolute;left:16px;color:#10b981;font-size:36px;">+</span>${prob.n2}
+              </div>
+              <div style="border-top:4px solid #64748b;margin:8px 0;"></div>
+              <div style="display:flex;justify-content:flex-end;gap:16px;letter-spacing:normal;">
+                <div style="width:54px;height:56px;border:3px dashed ${additionCurrentStep === 'tens' ? '#fde047' : (onesDone ? '#10b981' : '#475569')};border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:34px;color:#fde047;background:rgba(255,255,255,0.05);">
+                  ${additionUserTens !== '' ? additionUserTens : '?'}
+                </div>
+                <div style="width:54px;height:56px;border:3px dashed ${additionCurrentStep === 'ones' ? '#38bdf8' : '#10b981'};border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:34px;color:#38bdf8;background:rgba(255,255,255,0.05);">
+                  ${additionUserOnes !== '' ? additionUserOnes : '?'}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ADIM YÖNERGESİ VE CEVAP BUTONLARI -->
+          <div id="additionStepArea" style="max-width:480px;margin:0 auto;">
+            ${!isDone ? `
+              <div style="background:rgba(56,189,248,0.12);border:2px solid rgba(56,189,248,0.4);border-radius:14px;padding:14px;margin-bottom:14px;">
+                <div style="font-size:16px;color:#fff;font-weight:900;margin-bottom:6px;">
+                  ${additionCurrentStep === 'ones' 
+                    ? `👉 1. Adım (Birler Basamağı): <span style="color:#38bdf8;font-size:20px;">${prob.ones1} + ${prob.ones2}</span> kaç eder?` 
+                    : `👉 2. Adım (Onlar Basamağı): <span style="color:#fde047;font-size:20px;">${additionCarryActive ? '1 (elde) + ' : ''}${prob.tens1} + ${prob.tens2}</span> kaç eder?`}
+                </div>
+                <div style="font-size:12px;color:#bae6fd;">
+                  ${additionCurrentStep === 'ones' && prob.carry === 1 
+                    ? `💡 İpucu: ${prob.ones1} + ${prob.ones2} = ${prob.onesSum} eder. Birler basamağına son rakamı (${prob.onesDigit}) yazacağız!` 
+                    : `Aşağıdaki doğru sayı butonuna dokun:`}
+                </div>
+              </div>
+              <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+                ${getAdditionStepChoices(prob, additionCurrentStep).map(val => `
+                  <button class="action-btn" style="background:linear-gradient(135deg, #1e293b, #0f172a);border:3px solid #38bdf8;color:#fff;font-size:24px;font-weight:900;padding:14px 26px;min-width:74px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,0.4);" onclick="handleAdditionStepAnswer(${val})">
+                    ${val}
+                  </button>
+                `).join('')}
+              </div>
+            ` : `
+              <div style="background:rgba(16,185,129,0.18);border:2px solid #10b981;border-radius:16px;padding:18px;animation:fadeIn 0.3s ease;">
+                <div style="font-size:42px;margin-bottom:4px;">🎉🌟</div>
+                <h4 style="font-size:20px;color:#6ee7b7;font-weight:900;margin-bottom:6px;">Tebrikler! Çok Güzel Çözdün!</h4>
+                <p style="font-size:15px;color:#fff;margin-bottom:16px;">
+                  <strong>${prob.n1} + ${prob.n2} = ${prob.sum}</strong>
+                </p>
+                <button class="action-btn" style="background:#10b981;color:#0f172a;font-size:16px;font-weight:900;padding:12px 28px;border-radius:14px;box-shadow:0 4px 16px rgba(16,185,129,0.4);" onclick="nextAdditionProblem()">
+                  🎯 Yeni Toplama Sorusu Getir ➔
+                </button>
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    /* TOPLAMA EKRANI RENDER (KONU ANLATIMI + HEMEN ALTINDA İNTERAKTİF TAHTA) */
     function renderMathAddition() {
       recordActivity();
       currentMainTab = 'math_addition';
@@ -3280,206 +3481,159 @@
         additionCarryActive = false;
       }
 
-      let contentHtml = '';
-
-      if (mathActiveStage === 'learn') {
-        contentHtml = `
-          <div class="card" style="border:2px solid #10b981;">
-            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;">
-              <div style="display:flex;align-items:center;gap:10px;">
-                <span style="font-size:32px;">➕</span>
-                <div>
-                  <h3 style="font-size:20px;color:#fff;font-weight:900;margin:0;">2. Sınıf Toplama İşlemi Rehberi</h3>
-                  <p style="font-size:12px;color:#6ee7b7;margin:0;">MEB Maarif Modeli • Onluk Taban Blokları ve Basamak Tablosu</p>
-                </div>
-              </div>
-              <button class="sound-btn" onclick="speakTurkish('Toplama işleminde önce birler basamağındaki birlikler toplanır. Eğer birliklerin toplamı 10 veya daha büyükse, 10 birlik birleşerek 1 onluk olur ve onlar basamağına elde olarak eklenir!')" title="Dersi Sesli Dinle">
-                🔊 Sesli Dinle
-              </button>
-            </div>
-
-            <!-- 1. KAVRAMSAL MODEL: ONLUK TABAN BLOKLARI -->
-            <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:16px;margin-bottom:16px;">
-              <h4 style="font-size:15px;color:#38bdf8;margin-bottom:8px;font-weight:800;">🧱 1. Onluk ve Birlik Nedir?</h4>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;line-height:1.5;">
-                <div style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);padding:10px;border-radius:10px;">
-                  <div style="font-size:22px;margin-bottom:4px;">🟨</div>
-                  <strong style="color:#fff;">1 Birlik:</strong> Tek başına duran 1 adet küçük küp.
-                </div>
-                <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:10px;border-radius:10px;">
-                  <div style="font-size:22px;margin-bottom:4px;">🟦</div>
-                  <strong style="color:#fff;">1 Onluk:</strong> 10 tane birliğin alt alta birleştiği çubuk (10 Birlik = 1 Onluk).
-                </div>
-              </div>
-            </div>
-
-            <!-- 2. ELDESİZ TOPLAMA ÖRNEĞİ -->
-            <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:16px;margin-bottom:16px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                <h4 style="font-size:15px;color:#10b981;font-weight:800;">🟢 2. Eldesiz Toplama: 34 + 23</h4>
-                <button class="sound-btn" style="font-size:11px;padding:4px 8px;width:auto;" onclick="speakTurkish('34 ile 23 ü toplarken önce birlikleri toplarız: 4 artı 3 eşittir 7. Sonra onlar basamağı: 3 artı 2 eşittir 5. Sonuç 57!')">🔊 Dinle</button>
-              </div>
-              <p style="font-size:13px;color:#cbd5e1;line-height:1.5;margin-bottom:10px;">
-                Birliklerin toplamı 10'u geçmiyorsa işlem çok basittir:
-              </p>
-              <div style="display:flex;align-items:center;justify-content:center;gap:20px;background:#0f172a;border-radius:12px;padding:14px;font-family:monospace;font-size:18px;">
-                <div style="text-align:right;line-height:1.4;">
-                  <div>&nbsp; 3 4</div>
-                  <div>+ 2 3</div>
-                  <div style="border-top:2px solid #334155;color:#10b981;font-weight:900;">&nbsp; 5 7</div>
-                </div>
-                <div style="font-size:12px;color:#94a3b8;font-family:sans-serif;text-align:left;">
-                  <div>1️⃣ <strong>Birlikler:</strong> 4 + 3 = <strong>7</strong></div>
-                  <div>2️⃣ <strong>Onluklar:</strong> 3 + 2 = <strong>5</strong></div>
-                  <div style="color:#10b981;font-weight:700;">Sonuç: 57</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 3. ELDELİ TOPLAMA ÖRNEĞİ -->
-            <div style="background:linear-gradient(135deg, rgba(239,68,68,0.1), rgba(15,23,42,0.8));border:1px solid rgba(239,68,68,0.3);border-radius:14px;padding:16px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                <h4 style="font-size:15px;color:#f87171;font-weight:800;">🔴 3. Eldeli Toplama: 28 + 15 (10 Birlik = 1 Onluk!)</h4>
-                <button class="sound-btn" style="font-size:11px;padding:4px 8px;width:auto;" onclick="speakTurkish('28 ile 15 i toplarken önce birler basamağı: 8 artı 5 eşittir 13. 13 ün 3 ünü birler basamağına yazarız, 1 onluğu ise elde var 1 diyerek onlar basamağına ekleriz. Onlar basamağında 1 artı 2 artı 1 eşittir 4. Sonuç 43!')">🔊 Dinle</button>
-              </div>
-              <p style="font-size:13px;color:#cbd5e1;line-height:1.5;margin-bottom:12px;">
-                Birliklerin toplamı 10 veya daha büyükse, 10 birlik paketlenip <strong>1 ONLUK</strong> olur ve komşuya uçar!
-              </p>
-              <div style="display:flex;align-items:center;justify-content:center;gap:20px;background:#0f172a;border-radius:12px;padding:14px;font-family:monospace;font-size:18px;">
-                <div style="text-align:right;line-height:1.4;">
-                  <div style="color:#ef4444;font-size:12px;font-weight:900;">① (Elde)</div>
-                  <div>&nbsp; 2 8</div>
-                  <div>+ 1 5</div>
-                  <div style="border-top:2px solid #ef4444;color:#fde047;font-weight:900;">&nbsp; 4 3</div>
-                </div>
-                <div style="font-size:12px;color:#cbd5e1;font-family:sans-serif;text-align:left;line-height:1.6;">
-                  <div>1️⃣ 8 + 5 = <strong>13</strong></div>
-                  <div>2️⃣ 13'ün <strong>3</strong>'ünü yazdık, <strong>1 ONLUK</strong> elde kaldı!</div>
-                  <div>3️⃣ Onluklar: 1 (elde) + 2 + 1 = <strong>4</strong></div>
-                  <div style="color:#fde047;font-weight:900;">Cevap: 43</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      } else if (mathActiveStage === 'practice') {
-        const prob = additionCurrentProblem;
-        const onesDone = additionCurrentStep === 'tens' || additionCurrentStep === 'done';
-        const isDone = additionCurrentStep === 'done';
-
-        contentHtml = `
-          <div class="card" style="border:2px solid #10b981;text-align:center;">
-            <!-- SEVİYE SEÇİCİ -->
-            <div style="display:flex;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-              <button class="action-btn" style="background:${additionPracticeType === 'no_carry' ? '#10b981' : '#334155'};font-size:12px;font-weight:800;padding:8px 14px;" onclick="setAdditionPracticeType('no_carry')">
-                🟢 Eldesiz Toplama
-              </button>
-              <button class="action-btn" style="background:${additionPracticeType === 'with_carry' ? '#ef4444' : '#334155'};font-size:12px;font-weight:800;padding:8px 14px;" onclick="setAdditionPracticeType('with_carry')">
-                🔴 Eldeli Toplama
-              </button>
-              <button class="action-btn" style="background:#06b6d4;font-size:12px;font-weight:800;padding:8px 14px;" onclick="nextAdditionProblem()">
-                🔄 Yeni Sayılar Getir
-              </button>
-            </div>
-
-            <div style="display:flex;justify-content:center;gap:14px;margin-bottom:12px;">
-              <span style="background:rgba(16,185,129,0.2);color:#34d399;padding:4px 10px;border-radius:8px;font-weight:800;font-size:12px;">⭐ Puan: ${additionScore}</span>
-              <span style="background:rgba(245,158,11,0.2);color:#fde047;padding:4px 10px;border-radius:8px;font-weight:800;font-size:12px;">🔥 Seri: ${additionStreak}</span>
-            </div>
-
-            <!-- İŞLEM TAHTASI -->
-            <div style="max-width:320px;margin:0 auto 18px;background:#0f172a;border:2px solid #334155;border-radius:16px;padding:20px;position:relative;">
-              <div style="display:flex;justify-content:center;gap:24px;margin-bottom:8px;font-size:14px;">
-                <div style="width:40px;height:28px;display:flex;align-items:center;justify-content:center;">
-                  ${additionCarryActive ? '<span style="background:#ef4444;color:#fff;border-radius:999px;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;animation:fadeIn 0.3s ease;">+1</span>' : '<span style="color:#475569;font-size:11px;">Onluk</span>'}
-                </div>
-                <div style="width:40px;height:28px;display:flex;align-items:center;justify-content:center;color:#475569;font-size:11px;">
-                  Birlik
-                </div>
-              </div>
-
-              <div style="font-family:monospace;font-size:36px;font-weight:900;line-height:1.3;letter-spacing:14px;text-align:right;padding-right:24px;">
-                <div style="color:#fff;">${prob.n1}</div>
-                <div style="color:#fff;position:relative;">
-                  <span style="position:absolute;left:20px;color:#10b981;font-size:32px;">+</span>${prob.n2}
-                </div>
-                <div style="border-top:3px solid #64748b;margin:6px 0;"></div>
-                <div style="display:flex;justify-content:flex-end;gap:14px;letter-spacing:normal;">
-                  <div style="width:46px;height:50px;border:2px dashed ${onesDone ? '#10b981' : '#64748b'};border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:32px;color:#fde047;background:rgba(255,255,255,0.04);">
-                    ${additionUserTens !== '' ? additionUserTens : '?'}
-                  </div>
-                  <div style="width:46px;height:50px;border:2px dashed ${additionCurrentStep === 'ones' ? '#38bdf8' : '#10b981'};border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:32px;color:#38bdf8;background:rgba(255,255,255,0.04);">
-                    ${additionUserOnes !== '' ? additionUserOnes : '?'}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ADIM YÖNERGESİ VE CEVAP BUTONLARI -->
-            <div id="additionStepArea" style="max-width:440px;margin:0 auto;">
-              ${!isDone ? `
-                <div style="font-size:15px;color:#fff;font-weight:800;margin-bottom:12px;">
-                  ${additionCurrentStep === 'ones' 
-                    ? `👉 1. Adım: Birler basamağını topla: <strong>${prob.ones1} + ${prob.ones2}</strong> kaç eder?` 
-                    : `👉 2. Adım: Onlar basamağını topla: <strong>${additionCarryActive ? '1 (elde) + ' : ''}${prob.tens1} + ${prob.tens2}</strong> kaç eder?`}
-                </div>
-                <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
-                  ${getAdditionStepChoices(prob, additionCurrentStep).map(val => `
-                    <button class="action-btn" style="background:#1e293b;border:2px solid #38bdf8;color:#fff;font-size:20px;font-weight:900;padding:10px 22px;min-width:60px;" onclick="handleAdditionStepAnswer(${val})">
-                      ${val}
-                    </button>
-                  `).join('')}
-                </div>
-              ` : `
-                <div style="background:rgba(16,185,129,0.15);border:2px solid #10b981;border-radius:14px;padding:16px;">
-                  <div style="font-size:36px;margin-bottom:4px;">🎉🌟</div>
-                  <h4 style="font-size:18px;color:#6ee7b7;font-weight:900;margin-bottom:6px;">Harika Çözdün!</h4>
-                  <p style="font-size:13px;color:#cbd5e1;margin-bottom:14px;">
-                    ${prob.n1} + ${prob.n2} = <strong>${prob.sum}</strong> işlemini doğru tamamladın.
-                  </p>
-                  <button class="action-btn" style="background:#10b981;color:#fff;font-size:14px;font-weight:900;padding:10px 24px;" onclick="nextAdditionProblem()">
-                    Sonraki Soruya Geç ➔
-                  </button>
-                </div>
-              `}
-            </div>
-          </div>
-        `;
-      }
-
       const fullHtml = `
+        <!-- ÜST GERİ DÖNÜŞ & DİĞER MATEMATİK MODÜLLERİNE GEÇİŞ -->
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
-          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:8px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('math')">
+          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:9px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('math')">
             ⬅️ Matematik Menüsüne Dön
           </button>
-          <div style="display:flex;gap:8px;">
-            <button class="action-btn ${mathActiveStage === 'learn' ? 'active-all' : ''}" style="background:${mathActiveStage === 'learn' ? '#10b981' : '#1e293b'};font-size:12px;font-weight:800;padding:7px 12px;" onclick="setMathStage('learn', 'addition')">
-              📖 Konu Anlatımı
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="action-btn" style="background:#ef4444;color:#fff;font-size:12px;font-weight:800;padding:8px 14px;" onclick="switchMainTab('math_subtraction')">
+              ➖ Çıkarma Dersine Geç
             </button>
-            <button class="action-btn ${mathActiveStage === 'practice' ? 'active-all' : ''}" style="background:${mathActiveStage === 'practice' ? '#10b981' : '#1e293b'};font-size:12px;font-weight:800;padding:7px 12px;" onclick="setMathStage('practice', 'addition')">
-              ✏️ İnteraktif Tahta
+            <button class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_problems')">
+              🧠 Hikayeli Problemler
             </button>
           </div>
         </div>
 
-        ${contentHtml}
+        <!-- 2 BÜYÜK VE BELİRGİN BÖLÜM SEÇİCİ KART -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin-bottom:18px;">
+          <div onclick="window.scrollTo({top:0, behavior:'smooth'})" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(30,41,59,0.95));border:2px solid #10b981;border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">
+            <div style="font-size:34px;background:rgba(16,185,129,0.2);padding:8px;border-radius:12px;">📖</div>
+            <div>
+              <div style="font-size:11px;font-weight:900;color:#6ee7b7;">1. AŞAMA</div>
+              <div style="font-size:16px;font-weight:900;color:#fff;">Konu Anlatımı & Örnekler</div>
+              <div style="font-size:11px;color:#cbd5e1;">Onluk bloklar, eldesiz ve eldeli toplama</div>
+            </div>
+          </div>
+
+          <div onclick="scrollToInteractiveBoard('interactiveAdditionSection')" style="background:linear-gradient(135deg, rgba(56,189,248,0.25), rgba(99,102,241,0.25));border:2px solid #38bdf8;border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 6px 20px rgba(56,189,248,0.2);">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="font-size:34px;background:rgba(56,189,248,0.2);padding:8px;border-radius:12px;">✏️</div>
+              <div>
+                <div style="font-size:11px;font-weight:900;color:#38bdf8;">2. AŞAMA (DERSİN ALTINDA)</div>
+                <div style="font-size:16px;font-weight:900;color:#fff;">İnteraktif Toplama Tahtası</div>
+                <div style="font-size:11px;color:#bae6fd;">Hemen aşağıya in ve kendin çöz! ⬇</div>
+              </div>
+            </div>
+            <span style="font-size:22px;color:#38bdf8;font-weight:900;">⬇</span>
+          </div>
+        </div>
+
+        <!-- 1. BÖLÜM: KONU ANLATIMI KARTI -->
+        <div class="card" style="border:2px solid #10b981;margin-bottom:22px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:32px;">➕</span>
+              <div>
+                <h3 style="font-size:20px;color:#fff;font-weight:900;margin:0;">1. Bölüm: 2. Sınıf Toplama İşlemi Rehberi</h3>
+                <p style="font-size:12px;color:#6ee7b7;margin:0;">MEB Maarif Modeli • Onluk Taban Blokları ve Basamak Tablosu</p>
+              </div>
+            </div>
+            <button class="sound-btn" style="width:auto;padding:8px 14px;font-size:13px;font-weight:800;border-radius:12px;" onclick="speakTurkish('Toplama işleminde önce birler basamağındaki birlikler toplanır. Eğer birliklerin toplamı 10 veya daha büyükse, 10 birlik birleşerek 1 onluk olur ve onlar basamağına elde olarak eklenir!')" title="Dersi Sesli Dinle">
+              🔊 Dersi Sesli Dinle
+            </button>
+          </div>
+
+          <!-- 1. KAVRAMSAL MODEL: ONLUK TABAN BLOKLARI -->
+          <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:16px;margin-bottom:16px;">
+            <h4 style="font-size:15px;color:#38bdf8;margin-bottom:8px;font-weight:800;">🧱 1. Onluk ve Birlik Nedir?</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;line-height:1.5;">
+              <div style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);padding:10px;border-radius:10px;">
+                <div style="font-size:22px;margin-bottom:4px;">🟨</div>
+                <strong style="color:#fff;">1 Birlik:</strong> Tek başına duran 1 adet küçük küp.
+              </div>
+              <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:10px;border-radius:10px;">
+                <div style="font-size:22px;margin-bottom:4px;">🟦</div>
+                <strong style="color:#fff;">1 Onluk:</strong> 10 tane birliğin alt alta birleştiği çubuk (10 Birlik = 1 Onluk).
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. ELDESİZ TOPLAMA ÖRNEĞİ -->
+          <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:16px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+              <h4 style="font-size:15px;color:#10b981;font-weight:800;margin:0;">🟢 2. Eldesiz Toplama: 34 + 23</h4>
+              <button class="sound-btn" style="font-size:12px;padding:5px 10px;width:auto;border-radius:8px;" onclick="speakTurkish('34 ile 23 ü toplarken önce birlikleri toplarız: 4 artı 3 eşittir 7. Sonra onlar basamağı: 3 artı 2 eşittir 5. Sonuç 57!')">🔊 Örneği Dinle</button>
+            </div>
+            <p style="font-size:13px;color:#cbd5e1;line-height:1.5;margin-bottom:10px;">
+              Birliklerin toplamı 10'u geçmiyorsa işlem çok basittir:
+            </p>
+            <div style="display:flex;align-items:center;justify-content:center;gap:20px;background:#0f172a;border-radius:12px;padding:14px;font-family:monospace;font-size:18px;margin-bottom:12px;">
+              <div style="text-align:right;line-height:1.4;">
+                <div>&nbsp; 3 4</div>
+                <div>+ 2 3</div>
+                <div style="border-top:2px solid #334155;color:#10b981;font-weight:900;">&nbsp; 5 7</div>
+              </div>
+              <div style="font-size:12px;color:#94a3b8;font-family:sans-serif;text-align:left;">
+                <div>1️⃣ <strong>Birlikler:</strong> 4 + 3 = <strong>7</strong></div>
+                <div>2️⃣ <strong>Onluklar:</strong> 3 + 2 = <strong>5</strong></div>
+                <div style="color:#10b981;font-weight:700;">Sonuç: 57</div>
+              </div>
+            </div>
+            <button class="action-btn" style="width:100%;background:rgba(16,185,129,0.2);border:2px solid #10b981;color:#6ee7b7;font-size:14px;font-weight:900;padding:10px;border-radius:12px;" onclick="jumpToAdditionBoard('no_carry')">
+              🟢 Şimdi Aşağıdaki Tahtada Eldesiz Toplama Çöz! ⬇
+            </button>
+          </div>
+
+          <!-- 3. ELDELİ TOPLAMA ÖRNEĞİ -->
+          <div style="background:linear-gradient(135deg, rgba(239,68,68,0.1), rgba(15,23,42,0.8));border:1px solid rgba(239,68,68,0.3);border-radius:14px;padding:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+              <h4 style="font-size:15px;color:#f87171;font-weight:800;margin:0;">🔴 3. Eldeli Toplama: 28 + 15 (10 Birlik = 1 Onluk!)</h4>
+              <button class="sound-btn" style="font-size:12px;padding:5px 10px;width:auto;border-radius:8px;" onclick="speakTurkish('28 ile 15 i toplarken önce birler basamağı: 8 artı 5 eşittir 13. 13 ün 3 ünü birler basamağına yazarız, 1 onluğu ise elde var 1 diyerek onlar basamağına ekleriz. Onlar basamağında 1 artı 2 artı 1 eşittir 4. Sonuç 43!')">🔊 Örneği Dinle</button>
+            </div>
+            <p style="font-size:13px;color:#cbd5e1;line-height:1.5;margin-bottom:12px;">
+              Birliklerin toplamı 10 veya daha büyükse, 10 birlik paketlenip <strong>1 ONLUK</strong> olur ve komşuya uçar!
+            </p>
+            <div style="display:flex;align-items:center;justify-content:center;gap:20px;background:#0f172a;border-radius:12px;padding:14px;font-family:monospace;font-size:18px;margin-bottom:12px;">
+              <div style="text-align:right;line-height:1.4;">
+                <div style="color:#ef4444;font-size:12px;font-weight:900;">① (Elde)</div>
+                <div>&nbsp; 2 8</div>
+                <div>+ 1 5</div>
+                <div style="border-top:2px solid #ef4444;color:#fde047;font-weight:900;">&nbsp; 4 3</div>
+              </div>
+              <div style="font-size:12px;color:#cbd5e1;font-family:sans-serif;text-align:left;line-height:1.6;">
+                <div>1️⃣ 8 + 5 = <strong>13</strong></div>
+                <div>2️⃣ 13'ün <strong>3</strong>'ünü yazdık, <strong>1 ONLUK</strong> elde kaldı!</div>
+                <div>3️⃣ Onluklar: 1 (elde) + 2 + 1 = <strong>4</strong></div>
+                <div style="color:#fde047;font-weight:900;">Cevap: 43</div>
+              </div>
+            </div>
+            <button class="action-btn" style="width:100%;background:rgba(239,68,68,0.2);border:2px solid #ef4444;color:#fca5a5;font-size:14px;font-weight:900;padding:10px;border-radius:12px;" onclick="jumpToAdditionBoard('with_carry')">
+              🔴 Şimdi Aşağıdaki Tahtada Eldeli Toplama Çöz! ⬇
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. BÖLÜM: DERSLERİN HEMEN ALTINDA AÇIK İNTERAKTİF TOPLAMA TAHTASI -->
+        <div id="interactiveAdditionSection">
+          ${buildAdditionBoardHtml()}
+        </div>
       `;
 
       document.getElementById('appContent').innerHTML = fullHtml;
     }
 
     function setAdditionPracticeType(type) {
+      recordActivity();
       additionPracticeType = type;
       nextAdditionProblem();
     }
 
     function nextAdditionProblem() {
+      recordActivity();
       additionCurrentProblem = generateAdditionProblem(additionPracticeType === 'with_carry');
       additionCurrentStep = 'ones';
       additionUserOnes = '';
       additionUserTens = '';
       additionCarryActive = false;
-      renderMathAddition();
+      const boardEl = document.getElementById('interactiveAdditionSection');
+      if (boardEl) {
+        boardEl.innerHTML = buildAdditionBoardHtml();
+      } else {
+        renderMathAddition();
+      }
     }
 
     function getAdditionStepChoices(prob, step) {
@@ -3516,7 +3670,9 @@
             speakTurkish("Aferin! " + prob.ones1 + " artı " + prob.ones2 + " eşittir " + prob.onesDigit + ".");
           }
           additionCurrentStep = 'tens';
-          renderMathAddition();
+          const boardEl = document.getElementById('interactiveAdditionSection');
+          if (boardEl) boardEl.innerHTML = buildAdditionBoardHtml();
+          else renderMathAddition();
         } else {
           playChimeSound('wrong');
           speakTurkish("Tekrar dene! " + prob.ones1 + " ile " + prob.ones2 + " toplanırsa kaç eder?");
@@ -3530,7 +3686,9 @@
           additionStreak++;
           unlockBadge('math_addition_hero');
           speakTurkish("Tebrikler! Sonuç " + prob.sum + "! Harika topladın.");
-          renderMathAddition();
+          const boardEl = document.getElementById('interactiveAdditionSection');
+          if (boardEl) boardEl.innerHTML = buildAdditionBoardHtml();
+          else renderMathAddition();
         } else {
           playChimeSound('wrong');
           speakTurkish("Onlukları tekrar topla: " + (additionCarryActive ? "1 elde artı " : "") + prob.tens1 + " artı " + prob.tens2 + " kaç eder?");
@@ -3538,7 +3696,129 @@
       }
     }
 
-    /* ÇIKARMA EKRANI RENDER */
+    /* İNTERAKTİF ÇIKARMA TAHTASI HTML ÜRETİCİSİ */
+    function buildSubtractionBoardHtml() {
+      const prob = subtractionCurrentProblem;
+      const onesDone = subtractionCurrentStep === 'tens' || subtractionCurrentStep === 'done';
+      const isDone = subtractionCurrentStep === 'done';
+
+      return `
+        <div class="card" style="border:3px solid #ef4444;background:linear-gradient(145deg, rgba(239,68,68,0.12), rgba(15,23,42,0.98));box-shadow:0 12px 32px rgba(239,68,68,0.2);text-align:center;padding:22px 16px;">
+          <!-- TAHTA BAŞLIĞI -->
+          <div style="display:inline-flex;align-items:center;gap:8px;background:#ef4444;color:#fff;font-size:12px;font-weight:900;padding:5px 14px;border-radius:999px;margin-bottom:10px;letter-spacing:0.5px;">
+            ✏️ 2. BÖLÜM • İNTERAKTİF ÇIKARMA TAHTASI
+          </div>
+          <h3 style="font-size:22px;color:#fff;font-weight:900;margin:0 0 6px;">
+            Şimdi Sıra Sende! Çıkarma İşlemini Adım Adım Çöz
+          </h3>
+          <p style="font-size:13px;color:#cbd5e1;margin:0 0 16px;">
+            İster <strong>Onluk Bozmasız</strong> ister <strong>Onluk Bozmalı</strong> çıkarma seçerek tahtadaki işlemleri çözebilirsin:
+          </p>
+
+          <!-- BÜYÜK MOD SEÇİCİ BUTONLAR -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:10px;max-width:560px;margin:0 auto 16px;">
+            <button class="action-btn" style="background:${subtractionPracticeType === 'no_borrow' ? '#10b981' : '#1e293b'};color:${subtractionPracticeType === 'no_borrow' ? '#0f172a' : '#e2e8f0'};border:2px solid #10b981;font-size:14px;font-weight:900;padding:12px 10px;border-radius:14px;" onclick="setSubtractionPracticeType('no_borrow')">
+              🟢 Onluk Bozmasız
+            </button>
+            <button class="action-btn" style="background:${subtractionPracticeType === 'with_borrow' ? '#ef4444' : '#1e293b'};color:#fff;border:2px solid #ef4444;font-size:14px;font-weight:900;padding:12px 10px;border-radius:14px;" onclick="setSubtractionPracticeType('with_borrow')">
+              🔴 Onluk Bozmalı
+            </button>
+            <button class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:14px;font-weight:900;padding:12px 10px;border-radius:14px;" onclick="nextSubtractionProblem()">
+              🔄 Yeni Soru Getir
+            </button>
+          </div>
+
+          <!-- PUAN VE SESLİ OKUMA -->
+          <div style="display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+            <span style="background:rgba(239,68,68,0.2);color:#fca5a5;padding:6px 14px;border-radius:10px;font-weight:900;font-size:13px;">⭐ Puan: ${subtractionScore}</span>
+            <span style="background:rgba(245,158,11,0.2);color:#fde047;padding:6px 14px;border-radius:10px;font-weight:900;font-size:13px;">🔥 Seri: ${subtractionStreak}</span>
+            <button class="sound-btn" style="width:auto;padding:6px 12px;font-size:12px;font-weight:800;border-radius:10px;" onclick="speakTurkish('${prob.n1} eksi ${prob.n2} işlemini çözelim.')">
+              🔊 Soruyu Dinle
+            </button>
+          </div>
+
+          <!-- İŞLEM TAHTASI -->
+          <div style="max-width:340px;margin:0 auto 18px;background:#0f172a;border:3px solid #334155;border-radius:18px;padding:20px;position:relative;box-shadow:inset 0 4px 12px rgba(0,0,0,0.5);">
+            <!-- ONLUK BOZULDUĞUNDA ÜSTTEKİ SAYILAR -->
+            <div style="display:flex;justify-content:flex-end;gap:18px;margin-bottom:6px;padding-right:20px;font-size:15px;font-weight:900;">
+              ${subtractionHasBorrowed ? `
+                <div style="background:rgba(56,189,248,0.2);border:1px solid #38bdf8;color:#38bdf8;padding:2px 10px;border-radius:8px;animation:fadeIn 0.3s ease;">${prob.borrowedTens1} Onluk</div>
+                <div style="background:rgba(16,185,129,0.2);border:1px solid #10b981;color:#6ee7b7;padding:2px 10px;border-radius:8px;animation:fadeIn 0.3s ease;">${prob.borrowedOnes1} Birlik</div>
+              ` : `
+                <div style="width:52px;color:#94a3b8;font-size:12px;font-weight:800;">ONLUK</div>
+                <div style="width:52px;color:#38bdf8;font-size:12px;font-weight:800;">BİRLİK</div>
+              `}
+            </div>
+
+            <!-- SAYILAR -->
+            <div style="font-family:monospace;font-size:40px;font-weight:900;line-height:1.3;letter-spacing:18px;text-align:right;padding-right:20px;">
+              <div style="color:#fff;">
+                ${subtractionHasBorrowed ? `<span style="text-decoration:line-through;color:#64748b;">${prob.tens1}</span><span style="text-decoration:line-through;color:#64748b;">${prob.ones1}</span>` : prob.n1}
+              </div>
+              <div style="color:#fff;position:relative;">
+                <span style="position:absolute;left:16px;color:#ef4444;font-size:36px;">-</span>${prob.n2}
+              </div>
+              <div style="border-top:4px solid #64748b;margin:8px 0;"></div>
+              <!-- ÇÖZÜM SATIRI -->
+              <div style="display:flex;justify-content:flex-end;gap:16px;letter-spacing:normal;">
+                <div style="width:54px;height:56px;border:3px dashed ${subtractionCurrentStep === 'tens' ? '#fde047' : (onesDone ? '#10b981' : '#475569')};border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:34px;color:#fde047;background:rgba(255,255,255,0.05);">
+                  ${subtractionUserTens !== '' ? subtractionUserTens : '?'}
+                </div>
+                <div style="width:54px;height:56px;border:3px dashed ${subtractionCurrentStep === 'ones' ? '#38bdf8' : '#10b981'};border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:34px;color:#38bdf8;background:rgba(255,255,255,0.05);">
+                  ${subtractionUserOnes !== '' ? subtractionUserOnes : '?'}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ADIM ALANI -->
+          <div style="max-width:480px;margin:0 auto;">
+            ${subtractionCurrentStep === 'borrow_check' ? `
+              <div style="background:rgba(245,158,11,0.16);border:2px solid #f59e0b;border-radius:16px;padding:16px;margin-bottom:14px;">
+                <div style="font-size:17px;color:#fff;font-weight:900;margin-bottom:6px;">
+                  🤔 Dikkat: Birler basamağında ${prob.ones1}'den ${prob.ones2} çıkar mı?
+                </div>
+                <p style="font-size:13px;color:#fde047;margin-bottom:14px;">
+                  <strong>${prob.ones1}</strong> sayısı <strong>${prob.ones2}</strong> sayısından küçük olduğu için çıkmaz! Komşudan 1 onluk bozmalısın:
+                </p>
+                <button class="action-btn" style="background:linear-gradient(135deg, #f59e0b, #eab308);color:#0f172a;font-size:16px;font-weight:900;padding:14px 26px;border-radius:14px;box-shadow:0 6px 20px rgba(245,158,11,0.45);" onclick="handleBorrowTens()">
+                  🚪 Komşudan 1 Onluk Al (+10 Birlik Ekle)
+                </button>
+              </div>
+            ` : !isDone ? `
+              <div style="background:rgba(56,189,248,0.12);border:2px solid rgba(56,189,248,0.4);border-radius:14px;padding:14px;margin-bottom:14px;">
+                <div style="font-size:16px;color:#fff;font-weight:900;margin-bottom:4px;">
+                  ${subtractionCurrentStep === 'ones' 
+                    ? `👉 1. Adım (Birler Basamağı): <span style="color:#38bdf8;font-size:20px;">${subtractionHasBorrowed ? prob.borrowedOnes1 : prob.ones1} - ${prob.ones2}</span> kaç eder?` 
+                    : `👉 2. Adım (Onlar Basamağı): <span style="color:#fde047;font-size:20px;">${subtractionHasBorrowed ? prob.borrowedTens1 : prob.tens1} - ${prob.tens2}</span> kaç eder?`}
+                </div>
+                <div style="font-size:12px;color:#bae6fd;">Aşağıdaki doğru sayı butonuna dokun:</div>
+              </div>
+              <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+                ${getSubtractionStepChoices(prob, subtractionCurrentStep, subtractionHasBorrowed).map(val => `
+                  <button class="action-btn" style="background:linear-gradient(135deg, #1e293b, #0f172a);border:3px solid #38bdf8;color:#fff;font-size:24px;font-weight:900;padding:14px 26px;min-width:74px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,0.4);" onclick="handleSubtractionStepAnswer(${val})">
+                    ${val}
+                  </button>
+                `).join('')}
+              </div>
+            ` : `
+              <div style="background:rgba(16,185,129,0.18);border:2px solid #10b981;border-radius:16px;padding:18px;animation:fadeIn 0.3s ease;">
+                <div style="font-size:42px;margin-bottom:4px;">🎉🌟</div>
+                <h4 style="font-size:20px;color:#6ee7b7;font-weight:900;margin-bottom:6px;">Tebrikler! Çok Güzel Çözdün!</h4>
+                <p style="font-size:15px;color:#fff;margin-bottom:16px;">
+                  <strong>${prob.n1} - ${prob.n2} = ${prob.diff}</strong>
+                </p>
+                <button class="action-btn" style="background:#10b981;color:#0f172a;font-size:16px;font-weight:900;padding:12px 28px;border-radius:14px;box-shadow:0 4px 16px rgba(16,185,129,0.4);" onclick="nextSubtractionProblem()">
+                  🎯 Yeni Çıkarma Sorusu Getir ➔
+                </button>
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    /* ÇIKARMA EKRANI RENDER (KONU ANLATIMI + HEMEN ALTINDA İNTERAKTİF TAHTA) */
     function renderMathSubtraction() {
       recordActivity();
       currentMainTab = 'math_subtraction';
@@ -3552,225 +3832,164 @@
         subtractionUserTens = '';
       }
 
-      let contentHtml = '';
-
-      if (mathActiveStage === 'learn') {
-        contentHtml = `
-          <div class="card" style="border:2px solid #ef4444;">
-            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;">
-              <div style="display:flex;align-items:center;gap:10px;">
-                <span style="font-size:32px;">➖</span>
-                <div>
-                  <h3 style="font-size:20px;color:#fff;font-weight:900;margin:0;">2. Sınıf Çıkarma İşlemi Rehberi</h3>
-                  <p style="font-size:12px;color:#fca5a5;margin:0;">MEB Maarif Modeli • Eksilen, Çıkan, Fark ve Onluk Bozma</p>
-                </div>
-              </div>
-              <button class="sound-btn" onclick="speakTurkish('Çıkarma işleminde en üstteki sayı eksilen, çıkarılan sayı çıkan, sonuç ise farktır. Küçük sayıdan büyük sayı çıkmazsa onlar basamağındaki komşuya gidip bir onluk bozarız!')" title="Dersi Sesli Dinle">
-                🔊 Sesli Dinle
-              </button>
-            </div>
-
-            <!-- 1. TERİMLER: EKSİLEN, ÇIKAN, FARK -->
-            <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:16px;margin-bottom:16px;">
-              <h4 style="font-size:15px;color:#f87171;margin-bottom:8px;font-weight:800;">🍰 1. Çıkarma İşleminin Terimleri</h4>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:10px;font-size:12px;">
-                <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:10px;border-radius:10px;text-align:center;">
-                  <div style="font-size:24px;margin-bottom:4px;">🎂</div>
-                  <strong style="color:#fca5a5;font-size:13px;">Eksilen:</strong>
-                  <div>Azalacak olan büyük sayı</div>
-                </div>
-                <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);padding:10px;border-radius:10px;text-align:center;">
-                  <div style="font-size:24px;margin-bottom:4px;">🍴</div>
-                  <strong style="color:#fde047;font-size:13px;">Çıkan:</strong>
-                  <div>Eksilenden alınan miktar</div>
-                </div>
-                <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:10px;border-radius:10px;text-align:center;">
-                  <div style="font-size:24px;margin-bottom:4px;">🍽️</div>
-                  <strong style="color:#6ee7b7;font-size:13px;">Fark (Kalan):</strong>
-                  <div>İşlem sonucu geriye kalan</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 2. ONLUK BOZMASIZ ÇIKARMA -->
-            <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:16px;margin-bottom:16px;">
-              <h4 style="font-size:15px;color:#10b981;font-weight:800;margin-bottom:8px;">🟢 2. Onluk Bozmasız Çıkarma: 48 - 25</h4>
-              <div style="display:flex;align-items:center;justify-content:center;gap:20px;background:#0f172a;border-radius:12px;padding:14px;font-family:monospace;font-size:18px;">
-                <div style="text-align:right;line-height:1.4;">
-                  <div>&nbsp; 4 8 (Eksilen)</div>
-                  <div>- 2 5 (Çıkan)</div>
-                  <div style="border-top:2px solid #334155;color:#10b981;font-weight:900;">&nbsp; 2 3 (Fark)</div>
-                </div>
-                <div style="font-size:12px;color:#cbd5e1;font-family:sans-serif;text-align:left;">
-                  <div>1️⃣ <strong>Birlikler:</strong> 8 - 5 = <strong>3</strong></div>
-                  <div>2️⃣ <strong>Onluklar:</strong> 4 - 2 = <strong>2</strong></div>
-                  <div style="color:#10b981;font-weight:700;">Fark: 23</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 3. ONLUK BOZARAK ÇIKARMA (KOMŞUYA GİTME) -->
-            <div style="background:linear-gradient(135deg, rgba(239,68,68,0.15), rgba(15,23,42,0.9));border:1px solid rgba(239,68,68,0.35);border-radius:14px;padding:16px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                <h4 style="font-size:15px;color:#f87171;font-weight:800;">🔴 3. Onluk Bozarak Çıkarma: 52 - 27</h4>
-                <button class="sound-btn" style="font-size:11px;padding:4px 8px;width:auto;" onclick="speakTurkish('52 den 27 yi çıkarırken birler basamağında 2 den 7 çıkmaz. Komşudaki 5 onluktan bir onluk alırız. Komşuda 4 onluk kalır. 10 birlik ile 2 birliği birleştiririz, 12 birlik olur. 12 den 7 çıktı 5 kaldı. Onlar basamağında 4 ten 2 çıktı 2 kaldı. Sonuç 25!')">🔊 Dinle</button>
-              </div>
-              <p style="font-size:13px;color:#cbd5e1;line-height:1.5;margin-bottom:12px;">
-                Birler basamağında <strong>2'den 7 çıkmaz!</strong> Komşuya (onlar basamağına) gideriz ve 1 ONLUK bozarız:
-              </p>
-              <div style="display:flex;align-items:center;justify-content:center;gap:20px;background:#0f172a;border-radius:12px;padding:14px;font-family:monospace;font-size:18px;">
-                <div style="text-align:right;line-height:1.4;">
-                  <div style="color:#38bdf8;font-size:12px;font-weight:900;">(4) (12)</div>
-                  <div>&nbsp; <span style="text-decoration:line-through;color:#94a3b8;">5</span> <span style="text-decoration:line-through;color:#94a3b8;">2</span></div>
-                  <div>- 2 &nbsp;7</div>
-                  <div style="border-top:2px solid #ef4444;color:#fde047;font-weight:900;">&nbsp; 2 &nbsp;5</div>
-                </div>
-                <div style="font-size:12px;color:#cbd5e1;font-family:sans-serif;text-align:left;line-height:1.6;">
-                  <div>1️⃣ 2'den 7 çıkmaz. Komşudan 1 onluk aldık.</div>
-                  <div>2️⃣ Komşuda <strong>4 onluk</strong> kaldı. Bizde <strong>12 birlik</strong> oldu!</div>
-                  <div>3️⃣ 12 - 7 = <strong>5</strong></div>
-                  <div>4️⃣ Onluklar: 4 - 2 = <strong>2</strong></div>
-                  <div style="color:#fde047;font-weight:900;">Kalan: 25</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      } else if (mathActiveStage === 'practice') {
-        const prob = subtractionCurrentProblem;
-        const onesDone = subtractionCurrentStep === 'tens' || subtractionCurrentStep === 'done';
-        const isDone = subtractionCurrentStep === 'done';
-
-        contentHtml = `
-          <div class="card" style="border:2px solid #ef4444;text-align:center;">
-            <div style="display:flex;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-              <button class="action-btn" style="background:${subtractionPracticeType === 'no_borrow' ? '#10b981' : '#334155'};font-size:12px;font-weight:800;padding:8px 14px;" onclick="setSubtractionPracticeType('no_borrow')">
-                🟢 Onluk Bozmasız Çıkarma
-              </button>
-              <button class="action-btn" style="background:${subtractionPracticeType === 'with_borrow' ? '#ef4444' : '#334155'};font-size:12px;font-weight:800;padding:8px 14px;" onclick="setSubtractionPracticeType('with_borrow')">
-                🔴 Onluk Bozmalı Çıkarma
-              </button>
-              <button class="action-btn" style="background:#06b6d4;font-size:12px;font-weight:800;padding:8px 14px;" onclick="nextSubtractionProblem()">
-                🔄 Yeni Sayılar Getir
-              </button>
-            </div>
-
-            <div style="display:flex;justify-content:center;gap:14px;margin-bottom:12px;">
-              <span style="background:rgba(239,68,68,0.2);color:#fca5a5;padding:4px 10px;border-radius:8px;font-weight:800;font-size:12px;">⭐ Puan: ${subtractionScore}</span>
-              <span style="background:rgba(245,158,11,0.2);color:#fde047;padding:4px 10px;border-radius:8px;font-weight:800;font-size:12px;">🔥 Seri: ${subtractionStreak}</span>
-            </div>
-
-            <!-- İŞLEM TAHTASI -->
-            <div style="max-width:320px;margin:0 auto 18px;background:#0f172a;border:2px solid #334155;border-radius:16px;padding:20px;position:relative;">
-              <!-- ONLUK BOZULDUĞUNDA ÜSTTEKİ SAYILAR -->
-              <div style="display:flex;justify-content:flex-end;gap:18px;margin-bottom:4px;padding-right:24px;font-size:14px;font-weight:900;">
-                ${subtractionHasBorrowed ? `
-                  <div style="color:#38bdf8;animation:fadeIn 0.3s ease;">(${prob.borrowedTens1})</div>
-                  <div style="color:#38bdf8;animation:fadeIn 0.3s ease;">(${prob.borrowedOnes1})</div>
-                ` : `
-                  <div style="color:#475569;font-size:11px;">Onluk</div>
-                  <div style="color:#475569;font-size:11px;">Birlik</div>
-                `}
-              </div>
-
-              <!-- SAYILAR -->
-              <div style="font-family:monospace;font-size:36px;font-weight:900;line-height:1.3;letter-spacing:14px;text-align:right;padding-right:24px;">
-                <div style="color:#fff;">
-                  ${subtractionHasBorrowed ? `<span style="text-decoration:line-through;color:#94a3b8;">${prob.tens1}</span><span style="text-decoration:line-through;color:#94a3b8;">${prob.ones1}</span>` : prob.n1}
-                </div>
-                <div style="color:#fff;position:relative;">
-                  <span style="position:absolute;left:20px;color:#ef4444;font-size:32px;">-</span>${prob.n2}
-                </div>
-                <div style="border-top:3px solid #64748b;margin:6px 0;"></div>
-                <!-- ÇÖZÜM SATIRI -->
-                <div style="display:flex;justify-content:flex-end;gap:14px;letter-spacing:normal;">
-                  <div style="width:46px;height:50px;border:2px dashed ${onesDone ? '#10b981' : '#64748b'};border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:32px;color:#fde047;background:rgba(255,255,255,0.04);">
-                    ${subtractionUserTens !== '' ? subtractionUserTens : '?'}
-                  </div>
-                  <div style="width:46px;height:50px;border:2px dashed ${subtractionCurrentStep === 'ones' ? '#38bdf8' : '#10b981'};border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:32px;color:#38bdf8;background:rgba(255,255,255,0.04);">
-                    ${subtractionUserOnes !== '' ? subtractionUserOnes : '?'}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ADIM ALANI -->
-            <div style="max-width:440px;margin:0 auto;">
-              ${subtractionCurrentStep === 'borrow_check' ? `
-                <div style="background:rgba(245,158,11,0.12);border:1px solid #f59e0b;border-radius:12px;padding:14px;margin-bottom:14px;">
-                  <div style="font-size:15px;color:#fff;font-weight:800;margin-bottom:6px;">
-                    🤔 Dikkat: ${prob.ones1}'den ${prob.ones2} çıkar mı?
-                  </div>
-                  <p style="font-size:13px;color:#fde047;margin-bottom:12px;">
-                    ${prob.ones1}, ${prob.ones2}'den küçük olduğu için çıkmaz! Komşudan 1 onluk almalısın.
-                  </p>
-                  <button class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:15px;font-weight:900;padding:12px 24px;border-radius:12px;box-shadow:0 4px 16px rgba(245,158,11,0.4);" onclick="handleBorrowTens()">
-                    🚪 Komşudan 1 Onluk Al (+10 Birlik)
-                  </button>
-                </div>
-              ` : !isDone ? `
-                <div style="font-size:15px;color:#fff;font-weight:800;margin-bottom:12px;">
-                  ${subtractionCurrentStep === 'ones' 
-                    ? `👉 1. Adım: Birler basamağını çıkar: <strong>${subtractionHasBorrowed ? prob.borrowedOnes1 : prob.ones1} - ${prob.ones2}</strong> kaç eder?` 
-                    : `👉 2. Adım: Onlar basamağını çıkar: <strong>${subtractionHasBorrowed ? prob.borrowedTens1 : prob.tens1} - ${prob.tens2}</strong> kaç eder?`}
-                </div>
-                <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
-                  ${getSubtractionStepChoices(prob, subtractionCurrentStep, subtractionHasBorrowed).map(val => `
-                    <button class="action-btn" style="background:#1e293b;border:2px solid #38bdf8;color:#fff;font-size:20px;font-weight:900;padding:10px 22px;min-width:60px;" onclick="handleSubtractionStepAnswer(${val})">
-                      ${val}
-                    </button>
-                  `).join('')}
-                </div>
-              ` : `
-                <div style="background:rgba(16,185,129,0.15);border:2px solid #10b981;border-radius:14px;padding:16px;">
-                  <div style="font-size:36px;margin-bottom:4px;">🎉🌟</div>
-                  <h4 style="font-size:18px;color:#6ee7b7;font-weight:900;margin-bottom:6px;">Harika Çözdün!</h4>
-                  <p style="font-size:13px;color:#cbd5e1;margin-bottom:14px;">
-                    ${prob.n1} - ${prob.n2} = <strong>${prob.diff}</strong> çıkarma işlemini doğru tamamladın.
-                  </p>
-                  <button class="action-btn" style="background:#10b981;color:#fff;font-size:14px;font-weight:900;padding:10px 24px;" onclick="nextSubtractionProblem()">
-                    Sonraki Soruya Geç ➔
-                  </button>
-                </div>
-              `}
-            </div>
-          </div>
-        `;
-      }
-
       const fullHtml = `
+        <!-- ÜST GERİ DÖNÜŞ & DİĞER MATEMATİK MODÜLLERİNE GEÇİŞ -->
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
-          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:8px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('math')">
+          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:9px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('math')">
             ⬅️ Matematik Menüsüne Dön
           </button>
-          <div style="display:flex;gap:8px;">
-            <button class="action-btn ${mathActiveStage === 'learn' ? 'active-all' : ''}" style="background:${mathActiveStage === 'learn' ? '#ef4444' : '#1e293b'};font-size:12px;font-weight:800;padding:7px 12px;" onclick="setMathStage('learn', 'subtraction')">
-              📖 Konu Anlatımı
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="action-btn" style="background:#10b981;color:#0f172a;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_addition')">
+              ➕ Toplama Dersine Geç
             </button>
-            <button class="action-btn ${mathActiveStage === 'practice' ? 'active-all' : ''}" style="background:${mathActiveStage === 'practice' ? '#ef4444' : '#1e293b'};font-size:12px;font-weight:800;padding:7px 12px;" onclick="setMathStage('practice', 'subtraction')">
-              ✏️ İnteraktif Tahta
+            <button class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_problems')">
+              🧠 Hikayeli Problemler
             </button>
           </div>
         </div>
 
-        ${contentHtml}
+        <!-- 2 BÜYÜK VE BELİRGİN BÖLÜM SEÇİCİ KART -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin-bottom:18px;">
+          <div onclick="window.scrollTo({top:0, behavior:'smooth'})" style="background:linear-gradient(135deg, rgba(239,68,68,0.22), rgba(30,41,59,0.95));border:2px solid #ef4444;border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">
+            <div style="font-size:34px;background:rgba(239,68,68,0.2);padding:8px;border-radius:12px;">📖</div>
+            <div>
+              <div style="font-size:11px;font-weight:900;color:#fca5a5;">1. AŞAMA</div>
+              <div style="font-size:16px;font-weight:900;color:#fff;">Konu Anlatımı & Örnekler</div>
+              <div style="font-size:11px;color:#cbd5e1;">Eksilen, Çıkan, Fark ve Onluk Bozma</div>
+            </div>
+          </div>
+
+          <div onclick="scrollToInteractiveBoard('interactiveSubtractionSection')" style="background:linear-gradient(135deg, rgba(56,189,248,0.25), rgba(99,102,241,0.25));border:2px solid #38bdf8;border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 6px 20px rgba(56,189,248,0.2);">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="font-size:34px;background:rgba(56,189,248,0.2);padding:8px;border-radius:12px;">✏️</div>
+              <div>
+                <div style="font-size:11px;font-weight:900;color:#38bdf8;">2. AŞAMA (DERSİN ALTINDA)</div>
+                <div style="font-size:16px;font-weight:900;color:#fff;">İnteraktif Çıkarma Tahtası</div>
+                <div style="font-size:11px;color:#bae6fd;">Hemen aşağıya in ve kendin çöz! ⬇</div>
+              </div>
+            </div>
+            <span style="font-size:22px;color:#38bdf8;font-weight:900;">⬇</span>
+          </div>
+        </div>
+
+        <!-- 1. BÖLÜM: KONU ANLATIMI KARTI -->
+        <div class="card" style="border:2px solid #ef4444;margin-bottom:22px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:32px;">➖</span>
+              <div>
+                <h3 style="font-size:20px;color:#fff;font-weight:900;margin:0;">1. Bölüm: 2. Sınıf Çıkarma İşlemi Rehberi</h3>
+                <p style="font-size:12px;color:#fca5a5;margin:0;">MEB Maarif Modeli • Eksilen, Çıkan, Fark ve Onluk Bozma</p>
+              </div>
+            </div>
+            <button class="sound-btn" style="width:auto;padding:8px 14px;font-size:13px;font-weight:800;border-radius:12px;" onclick="speakTurkish('Çıkarma işleminde en üstteki sayı eksilen, çıkarılan sayı çıkan, sonuç ise farktır. Küçük sayıdan büyük sayı çıkmazsa onlar basamağındaki komşuya gidip bir onluk bozarız!')" title="Dersi Sesli Dinle">
+              🔊 Dersi Sesli Dinle
+            </button>
+          </div>
+
+          <!-- 1. TERİMLER: EKSİLEN, ÇIKAN, FARK -->
+          <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:16px;margin-bottom:16px;">
+            <h4 style="font-size:15px;color:#f87171;margin-bottom:8px;font-weight:800;">🍰 1. Çıkarma İşleminin Terimleri</h4>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:10px;font-size:12px;">
+              <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:10px;border-radius:10px;text-align:center;">
+                <div style="font-size:24px;margin-bottom:4px;">🎂</div>
+                <strong style="color:#fca5a5;font-size:13px;">Eksilen:</strong>
+                <div>Azalacak olan büyük sayı</div>
+              </div>
+              <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);padding:10px;border-radius:10px;text-align:center;">
+                <div style="font-size:24px;margin-bottom:4px;">🍴</div>
+                <strong style="color:#fde047;font-size:13px;">Çıkan:</strong>
+                <div>Eksilenden alınan miktar</div>
+              </div>
+              <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:10px;border-radius:10px;text-align:center;">
+                <div style="font-size:24px;margin-bottom:4px;">🍽️</div>
+                <strong style="color:#6ee7b7;font-size:13px;">Fark (Kalan):</strong>
+                <div>İşlem sonucu geriye kalan</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. ONLUK BOZMASIZ ÇIKARMA -->
+          <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:16px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+              <h4 style="font-size:15px;color:#10b981;font-weight:800;margin:0;">🟢 2. Onluk Bozmasız Çıkarma: 48 - 25</h4>
+              <button class="sound-btn" style="font-size:12px;padding:5px 10px;width:auto;border-radius:8px;" onclick="speakTurkish('48 den 25 i çıkarırken önce birlikleri çıkarırız: 8 eksi 5 eşittir 3. Sonra onlukları çıkarırız: 4 eksi 2 eşittir 2. Fark 23!')">🔊 Örneği Dinle</button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:20px;background:#0f172a;border-radius:12px;padding:14px;font-family:monospace;font-size:18px;margin-bottom:12px;">
+              <div style="text-align:right;line-height:1.4;">
+                <div>&nbsp; 4 8 (Eksilen)</div>
+                <div>- 2 5 (Çıkan)</div>
+                <div style="border-top:2px solid #334155;color:#10b981;font-weight:900;">&nbsp; 2 3 (Fark)</div>
+              </div>
+              <div style="font-size:12px;color:#cbd5e1;font-family:sans-serif;text-align:left;">
+                <div>1️⃣ <strong>Birlikler:</strong> 8 - 5 = <strong>3</strong></div>
+                <div>2️⃣ <strong>Onluklar:</strong> 4 - 2 = <strong>2</strong></div>
+                <div style="color:#10b981;font-weight:700;">Fark: 23</div>
+              </div>
+            </div>
+            <button class="action-btn" style="width:100%;background:rgba(16,185,129,0.2);border:2px solid #10b981;color:#6ee7b7;font-size:14px;font-weight:900;padding:10px;border-radius:12px;" onclick="jumpToSubtractionBoard('no_borrow')">
+              🟢 Şimdi Aşağıdaki Tahtada Onluk Bozmasız Çıkarma Çöz! ⬇
+            </button>
+          </div>
+
+          <!-- 3. ONLUK BOZARAK ÇIKARMA (KOMŞUYA GİTME) -->
+          <div style="background:linear-gradient(135deg, rgba(239,68,68,0.15), rgba(15,23,42,0.9));border:1px solid rgba(239,68,68,0.35);border-radius:14px;padding:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+              <h4 style="font-size:15px;color:#f87171;font-weight:800;margin:0;">🔴 3. Onluk Bozarak Çıkarma: 52 - 27</h4>
+              <button class="sound-btn" style="font-size:12px;padding:5px 10px;width:auto;border-radius:8px;" onclick="speakTurkish('52 den 27 yi çıkarırken birler basamağında 2 den 7 çıkmaz. Komşudaki 5 onluktan bir onluk alırız. Komşuda 4 onluk kalır. 10 birlik ile 2 birliği birleştiririz, 12 birlik olur. 12 den 7 çıktı 5 kaldı. Onlar basamağında 4 ten 2 çıktı 2 kaldı. Sonuç 25!')">🔊 Örneği Dinle</button>
+            </div>
+            <p style="font-size:13px;color:#cbd5e1;line-height:1.5;margin-bottom:12px;">
+              Birler basamağında <strong>2'den 7 çıkmaz!</strong> Komşuya (onlar basamağına) gideriz ve 1 ONLUK bozarız:
+            </p>
+            <div style="display:flex;align-items:center;justify-content:center;gap:20px;background:#0f172a;border-radius:12px;padding:14px;font-family:monospace;font-size:18px;margin-bottom:12px;">
+              <div style="text-align:right;line-height:1.4;">
+                <div style="color:#38bdf8;font-size:12px;font-weight:900;">(4) (12)</div>
+                <div>&nbsp; <span style="text-decoration:line-through;color:#94a3b8;">5</span> <span style="text-decoration:line-through;color:#94a3b8;">2</span></div>
+                <div>- 2 &nbsp;7</div>
+                <div style="border-top:2px solid #ef4444;color:#fde047;font-weight:900;">&nbsp; 2 &nbsp;5</div>
+              </div>
+              <div style="font-size:12px;color:#cbd5e1;font-family:sans-serif;text-align:left;line-height:1.6;">
+                <div>1️⃣ 2'den 7 çıkmaz. Komşudan 1 onluk aldık.</div>
+                <div>2️⃣ Komşuda <strong>4 onluk</strong> kaldı. Bizde <strong>12 birlik</strong> oldu!</div>
+                <div>3️⃣ 12 - 7 = <strong>5</strong></div>
+                <div>4️⃣ Onluklar: 4 - 2 = <strong>2</strong></div>
+                <div style="color:#fde047;font-weight:900;">Kalan: 25</div>
+              </div>
+            </div>
+            <button class="action-btn" style="width:100%;background:rgba(239,68,68,0.2);border:2px solid #ef4444;color:#fca5a5;font-size:14px;font-weight:900;padding:10px;border-radius:12px;" onclick="jumpToSubtractionBoard('with_borrow')">
+              🔴 Şimdi Aşağıdaki Tahtada Onluk Bozmalı Çıkarma Çöz! ⬇
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. BÖLÜM: DERSLERİN HEMEN ALTINDA AÇIK İNTERAKTİF ÇIKARMA TAHTASI -->
+        <div id="interactiveSubtractionSection">
+          ${buildSubtractionBoardHtml()}
+        </div>
       `;
 
       document.getElementById('appContent').innerHTML = fullHtml;
     }
 
     function setSubtractionPracticeType(type) {
+      recordActivity();
       subtractionPracticeType = type;
       nextSubtractionProblem();
     }
 
     function nextSubtractionProblem() {
+      recordActivity();
       subtractionCurrentProblem = generateSubtractionProblem(subtractionPracticeType === 'with_borrow');
       subtractionCurrentStep = subtractionCurrentProblem.needsBorrow ? 'borrow_check' : 'ones';
       subtractionHasBorrowed = false;
       subtractionUserOnes = '';
       subtractionUserTens = '';
-      renderMathSubtraction();
+      const boardEl = document.getElementById('interactiveSubtractionSection');
+      if (boardEl) {
+        boardEl.innerHTML = buildSubtractionBoardHtml();
+      } else {
+        renderMathSubtraction();
+      }
     }
 
     function handleBorrowTens() {
@@ -3779,7 +3998,12 @@
       subtractionHasBorrowed = true;
       subtractionCurrentStep = 'ones';
       speakTurkish("Harika! Komşudan 1 onluk aldın. Komşuda " + subtractionCurrentProblem.borrowedTens1 + " onluk kaldı, sende " + subtractionCurrentProblem.borrowedOnes1 + " birlik oldu!");
-      renderMathSubtraction();
+      const boardEl = document.getElementById('interactiveSubtractionSection');
+      if (boardEl) {
+        boardEl.innerHTML = buildSubtractionBoardHtml();
+      } else {
+        renderMathSubtraction();
+      }
     }
 
     function getSubtractionStepChoices(prob, step, hasBorrowed) {
@@ -3812,7 +4036,9 @@
           subtractionCurrentStep = 'tens';
           const topOnes = subtractionHasBorrowed ? prob.borrowedOnes1 : prob.ones1;
           speakTurkish("Aferin! " + topOnes + " eksi " + prob.ones2 + " eşittir " + prob.onesDiff + ".");
-          renderMathSubtraction();
+          const boardEl = document.getElementById('interactiveSubtractionSection');
+          if (boardEl) boardEl.innerHTML = buildSubtractionBoardHtml();
+          else renderMathSubtraction();
         } else {
           playChimeSound('wrong');
           const topOnes = subtractionHasBorrowed ? prob.borrowedOnes1 : prob.ones1;
@@ -3827,7 +4053,9 @@
           subtractionStreak++;
           unlockBadge('math_subtraction_hero');
           speakTurkish("Tebrikler! Çıkarma işleminin farkı " + prob.diff + "! Çok güzel çözdün.");
-          renderMathSubtraction();
+          const boardEl = document.getElementById('interactiveSubtractionSection');
+          if (boardEl) boardEl.innerHTML = buildSubtractionBoardHtml();
+          else renderMathSubtraction();
         } else {
           playChimeSound('wrong');
           const topTens = subtractionHasBorrowed ? prob.borrowedTens1 : prob.tens1;
@@ -8870,7 +9098,7 @@
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.7.0';
+    const CURRENT_APP_VERSION = '2.7.1';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
