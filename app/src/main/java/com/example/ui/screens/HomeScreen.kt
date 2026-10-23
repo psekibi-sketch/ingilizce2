@@ -186,7 +186,7 @@ fun HomeScreen(
                     }
 
                     Text(
-                        text = "• 2'şer, 3'er, 4'er ve 5'er Ritmik Sayma\n• 3 Aşamalı Eğitim (Öğretmen Sayar ➔ Sen Say ➔ Sınav)\n• 🚀 Geriye Doğru Sayma & Roket Modu",
+                        text = "• 2'şer, 3'er, 4'er ve 5'er Ritmik Sayma & Sınav\n• ➕➖ 2. Sınıf Toplama & Çıkarma (Eldeli/Onluk Bozmalı)\n• 🧠 MEB Maarif Modeli Hikayeli Problem Çözme",
                         fontSize = 12.sp,
                         color = Color(0xFFFCE7F3),
                         lineHeight = 18.sp,
