@@ -975,7 +975,7 @@
           📲 Ana Ekrana Ekle
         </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
-          🔄 Sürümü Yenile (v2.9.2)
+          🔄 Sürümü Yenile (v2.9.3)
         </button>
         <button onclick="switchMainTab('pet_hub')" class="action-btn" style="background:#ec4899;color:#fff;font-size:11px;padding:7px 12px;font-weight:900;">
           🐾 Dostum &amp; Çark
@@ -2636,7 +2636,7 @@
       const headerHomeBtn = document.getElementById('headerHomeBtn');
       if (tabId === 'menu') {
         if (navScroll) navScroll.style.display = 'flex';
-        if (headerHomeBtn) headerHomeBtn.style.display = 'none';
+        if (headerHomeBtn) headerHomeBtn.style.display = currentHomeSubject === 'home' ? 'none' : 'inline-flex';
       } else {
         if (navScroll) navScroll.style.display = 'none';
         if (headerHomeBtn) headerHomeBtn.style.display = 'inline-flex';
@@ -2789,6 +2789,7 @@
       const petSummary = typeof getPetSummaryForMenu === 'function' ? getPetSummaryForMenu() : { petEmoji: '🐱', petName: 'Pamuk Kedi', level: 1, stars: 20, questsDone: 0, avatarEmoji: '🦸' };
 
       const html = `
+        ${isHomeOnly ? `
         <!-- EĞLENCE, DİJİTAL DOSTUM, GÜNLÜK ÇARK VE OYUN MERKEZİ ÜST BANNER -->
         <div class="card" style="border:2px solid rgba(245,158,11,0.5);background:linear-gradient(135deg,rgba(245,158,11,0.16),rgba(236,72,153,0.14),rgba(15,23,42,0.95));margin-bottom:18px;padding:16px;">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
@@ -2867,6 +2868,7 @@
             </div>
           </div>
         </div>
+        ` : ''}
 
         ${showMath ? `
           <!-- ========================================================
@@ -13319,7 +13321,7 @@
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.9.2';
+    const CURRENT_APP_VERSION = '2.9.3';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
