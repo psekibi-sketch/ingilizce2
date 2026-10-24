@@ -972,13 +972,13 @@
           📲 Ana Ekrana Ekle
         </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
-          🔄 Sürümü Yenile (v2.7.2)
+          🔄 Sürümü Yenile (v2.8.0)
         </button>
         <button onclick="openParentGateModal()" class="action-btn" style="background:#475569;color:#f8fafc;border:1px solid #64748b;font-size:11px;padding:7px 12px;font-weight:900;" title="Ebeveyn Kontrolü ve Günlük Gelişim Raporu">
           👨‍👩‍👧 Ebeveyn Ekranı
         </button>
         <button onclick="openBadgesModal()" class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;">
-          🏆 Rozet Vitrini (<span id="unlockedBadgesCount">0</span>/12)
+          🏆 Rozet Vitrini (<span id="unlockedBadgesCount">0</span>/14)
         </button>
       </div>
     </div>
@@ -1075,7 +1075,9 @@
       { id: 'days_expert', title: "Günler Bilgini", icon: '📅', desc: "Haftanın günlerini eksiksiz sıraya dizdi!", color: '#14b8a6' },
       { id: 'listen_detective', title: "Dinle & Bul Dedektifi", icon: '🎧', desc: "Görsel dinleme oyununda tüm hedefleri buldu!", color: '#f43f5e' },
       { id: 'math_addition_hero', title: "Toplama Ustası", icon: '➕', desc: "Eldeli ve eldesiz toplama işlemlerini başarıyla çözdü!", color: '#10b981' },
-      { id: 'math_subtraction_hero', title: "Çıkarma Şampiyonu", icon: '➖', desc: "Onluk bozmalı ve bozmasız çıkarma işlemlerini başarıyla tamamladı!", color: '#ef4444' }
+      { id: 'math_subtraction_hero', title: "Çıkarma Şampiyonu", icon: '➖', desc: "Onluk bozmalı ve bozmasız çıkarma işlemlerini başarıyla tamamladı!", color: '#ef4444' },
+      { id: 'math_mult_hero', title: "Çarpma Sihirbazı", icon: '✖️', desc: "2. sınıf çarpma işlemi ve kat problemlerini başarıyla çözdü!", color: '#8b5cf6' },
+      { id: 'math_div_hero', title: "Bölme Ustası", icon: '➗', desc: "Eşit paylaştırma ve bölme işlemlerini başarıyla tamamladı!", color: '#06b6d4' }
     ];
 
     function getUnlockedBadges() {
@@ -1323,11 +1325,13 @@
 
     const PARENT_CATEGORY_LABELS = {
       math_rhythm: { title: '🔢 Ritmik Sayma (2, 3, 4, 5\'er)', color: '#38bdf8' },
-      math_addition: { title: '➕ 2. Sınıf Toplama İşlemi', color: '#10b981' },
-      math_subtraction: { title: '➖ 2. Sınıf Çıkarma İşlemi', color: '#ef4444' },
+      math_addition: { title: '➕ 2. Sınıf Toplama İşlemi & Testi', color: '#10b981' },
+      math_subtraction: { title: '➖ 2. Sınıf Çıkarma İşlemi & Testi', color: '#ef4444' },
+      math_multiplication: { title: '✖️ 2. Sınıf Çarpma İşlemi & Testi', color: '#8b5cf6' },
+      math_division: { title: '➗ 2. Sınıf Bölme İşlemi & Testi', color: '#06b6d4' },
       math_problems: { title: '🧠 Hikayeli Problemler', color: '#f59e0b' },
-      english_quiz: { title: '🇬🇧 İngilizce Test & Telaffuz', color: '#8b5cf6' },
-      english_units: { title: '📘 İngilizce Ünite Alıştırmaları', color: '#06b6d4' }
+      english_quiz: { title: '🇬🇧 İngilizce Test & Telaffuz', color: '#ec4899' },
+      english_units: { title: '📘 İngilizce Ünite Alıştırmaları', color: '#14b8a6' }
     };
 
     function getTodayDateKey() {
@@ -2095,6 +2099,9 @@
       if (typeof stopRhythmAutoTeach === 'function' && tabId !== 'rhythmic') {
         stopRhythmAutoTeach();
       }
+      if (typeof stopChildVoiceCount === 'function' && tabId !== 'rhythmic') {
+        stopChildVoiceCount();
+      }
       currentMainTab = tabId;
       document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
       const activeNavTab = document.getElementById(`tab_${tabId}`);
@@ -2162,6 +2169,30 @@
       } else if (tabId === 'math_problems') {
         document.getElementById('subHeaderTitle').textContent = '🧠 2. Sınıf MEB Maarif Modeli Hikayeli Problemler';
         renderMathProblems();
+      } else if (tabId === 'math_addition_quiz') {
+        document.getElementById('subHeaderTitle').textContent = '➕ 2. Sınıf Toplama Testi (Seviyeli & Dinamik)';
+        renderMathQuizScreen('addition');
+      } else if (tabId === 'math_subtraction_quiz') {
+        document.getElementById('subHeaderTitle').textContent = '➖ 2. Sınıf Çıkarma Testi (Seviyeli & Dinamik)';
+        renderMathQuizScreen('subtraction');
+      } else if (tabId === 'math_multiplication') {
+        document.getElementById('subHeaderTitle').textContent = '✖️ 2. Sınıf MEB Maarif Modeli Doğal Sayılarla Çarpma İşlemi';
+        renderMathMultiplication();
+      } else if (tabId === 'math_multiplication_quiz') {
+        document.getElementById('subHeaderTitle').textContent = '✖️ 2. Sınıf Çarpma İşlemi Testi (Seviyeli & Dinamik)';
+        renderMathQuizScreen('multiplication');
+      } else if (tabId === 'math_division') {
+        document.getElementById('subHeaderTitle').textContent = '➗ 2. Sınıf MEB Maarif Modeli Doğal Sayılarla Bölme İşlemi';
+        renderMathDivision();
+      } else if (tabId === 'math_division_quiz') {
+        document.getElementById('subHeaderTitle').textContent = '➗ 2. Sınıf Bölme İşlemi Testi (Seviyeli & Dinamik)';
+        renderMathQuizScreen('division');
+      } else if (tabId === 'unit7') {
+        document.getElementById('subHeaderTitle').textContent = '7. Ünite: In My House (Evimiz, Odalar & Eşyalar)';
+        renderUnitHouse();
+      } else if (tabId === 'unit8') {
+        document.getElementById('subHeaderTitle').textContent = '8. Ünite: In the City (Şehir Mekanları & Taşıtlar)';
+        renderUnitCity();
       }
       if (tabId !== 'menu') {
         const subTitleEl = document.getElementById('subHeaderTitle');
@@ -2188,7 +2219,9 @@
         { id: 'unit3', num: '3. Ünite', title: 'Personal Life', pages: 'Sayfa 25 - 32', icon: '👤', desc: 'Vücut organları (head, nose, eye), giysiler, boyama ve alıştırmalar.', color: '#8b5cf6' },
         { id: 'unit4', num: '4. Ünite', title: 'Family Life', pages: 'Sayfa 33 - 40', icon: '👨‍👩‍👧‍👦', desc: 'Aile bireyleri (mother, father, baby, grandfather), cümle kurma.', color: '#f59e0b' },
         { id: 'unit5', num: '5. Ünite', title: 'Homes & Houses', pages: 'Sayfa 41 - 48', icon: '🏡', desc: 'Evin bölümleri (bedroom, kitchen, bathroom), mobilyalar, Where is the dog?', color: '#ec4899' },
-        { id: 'unit6', num: '6. Ünite', title: 'Life in the City', pages: 'Sayfa 49 - 56', icon: '🌆', desc: 'Şehir mekanları (school, park, hospital, zoo, museum, cinema) ve dünya.', color: '#06b6d4' }
+        { id: 'unit6', num: '6. Ünite', title: 'Life in the City', pages: 'Sayfa 49 - 56', icon: '🌆', desc: 'Şehir mekanları (school, park, hospital, zoo, museum, cinema) ve dünya.', color: '#06b6d4' },
+        { id: 'unit7', num: '7. Ünite', title: 'In My House', pages: 'Ders & Odalar', icon: '🏠', desc: 'Evin bölümleri (living room, bedroom, kitchen), eşyalar (sofa, bed, table) ve nerede soruları.', color: '#ec4899' },
+        { id: 'unit8', num: '8. Ünite', title: 'In the City', pages: 'Ders & Mekanlar', icon: '🚗', desc: 'Şehir mekanları (school, park, hospital, zoo, cinema) ve ulaşım araçları.', color: '#06b6d4' }
       ];
 
       const mathModules = [
@@ -2377,7 +2410,7 @@
                   <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
                     Onluk taban bloklarıyla modelleme, adım adım eldeli toplama ve hemen dersin altındaki interaktif işlem tahtası.
                   </p>
-                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
                     <button class="action-btn" style="width:100%;background:#10b981;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_addition');window.scrollTo({top:0,behavior:'smooth'})">
                       📖 1. Konu Anlatımı
                     </button>
@@ -2385,6 +2418,9 @@
                       ✏️ 2. İnteraktif Tahta
                     </button>
                   </div>
+                  <button class="action-btn" style="width:100%;background:linear-gradient(135deg, #10b981, #059669);color:#fff;font-size:12px;font-weight:900;padding:9px;" onclick="event.stopPropagation();startMathQuiz('addition')">
+                    🎯 3. Toplama Testi (10 Soru) ➔
+                  </button>
                 </div>
 
                 <!-- 2. ÇIKARMA İŞLEMİ KARTI -->
@@ -2397,14 +2433,14 @@
                           ONLUK BOZMALI & BOZMASIZ
                         </span>
                         <h4 style="font-size:17px;color:#fff;font-weight:900;margin:3px 0 1px;">Çıkarma İşlemi</h4>
-                        <div style="font-size:11px;color:#fca5a5;">Eksilen, Çıkan, Fark & Komşudan Onluk Alma</div>
+                        <div style="font-size:11px;color:#fca5a5;">Eksilen, Çıkan, Fark & Onluk Bozma</div>
                       </div>
                     </div>
                   </div>
                   <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
                     Küçük sayıdan büyük sayı çıkmadığında komşudan onluk alma animasyonu, terimler ve hemen dersin altındaki çıkarma tahtası.
                   </p>
-                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
                     <button class="action-btn" style="width:100%;background:#ef4444;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_subtraction');window.scrollTo({top:0,behavior:'smooth'})">
                       📖 1. Konu Anlatımı
                     </button>
@@ -2412,9 +2448,66 @@
                       ✏️ 2. İnteraktif Tahta
                     </button>
                   </div>
+                  <button class="action-btn" style="width:100%;background:linear-gradient(135deg, #ef4444, #dc2626);color:#fff;font-size:12px;font-weight:900;padding:9px;" onclick="event.stopPropagation();startMathQuiz('subtraction')">
+                    🎯 3. Çıkarma Testi (10 Soru) ➔
+                  </button>
                 </div>
 
-                <!-- 3. HİKAYELİ PROBLEMLER KARTI -->
+                <!-- 3. ÇARPMA İŞLEMİ KARTI -->
+                <div class="card" style="margin-bottom:0;border:2px solid #8b5cf6;background:linear-gradient(145deg, rgba(139,92,246,0.12), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_multiplication')">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <div style="font-size:36px;background:rgba(139,92,246,0.2);padding:8px;border-radius:14px;">✖️</div>
+                      <div>
+                        <span style="font-size:10px;font-weight:900;background:#8b5cf6;color:#fff;padding:2px 8px;border-radius:6px;">
+                          TEKRARLI TOPLAMA & KAT
+                        </span>
+                        <h4 style="font-size:17px;color:#fff;font-weight:900;margin:3px 0 1px;">Çarpma İşlemi</h4>
+                        <div style="font-size:11px;color:#c4b5fd;">1. Çarpan, 2. Çarpan, Çarpım, 1 ve 0 Kuralı</div>
+                      </div>
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
+                    Görsel tabaklar ve modellerle tekrarlı toplama mantığı, adım adım interaktif çarpma tahtası ve seviyeli çarpma testi.
+                  </p>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                    <button class="action-btn" style="width:100%;background:#8b5cf6;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_multiplication')">
+                      📖 1. Konu & Tahta
+                    </button>
+                    <button class="action-btn" style="width:100%;background:#f59e0b;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();startMathQuiz('multiplication')">
+                      🎯 2. Çarpma Testi
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 4. BÖLME İŞLEMİ KARTI -->
+                <div class="card" style="margin-bottom:0;border:2px solid #06b6d4;background:linear-gradient(145deg, rgba(6,182,212,0.12), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_division')">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <div style="font-size:36px;background:rgba(6,182,212,0.2);padding:8px;border-radius:14px;">➗</div>
+                      <div>
+                        <span style="font-size:10px;font-weight:900;background:#06b6d4;color:#0f172a;padding:2px 8px;border-radius:6px;">
+                          EŞİT PAYLAŞTIRMA & GRUPLAMA
+                        </span>
+                        <h4 style="font-size:17px;color:#fff;font-weight:900;margin:3px 0 1px;">Bölme İşlemi</h4>
+                        <div style="font-size:11px;color:#67e8f9;">Bölünen, Bölen, Bölüm, Kalan & Ardışık Çıkarma</div>
+                      </div>
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
+                    Nesneleri eşit paylaştırma modellemesi, ardışık çıkarma bağlantısı, adım adım interaktif bölme tahtası ve testi.
+                  </p>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                    <button class="action-btn" style="width:100%;background:#06b6d4;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_division')">
+                      📖 1. Konu & Tahta
+                    </button>
+                    <button class="action-btn" style="width:100%;background:#f59e0b;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();startMathQuiz('division')">
+                      🎯 2. Bölme Testi
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 5. HİKAYELİ PROBLEMLER KARTI -->
                 <div class="card" style="margin-bottom:0;border:2px solid #f59e0b;background:linear-gradient(145deg, rgba(245,158,11,0.12), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_problems')">
                   <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
                     <div style="display:flex;align-items:center;gap:10px;">
@@ -2735,6 +2828,7 @@
     function switchRhythmStage(newStage) {
       recordActivity();
       stopRhythmAutoTeach();
+      if (typeof stopChildVoiceCount === 'function') stopChildVoiceCount();
       rhythmActiveStage = newStage;
       if (newStage === 'learn') {
         renderRhythmicCounting();
@@ -2842,8 +2936,11 @@
       const info = rhythmData[rhythmActiveMode];
       const modeSay = (rhythmActiveMode === 2) ? "2'şer 2'şer" :
                       (rhythmActiveMode === 3) ? "3'er 3'er" :
-                      (rhythmActiveMode === 4) ? "4'er 4'er" : "5'er 5'er";
-      speakTurkish(`Şimdi sıra sende! ${modeSay} ${info.maxNumber}'e kadar sen sayıyorsun! İlk sayımız kaç? Yüksek sesle söyle ve seç!`, 0.95);
+      speakTurkish(`Şimdi sıra sende! ${modeSay} ${info.maxNumber}'e kadar sen sayıyorsun! İlk sayımız kaç? Yüksek sesle söyle!`, 0.95, () => {
+        if (rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted) {
+          setTimeout(() => startChildVoiceCount(true), 250);
+        }
+      });
     }
 
     function generateRhythmPracticeChoices() {
@@ -2897,6 +2994,7 @@
         recordParentActivityLog('math_rhythm', true, `${info.stepSize}'er Ritmik Sayma (${currentItem.step}. Adım)`, `Doğru sayı: ${currentItem.num} (${currentItem.tr})`);
 
         if (rhythmPracticeTargetStep >= info.steps.length) {
+          stopChildVoiceCount();
           // TÜM SAYILAR AÇILDI! BAŞARI VE SÜRE HESAPLAMA
           rhythmPracticeEndTime = Date.now();
           rhythmPracticeDuration = Math.max(1, Math.round((rhythmPracticeEndTime - rhythmPracticeStartTime) / 1000));
@@ -2906,10 +3004,15 @@
           recordParentMilestone('math_rhythm', `${info.stepSize}'er ${rhythmCountDirection === 'backward' ? 'Geriye' : 'İleriye'} Ritmik Sayma`, `${stats.totalScore}/100 Puan • Süre: ${rhythmPracticeDuration} sn • Hata: ${rhythmPracticeTotalMistakes} (${stats.fingerCountingStatus})`);
           speakTurkish(`${currentItem.tr}! Harikasın şampiyon, tamamladın! Süren ${rhythmPracticeDuration} saniye, puanın 100 üzerinden ${stats.totalScore}! ${stats.voiceFeedback}`, 0.94);
         } else {
+          stopChildVoiceCount();
           rhythmPracticeTargetStep++;
           generateRhythmPracticeChoices();
           renderRhythmicCounting();
-          speakTurkish(`Aferin, ${currentItem.tr}! Sıradaki sayı kaç?`, 0.95);
+          speakTurkish(`Aferin, ${currentItem.tr}! Sıradaki sayı kaç?`, 0.95, () => {
+            if (rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted) {
+              setTimeout(() => startChildVoiceCount(true), 250);
+            }
+          });
         }
       } else {
         rhythmPracticeTotalMistakes++;
@@ -2917,7 +3020,11 @@
         recordParentActivityLog('math_rhythm', false, `${info.stepSize}'er Ritmik Sayma (${currentItem.step}. Adım)`, `Doğru sayı ${currentItem.num} iken ${chosenNum} seçti`);
         rhythmPracticeWrongFeedback = `❌ ${chosenNum} değil! İpucu: ${rhythmPracticeTargetStep} tane ${info.stepSize} (${rhythmPracticeTargetStep} × ${info.stepSize}) kaç eder?`;
         renderRhythmicCounting();
-        speakTurkish(`Tekrar dene! ${rhythmPracticeTargetStep} tane ${info.stepSize} kaç eder?`, 0.95);
+        speakTurkish(`Tekrar dene! ${rhythmPracticeTargetStep} tane ${info.stepSize} kaç eder?`, 0.95, () => {
+          if (rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted) {
+            setTimeout(() => startChildVoiceCount(true), 250);
+          }
+        });
       }
     }
 
@@ -2994,29 +3101,68 @@
       };
     }
 
-    function startChildVoiceCount() {
+    let rhythmAutoMicEnabled = true;
+    let rhythmSpeechRecognizer = null;
+    let rhythmAutoMicRestartTimer = null;
+
+    function toggleRhythmAutoMic() {
+      rhythmAutoMicEnabled = !rhythmAutoMicEnabled;
+      if (!rhythmAutoMicEnabled) {
+        stopChildVoiceCount();
+      } else {
+        startChildVoiceCount(true);
+      }
+      renderRhythmicCounting();
+    }
+
+    function stopChildVoiceCount() {
+      if (rhythmAutoMicRestartTimer) {
+        clearTimeout(rhythmAutoMicRestartTimer);
+        rhythmAutoMicRestartTimer = null;
+      }
+      if (rhythmSpeechRecognizer) {
+        try { rhythmSpeechRecognizer.stop(); } catch (e) {}
+        rhythmSpeechRecognizer = null;
+      }
+      rhythmVoiceListening = false;
+    }
+
+    function startChildVoiceCount(isAuto = false) {
       recordActivity();
       const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
       const info = rhythmData[rhythmActiveMode];
+      if (!info) return;
       const currentItem = info.steps[rhythmPracticeTargetStep - 1];
-      if (!currentItem) return;
-
-      if (!SpeechRec) {
-        speakTurkish(`Yüksek sesle ${currentItem.tr} dedin, harikasın!`, 0.95);
-        handleChildCountChoice(currentItem.num);
+      if (!currentItem || rhythmPracticeCompleted || rhythmActiveStage !== 'practice') {
+        stopChildVoiceCount();
         return;
       }
 
+      if (!SpeechRec) {
+        if (!isAuto) {
+          speakTurkish(`Yüksek sesle ${currentItem.tr} dedin, harikasın!`, 0.95);
+          handleChildCountChoice(currentItem.num);
+        }
+        return;
+      }
+
+      if (rhythmVoiceListening && rhythmSpeechRecognizer) {
+        return; // Zaten aktif dinliyor
+      }
+
       try {
+        stopChildVoiceCount();
         const rec = new SpeechRec();
         rec.lang = 'tr-TR';
         rec.interimResults = false;
-        rec.maxAlternatives = 4;
+        rec.maxAlternatives = 5;
+        rhythmSpeechRecognizer = rec;
         rhythmVoiceListening = true;
         renderRhythmicCounting();
 
         rec.onresult = (event) => {
           rhythmVoiceListening = false;
+          rhythmSpeechRecognizer = null;
           let transcripts = [];
           for (let i = 0; i < event.results[0].length; i++) {
             transcripts.push(event.results[0][i].transcript.toLowerCase().trim());
@@ -3028,22 +3174,41 @@
           if (combined.includes(targetNumStr) || combined.includes(targetTrStr)) {
             handleChildCountChoice(currentItem.num);
           } else {
-            rhythmPracticeWrongFeedback = `🎙️ "${transcripts[0] || ''}" duyuldu. Yüksek sesle "${currentItem.tr} (${currentItem.num})" söyle veya aşağıdaki ${currentItem.num} baloncuğuna dokun!`;
+            rhythmPracticeWrongFeedback = `🎙️ "${transcripts[0] || ''}" duyuldu. Yüksek sesle "${currentItem.tr} (${currentItem.num})" de veya baloncuğa dokun!`;
+            renderRhythmicCounting();
+            if (rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted) {
+              rhythmAutoMicRestartTimer = setTimeout(() => startChildVoiceCount(true), 800);
+            }
+          }
+        };
+
+        rec.onerror = (err) => {
+          rhythmVoiceListening = false;
+          rhythmSpeechRecognizer = null;
+          if (err && err.error === 'no-speech' && rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted) {
+            rhythmAutoMicRestartTimer = setTimeout(() => startChildVoiceCount(true), 350);
+          } else if (err && (err.error === 'not-allowed' || err.error === 'service-not-allowed')) {
+            rhythmAutoMicEnabled = false;
+            renderRhythmicCounting();
+          } else {
             renderRhythmicCounting();
           }
         };
-        rec.onerror = () => {
-          rhythmVoiceListening = false;
-          renderRhythmicCounting();
-        };
+
         rec.onend = () => {
           rhythmVoiceListening = false;
-          renderRhythmicCounting();
+          rhythmSpeechRecognizer = null;
+          if (rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted) {
+            rhythmAutoMicRestartTimer = setTimeout(() => startChildVoiceCount(true), 350);
+          } else {
+            renderRhythmicCounting();
+          }
         };
+
         rec.start();
       } catch (e) {
         rhythmVoiceListening = false;
-        handleChildCountChoice(currentItem.num);
+        rhythmSpeechRecognizer = null;
       }
     }
 
@@ -3558,11 +3723,29 @@
                     : `${info.steps[currentTarget.step - 2].num} sayısından sonra ${info.stepSize} eklersek sıradaki sayı kaç olur?`}
                 </div>
 
-                <!-- Sesle Söyleme + Baloncuk Seçenekleri -->
+                <!-- Sesle Söyleme + Otomatik Dinleme + Baloncuk Seçenekleri -->
                 <div style="margin-bottom:14px;">
-                  <button class="action-btn" style="background:${rhythmVoiceListening ? '#ef4444' : '#8b5cf6'};color:#fff;font-size:14px;padding:12px 20px;margin-bottom:10px;" onclick="startChildVoiceCount()">
-                    ${rhythmVoiceListening ? '🎙️ Dinleniyor... Şimdi Söyle!' : '🎙️ Mikrofona Yüksek Sesle Söyle'}
-                  </button>
+                  <div style="background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(6,182,212,0.18));border:2px solid ${rhythmVoiceListening ? '#10b981' : '#0284c7'};border-radius:14px;padding:12px 16px;max-width:540px;margin:0 auto 12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;text-align:left;">
+                      <span style="font-size:30px;">${rhythmVoiceListening ? '🎙️' : '🎧'}</span>
+                      <div>
+                        <div style="font-size:14px;font-weight:900;color:${rhythmVoiceListening ? '#6ee7b7' : '#fde047'};">
+                          ${rhythmVoiceListening ? '🎙️ Seni Dinliyorum! Şimdi Yüksek Sesle Söyle!' : (rhythmAutoMicEnabled ? '🎙️ Otomatik Dinleme Açık (Sıradaki sayıyı söyle!)' : '🎙️ Manuel Mikrofon Modu')}
+                        </div>
+                        <div style="font-size:11px;color:#cbd5e1;">
+                          Butona basmana gerek yok; mikrofona söyle veya aşağıdaki baloncuğa dokun!
+                        </div>
+                      </div>
+                    </div>
+                    <div style="display:flex;gap:6px;">
+                      <button type="button" class="action-btn" style="background:${rhythmAutoMicEnabled ? '#10b981' : '#334155'};color:#fff;font-size:11px;font-weight:900;padding:6px 10px;" onclick="toggleRhythmAutoMic()">
+                        ${rhythmAutoMicEnabled ? '✅ Otomatik: AÇIK' : '❌ Otomatik: KAPALI'}
+                      </button>
+                      <button type="button" class="action-btn" style="background:#8b5cf6;color:#fff;font-size:11px;padding:6px 10px;" onclick="startChildVoiceCount(false)">
+                        ${rhythmVoiceListening ? '⏹️ Dinliyor' : '🎙️ Başlat'}
+                      </button>
+                    </div>
+                  </div>
                   <div style="font-size:12px;color:#94a3b8;">veya yüksek sesle söyleyip doğru sayı baloncuğuna dokun:</div>
                 </div>
 
@@ -4207,6 +4390,9 @@
             ⬅️ Matematik Menüsüne Dön
           </button>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="action-btn" style="background:#059669;color:#fff;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_addition_quiz')">
+              🎯 Toplama Testleri (3 Seviye)
+            </button>
             <button class="action-btn" style="background:#ef4444;color:#fff;font-size:12px;font-weight:800;padding:8px 14px;" onclick="switchMainTab('math_subtraction')">
               ➖ Çıkarma Dersine Geç
             </button>
@@ -4216,13 +4402,13 @@
           </div>
         </div>
 
-        <!-- 2 BÜYÜK VE BELİRGİN BÖLÜM SEÇİCİ KART -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin-bottom:18px;">
+        <!-- 3 BÜYÜK VE BELİRGİN BÖLÜM SEÇİCİ KART -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));gap:12px;margin-bottom:18px;">
           <div onclick="window.scrollTo({top:0, behavior:'smooth'})" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(30,41,59,0.95));border:2px solid #10b981;border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">
             <div style="font-size:34px;background:rgba(16,185,129,0.2);padding:8px;border-radius:12px;">📖</div>
             <div>
               <div style="font-size:11px;font-weight:900;color:#6ee7b7;">1. AŞAMA</div>
-              <div style="font-size:16px;font-weight:900;color:#fff;">Konu Anlatımı & Örnekler</div>
+              <div style="font-size:15px;font-weight:900;color:#fff;">Konu Anlatımı & Örnekler</div>
               <div style="font-size:11px;color:#cbd5e1;">Onluk bloklar, eldesiz ve eldeli toplama</div>
             </div>
           </div>
@@ -4232,11 +4418,23 @@
               <div style="font-size:34px;background:rgba(56,189,248,0.2);padding:8px;border-radius:12px;">✏️</div>
               <div>
                 <div style="font-size:11px;font-weight:900;color:#38bdf8;">2. AŞAMA (DERSİN ALTINDA)</div>
-                <div style="font-size:16px;font-weight:900;color:#fff;">İnteraktif Toplama Tahtası</div>
+                <div style="font-size:15px;font-weight:900;color:#fff;">İnteraktif Toplama Tahtası</div>
                 <div style="font-size:11px;color:#bae6fd;">Hemen aşağıya in ve kendin çöz! ⬇</div>
               </div>
             </div>
             <span style="font-size:22px;color:#38bdf8;font-weight:900;">⬇</span>
+          </div>
+
+          <div onclick="switchMainTab('math_addition_quiz')" style="background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(16,185,129,0.22));border:2px solid #f59e0b;border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="font-size:34px;background:rgba(245,158,11,0.2);padding:8px;border-radius:12px;">🎯</div>
+              <div>
+                <div style="font-size:11px;font-weight:900;color:#fde047;">3. AŞAMA (DEĞİŞKEN SORULAR)</div>
+                <div style="font-size:15px;font-weight:900;color:#fff;">Toplama Testleri (3 Seviye)</div>
+                <div style="font-size:11px;color:#fef08a;">Eldesiz, Eldeli ve Karışık Test ➔</div>
+              </div>
+            </div>
+            <span style="font-size:20px;color:#fde047;font-weight:900;">➔</span>
           </div>
         </div>
 
@@ -4564,19 +4762,22 @@
             <button class="action-btn" style="background:#10b981;color:#0f172a;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_addition')">
               ➕ Toplama Dersine Geç
             </button>
+            <button class="action-btn" style="background:#dc2626;color:#fff;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_subtraction_quiz')">
+              🎯 Çıkarma Testleri (3 Seviye)
+            </button>
             <button class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_problems')">
               🧠 Hikayeli Problemler
             </button>
           </div>
         </div>
 
-        <!-- 2 BÜYÜK VE BELİRGİN BÖLÜM SEÇİCİ KART -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin-bottom:18px;">
+        <!-- 3 BÜYÜK VE BELİRGİN BÖLÜM SEÇİCİ KART -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));gap:12px;margin-bottom:18px;">
           <div onclick="window.scrollTo({top:0, behavior:'smooth'})" style="background:linear-gradient(135deg, rgba(239,68,68,0.22), rgba(30,41,59,0.95));border:2px solid #ef4444;border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">
             <div style="font-size:34px;background:rgba(239,68,68,0.2);padding:8px;border-radius:12px;">📖</div>
             <div>
               <div style="font-size:11px;font-weight:900;color:#fca5a5;">1. AŞAMA</div>
-              <div style="font-size:16px;font-weight:900;color:#fff;">Konu Anlatımı & Örnekler</div>
+              <div style="font-size:15px;font-weight:900;color:#fff;">Konu Anlatımı & Örnekler</div>
               <div style="font-size:11px;color:#cbd5e1;">Eksilen, Çıkan, Fark ve Onluk Bozma</div>
             </div>
           </div>
@@ -4586,11 +4787,23 @@
               <div style="font-size:34px;background:rgba(56,189,248,0.2);padding:8px;border-radius:12px;">✏️</div>
               <div>
                 <div style="font-size:11px;font-weight:900;color:#38bdf8;">2. AŞAMA (DERSİN ALTINDA)</div>
-                <div style="font-size:16px;font-weight:900;color:#fff;">İnteraktif Çıkarma Tahtası</div>
+                <div style="font-size:15px;font-weight:900;color:#fff;">İnteraktif Çıkarma Tahtası</div>
                 <div style="font-size:11px;color:#bae6fd;">Hemen aşağıya in ve kendin çöz! ⬇</div>
               </div>
             </div>
             <span style="font-size:22px;color:#38bdf8;font-weight:900;">⬇</span>
+          </div>
+
+          <div onclick="switchMainTab('math_subtraction_quiz')" style="background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(239,68,68,0.22));border:2px solid #f59e0b;border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="font-size:34px;background:rgba(245,158,11,0.2);padding:8px;border-radius:12px;">🎯</div>
+              <div>
+                <div style="font-size:11px;font-weight:900;color:#fde047;">3. AŞAMA (DEĞİŞKEN SORULAR)</div>
+                <div style="font-size:15px;font-weight:900;color:#fff;">Çıkarma Testleri (3 Seviye)</div>
+                <div style="font-size:11px;color:#fef08a;">Onluk Bozmasız, Bozmalı & Karışık ➔</div>
+              </div>
+            </div>
+            <span style="font-size:20px;color:#fde047;font-weight:900;">➔</span>
           </div>
         </div>
 
@@ -4941,6 +5154,810 @@
       storyProblemUserChoice = null;
       storyProblemShowSolution = false;
       renderMathProblems();
+    }
+
+    /* ========================================================
+       2.1. MEB MAARİF MODELİ DİNAMİK MATEMATİK TESTLERİ
+       (Toplama, Çıkarma, Çarpma, Bölme • Her Seferinde Yepyeni ve Değişken Sorular)
+    ======================================================== */
+    let mathQuizActiveType = 'addition'; // 'addition' | 'subtraction' | 'multiplication' | 'division'
+    let mathQuizActiveLevel = 'mixed';   // 'easy' | 'medium' | 'mixed'
+    let mathQuizQuestions = [];
+    let mathQuizCurrentIndex = 0;
+    let mathQuizScore = 0;
+    let mathQuizFirstTry = 0;
+    let mathQuizWrongCurrent = 0;
+    let mathQuizAnswered = false;
+    let mathQuizWrongClicked = [];
+
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function generateMathQuizQuestions(type, level) {
+      const questions = [];
+      for (let i = 0; i < 10; i++) {
+        let q = {};
+        if (type === 'addition') {
+          if (level === 'easy') {
+            // Eldesiz toplama
+            const ones1 = Math.floor(Math.random() * 5);
+            const ones2 = Math.floor(Math.random() * (9 - ones1));
+            const tens1 = Math.floor(Math.random() * 4) + 1;
+            const tens2 = Math.floor(Math.random() * (8 - tens1)) + 1;
+            const n1 = tens1 * 10 + ones1;
+            const n2 = tens2 * 10 + ones2;
+            const sum = n1 + n2;
+            q = {
+              badge: "🟢 1. SEVİYE • ELDESİZ TOPLAMA",
+              title: "Doğal Sayılarla Toplama",
+              prompt: `${n1} + ${n2} işleminin sonucu kaçtır?`,
+              visual: `<div style="font-size:28px;font-weight:900;letter-spacing:4px;line-height:1.2;">  ${n1}<br>+ ${n2}<br>----<br>  ❓</div>`,
+              correct: String(sum),
+              options: shuffleArray([String(sum), String(sum + 10), String(sum - 1), String(sum + 1)]),
+              explanation: `Önce birler: ${ones1} + ${ones2} = ${ones1 + ones2}. Sonra onlar: ${tens1} + ${tens2} = ${tens1 + tens2}. Sonuç: ${sum}.`
+            };
+          } else if (level === 'medium') {
+            // Eldeli toplama
+            const ones1 = Math.floor(Math.random() * 5) + 5;
+            const ones2 = Math.floor(Math.random() * 4) + (10 - ones1);
+            const tens1 = Math.floor(Math.random() * 3) + 1;
+            const tens2 = Math.floor(Math.random() * (6 - tens1)) + 1;
+            const n1 = tens1 * 10 + ones1;
+            const n2 = tens2 * 10 + ones2;
+            const sum = n1 + n2;
+            q = {
+              badge: "🟡 2. SEVİYE • ELDELİ TOPLAMA",
+              title: "Eldeli Toplama (10 Birlik = 1 Onluk)",
+              prompt: `${n1} + ${n2} eldeli toplama işleminin sonucu kaçtır?`,
+              visual: `<div style="font-size:28px;font-weight:900;letter-spacing:4px;line-height:1.2;">  ${n1}<br>+ ${n2}<br>----<br>  ❓</div>`,
+              correct: String(sum),
+              options: shuffleArray([String(sum), String(sum - 10), String(sum + 1), String(sum - 2)]),
+              explanation: `Birler: ${ones1} + ${ones2} = ${ones1 + ones2}. 1 onluk elde var! Onlar: 1 elde + ${tens1} + ${tens2} = ${Math.floor(sum / 10)}. Sonuç: ${sum}.`
+            };
+          } else {
+            // Karışık & Verilmeyen Terim
+            const isMissing = Math.random() > 0.5;
+            if (isMissing) {
+              const part = Math.floor(Math.random() * 25) + 15;
+              const missing = Math.floor(Math.random() * 25) + 12;
+              const total = part + missing;
+              q = {
+                badge: "🏆 3. SEVİYE • VERİLMEYEN TOPLANAN",
+                title: "Toplama İşleminde Verilmeyeni Bulma",
+                prompt: `${part} + ❓ = ${total} işleminde soru işareti yerine hangi sayı gelmelidir?`,
+                visual: `<div style="font-size:24px;font-weight:900;letter-spacing:2px;color:#fde047;">${part} + [ ❓ ] = ${total}</div>`,
+                correct: String(missing),
+                options: shuffleArray([String(missing), String(missing + 10), String(Math.max(1, missing - 5)), String(missing + 3)]),
+                explanation: `Verilmeyen toplananı bulmak için toplamdan verilen toplananı çıkarırız: ${total} - ${part} = ${missing}.`
+              };
+            } else {
+              const n1 = Math.floor(Math.random() * 40) + 18;
+              const n2 = Math.floor(Math.random() * 35) + 12;
+              const sum = n1 + n2;
+              q = {
+                badge: "🏆 3. SEVİYE • KARIŞIK TOPLAMA",
+                title: "2. Sınıf Maarif Modeli Toplama",
+                prompt: `${n1} + ${n2} işleminin sonucu kaçtır?`,
+                visual: `<div style="font-size:28px;font-weight:900;letter-spacing:4px;line-height:1.2;">  ${n1}<br>+ ${n2}<br>----<br>  ❓</div>`,
+                correct: String(sum),
+                options: shuffleArray([String(sum), String(sum + 10), String(sum - 10), String(sum + 2)]),
+                explanation: `${n1} sayısına ${n2} eklersek sonuç ${sum} olur.`
+              };
+            }
+          }
+        } else if (type === 'subtraction') {
+          if (level === 'easy') {
+            // Onluk bozmasız çıkarma
+            const ones1 = Math.floor(Math.random() * 5) + 4;
+            const ones2 = Math.floor(Math.random() * (ones1 + 1));
+            const tens1 = Math.floor(Math.random() * 4) + 4;
+            const tens2 = Math.floor(Math.random() * (tens1 - 1)) + 1;
+            const n1 = tens1 * 10 + ones1;
+            const n2 = tens2 * 10 + ones2;
+            const diff = n1 - n2;
+            q = {
+              badge: "🟢 1. SEVİYE • ONLUK BOZMASIZ ÇIKARMA",
+              title: "Doğal Sayılarla Çıkarma",
+              prompt: `${n1} - ${n2} işleminin sonucu kaçtır?`,
+              visual: `<div style="font-size:28px;font-weight:900;letter-spacing:4px;line-height:1.2;">  ${n1}<br>- ${n2}<br>----<br>  ❓</div>`,
+              correct: String(diff),
+              options: shuffleArray([String(diff), String(diff + 10), String(diff - 2), String(diff + 1)]),
+              explanation: `Birler: ${ones1} - ${ones2} = ${ones1 - ones2}. Onlar: ${tens1} - ${tens2} = ${tens1 - tens2}. Sonuç: ${diff}.`
+            };
+          } else if (level === 'medium') {
+            // Onluk bozmalı çıkarma
+            const ones1 = Math.floor(Math.random() * 5);
+            const ones2 = Math.floor(Math.random() * 4) + 6;
+            const tens1 = Math.floor(Math.random() * 4) + 4;
+            const tens2 = Math.floor(Math.random() * (tens1 - 1)) + 1;
+            const n1 = tens1 * 10 + ones1;
+            const n2 = tens2 * 10 + ones2;
+            const diff = n1 - n2;
+            q = {
+              badge: "🔴 2. SEVİYE • ONLUK BOZMALI ÇIKARMA",
+              title: "Komşudan Onluk Bozarak Çıkarma",
+              prompt: `${n1} - ${n2} onluk bozmalı çıkarma işleminin sonucu kaçtır?`,
+              visual: `<div style="font-size:28px;font-weight:900;letter-spacing:4px;line-height:1.2;">  ${n1}<br>- ${n2}<br>----<br>  ❓</div>`,
+              correct: String(diff),
+              options: shuffleArray([String(diff), String(diff + 10), String(diff - 10), String(diff + 2)]),
+              explanation: `${ones1}'den ${ones2} çıkmaz! Komşudan 1 onluk aldık: ${ones1 + 10} - ${ones2} = ${(ones1 + 10) - ones2}. Onlar basamağında ${tens1 - 1} kaldı: ${tens1 - 1} - ${tens2} = ${(tens1 - 1) - tens2}. Sonuç: ${diff}.`
+            };
+          } else {
+            // Karışık & Verilmeyen Eksilen / Çıkan
+            const isMissing = Math.random() > 0.5;
+            if (isMissing) {
+              const diff = Math.floor(Math.random() * 25) + 15;
+              const sub = Math.floor(Math.random() * 25) + 12;
+              const total = diff + sub;
+              q = {
+                badge: "🏆 3. SEVİYE • VERİLMEYEN EKSİLENİ BULMA",
+                title: "Çıkarma İşleminde Verilmeyeni Bulma",
+                prompt: `❓ - ${sub} = ${diff} işleminde verilmeyen eksilen sayı kaçtır?`,
+                visual: `<div style="font-size:24px;font-weight:900;letter-spacing:2px;color:#fde047;">[ ❓ ] - ${sub} = ${diff}</div>`,
+                correct: String(total),
+                options: shuffleArray([String(total), String(total - 10), String(Math.abs(diff - sub)), String(total + 5)]),
+                explanation: `Eksileni bulmak için çıkan ile fark toplanır: ${diff} + ${sub} = ${total}.`
+              };
+            } else {
+              const tens1 = Math.floor(Math.random() * 4) + 4;
+              const tens2 = Math.floor(Math.random() * (tens1 - 1)) + 1;
+              const n1 = tens1 * 10 + Math.floor(Math.random() * 10);
+              const n2 = tens2 * 10 + Math.floor(Math.random() * 10);
+              const diff = n1 - n2;
+              q = {
+                badge: "🏆 3. SEVİYE • KARIŞIK ÇIKARMA",
+                title: "2. Sınıf Maarif Modeli Çıkarma",
+                prompt: `${n1} - ${n2} işleminin sonucu kaçtır?`,
+                visual: `<div style="font-size:28px;font-weight:900;letter-spacing:4px;line-height:1.2;">  ${n1}<br>- ${n2}<br>----<br>  ❓</div>`,
+                correct: String(diff),
+                options: shuffleArray([String(diff), String(diff + 10), String(diff - 10), String(diff + 1)]),
+                explanation: `${n1} sayısından ${n2} çıkarıldığında fark ${diff} olur.`
+              };
+            }
+          }
+        } else if (type === 'multiplication') {
+          const f1 = (level === 'easy') ? (Math.floor(Math.random() * 5) + 1) : (Math.floor(Math.random() * 7) + 2);
+          const f2 = (level === 'easy') ? [1, 2, 5][Math.floor(Math.random() * 3)] : (Math.floor(Math.random() * 4) + 2);
+          const product = f1 * f2;
+          q = {
+            badge: "✖️ 2. SINIF ÇARPMA İŞLEMİ",
+            title: "Tekrarlı Toplama ve Kat Anlamı",
+            prompt: `${f1} tane ${f2} (${f1} × ${f2}) kaç eder?`,
+            visual: `<div style="font-size:32px;font-weight:900;color:#fde047;">${f1} × ${f2} = ❓</div>`,
+            correct: String(product),
+            options: shuffleArray([String(product), String(product + f2), String(Math.max(1, product - f2)), String(product + 2)]),
+            explanation: `${f1} tane ${f2} yan yana toplanırsa: ${Array(f1).fill(f2).join(' + ')} = ${product}.`
+          };
+        } else if (type === 'division') {
+          const divisor = [2, 3, 4, 5][Math.floor(Math.random() * 4)];
+          const quotient = Math.floor(Math.random() * 7) + 2;
+          const dividend = divisor * quotient;
+          q = {
+            badge: "➗ 2. SINIF BÖLME İŞLEMİ",
+            title: "Eşit Paylaştırma ve Gruplama",
+            prompt: `${dividend} sayısı ${divisor} eşit parçaya bölünürse (${dividend} ÷ ${divisor}) sonuç kaç olur?`,
+            visual: `<div style="font-size:32px;font-weight:900;color:#38bdf8;">${dividend} ÷ ${divisor} = ❓</div>`,
+            correct: String(quotient),
+            options: shuffleArray([String(quotient), String(quotient + 1), String(Math.max(1, quotient - 1)), String(quotient + 2)]),
+            explanation: `${dividend} nesne ${divisor} kişiye eşit paylaştırılırsa her birine ${quotient} nesne düşer (${dividend} ÷ ${divisor} = ${quotient}).`
+          };
+        }
+        questions.push(q);
+      }
+      return questions;
+    }
+
+    function startMathQuiz(type, level = 'mixed') {
+      recordActivity();
+      mathQuizActiveType = type;
+      mathQuizActiveLevel = level;
+      mathQuizQuestions = generateMathQuizQuestions(type, level);
+      mathQuizCurrentIndex = 0;
+      mathQuizScore = 0;
+      mathQuizFirstTry = 0;
+      mathQuizWrongCurrent = 0;
+      mathQuizAnswered = false;
+      mathQuizWrongClicked = [];
+      renderMathQuizScreen(type);
+    }
+
+    function renderMathQuizScreen(type) {
+      recordActivity();
+      mathQuizActiveType = type;
+      if (!mathQuizQuestions || mathQuizQuestions.length === 0) {
+        mathQuizQuestions = generateMathQuizQuestions(type, mathQuizActiveLevel);
+      }
+
+      const typeMeta = {
+        addition: { title: "➕ 2. Sınıf Toplama İşlemi Testi", color: "#10b981", backTab: "math_addition" },
+        subtraction: { title: "➖ 2. Sınıf Çıkarma İşlemi Testi", color: "#ef4444", backTab: "math_subtraction" },
+        multiplication: { title: "✖️ 2. Sınıf Çarpma İşlemi Testi", color: "#8b5cf6", backTab: "math_multiplication" },
+        division: { title: "➗ 2. Sınıf Bölme İşlemi Testi", color: "#06b6d4", backTab: "math_division" }
+      }[type] || { title: "Matematik Testi", color: "#10b981", backTab: "menu" };
+
+      // TEST TAMAMLANDI EKRANI
+      if (mathQuizCurrentIndex >= mathQuizQuestions.length) {
+        const fullScore = mathQuizQuestions.length * 10;
+        const accuracy = Math.round((mathQuizFirstTry / mathQuizQuestions.length) * 100);
+        let note = "Mükemmel sonuç! İşlem becerilerin harika seviyede!";
+        if (accuracy < 60) note = "Konu anlatımını tekrar inceleyip testi baştan çözmen faydalı olacaktır.";
+        else if (accuracy < 85) note = "Çok iyi! Birkaç küçük dikkat hatası dışında harika bir başarı.";
+
+        recordParentMilestone('math_' + type, typeMeta.title, `${mathQuizScore}/${fullScore} Puan • İlk Denemede Doğru: ${mathQuizFirstTry}/${mathQuizQuestions.length}`);
+
+        const html = `
+          <div style="margin-bottom:14px;">
+            <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:8px 16px;" onclick="switchMainTab('${typeMeta.backTab}')">
+              ⬅️ Dersi İncele
+            </button>
+          </div>
+          <div class="card" style="text-align:center;padding:32px 20px;border:3px solid ${typeMeta.color};background:linear-gradient(145deg, rgba(30,41,59,0.98), rgba(15,23,42,0.99));">
+            <div style="font-size:64px;margin-bottom:10px;">🏆 ⭐ 🎉</div>
+            <h3 style="font-size:24px;color:#fde047;font-weight:900;margin-bottom:6px;">${typeMeta.title} Tamamlandı!</h3>
+            <p style="font-size:14px;color:#cbd5e1;max-width:500px;margin:0 auto 18px;">${note}</p>
+
+            <div style="font-size:42px;color:#fff;font-weight:900;margin-bottom:8px;">
+              ${mathQuizScore} / ${fullScore} Puan
+            </div>
+            <div style="font-size:13px;color:#94a3b8;margin-bottom:24px;">
+              İlk Seferde Doğru: <strong>${mathQuizFirstTry} / 10</strong> Soru
+            </div>
+
+            <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
+              <button class="whatsapp-share-btn" onclick="openWhatsAppShare('🌟 *Lingo Ders Arkadaşım - Matematik Karne Raporu* 🌟\\n👤 Öğrenci ${typeMeta.title} testini ' + mathQuizScore + '/100 tam puanla tamamladı!\\nİlk denemede doğru: ${mathQuizFirstTry}/10\\nTebrikler! 🏆')">
+                📲 Karneni WhatsApp ile Paylaş
+              </button>
+              <button class="action-btn" style="background:${typeMeta.color};color:#0f172a;font-weight:900;font-size:14px;padding:12px 20px;" onclick="startMathQuiz('${type}', '${mathQuizActiveLevel}')">
+                🔄 Yeni Sorularla Testi Tekrarla
+              </button>
+              <button class="action-btn" style="background:#334155;color:#fff;font-size:13px;padding:12px 18px;" onclick="selectHomeSubject('math')">
+                🔢 Matematik Menüsü ➔
+              </button>
+            </div>
+          </div>
+        `;
+        document.getElementById('appContent').innerHTML = html;
+        return;
+      }
+
+      const q = mathQuizQuestions[mathQuizCurrentIndex];
+
+      const html = `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:8px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="switchMainTab('${typeMeta.backTab}')">
+            ⬅️ Ders Sayfasına Dön
+          </button>
+          <!-- SEVİYE SEÇİCİ -->
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="action-btn" style="background:${mathQuizActiveLevel === 'easy' ? typeMeta.color : '#1e293b'};color:${mathQuizActiveLevel === 'easy' ? '#0f172a' : '#fff'};font-size:11px;font-weight:900;padding:6px 10px;" onclick="startMathQuiz('${type}', 'easy')">
+              🟢 1. Seviye
+            </button>
+            <button class="action-btn" style="background:${mathQuizActiveLevel === 'medium' ? typeMeta.color : '#1e293b'};color:${mathQuizActiveLevel === 'medium' ? '#0f172a' : '#fff'};font-size:11px;font-weight:900;padding:6px 10px;" onclick="startMathQuiz('${type}', 'medium')">
+              🟡 2. Seviye
+            </button>
+            <button class="action-btn" style="background:${mathQuizActiveLevel === 'mixed' ? typeMeta.color : '#1e293b'};color:${mathQuizActiveLevel === 'mixed' ? '#0f172a' : '#fff'};font-size:11px;font-weight:900;padding:6px 10px;" onclick="startMathQuiz('${type}', 'mixed')">
+              🏆 3. Seviye (Karışık)
+            </button>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <span style="background:rgba(255,255,255,0.08);color:#fde047;padding:5px 12px;border-radius:10px;font-size:13px;font-weight:800;">
+              ⭐ Puan: ${mathQuizScore}
+            </span>
+            <span style="font-size:13px;color:#94a3b8;font-weight:700;">
+              Soru: ${mathQuizCurrentIndex + 1} / ${mathQuizQuestions.length}
+            </span>
+          </div>
+        </div>
+
+        <div class="card" style="border:2px solid ${typeMeta.color};padding:22px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+            <span style="font-size:11px;font-weight:900;background:${typeMeta.color};color:#0f172a;padding:3px 10px;border-radius:6px;">
+              ${q.badge}
+            </span>
+            <span style="font-size:12px;color:#94a3b8;">Her Soru +10 Puan</span>
+          </div>
+
+          <h3 style="font-size:19px;color:#fff;margin-bottom:16px;line-height:1.4;">${q.prompt}</h3>
+
+          <!-- İŞLEM KUTUSU VEYA GÖRSEL -->
+          <div style="background:#0f172a;border:2px dashed ${typeMeta.color};border-radius:16px;padding:20px;text-align:center;margin-bottom:20px;">
+            ${q.visual}
+          </div>
+
+          <!-- ŞIKLAR -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:12px;margin-bottom:16px;">
+            ${q.options.map(opt => {
+              const isCorrect = opt === q.correct;
+              const isWrong = mathQuizWrongClicked.includes(opt);
+              let btnStyle = `background:#1e293b;border:2px solid #334155;color:#fff;font-size:18px;font-weight:900;padding:16px 12px;border-radius:14px;cursor:pointer;`;
+              if (mathQuizAnswered && isCorrect) {
+                btnStyle = `background:#10b981;border:2px solid #34d399;color:#fff;font-size:18px;font-weight:900;padding:16px 12px;border-radius:14px;box-shadow:0 0 16px rgba(16,185,129,0.5);`;
+              } else if (isWrong) {
+                btnStyle = `background:#ef4444;border:2px solid #f87171;color:#fff;font-size:18px;font-weight:900;padding:16px 12px;border-radius:14px;opacity:0.6;`;
+              }
+              return `
+                <button type="button" style="${btnStyle}" onclick="handleMathQuizAnswer('${opt}')" ${mathQuizAnswered ? 'disabled' : ''}>
+                  ${opt} ${mathQuizAnswered && isCorrect ? '✅' : (isWrong ? '❌' : '')}
+                </button>
+              `;
+            }).join('')}
+          </div>
+
+          ${mathQuizAnswered ? `
+            <div style="background:rgba(16,185,129,0.15);border:1px solid #10b981;border-radius:14px;padding:14px;margin-bottom:14px;">
+              <div style="font-weight:900;color:#6ee7b7;font-size:15px;margin-bottom:4px;">🎉 Harika! Doğru Cevap: ${q.correct}</div>
+              <p style="font-size:13px;color:#cbd5e1;margin:0;">${q.explanation}</p>
+            </div>
+            <button class="action-btn" style="width:100%;background:${typeMeta.color};color:#0f172a;font-size:15px;font-weight:900;padding:14px;" onclick="nextMathQuizQuestion()">
+              ${mathQuizCurrentIndex + 1 >= mathQuizQuestions.length ? 'Sonuçları Gör ➔' : 'Sonraki Soruya Geç ➔'}
+            </button>
+          ` : ''}
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    function handleMathQuizAnswer(selectedOption) {
+      recordActivity();
+      if (mathQuizAnswered) return;
+      const q = mathQuizQuestions[mathQuizCurrentIndex];
+      if (!q) return;
+
+      if (selectedOption === q.correct) {
+        mathQuizAnswered = true;
+        playChimeSound('fanfare');
+        if (mathQuizWrongCurrent === 0) {
+          mathQuizScore += 10;
+          mathQuizFirstTry++;
+          if (mathQuizActiveType === 'addition') unlockBadge('math_addition_hero');
+          else if (mathQuizActiveType === 'subtraction') unlockBadge('math_subtraction_hero');
+          else if (mathQuizActiveType === 'multiplication') unlockBadge('math_mult_hero');
+          else if (mathQuizActiveType === 'division') unlockBadge('math_div_hero');
+        } else {
+          mathQuizScore += 5;
+        }
+        recordParentActivityLog('math_' + mathQuizActiveType, true, `${q.title}: ${q.prompt}`, `Doğru cevap: ${q.correct}`);
+        speakTurkish("Tebrikler! Doğru cevap " + q.correct);
+        renderMathQuizScreen(mathQuizActiveType);
+      } else {
+        playChimeSound('wrong');
+        mathQuizWrongCurrent++;
+        if (!mathQuizWrongClicked.includes(selectedOption)) {
+          mathQuizWrongClicked.push(selectedOption);
+        }
+        recordParentActivityLog('math_' + mathQuizActiveType, false, `${q.title}: ${q.prompt}`, `Doğru: ${q.correct} | Seçilen: ${selectedOption}`);
+        speakTurkish("Tekrar dikkatlice hesapla!");
+        renderMathQuizScreen(mathQuizActiveType);
+      }
+    }
+
+    function nextMathQuizQuestion() {
+      recordActivity();
+      mathQuizCurrentIndex++;
+      mathQuizWrongCurrent = 0;
+      mathQuizWrongClicked = [];
+      mathQuizAnswered = false;
+      renderMathQuizScreen(mathQuizActiveType);
+    }
+
+    /* ========================================================
+       2.2. 2. SINIF MEB MAARİF MODELİ ÇARPMA İŞLEMİ DERSİ
+       (Tekrarlı Toplama, Kat Anlamı, Terimler & İnteraktif Tahta)
+    ======================================================== */
+    let multInteractiveProblem = null;
+    let multUserStep = 'repeat'; // 'repeat' | 'calc' | 'done'
+
+    function generateMultiplicationProblem() {
+      const g = Math.floor(Math.random() * 4) + 2; // 2-5 grup
+      const itemsPerGroup = Math.floor(Math.random() * 4) + 2; // 2-5 nesne
+      return {
+        groups: g,
+        itemsPerGroup: itemsPerGroup,
+        product: g * itemsPerGroup,
+        repeatedSumText: Array(g).fill(itemsPerGroup).join(' + '),
+        multText: `${g} × ${itemsPerGroup}`
+      };
+    }
+
+    function renderMathMultiplication() {
+      recordActivity();
+      currentMainTab = 'math_multiplication';
+      document.getElementById('subHeaderTitle').textContent = '✖️ 2. Sınıf MEB Maarif Modeli Doğal Sayılarla Çarpma İşlemi';
+
+      if (!multInteractiveProblem) {
+        multInteractiveProblem = generateMultiplicationProblem();
+        multUserStep = 'repeat';
+      }
+
+      const prob = multInteractiveProblem;
+
+      const html = `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:9px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('math')">
+            ⬅️ Matematik Menüsüne Dön
+          </button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="action-btn" style="background:#8b5cf6;color:#fff;font-size:12px;font-weight:900;padding:8px 14px;" onclick="startMathQuiz('multiplication')">
+              🎯 10 Soruluk Çarpma Testini Çöz
+            </button>
+          </div>
+        </div>
+
+        <!-- 1. KONU ANLATIMI: ÇARPMA NEDİR? (MEB MAARİF MODELİ) -->
+        <div class="card" style="border:2px solid #8b5cf6;margin-bottom:18px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:28px;">🍎</span>
+            <div>
+              <span style="background:#8b5cf6;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">1. BÖLÜM • KONU ANLATIMI</span>
+              <h3 style="font-size:19px;color:#fff;margin:2px 0;">Çarpma İşlemi: Tekrarlı Toplama ve Kat Anlamı</h3>
+            </div>
+          </div>
+          <p style="font-size:13px;color:#cbd5e1;line-height:1.6;margin-bottom:14px;">
+            Aynı sayıların peş peşe toplanmasının kısa yoluna <strong>çarpma işlemi</strong> denir.
+            Örneğin: 4 tabakta 3'er elma varsa, tek tek 3 + 3 + 3 + 3 toplamak yerine <strong>4 tane 3 = 4 × 3 = 12</strong> deriz.
+          </p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin-bottom:14px;">
+            <div style="background:#0f172a;border:1px solid var(--border);border-radius:14px;padding:14px;">
+              <div style="font-weight:900;color:#fde047;font-size:14px;margin-bottom:4px;">📌 Çarpma İşleminin Terimleri</div>
+              <ul style="margin:6px 0 0 18px;font-size:12px;color:#cbd5e1;line-height:1.6;">
+                <li><strong>1. Çarpan:</strong> Grup sayısı (Kaç tane olduğu)</li>
+                <li><strong>2. Çarpan:</strong> Her gruptaki nesne sayısı</li>
+                <li><strong>Çarpım:</strong> İşlemin toplam sonucu</li>
+              </ul>
+            </div>
+            <div style="background:#0f172a;border:1px solid var(--border);border-radius:14px;padding:14px;">
+              <div style="font-weight:900;color:#6ee7b7;font-size:14px;margin-bottom:4px;">✨ 1 ve 0 ile Çarpma Kuralı</div>
+              <ul style="margin:6px 0 0 18px;font-size:12px;color:#cbd5e1;line-height:1.6;">
+                <li><strong>1 ile Çarpma:</strong> 1 etkisiz elemandır (Örn: 6 × 1 = 6)</li>
+                <li><strong>0 ile Çarpma:</strong> 0 yutan elemandır (Örn: 9 × 0 = 0)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. İNTERAKTİF ÇARPMA TAHTASI -->
+        <div class="card" style="border:2px solid #f59e0b;padding:20px;text-align:center;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+            <span style="background:#f59e0b;color:#0f172a;font-size:11px;font-weight:900;padding:3px 10px;border-radius:6px;">
+              2. BÖLÜM • İNTERAKTİF ÇARPMA TAHTASI
+            </span>
+            <button class="action-btn" style="background:#334155;font-size:12px;padding:6px 12px;" onclick="multInteractiveProblem = generateMultiplicationProblem(); multUserStep = 'repeat'; renderMathMultiplication();">
+              🔄 Yeni Soru Getir
+            </button>
+          </div>
+
+          <div style="font-size:16px;font-weight:900;color:#fff;margin-bottom:16px;">
+            ${prob.groups} tabak var. Her tabakta ${prob.itemsPerGroup} adet kurabiye (🍪) bulunuyor.
+          </div>
+
+          <!-- GÖRSEL TABAKLAR -->
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;">
+            ${Array(prob.groups).fill(0).map((_, idx) => `
+              <div style="background:#0f172a;border:2px solid #8b5cf6;border-radius:16px;padding:14px 18px;min-width:110px;">
+                <div style="font-size:11px;color:#94a3b8;margin-bottom:4px;">${idx + 1}. Tabak</div>
+                <div style="font-size:22px;letter-spacing:4px;">${'🍪'.repeat(prob.itemsPerGroup)}</div>
+                <div style="font-size:12px;font-weight:800;color:#fde047;margin-top:4px;">${prob.itemsPerGroup} tane</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div style="background:#0f172a;border:2px dashed #f59e0b;border-radius:16px;padding:16px;max-width:540px;margin:0 auto 16px;">
+            <div style="font-size:14px;color:#cbd5e1;margin-bottom:6px;">Bu modelin çarpma işlemi olarak gösterimi nedir?</div>
+            <div style="font-size:24px;font-weight:900;color:#fde047;margin-bottom:12px;">
+              ${prob.groups} tane ${prob.itemsPerGroup} = ${prob.groups} × ${prob.itemsPerGroup} = ❓
+            </div>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+              ${shuffleArray([prob.product, prob.product + prob.itemsPerGroup, Math.max(1, prob.product - prob.itemsPerGroup), prob.product + 2]).map(val => `
+                <button class="action-btn" style="background:#1e293b;border:2px solid #334155;color:#fff;font-size:18px;font-weight:900;padding:12px 20px;" onclick="handleMultiplicationAnswer(${val})">
+                  ${val}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    function handleMultiplicationAnswer(chosenVal) {
+      recordActivity();
+      const prob = multInteractiveProblem;
+      if (!prob) return;
+      if (chosenVal === prob.product) {
+        playChimeSound('fanfare');
+        unlockBadge('math_mult_hero');
+        recordParentActivityLog('math_multiplication', true, `${prob.groups} × ${prob.itemsPerGroup} = ${prob.product}`, `Doğru cevaplandı (+10 Puan)`);
+        speakTurkish(`Harika! ${prob.groups} tane ${prob.itemsPerGroup} eşittir ${prob.product}!`);
+        alert(`🎉 Tebrikler! Doğru cevap: ${prob.groups} × ${prob.itemsPerGroup} = ${prob.product}!\nTekrarlı toplaması: ${prob.repeatedSumText} = ${prob.product}`);
+        multInteractiveProblem = generateMultiplicationProblem();
+        renderMathMultiplication();
+      } else {
+        playChimeSound('wrong');
+        recordParentActivityLog('math_multiplication', false, `${prob.groups} × ${prob.itemsPerGroup}`, `Doğru ${prob.product} iken ${chosenVal} seçti`);
+        speakTurkish(`Tekrar dene! ${prob.groups} tane ${prob.itemsPerGroup} kaç eder?`);
+      }
+    }
+
+    /* ========================================================
+       2.3. 2. SINIF MEB MAARİF MODELİ BÖLME İŞLEMİ DERSİ
+       (Eşit Paylaştırma, Gruplama, Terimler & İnteraktif Tahta)
+    ======================================================== */
+    let divInteractiveProblem = null;
+
+    function generateDivisionProblem() {
+      const divisor = [2, 3, 4, 5][Math.floor(Math.random() * 4)];
+      const quotient = Math.floor(Math.random() * 5) + 2;
+      return {
+        divisor: divisor,
+        quotient: quotient,
+        dividend: divisor * quotient
+      };
+    }
+
+    function renderMathDivision() {
+      recordActivity();
+      currentMainTab = 'math_division';
+      document.getElementById('subHeaderTitle').textContent = '➗ 2. Sınıf MEB Maarif Modeli Doğal Sayılarla Bölme İşlemi';
+
+      if (!divInteractiveProblem) {
+        divInteractiveProblem = generateDivisionProblem();
+      }
+
+      const prob = divInteractiveProblem;
+
+      const html = `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:9px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('math')">
+            ⬅️ Matematik Menüsüne Dön
+          </button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:12px;font-weight:900;padding:8px 14px;" onclick="startMathQuiz('division')">
+              🎯 10 Soruluk Bölme Testini Çöz
+            </button>
+          </div>
+        </div>
+
+        <!-- 1. KONU ANLATIMI: BÖLME NEDİR? (MEB MAARİF MODELİ) -->
+        <div class="card" style="border:2px solid #06b6d4;margin-bottom:18px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:28px;">🌰</span>
+            <div>
+              <span style="background:#06b6d4;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">1. BÖLÜM • KONU ANLATIMI</span>
+              <h3 style="font-size:19px;color:#fff;margin:2px 0;">Bölme İşlemi: Eşit Paylaştırma ve Gruplama</h3>
+            </div>
+          </div>
+          <p style="font-size:13px;color:#cbd5e1;line-height:1.6;margin-bottom:14px;">
+            Bir bütün nesne grubunu eşit parçalara ayırmaya <strong>bölme işlemi</strong> denir. Bölme işlemi aynı zamanda <strong>ardışık çıkarma işleminin</strong> kısa yoludur.
+            Örneğin 12 cevizi 3 arkadaşa paylaştırırsak her birine <strong>4 ceviz</strong> düşer: <strong>12 ÷ 3 = 4</strong>.
+          </p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin-bottom:14px;">
+            <div style="background:#0f172a;border:1px solid var(--border);border-radius:14px;padding:14px;">
+              <div style="font-weight:900;color:#38bdf8;font-size:14px;margin-bottom:4px;">📌 Bölme İşleminin Terimleri</div>
+              <ul style="margin:6px 0 0 18px;font-size:12px;color:#cbd5e1;line-height:1.6;">
+                <li><strong>Bölünen:</strong> Paylaştırılacak nesnelerin tamamı</li>
+                <li><strong>Bölen:</strong> Kaç eşit parçaya / kişiye bölündüğü</li>
+                <li><strong>Bölüm:</strong> Her bir parçaya düşen miktar (Sonuç)</li>
+                <li><strong>Kalan:</strong> Artan nesne sayısı (2. sınıfta kalansız bölme)</li>
+              </ul>
+            </div>
+            <div style="background:#0f172a;border:1px solid var(--border);border-radius:14px;padding:14px;">
+              <div style="font-weight:900;color:#fde047;font-size:14px;margin-bottom:4px;">🔄 Ardışık Çıkarma Mantığı</div>
+              <p style="font-size:12px;color:#cbd5e1;line-height:1.6;margin:6px 0 0;">
+                12'den sıfıra ulaşana kadar 3'er 3'er çıkarırız: 12-3=9, 9-3=6, 6-3=3, 3-3=0. Tam <strong>4 defa</strong> çıkarma yaptık, bu yüzden 12 ÷ 3 = 4'tür!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. İNTERAKTİF BÖLME TAHTASI -->
+        <div class="card" style="border:2px solid #06b6d4;padding:20px;text-align:center;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+            <span style="background:#06b6d4;color:#0f172a;font-size:11px;font-weight:900;padding:3px 10px;border-radius:6px;">
+              2. BÖLÜM • İNTERAKTİF BÖLME TAHTASI
+            </span>
+            <button class="action-btn" style="background:#334155;font-size:12px;padding:6px 12px;" onclick="divInteractiveProblem = generateDivisionProblem(); renderMathDivision();">
+              🔄 Yeni Soru Getir
+            </button>
+          </div>
+
+          <div style="font-size:16px;font-weight:900;color:#fff;margin-bottom:14px;">
+            Toplam <strong>${prob.dividend}</strong> fındığı <strong>${prob.divisor}</strong> tabağa eşit paylaştırıyoruz.
+          </div>
+
+          <div style="background:#0f172a;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:18px;">
+            <div style="font-size:12px;color:#94a3b8;margin-bottom:6px;">Paylaştırılacak Toplam Fındıklar (${prob.dividend} adet):</div>
+            <div style="font-size:20px;letter-spacing:3px;">${'🌰'.repeat(prob.dividend)}</div>
+          </div>
+
+          <div style="background:#0f172a;border:2px dashed #06b6d4;border-radius:16px;padding:16px;max-width:540px;margin:0 auto 16px;">
+            <div style="font-size:14px;color:#cbd5e1;margin-bottom:6px;">Her tabağa kaç adet fındık düşer?</div>
+            <div style="font-size:26px;font-weight:900;color:#38bdf8;margin-bottom:12px;">
+              ${prob.dividend} ÷ ${prob.divisor} = ❓
+            </div>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+              ${shuffleArray([prob.quotient, prob.quotient + 1, Math.max(1, prob.quotient - 1), prob.quotient + 2]).map(val => `
+                <button class="action-btn" style="background:#1e293b;border:2px solid #334155;color:#fff;font-size:18px;font-weight:900;padding:12px 20px;" onclick="handleDivisionAnswer(${val})">
+                  ${val}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    function handleDivisionAnswer(chosenVal) {
+      recordActivity();
+      const prob = divInteractiveProblem;
+      if (!prob) return;
+      if (chosenVal === prob.quotient) {
+        playChimeSound('fanfare');
+        unlockBadge('math_div_hero');
+        recordParentActivityLog('math_division', true, `${prob.dividend} ÷ ${prob.divisor} = ${prob.quotient}`, `Doğru paylaştırıldı (+10 Puan)`);
+        speakTurkish(`Aferin! ${prob.dividend} bölü ${prob.divisor} eşittir ${prob.quotient}!`);
+        alert(`🎉 Harika! ${prob.dividend} ÷ ${prob.divisor} = ${prob.quotient}!\nHer tabağa ${prob.quotient} adet fındık düşer.`);
+        divInteractiveProblem = generateDivisionProblem();
+        renderMathDivision();
+      } else {
+        playChimeSound('wrong');
+        recordParentActivityLog('math_division', false, `${prob.dividend} ÷ ${prob.divisor}`, `Doğru ${prob.quotient} iken ${chosenVal} seçti`);
+        speakTurkish(`Tekrar düşün! ${prob.dividend} fındık ${prob.divisor} tabağa paylaştırılırsa kaçar düşer?`);
+      }
+    }
+
+    /* ========================================================
+       2.4. 7. ÜNİTE: IN MY HOUSE (EVİMİZ, ODALAR & EŞYALAR)
+    ======================================================== */
+    const u7Rooms = [
+      { en: "Living room", tr: "Oturma Odası / Salon", icon: "🛋️" },
+      { en: "Bedroom", tr: "Yatak Odası", icon: "🛏️" },
+      { en: "Kitchen", tr: "Mutfak", icon: "🍳" },
+      { en: "Bathroom", tr: "Banyo", icon: "🛁" },
+      { en: "Garden", tr: "Bahçe", icon: "🌳" },
+      { en: "House", tr: "Ev", icon: "🏠" }
+    ];
+
+    const u7Furniture = [
+      { en: "Sofa", tr: "Koltuk / Kanepe", icon: "🛋️" },
+      { en: "Bed", tr: "Yatak", icon: "🛏️" },
+      { en: "Table", tr: "Masa", icon: "🪵" },
+      { en: "Chair", tr: "Sandalye", icon: "🪑" },
+      { en: "Television", tr: "Televizyon", icon: "📺" },
+      { en: "Fridge", tr: "Buzdolabı", icon: "🧊" }
+    ];
+
+    function renderUnitHouse() {
+      recordActivity();
+      currentMainTab = 'unit7';
+      document.getElementById('subHeaderTitle').textContent = '7. Ünite: In My House (Evimiz & Eşyalar)';
+
+      const html = `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:8px 16px;" onclick="selectHomeSubject('english')">
+            ⬅️ İngilizce Menüsüne Dön
+          </button>
+          <button class="action-btn" style="background:#ec4899;color:#fff;font-size:12px;font-weight:900;padding:8px 14px;" onclick="startTopicQuiz('house')">
+            🎯 Evim & Odalar Testini Çöz
+          </button>
+        </div>
+
+        <div class="card" style="border:2px solid #ec4899;margin-bottom:18px;">
+          <div class="card-header-bar">
+            <div class="card-title">🏠 Theme 7: In My House (Evin Odaları)</div>
+          </div>
+          <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Evin bölümlerini öğrenelim. Hoparlöre dokunarak telaffuzlarını dinleyin.</p>
+          <div class="word-grid">
+            ${u7Rooms.map(item => `
+              <div class="word-tile" onclick="speakText('${item.en}')">
+                <span class="speaker-icon">🔊</span>
+                <div class="tile-icon">${item.icon}</div>
+                <div class="en-text">${item.en}</div>
+                <div class="tr-text">${item.tr}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="card" style="border:2px solid #f59e0b;margin-bottom:18px;">
+          <div class="card-header-bar">
+            <div class="card-title">🛋️ Eşyalar ve Mobilyalar (Furniture)</div>
+          </div>
+          <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Evdeki temel eşyaların İngilizcelerini öğrenelim.</p>
+          <div class="word-grid">
+            ${u7Furniture.map(item => `
+              <div class="word-tile" onclick="speakText('${item.en}')">
+                <span class="speaker-icon">🔊</span>
+                <div class="tile-icon">${item.icon}</div>
+                <div class="en-text">${item.en}</div>
+                <div class="tr-text">${item.tr}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    /* ========================================================
+       2.5. 8. ÜNİTE: IN THE CITY (ŞEHİRDE YAŞAM & ULAŞIM)
+    ======================================================== */
+    const u8Places = [
+      { en: "School", tr: "Okul", icon: "🏫" },
+      { en: "Park", tr: "Park", icon: "🛝" },
+      { en: "Hospital", tr: "Hastane", icon: "🏥" },
+      { en: "Zoo", tr: "Hayvanat Bahçesi", icon: "🦁" },
+      { en: "Cinema", tr: "Sinema", icon: "🍿" },
+      { en: "Library", tr: "Kütüphane", icon: "📚" },
+      { en: "Market", tr: "Market / Bakkal", icon: "🛒" }
+    ];
+
+    const u8Vehicles = [
+      { en: "Bus", tr: "Otobüs", icon: "🚌" },
+      { en: "Car", tr: "Araba", icon: "🚗" },
+      { en: "Bike", tr: "Bisiklet", icon: "🚲" },
+      { en: "Train", tr: "Tren", icon: "🚆" },
+      { en: "Plane", tr: "Uçak", icon: "✈️" }
+    ];
+
+    function renderUnitCity() {
+      recordActivity();
+      currentMainTab = 'unit8';
+      document.getElementById('subHeaderTitle').textContent = '8. Ünite: In the City (Şehir Mekanları & Taşıtlar)';
+
+      const html = `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:8px 16px;" onclick="selectHomeSubject('english')">
+            ⬅️ İngilizce Menüsüne Dön
+          </button>
+          <button class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:12px;font-weight:900;padding:8px 14px;" onclick="startTopicQuiz('city')">
+            🎯 Şehir & Ulaşım Testini Çöz
+          </button>
+        </div>
+
+        <div class="card" style="border:2px solid #06b6d4;margin-bottom:18px;">
+          <div class="card-header-bar">
+            <div class="card-title">🌆 Theme 8: In the City (Şehir Mekanları)</div>
+          </div>
+          <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Şehirdeki önemli mekanları öğrenelim. Telaffuzları dinlemek için dokunun.</p>
+          <div class="word-grid">
+            ${u8Places.map(item => `
+              <div class="word-tile" onclick="speakText('${item.en}')">
+                <span class="speaker-icon">🔊</span>
+                <div class="tile-icon">${item.icon}</div>
+                <div class="en-text">${item.en}</div>
+                <div class="tr-text">${item.tr}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="card" style="border:2px solid #10b981;margin-bottom:18px;">
+          <div class="card-header-bar">
+            <div class="card-title">🚌 Taşıtlar ve Ulaşım (Vehicles)</div>
+          </div>
+          <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Ulaşım araçlarını öğrenelim.</p>
+          <div class="word-grid">
+            ${u8Vehicles.map(item => `
+              <div class="word-tile" onclick="speakText('${item.en}')">
+                <span class="speaker-icon">🔊</span>
+                <div class="tile-icon">${item.icon}</div>
+                <div class="en-text">${item.en}</div>
+                <div class="tr-text">${item.tr}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
     }
 
 
@@ -9296,13 +10313,42 @@
             </div>
           </div>
 
+          <!-- MATEMATİK 4 İŞLEM DİNAMİK TEST MERKEZİ KARTI -->
+          <div class="card" style="margin-bottom:16px;padding:18px;border:2px solid #10b981;background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(15,23,42,0.95));">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+              <div>
+                <div style="display:inline-block;background:#10b981;color:#052e16;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;margin-bottom:4px;">
+                  HER SEFERİNDE YENİ VE DEĞİŞKEN SORULAR
+                </div>
+                <h3 style="font-size:17px;color:#fff;margin:0;font-weight:900;">🧮 Matematik 4 İşlem Seviyeli Test Merkezi</h3>
+                <p style="font-size:12px;color:#cbd5e1;margin:2px 0 0;">
+                  Toplama, Çıkarma, Çarpma ve Bölme derslerinin 3'er seviyeli (Kolay, Orta, Karışık) 10 soruluk dinamik testleri:
+                </p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(145px, 1fr));gap:8px;">
+              <button class="action-btn" style="background:#059669;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="switchMainTab('math_addition_quiz')">
+                ➕ Toplama Testleri
+              </button>
+              <button class="action-btn" style="background:#dc2626;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="switchMainTab('math_subtraction_quiz')">
+                ➖ Çıkarma Testleri
+              </button>
+              <button class="action-btn" style="background:#7c3aed;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="switchMainTab('math_multiplication_quiz')">
+                ✖️ Çarpma Testleri
+              </button>
+              <button class="action-btn" style="background:#0284c7;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="switchMainTab('math_division_quiz')">
+                ➗ Bölme Testleri
+              </button>
+            </div>
+          </div>
+
           <!-- ÜST AÇIKLAMA KARTI -->
           <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg, rgba(30,41,59,0.9), rgba(15,23,42,0.9));border:2px solid var(--accent);">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
               <div>
-                <h2 style="font-size:20px;color:#fff;margin-bottom:4px;">📝 Konu Testleri & Sesli Telaffuz Merkezi</h2>
+                <h2 style="font-size:20px;color:#fff;margin-bottom:4px;">📝 İngilizce Konu Testleri & Sesli Telaffuz Merkezi</h2>
                 <p style="font-size:13px;color:var(--muted);margin:0;">
-                  Sorular 2. sınıf düzeyinde <strong>Türkçe açıklamalı ve iki dilli</strong> hazırlanmıştır. Çocuğun mikrofona konuşup kelimeleri telaffuz ettiği <strong>Sesli Konuşma Testi</strong> ve <strong>Günler Testi</strong> ayrıdır!
+                  Sorular ve şıkların yerleri <strong>her girişte otomatik olarak değişir!</strong> 2. sınıf düzeyinde Türkçe açıklamalı ve iki dilli hazırlanmıştır.
                 </p>
               </div>
               <button class="action-btn" onclick="switchMainTab('menu')" style="background:#334155;font-size:12px;padding:8px 12px;">
@@ -9319,10 +10365,56 @@
       `;
     }
 
-    // 2. TESTİ BAŞLAT
+    // 2. TESTİ BAŞLAT (Her başlatmada soru sırasını ve şıkların yerini karıştırır!)
     function startTopicQuiz(topicId) {
       if (!quizTopicBanks[topicId]) topicId = 'days';
       activeTopicId = topicId;
+
+      const topic = quizTopicBanks[topicId];
+      if (topic && Array.isArray(topic.questions)) {
+        // Orijinal soru havuzunu ilk seferde yedekle
+        if (!topic._baseQuestions) {
+          topic._baseQuestions = topic.questions.map(q => ({
+            ...q,
+            options: Array.isArray(q.options) ? [...q.options] : undefined
+          }));
+        }
+
+        // Eğer Büyük Karma Test (grand) ise tüm ünitelerin sorularından her seferinde rastgele 12 soru seç
+        if (topicId === 'grand') {
+          const allPools = ['days', 'school', 'greetings', 'body', 'family', 'house', 'city'];
+          let combined = [...topic._baseQuestions];
+          allPools.forEach(k => {
+            const bank = quizTopicBanks[k];
+            if (bank) {
+              const src = bank._baseQuestions || bank.questions || [];
+              combined = combined.concat(src);
+            }
+          });
+          // Kelime+prompt bazında tekilleştir ve karıştır
+          const seen = new Set();
+          const uniquePool = [];
+          shuffleArray(combined).forEach(q => {
+            const key = (q.word || '') + '|' + (q.prompt || '');
+            if (!seen.has(key) && q.direction !== 'SPEAKING') {
+              seen.add(key);
+              uniquePool.push({
+                ...q,
+                options: Array.isArray(q.options) ? shuffleArray(q.options) : undefined
+              });
+            }
+          });
+          topic.questions = uniquePool.slice(0, 12);
+          topic.totalQuestions = topic.questions.length;
+        } else {
+          // Diğer tüm testlerde soruları ve şıkları her girişte yeniden karıştır
+          topic.questions = shuffleArray(topic._baseQuestions).map(q => ({
+            ...q,
+            options: Array.isArray(q.options) ? shuffleArray(q.options) : undefined
+          }));
+        }
+      }
+
       currentQuizIndex = 0;
       quizScore = 0;
       quizStreak = 0;
@@ -9846,7 +10938,7 @@
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.7.2';
+    const CURRENT_APP_VERSION = '2.8.0';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
