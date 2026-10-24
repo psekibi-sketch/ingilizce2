@@ -987,7 +987,7 @@
           📲 Ana Ekrana Ekle
         </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
-          🔄 Sürümü Yenile (v2.9.7)
+          🔄 Sürümü Yenile (v2.9.8)
         </button>
         <button onclick="switchMainTab('pet_hub')" class="action-btn" style="background:#ec4899;color:#fff;font-size:11px;padding:7px 12px;font-weight:900;">
           🐾 Dostum &amp; Çark
@@ -2682,7 +2682,7 @@
         document.getElementById('subHeaderTitle').textContent = 'Haftanın Günleri Sıralama Ödevi';
         renderDaysSort();
       } else if (tabId === 'quiz') {
-        document.getElementById('subHeaderTitle').textContent = '📝 Konu Testleri & Sınavlar (Ritmik Sayma, Günler, Okul, 20 Soru)';
+        document.getElementById('subHeaderTitle').textContent = '🇬🇧 İngilizce Konu Testleri, Sesli Telaffuz & 20 Sorulu Büyük Sınav';
         renderQuizHub();
       } else if (tabId === 'flashcards') {
         document.getElementById('subHeaderTitle').textContent = 'Kelimeler & Flaş Kartlar';
@@ -3418,12 +3418,15 @@
                 <div style="display:flex;align-items:center;gap:14px;">
                   <div style="font-size:40px;">📝</div>
                   <div>
-                    <div style="display:inline-block;background:#3b82f6;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;margin-bottom:4px;">İNGİLİZCE BÜYÜK SINAVI</div>
+                    <div style="display:inline-block;background:#3b82f6;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;margin-bottom:4px;">İNGİLİZCE BÜYÜK SINAVI VE ÜNİTE TESTLERİ</div>
                     <h4 style="font-size:18px;color:#93c5fd;margin:0 0 4px;font-weight:900;">20 Sorulu Puanlı Büyük Sınav &amp; Ünite Testleri</h4>
-                    <p style="font-size:12px;color:#cbd5e1;margin:0;">Puan kazandıran (+10 Puan), seri çarpanlı (🔥 Seri), sesli dinleme ve hata hakkı veren genel İngilizce sınavı.</p>
+                    <p style="font-size:12px;color:#cbd5e1;margin:0;">Sadece İngilizce ünitelerinden oluşan 20 soruluk genel sınav (+10 Puan, 🔥 Seri) ve ünite bazlı konu testleri.</p>
                   </div>
                 </div>
-                <button class="action-btn" style="background:#2563eb;color:#fff;white-space:nowrap;font-weight:800;" onclick="event.stopPropagation();switchMainTab('quiz');">İngilizce Sınavına Gir ➔</button>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="action-btn" style="background:#f59e0b;color:#0f172a;white-space:nowrap;font-weight:900;" onclick="event.stopPropagation();switchMainTab('quiz');startTopicQuiz('grand');">🏆 20 Soruluk Sınavı Başlat ➔</button>
+                  <button class="action-btn" style="background:#2563eb;color:#fff;white-space:nowrap;font-weight:800;" onclick="event.stopPropagation();switchMainTab('quiz');">📋 Tüm İngilizce Testleri</button>
+                </div>
               </div>
             </div>
 
@@ -4983,6 +4986,12 @@
       }
 
       const fullHtml = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+          <button class="action-btn" style="background:#334155;color:#fff;font-size:12px;padding:8px 14px;font-weight:800;" onclick="selectHomeSubject('math')">
+            ⬅️ Matematik Konularına Dön
+          </button>
+          <span style="font-size:12px;color:#93c5fd;font-weight:800;">🔢 Matematik • 2'şer, 3'er, 4'er, 5'er ve 10'ar Ritmik Sayma</span>
+        </div>
         <!-- 2, 3, 4 VE 5'ER MOD SEÇİCİ -->
         <div class="rhythm-mode-switch">
           <button class="rhythm-mode-btn ${rhythmActiveMode === 2 ? 'active-2' : ''}" onclick="switchRhythmMode(2)">
@@ -8917,6 +8926,14 @@
 
     function renderUnit1() {
       let pageNavHtml = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+          <button class="action-btn" style="background:#334155;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="selectHomeSubject('english')">
+            ⬅️ İngilizce Konularına Dön
+          </button>
+          <button class="action-btn" style="background:#2563eb;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="switchMainTab('quiz');startTopicQuiz('greetings');">
+            📝 1. Ünite Testini Çöz
+          </button>
+        </div>
         <div class="page-nav-bar">
           ${[9, 10, 11, 12, 13, 14, 15, 16].map(p => `
             <button class="page-chip ${currentUnit1Page === p ? 'active' : ''}" onclick="selectUnit1Page(${p})">
@@ -9393,7 +9410,16 @@
 
     function renderUnit6() {
       const p = currentUnit6Page;
-      const navChips = [49, 50, 51, 52, 53, 54, 55, 56].map(num => `
+      const navChips = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;width:100%;">
+          <button class="action-btn" style="background:#334155;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="selectHomeSubject('english')">
+            ⬅️ İngilizce Konularına Dön
+          </button>
+          <button class="action-btn" style="background:#2563eb;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="switchMainTab('quiz');startTopicQuiz('city');">
+            📝 6. Ünite Testini Çöz
+          </button>
+        </div>
+      ` + [49, 50, 51, 52, 53, 54, 55, 56].map(num => `
         <button class="page-chip ${p === num ? 'active' : ''}" onclick="selectUnit6Page(${num})">
           Sayfa ${num}
         </button>
@@ -10219,6 +10245,14 @@
 
     function renderUnit5() {
       let pageNavHtml = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+          <button class="action-btn" style="background:#334155;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="selectHomeSubject('english')">
+            ⬅️ İngilizce Konularına Dön
+          </button>
+          <button class="action-btn" style="background:#2563eb;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="switchMainTab('quiz');startTopicQuiz('house');">
+            📝 5. Ünite Testini Çöz
+          </button>
+        </div>
         <div class="page-nav-bar">
           ${[41, 42, 43, 44, 45, 46, 47, 48].map(p => `
             <button class="page-chip ${currentUnit5Page === p ? 'active' : ''}" onclick="selectUnit5Page(${p})">
@@ -11061,6 +11095,14 @@
 
     function renderUnit4() {
       let pageNavHtml = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+          <button class="action-btn" style="background:#334155;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="selectHomeSubject('english')">
+            ⬅️ İngilizce Konularına Dön
+          </button>
+          <button class="action-btn" style="background:#2563eb;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="switchMainTab('quiz');startTopicQuiz('family');">
+            📝 4. Ünite Testini Çöz
+          </button>
+        </div>
         <div class="page-nav-bar">
           ${[33, 34, 35, 36, 37, 38, 39, 40].map(p => `
             <button class="page-chip ${currentUnit4Page === p ? 'active' : ''}" onclick="selectUnit4Page(${p})">
@@ -11456,6 +11498,14 @@
 
     function renderUnit3() {
       let pageNavHtml = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+          <button class="action-btn" style="background:#334155;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="selectHomeSubject('english')">
+            ⬅️ İngilizce Konularına Dön
+          </button>
+          <button class="action-btn" style="background:#2563eb;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="switchMainTab('quiz');startTopicQuiz('body');">
+            📝 3. Ünite Testini Çöz
+          </button>
+        </div>
         <div class="page-nav-bar">
           ${[25, 26, 27, 28, 29, 30, 31, 32].map(p => `
             <button class="page-chip ${currentUnit3Page === p ? 'active' : ''}" onclick="selectUnit3Page(${p})">
@@ -11757,6 +11807,14 @@
 
     function renderUnit2() {
       let pageNavHtml = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+          <button class="action-btn" style="background:#334155;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="selectHomeSubject('english')">
+            ⬅️ İngilizce Konularına Dön
+          </button>
+          <button class="action-btn" style="background:#2563eb;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="switchMainTab('quiz');startTopicQuiz('school');">
+            📝 2. Ünite Testini Çöz
+          </button>
+        </div>
         <div class="page-nav-bar">
           ${[17, 18, 19, 20, 21, 22, 23, 24].map(p => `
             <button class="page-chip ${currentUnit2Page === p ? 'active' : ''}" onclick="selectUnit2Page(${p})">
@@ -11956,6 +12014,14 @@
 
     function renderDaysSort() {
       const html = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+          <button class="action-btn" style="background:#334155;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="selectHomeSubject('english')">
+            ⬅️ İngilizce Konularına Dön
+          </button>
+          <button class="action-btn" style="background:#0284c7;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="switchMainTab('quiz');startTopicQuiz('days');">
+            📝 Günler Testini Çöz
+          </button>
+        </div>
         <div class="card">
           <div class="card-header-bar">
             <div class="card-title">📅 Haftanın Günlerini Sıraya Dizme Ödevi</div>
@@ -13099,9 +13165,9 @@
     // En yüksek skorları yerel olarak saklama
     const quizBestScores = {};
 
-    // 1. TEST SATIRLARI MERKEZİ (HUB)
+    // 1. İNGİLİZCE TEST SATIRLARI MERKEZİ (HUB - SADECE İNGİLİZCE KONULARI)
     function renderQuizHub() {
-      const topicKeys = ['speaking', 'days', 'school', 'greetings', 'body', 'family', 'house', 'city', 'grand'];
+      const topicKeys = ['grand', 'speaking', 'greetings', 'school', 'body', 'family', 'house', 'city', 'days'];
       
       const rowsHtml = topicKeys.map(key => {
         const t = quizTopicBanks[key];
@@ -13119,9 +13185,9 @@
           badgeColor = '#059669';
           btnColor = '#10b981;color:#fff;font-weight:800;';
         } else if (isGrand) {
-          borderStyle = 'border:2px solid #f59e0b;background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(15,23,42,0.9));';
+          borderStyle = 'border:2px solid #f59e0b;background:linear-gradient(135deg, rgba(245,158,11,0.16), rgba(15,23,42,0.95));box-shadow:0 8px 25px rgba(245,158,11,0.18);';
           badgeColor = '#d97706';
-          btnColor = '#f59e0b;color:#0f172a;font-weight:800;';
+          btnColor = '#f59e0b;color:#0f172a;font-weight:900;';
         } else if (isDays) {
           borderStyle = 'border:2px solid #38bdf8;background:linear-gradient(135deg, rgba(56,189,248,0.1), rgba(15,23,42,0.9));';
           badgeColor = '#0284c7';
@@ -13153,7 +13219,7 @@
               </div>
               <div style="display:flex;align-items:center;gap:8px;align-self:center;">
                 <button class="action-btn" onclick="startTopicQuiz('${t.id}')" style="background:${btnColor}padding:10px 18px;font-size:13px;border-radius:10px;white-space:nowrap;">
-                  ▶ Testi Başlat
+                  ▶ ${isGrand ? '20 Soruluk Sınavı Başlat' : 'Testi Başlat'}
                 </button>
               </div>
             </div>
@@ -13163,84 +13229,57 @@
 
       document.getElementById('appContent').innerHTML = `
         <div style="max-width:680px;margin:0 auto;padding-bottom:20px;">
-          <!-- YENİ ÖZELLİK: 3'ER VE 4'ER RİTMİK SAYMA & ÇARPIM TABLOSUNA HAZIRLIK SINAVI KARTI -->
-          <div class="card" style="margin-bottom:14px;padding:18px;border:2px solid #f59e0b;background:linear-gradient(135deg, rgba(124,58,237,0.28), rgba(219,39,119,0.22), rgba(15,23,42,0.95));box-shadow:0 8px 25px rgba(245,158,11,0.2);">
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
-              <div style="display:flex;align-items:flex-start;gap:12px;flex:1;min-width:240px;">
-                <div style="font-size:40px;line-height:1;background:rgba(245,158,11,0.2);padding:12px;border-radius:14px;border:2px solid #f59e0b;">
-                  🚀
-                </div>
-                <div>
-                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
-                    <h3 style="font-size:17px;color:#fff;margin:0;font-weight:900;">3'er (30'a) & 4'er (40'a) Ritmik Sayma Sınavı</h3>
-                    <span style="background:#f59e0b;color:#0f172a;font-size:10px;font-weight:900;padding:3px 9px;border-radius:6px;">
-                      ÇARPIM TABLOSUNA HAZIRLIK
-                    </span>
-                    ${rhythmBestExamScore > 0 ? `<span style="color:#fde047;font-size:12px;font-weight:800;">★ Rekor: ${rhythmBestExamScore} Puan</span>` : ''}
-                  </div>
-                  <p style="font-size:12px;color:#e2e8f0;margin:0;line-height:1.45;">
-                    Öğretmen ödevi: Önce sesli öğretir ve sayar, sonra çocuğun saymasını ister, ardından <strong>10 soruluk Çarpım Tablosuna Hazırlık Sınavı</strong> yapar!
-                  </p>
-                </div>
-              </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;align-self:center;">
-                <button class="action-btn" onclick="selectRhythmStepAndOpen(3, 'learn')" style="background:#10b981;color:#052e16;font-weight:900;padding:10px 14px;font-size:12px;border-radius:10px;">
-                  🎧 Önce Öğren & Say
-                </button>
-                <button class="action-btn" onclick="selectRhythmStepAndOpen(3, 'exam')" style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;font-weight:900;padding:10px 16px;font-size:13px;border-radius:10px;">
-                  🏆 Ritmik Sınava Gir
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- MATEMATİK 4 İŞLEM DİNAMİK TEST MERKEZİ KARTI -->
-          <div class="card" style="margin-bottom:16px;padding:18px;border:2px solid #10b981;background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(15,23,42,0.95));">
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
-              <div>
-                <div style="display:inline-block;background:#10b981;color:#052e16;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;margin-bottom:4px;">
-                  HER SEFERİNDE YENİ VE DEĞİŞKEN SORULAR
-                </div>
-                <h3 style="font-size:17px;color:#fff;margin:0;font-weight:900;">🧮 Matematik 4 İşlem Seviyeli Test Merkezi</h3>
-                <p style="font-size:12px;color:#cbd5e1;margin:2px 0 0;">
-                  Toplama, Çıkarma, Çarpma ve Bölme derslerinin 3'er seviyeli (Kolay, Orta, Karışık) 10 soruluk dinamik testleri:
-                </p>
-              </div>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(145px, 1fr));gap:8px;">
-              <button class="action-btn" style="background:#059669;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="switchMainTab('math_addition_quiz')">
-                ➕ Toplama Testleri
-              </button>
-              <button class="action-btn" style="background:#dc2626;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="switchMainTab('math_subtraction_quiz')">
-                ➖ Çıkarma Testleri
-              </button>
-              <button class="action-btn" style="background:#7c3aed;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="switchMainTab('math_multiplication_quiz')">
-                ✖️ Çarpma Testleri
-              </button>
-              <button class="action-btn" style="background:#0284c7;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="switchMainTab('math_division_quiz')">
-                ➗ Bölme Testleri
-              </button>
-            </div>
-          </div>
-
-          <!-- ÜST AÇIKLAMA KARTI -->
-          <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg, rgba(30,41,59,0.9), rgba(15,23,42,0.9));border:2px solid var(--accent);">
+          <!-- ÜST AÇIKLAMA KARTI (SADECE İNGİLİZCE) -->
+          <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg, rgba(37,99,235,0.22), rgba(15,23,42,0.95));border:2px solid #3b82f6;">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
               <div>
-                <h2 style="font-size:20px;color:#fff;margin-bottom:4px;">📝 İngilizce Konu Testleri & Sesli Telaffuz Merkezi</h2>
+                <div style="display:inline-block;background:#2563eb;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;margin-bottom:4px;">
+                  🇬🇧 SADECE İNGİLİZCE SINAV &amp; KONU TESTLERİ MERKEZİ
+                </div>
+                <h2 style="font-size:20px;color:#fff;margin-bottom:4px;">📝 İngilizce 20 Soruluk Büyük Sınav &amp; Ünite Testleri</h2>
                 <p style="font-size:13px;color:var(--muted);margin:0;">
-                  Sorular ve şıkların yerleri <strong>her girişte otomatik olarak değişir!</strong> 2. sınıf düzeyinde Türkçe açıklamalı ve iki dilli hazırlanmıştır.
+                  Sorular ve şıkların yerleri <strong>her girişte otomatik olarak değişir!</strong> 2. sınıf düzeyinde Türkçe açıklamalı, okunuşlu (🗣️) ve sesli olarak hazırlanmıştır.
                 </p>
               </div>
-              <button class="action-btn" onclick="switchMainTab('menu')" style="background:#334155;font-size:12px;padding:8px 12px;">
-                🏠 Tüm Üniteler
+              <button class="action-btn" onclick="selectHomeSubject('english')" style="background:#334155;color:#fff;font-size:12px;padding:8px 14px;font-weight:800;">
+                ⬅️ İngilizce Konularına Dön
               </button>
             </div>
           </div>
 
-          <!-- TEST SATIRLARI (ROWS) -->
+          <!-- TEST SATIRLARI (1-8. ÜNİTELER + 20 SORULUK BÜYÜK SINAV) -->
           <div style="display:flex;flex-direction:column;gap:4px;">
             ${rowsHtml}
+          </div>
+
+          <!-- 9-13. ÜNİTELER (MEB & MAARİF EK TEMALAR) İNGİLİZCE TESTLERİ -->
+          <div class="card" style="margin-top:14px;padding:18px;border:2px solid #a855f7;background:linear-gradient(135deg, rgba(168,85,247,0.16), rgba(15,23,42,0.95));">
+            <div style="margin-bottom:12px;">
+              <div style="display:inline-block;background:#9333ea;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;margin-bottom:4px;">
+                🌟 9 - 13. ÜNİTELER • EK TEMA TESTLERİ
+              </div>
+              <h3 style="font-size:17px;color:#fff;margin:0;font-weight:900;">🧩 MEB &amp; Maarif Ek İngilizce Temaları Testleri (10'ar Soru)</h3>
+              <p style="font-size:12px;color:#cbd5e1;margin:2px 0 0;">
+                Oyuncaklar, Hayvanlar, Hava Durumu, Eylemler ve Duygular ünitelerinin sesli ve okunuşlu konu testleri:
+              </p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(185px, 1fr));gap:8px;">
+              <button class="action-btn" style="background:#d97706;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="openEngExtraTopic('eng_toys_games','quiz')">
+                🧸 9. Ünite: Toys &amp; Games Testi
+              </button>
+              <button class="action-btn" style="background:#059669;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="openEngExtraTopic('eng_animals_nature','quiz')">
+                🐾 10. Ünite: Animals &amp; Nature Testi
+              </button>
+              <button class="action-btn" style="background:#0284c7;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="openEngExtraTopic('eng_weather_clothes','quiz')">
+                🌦️ 11. Ünite: Weather &amp; Seasons Testi
+              </button>
+              <button class="action-btn" style="background:#7c3aed;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="openEngExtraTopic('eng_actions_abilities','quiz')">
+                🦸 12. Ünite: Actions (Can/Can't) Testi
+              </button>
+              <button class="action-btn" style="background:#db2777;color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="openEngExtraTopic('eng_feelings_health','quiz')">
+                😊 13. Ünite: Feelings &amp; Needs Testi
+              </button>
+            </div>
           </div>
         </div>
       `;
@@ -13250,8 +13289,14 @@
     function startTopicQuiz(topicId) {
       if (!quizTopicBanks[topicId]) topicId = 'days';
       activeTopicId = topicId;
+      currentMainTab = 'quiz';
 
       const topic = quizTopicBanks[topicId];
+      const subHeaderEl = document.getElementById('subHeaderTitle');
+      if (subHeaderEl && topic) {
+        subHeaderEl.textContent = '🇬🇧 İngilizce Sınavı: ' + topic.title;
+      }
+
       if (topic && Array.isArray(topic.questions)) {
         // Orijinal soru havuzunu ilk seferde yedekle
         if (!topic._baseQuestions) {
@@ -13261,7 +13306,7 @@
           }));
         }
 
-        // Eğer Büyük Karma Test (grand) ise tüm ünitelerin sorularından her seferinde rastgele 12 soru seç
+        // Eğer 20 Soruluk Büyük Karma Sınav (grand) ise tüm İngilizce ünitelerinin sorularından rastgele 20 soru seç
         if (topicId === 'grand') {
           const allPools = ['days', 'school', 'greetings', 'body', 'family', 'house', 'city'];
           let combined = [...topic._baseQuestions];
@@ -13285,7 +13330,7 @@
               });
             }
           });
-          topic.questions = uniquePool.slice(0, 12);
+          topic.questions = uniquePool.slice(0, 20);
           topic.totalQuestions = topic.questions.length;
         } else {
           // Diğer tüm testlerde soruları ve şıkları her girişte yeniden karıştır
@@ -13372,11 +13417,11 @@
                   Bu Testi Tekrarla 🔄
                 </button>
                 <button class="action-btn" style="flex:1;background:#2563eb;" onclick="renderQuizHub()">
-                  📋 Diğer Test Satırları
+                  📋 Diğer İngilizce Testleri
                 </button>
               </div>
-              <button class="action-btn" style="background:#334155;" onclick="switchMainTab('menu')">
-                🏠 Tüm Üniteler Menüsü
+              <button class="action-btn" style="background:#334155;" onclick="selectHomeSubject('english')">
+                ⬅️ İngilizce Konularına Dön
               </button>
             </div>
           </div>
@@ -13749,6 +13794,12 @@
       const card = allFlashcards[flashcardIndex];
 
       const html = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+          <button class="action-btn" style="background:#334155;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="selectHomeSubject('english')">
+            ⬅️ İngilizce Konularına Dön
+          </button>
+          <span style="font-size:12px;color:#fde047;font-weight:800;">🃏 İngilizce Flaş Kelime Kartları</span>
+        </div>
         <div class="card" style="text-align:center;">
           <div class="card-header-bar">
             <div class="card-title">🃏 Kelime Kartları (${flashcardIndex + 1} / ${allFlashcards.length})</div>
@@ -13798,10 +13849,16 @@
     }
 
     /* ========================================================
-       9. DAYS GUIDE (GÜNLER REHBERİ)
+       9. DAYS GUIDE (GÜNLER REHBERİ) & DİNLE-YAKALA (LISTEN & MATCH)
     ======================================================== */
     function renderDaysGuide() {
       const html = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+          <button class="action-btn" style="background:#334155;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="selectHomeSubject('english')">
+            ⬅️ İngilizce Konularına Dön
+          </button>
+          <span style="font-size:12px;color:#38bdf8;font-weight:800;">📖 Haftanın Günleri &amp; Telaffuz Rehberi</span>
+        </div>
         <div class="card">
           <div class="card-header-bar">
             <div class="card-title">📖 Haftanın Günleri Telaffuz & Bilgi Rehberi</div>
@@ -13822,6 +13879,130 @@
         </div>
       `;
       document.getElementById('appContent').innerHTML = html;
+    }
+
+    // İNGİLİZCE DİNLE VE RESMİ YAKALA OYUNU (renderListenMatch)
+    let listenMatchScore = 0;
+    let listenMatchRound = 1;
+    let listenMatchTarget = null;
+    let listenMatchOptions = [];
+    let listenMatchAnswered = false;
+
+    const listenMatchPool = [
+      { en: "Apple", tr: "Elma", icon: "🍎" },
+      { en: "Banana", tr: "Muz", icon: "🍌" },
+      { en: "Cat", tr: "Kedi", icon: "🐱" },
+      { en: "Dog", tr: "Köpek", icon: "🐶" },
+      { en: "Bird", tr: "Kuş", icon: "🐦" },
+      { en: "Fish", tr: "Balık", icon: "🐟" },
+      { en: "Book", tr: "Kitap", icon: "📕" },
+      { en: "Pencil", tr: "Kurşun Kalem", icon: "✏️" },
+      { en: "School Bag", tr: "Okul Çantası", icon: "🎒" },
+      { en: "Scissors", tr: "Makas", icon: "✂️" },
+      { en: "Car", tr: "Araba", icon: "🚗" },
+      { en: "Train", tr: "Tren", icon: "🚂" },
+      { en: "Ball", tr: "Top", icon: "⚽" },
+      { en: "Kite", tr: "Uçurtma", icon: "🪁" },
+      { en: "Sun", tr: "Güneş", icon: "☀️" },
+      { en: "Rain", tr: "Yağmur", icon: "🌧️" },
+      { en: "Umbrella", tr: "Şemsiye", icon: "☂️" },
+      { en: "House", tr: "Ev", icon: "🏠" },
+      { en: "Hospital", tr: "Hastane", icon: "🏥" },
+      { en: "Milk", tr: "Süt", icon: "🥛" }
+    ];
+
+    function prepareListenMatchQuestion() {
+      const shuffled = [...listenMatchPool].sort(() => Math.random() - 0.5);
+      listenMatchOptions = shuffled.slice(0, 4);
+      listenMatchTarget = listenMatchOptions[Math.floor(Math.random() * listenMatchOptions.length)];
+      listenMatchAnswered = false;
+    }
+
+    function renderListenMatch() {
+      if (!listenMatchTarget) {
+        prepareListenMatchQuestion();
+      }
+      const html = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+          <button class="action-btn" style="background:#334155;color:#fff;font-size:12px;padding:7px 14px;font-weight:800;" onclick="selectHomeSubject('english')">
+            ⬅️ İngilizce Konularına Dön
+          </button>
+          <span style="font-size:12px;color:#ec4899;font-weight:800;">🎧 İngilizce Dinle &amp; Resmi Yakala</span>
+        </div>
+        <div class="card" style="max-width:640px;margin:0 auto;text-align:center;border:2px solid #ec4899;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <span style="background:rgba(236,72,153,0.2);color:#f9a8d4;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;">
+              Soru: ${listenMatchRound}
+            </span>
+            <span style="background:rgba(250,204,21,0.18);color:#fde047;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:900;">
+              ⭐ Puan: ${listenMatchScore}
+            </span>
+            <button class="reset-btn" onclick="listenMatchScore=0;listenMatchRound=1;prepareListenMatchQuestion();renderListenMatch();">🔄 Sıfırla</button>
+          </div>
+          <h3 style="font-size:20px;color:#fff;margin-bottom:6px;">🎧 Sesi Dinle ve Doğru Resmi Yakala!</h3>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Hoparlöre basarak İngilizce kelimeyi dinle ve hangi resim olduğunu seç.</p>
+          <div style="background:#0f172a;border:2px dashed #ec4899;border-radius:16px;padding:18px;margin-bottom:16px;">
+            <button class="action-btn" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-size:16px;font-weight:900;padding:12px 24px;border-radius:999px;" onclick="speakText('${listenMatchTarget.en}')">
+              🔊 Kelimeyi Dinle: "${listenMatchTarget.en}"
+            </button>
+            <div style="margin-top:10px;">
+              <span style="display:inline-block;background:rgba(253,224,71,0.15);border:1px solid rgba(253,224,71,0.4);color:#fde047;font-size:13px;font-weight:900;padding:4px 12px;border-radius:999px;">
+                🗣️ ${getEnPhonetic(listenMatchTarget.en)}
+              </span>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+            ${listenMatchOptions.map((opt, i) => `
+              <button onclick="checkListenMatchAnswer(${i})" style="background:#1e293b;border:2px solid #334155;border-radius:16px;padding:18px 12px;cursor:pointer;color:#fff;transition:all 0.2s;" id="lmOpt_${i}">
+                <div style="font-size:48px;margin-bottom:6px;">${opt.icon}</div>
+                <div style="font-size:14px;font-weight:800;color:#cbd5e1;">${opt.tr}</div>
+              </button>
+            `).join('')}
+          </div>
+          <div id="listenMatchFeedback" style="margin-top:14px;min-height:36px;"></div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+      setTimeout(() => speakText(listenMatchTarget.en), 200);
+    }
+
+    function checkListenMatchAnswer(idx) {
+      if (listenMatchAnswered) return;
+      const chosen = listenMatchOptions[idx];
+      const fb = document.getElementById('listenMatchFeedback');
+      const btn = document.getElementById('lmOpt_' + idx);
+      if (chosen && chosen.en === listenMatchTarget.en) {
+        listenMatchAnswered = true;
+        listenMatchScore += 10;
+        addStarPoints(10);
+        playChimeSound('correct');
+        speakText('Great! ' + chosen.en);
+        if (btn) {
+          btn.style.borderColor = '#10b981';
+          btn.style.background = 'rgba(16,185,129,0.22)';
+        }
+        if (fb) {
+          fb.innerHTML = `<div class="feedback-banner success" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <span>🎉 Harika! <b>${chosen.en}</b> (🗣️ ${getEnPhonetic(chosen.en)}) = <b>${chosen.tr}</b> (+10 Puan)</span>
+            <button class="action-btn" style="background:#10b981;color:#052e16;font-weight:900;padding:6px 14px;" onclick="listenMatchRound++;prepareListenMatchQuestion();renderListenMatch();">Sonraki Kelime ➔</button>
+          </div>`;
+        }
+      } else {
+        playChimeSound('wrong');
+        speakText('Try again');
+        if (btn) {
+          btn.style.borderColor = '#ef4444';
+          btn.style.background = 'rgba(239,68,68,0.18)';
+        }
+        if (fb) {
+          fb.innerHTML = `<div class="feedback-banner error"><span>❌ Tekrar dinle ve doğru resmi bul!</span></div>`;
+        }
+      }
+    }
+
+    // MATEMATİK HIZLI PARMAK OYUNU (renderSpeedMath)
+    function renderSpeedMath() {
+      switchMainTab('rhythmic');
     }
 
     /* ========================================================
@@ -15634,7 +15815,7 @@
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.9.7';
+    const CURRENT_APP_VERSION = '2.9.8';
     let swRegistration = null;
     let updateBannerDismissed = false;
 

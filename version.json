@@ -1,5 +1,5 @@
 {
-  "version": "2.9.7",
+  "version": "2.9.8",
   "releaseDate": "2026-10-24",
-  "notes": "İngilizce kelime ve cümle kartlarındaki okunuş rozetlerinde 'Okunuşu:' yazısı kaldırılarak doğrudan 🗣️ emojisinden sonra okunuşun tek satırda sade ve net görünmesi sağlandı."
+  "notes": "İngilizce 20 Soruluk Büyük Sınav ve Konu Testleri merkezindeki Matematik (Ritmik Sayma ve 4 İşlem) kartları kaldırılarak Matematik ve İngilizce derslerinin birbirine karışması tamamen engellendi. Tüm ders ve ünite ekranlarına kendi ana dersine dönüş butonları eklendi."
 }
