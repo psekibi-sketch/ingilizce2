@@ -2729,6 +2729,21 @@
       } else if (tabId === 'math_money') {
         document.getElementById('subHeaderTitle').textContent = '🪙 2. Sınıf Paralarımız (TL & Kuruş) ve Kırtasiye Market Oyunu';
         renderMathMoney();
+      } else if (tabId === 'math_numbers') {
+        document.getElementById('subHeaderTitle').textContent = '🔢 2. Sınıf Doğal Sayılar: Basamak Değeri, Onluğa Yuvarlama, Deste & Düzine';
+        renderMathNumbersModule();
+      } else if (tabId === 'math_fractions') {
+        document.getElementById('subHeaderTitle').textContent = '🍕 2. Sınıf Kesirler: Bütün, Yarım ve Çeyrek (Görsel Modelleme & Test)';
+        renderMathFractionsModule();
+      } else if (tabId === 'math_measurement') {
+        document.getElementById('subHeaderTitle').textContent = '📏⚖️🥛 2. Sınıf Uzunluk (m/cm), Tartma (kg/g) ve Sıvı Ölçme Laboratuvarı';
+        renderMathMeasurementModule();
+      } else if (tabId === 'math_patterns_symmetry') {
+        document.getElementById('subHeaderTitle').textContent = '🦋🔄 2. Sınıf Geometrik & Sayı Örüntüleri, Simetri ve Uzamsal İlişkiler';
+        renderMathPatternsSymmetryModule();
+      } else if (tabId === 'math_data_graphs') {
+        document.getElementById('subHeaderTitle').textContent = '📊📋 2. Sınıf Veri Toplama: Çetele, Sıklık Tablosu ve Nesne/Şekil Grafiği';
+        renderMathDataGraphsModule();
       } else if (tabId === 'pet_hub') {
         document.getElementById('subHeaderTitle').textContent = '🐾 Lingo Dostum, Yıldız Kumbarası, Günlük Şans Çarkı & Görev Sandığı';
         renderPetAndWheelHub();
@@ -2846,9 +2861,9 @@
               <div style="display:flex;align-items:center;gap:14px;">
                 <div style="font-size:42px;background:rgba(255,255,255,0.12);padding:10px;border-radius:16px;">🔢</div>
                 <div style="flex:1;">
-                  <span style="background:#ec4899;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">YENİ: GEOMETRİK ŞEKİLLER &amp; CİSİMLER</span>
+                  <span style="background:#ec4899;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">TAM 2. SINIF MEB MÜFREDATI (14 KONU)</span>
                   <h3 style="font-size:20px;font-weight:900;color:#fff;margin:3px 0;">MATEMATİK DERSİ</h3>
-                  <p style="font-size:12px;color:#fce7f3;margin:0;">Geometrik Şekiller ve Cisimler • Saatler &amp; Paralarımız • Dört İşlem • Ritmik Sayma</p>
+                  <p style="font-size:12px;color:#fce7f3;margin:0;">Doğal Sayılar • Dört İşlem • Kesirler • Geometri &amp; Simetri • Saat, Para, Uzunluk, Tartma, Sıvı • Tablo &amp; Grafik</p>
                 </div>
                 <div style="font-size:20px;color:#fde047;">➔</div>
               </div>
@@ -2872,7 +2887,7 @@
 
         ${showMath ? `
           <!-- ========================================================
-               1. ANA BAŞLIK: MATEMATİK DERSİ
+               1. ANA BAŞLIK: MATEMATİK DERSİ (TÜM 2. SINIF MEB MÜFREDATI)
           ======================================================== -->
           <div style="margin-bottom:28px;">
             <div style="margin-bottom:14px;">
@@ -2884,12 +2899,12 @@
               <div style="display:flex;align-items:center;gap:10px;">
                 <span style="font-size:28px;">🔢</span>
                 <div>
-                  <h3 style="font-size:20px;color:#fff;font-weight:900;margin:0;">1. ANA BAŞLIK: MATEMATİK</h3>
-                  <p style="font-size:12px;color:#fce7f3;margin:0;">2'şer, 3'er, 4'er ve 5'er Ritmik Sayma • Çarpım Tablosuna Hazırlık Ödevi</p>
+                  <h3 style="font-size:20px;color:#fff;font-weight:900;margin:0;">1. BÖLÜM: RİTMİK SAYMA &amp; ÇARPIM TABLOSUNA HAZIRLIK</h3>
+                  <p style="font-size:12px;color:#fce7f3;margin:0;">2'şer, 3'er, 4'er ve 5'er Ritmik Sayma • Dinle, Mikrofonla Say ve Sınav Ol</p>
                 </div>
               </div>
               <button class="action-btn" style="background:#ec4899;font-size:12px;font-weight:800;padding:7px 14px;" onclick="switchMainTab('rhythmic')">
-                Tüm Matematik Sayfası ➔
+                Ritmik Sayma Ekranı ➔
               </button>
             </div>
 
@@ -2958,15 +2973,15 @@
             </div>
 
             <!-- ========================================================
-                 2. BÖLÜM: 2. SINIF DOĞAL SAYILARLA TOPLAMA & ÇIKARMA (MEB MAARİF MODELİ)
+                 2. BÖLÜM: DOĞAL SAYILAR, DÖRT İŞLEM VE KESİRLER (MEB MAARİF MODELİ)
             ======================================================== -->
             <div style="margin-top:24px;border-top:2px dashed rgba(255,255,255,0.12);padding-top:20px;">
               <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
                 <div style="display:flex;align-items:center;gap:10px;">
                   <span style="font-size:28px;">🧮</span>
                   <div>
-                    <h3 style="font-size:19px;color:#fff;font-weight:900;margin:0;">2. SINIF TOPLAMA & ÇIKARMA DERSLERİ</h3>
-                    <p style="font-size:12px;color:#6ee7b7;margin:0;">MEB Türkiye Yüzyılı Maarif Modeli • Onluk Taban Blokları • Hikayeli Problemler</p>
+                    <h3 style="font-size:19px;color:#fff;font-weight:900;margin:0;">2. BÖLÜM: DOĞAL SAYILAR, DÖRT İŞLEM &amp; KESİRLER</h3>
+                    <p style="font-size:12px;color:#6ee7b7;margin:0;">Basamak Değeri • Onluğa Yuvarlama • Deste &amp; Düzine • Toplama, Çıkarma, Çarpma, Bölme • Kesirler</p>
                   </div>
                 </div>
                 <span style="font-size:11px;font-weight:900;background:rgba(16,185,129,0.2);color:#34d399;padding:4px 10px;border-radius:999px;">
@@ -2974,8 +2989,34 @@
                 </span>
               </div>
 
-              <!-- 3 BÜYÜK MODÜL KARTI: TOPLAMA, ÇIKARMA, HİKAYELİ PROBLEMLER -->
               <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:14px;">
+                <!-- YENİ 1: DOĞAL SAYILAR (BASAMAK DEĞERİ, YUVARLAMA, DESTE-DÜZİNE, TEK-ÇİFT) -->
+                <div class="card" style="margin-bottom:0;border:2px solid #38bdf8;background:linear-gradient(145deg, rgba(56,189,248,0.16), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_numbers')">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <div style="font-size:36px;background:rgba(56,189,248,0.2);padding:8px;border-radius:14px;">🔟</div>
+                      <div>
+                        <span style="font-size:10px;font-weight:900;background:#38bdf8;color:#0f172a;padding:2px 8px;border-radius:6px;">
+                          YENİ • SAYILAR VE İŞLEMLER
+                        </span>
+                        <h4 style="font-size:17px;color:#bae6fd;font-weight:900;margin:3px 0 1px;">Doğal Sayılar &amp; Yuvarlama</h4>
+                        <div style="font-size:11px;color:#cbd5e1;">Basamak Değeri • Deste &amp; Düzine • Tek &amp; Çift</div>
+                      </div>
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
+                    Onluk ve birlikler, basamak değeri, en yakın onluğa yuvarlama makinesi, deste (10) - düzine (12), tek/çift sayılar ve sıralama!
+                  </p>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <button class="action-btn" style="width:100%;background:#38bdf8;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();mathNumbersSubTab='learn';switchMainTab('math_numbers')">
+                      📖 1. Konu &amp; Atölye
+                    </button>
+                    <button class="action-btn" style="width:100%;background:#0284c7;color:#fff;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();mathNumbersSubTab='quiz';switchMainTab('math_numbers')">
+                      🎯 2. Sayılar Testi
+                    </button>
+                  </div>
+                </div>
+
                 <!-- 1. TOPLAMA İŞLEMİ KARTI -->
                 <div class="card" style="margin-bottom:0;border:2px solid #10b981;background:linear-gradient(145deg, rgba(16,185,129,0.12), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_addition')">
                   <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
@@ -2983,7 +3024,7 @@
                       <div style="font-size:36px;background:rgba(16,185,129,0.2);padding:8px;border-radius:14px;">➕</div>
                       <div>
                         <span style="font-size:10px;font-weight:900;background:#10b981;color:#fff;padding:2px 8px;border-radius:6px;">
-                          ELDELİ & ELDESİZ
+                          ELDELİ &amp; ELDESİZ
                         </span>
                         <h4 style="font-size:17px;color:#fff;font-weight:900;margin:3px 0 1px;">Toplama İşlemi</h4>
                         <div style="font-size:11px;color:#6ee7b7;">10 Birlik = 1 Onluk! Basamak Tahtası</div>
@@ -3013,10 +3054,10 @@
                       <div style="font-size:36px;background:rgba(239,68,68,0.2);padding:8px;border-radius:14px;">➖</div>
                       <div>
                         <span style="font-size:10px;font-weight:900;background:#ef4444;color:#fff;padding:2px 8px;border-radius:6px;">
-                          ONLUK BOZMALI & BOZMASIZ
+                          ONLUK BOZMALI &amp; BOZMASIZ
                         </span>
                         <h4 style="font-size:17px;color:#fff;font-weight:900;margin:3px 0 1px;">Çıkarma İşlemi</h4>
-                        <div style="font-size:11px;color:#fca5a5;">Eksilen, Çıkan, Fark & Onluk Bozma</div>
+                        <div style="font-size:11px;color:#fca5a5;">Eksilen, Çıkan, Fark &amp; Onluk Bozma</div>
                       </div>
                     </div>
                   </div>
@@ -3043,7 +3084,7 @@
                       <div style="font-size:36px;background:rgba(139,92,246,0.2);padding:8px;border-radius:14px;">✖️</div>
                       <div>
                         <span style="font-size:10px;font-weight:900;background:#8b5cf6;color:#fff;padding:2px 8px;border-radius:6px;">
-                          TEKRARLI TOPLAMA & KAT
+                          TEKRARLI TOPLAMA &amp; KAT
                         </span>
                         <h4 style="font-size:17px;color:#fff;font-weight:900;margin:3px 0 1px;">Çarpma İşlemi</h4>
                         <div style="font-size:11px;color:#c4b5fd;">1. Çarpan, 2. Çarpan, Çarpım, 1 ve 0 Kuralı</div>
@@ -3055,7 +3096,7 @@
                   </p>
                   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
                     <button class="action-btn" style="width:100%;background:#8b5cf6;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_multiplication')">
-                      📖 1. Konu & Tahta
+                      📖 1. Konu &amp; Tahta
                     </button>
                     <button class="action-btn" style="width:100%;background:#f59e0b;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();startMathQuiz('multiplication')">
                       🎯 2. Çarpma Testi
@@ -3070,10 +3111,10 @@
                       <div style="font-size:36px;background:rgba(6,182,212,0.2);padding:8px;border-radius:14px;">➗</div>
                       <div>
                         <span style="font-size:10px;font-weight:900;background:#06b6d4;color:#0f172a;padding:2px 8px;border-radius:6px;">
-                          EŞİT PAYLAŞTIRMA & GRUPLAMA
+                          EŞİT PAYLAŞTIRMA &amp; GRUPLAMA
                         </span>
                         <h4 style="font-size:17px;color:#fff;font-weight:900;margin:3px 0 1px;">Bölme İşlemi</h4>
-                        <div style="font-size:11px;color:#67e8f9;">Bölünen, Bölen, Bölüm, Kalan & Ardışık Çıkarma</div>
+                        <div style="font-size:11px;color:#67e8f9;">Bölünen, Bölen, Bölüm, Kalan &amp; Ardışık Çıkarma</div>
                       </div>
                     </div>
                   </div>
@@ -3082,10 +3123,37 @@
                   </p>
                   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
                     <button class="action-btn" style="width:100%;background:#06b6d4;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_division')">
-                      📖 1. Konu & Tahta
+                      📖 1. Konu &amp; Tahta
                     </button>
                     <button class="action-btn" style="width:100%;background:#f59e0b;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();startMathQuiz('division')">
                       🎯 2. Bölme Testi
+                    </button>
+                  </div>
+                </div>
+
+                <!-- YENİ 2: KESİRLER (BÜTÜN, YARIM, ÇEYREK) KARTI -->
+                <div class="card" style="margin-bottom:0;border:2px solid #ec4899;background:linear-gradient(145deg, rgba(236,72,153,0.16), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_fractions')">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <div style="font-size:36px;background:rgba(236,72,153,0.2);padding:8px;border-radius:14px;">🍕</div>
+                      <div>
+                        <span style="font-size:10px;font-weight:900;background:#ec4899;color:#fff;padding:2px 8px;border-radius:6px;">
+                          YENİ • KESİRLER ÖDEVİ
+                        </span>
+                        <h4 style="font-size:17px;color:#fbcfe8;font-weight:900;margin:3px 0 1px;">Kesirler: Bütün, Yarım, Çeyrek</h4>
+                        <div style="font-size:11px;color:#cbd5e1;">1 Bütün = 2 Yarım = 4 Çeyrek</div>
+                      </div>
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
+                    Pizza, elma ve simit dilimleme atölyesiyle bütün-yarım-çeyrek dönüşümleri, nesne gruplarının yarısını/çeyreğini bulma ve testi!
+                  </p>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <button class="action-btn" style="width:100%;background:#ec4899;color:#fff;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();mathFractionsSubTab='learn';switchMainTab('math_fractions')">
+                      🍕 1. Kesir Atölyesi
+                    </button>
+                    <button class="action-btn" style="width:100%;background:#be185d;color:#fff;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();mathFractionsSubTab='quiz';switchMainTab('math_fractions')">
+                      🎯 2. Kesirler Testi
                     </button>
                   </div>
                 </div>
@@ -3100,7 +3168,7 @@
                           MEB MAARİF MODELİ
                         </span>
                         <h4 style="font-size:17px;color:#fde047;font-weight:900;margin:3px 0 1px;">Hikayeli Problem Atölyesi</h4>
-                        <div style="font-size:11px;color:#cbd5e1;">Günlük Hayat Problemleri & Sesli Okuma</div>
+                        <div style="font-size:11px;color:#cbd5e1;">Günlük Hayat Problemleri &amp; Sesli Okuma</div>
                       </div>
                     </div>
                   </div>
@@ -3115,20 +3183,20 @@
             </div>
 
             <!-- ========================================================
-                 3. BÖLÜM: 2. SINIF MATEMATİK — GEOMETRİ VE ÖLÇME KONULARI
-                 (Geometrik Şekiller ve Cisimler • Saatleri Okuma • Paralarımız TL & Kuruş)
+                 3. BÖLÜM: GEOMETRİ, ÖRÜNTÜLER, SİMETRİ, ÖLÇME VE VERİ GRAFİKLERİ
+                 (2. Sınıf MEB Müfredatındaki Tüm Diğer Matematik Konuları)
             ======================================================== -->
             <div style="margin-top:24px;border-top:2px dashed rgba(168,85,247,0.35);padding-top:20px;">
               <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
                 <div style="display:flex;align-items:center;gap:10px;">
                   <span style="font-size:28px;">📐</span>
                   <div>
-                    <h3 style="font-size:19px;color:#fff;font-weight:900;margin:0;">2. SINIF GEOMETRİ, SAATLER &amp; PARALARIMIZ (MATEMATİK)</h3>
-                    <p style="font-size:12px;color:#e9d5ff;margin:0;">MEB 2. Sınıf Matematik Müfredatı • Geometrik Şekiller ve Cisimler • Zaman Ölçme (Saatler) • Paralarımız (TL)</p>
+                    <h3 style="font-size:19px;color:#fff;font-weight:900;margin:0;">3. BÖLÜM: GEOMETRİ, SİMETRİ, ÖLÇME &amp; TABLO/GRAFİK</h3>
+                    <p style="font-size:12px;color:#e9d5ff;margin:0;">Geometrik Şekiller ve Cisimler • Örüntü &amp; Simetri • Saatler • Paralarımız • Uzunluk, Tartma, Sıvı Ölçme • Çetele &amp; Sıklık Grafiği</p>
                   </div>
                 </div>
                 <span style="font-size:11px;font-weight:900;background:rgba(168,85,247,0.22);color:#e9d5ff;padding:4px 10px;border-radius:999px;">
-                  GEOMETRİ &amp; ÖLÇME ÜNİTELERİ
+                  GEOMETRİ • ÖLÇME • VERİ İŞLEME
                 </span>
               </div>
 
@@ -3156,6 +3224,33 @@
                     </button>
                     <button class="action-btn" style="width:100%;background:#db2777;color:#fff;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_geometry_quiz')">
                       🎯 2. Geometri Testi
+                    </button>
+                  </div>
+                </div>
+
+                <!-- YENİ 3: GEOMETRİK ÖRÜNTÜLER, SİMETRİ VE UZAMSAL İLİŞKİLER -->
+                <div class="card" style="margin-bottom:0;border:2px solid #14b8a6;background:linear-gradient(145deg, rgba(20,184,166,0.16), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_patterns_symmetry')">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <div style="font-size:36px;background:rgba(20,184,166,0.2);padding:8px;border-radius:14px;">🦋</div>
+                      <div>
+                        <span style="font-size:10px;font-weight:900;background:#14b8a6;color:#0f172a;padding:2px 8px;border-radius:6px;">
+                          YENİ • ÖRÜNTÜ &amp; SİMETRİ
+                        </span>
+                        <h4 style="font-size:17px;color:#99f6e4;font-weight:900;margin:3px 0 1px;">Örüntüler, Simetri &amp; Yön</h4>
+                        <div style="font-size:11px;color:#cbd5e1;">Simetri Doğrusu • Şekil/Sayı Örüntüsü • Konum</div>
+                      </div>
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
+                    Geometrik ve sayı örüntülerinde kuralı bulma, kelebek ve harflerde simetri doğrusu aynası, sağ-sol-arasında uzamsal ilişkiler!
+                  </p>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <button class="action-btn" style="width:100%;background:#14b8a6;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();mathPatternsSubTab='learn';switchMainTab('math_patterns_symmetry')">
+                      🦋 1. Konu &amp; Ayna
+                    </button>
+                    <button class="action-btn" style="width:100%;background:#0d9488;color:#fff;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();mathPatternsSubTab='quiz';switchMainTab('math_patterns_symmetry')">
+                      🎯 2. Simetri Testi
                     </button>
                   </div>
                 </div>
@@ -3202,6 +3297,60 @@
                   <button class="action-btn" style="width:100%;background:#f97316;color:#fff;font-size:12px;font-weight:900;padding:9px;" onclick="event.stopPropagation();switchMainTab('math_money')">
                     🪙 Paralarımız &amp; Kırtasiye Marketi Aç ➔
                   </button>
+                </div>
+
+                <!-- YENİ 4: UZUNLUK, TARTMA VE SIVI ÖLÇME LABORATUVARI -->
+                <div class="card" style="margin-bottom:0;border:2px solid #22c55e;background:linear-gradient(145deg, rgba(34,197,94,0.16), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_measurement')">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <div style="font-size:36px;background:rgba(34,197,94,0.2);padding:8px;border-radius:14px;">📏⚖️</div>
+                      <div>
+                        <span style="font-size:10px;font-weight:900;background:#22c55e;color:#0f172a;padding:2px 8px;border-radius:6px;">
+                          YENİ • ÖLÇME ÜNİTESİ
+                        </span>
+                        <h4 style="font-size:17px;color:#bbf7d0;font-weight:900;margin:3px 0 1px;">Uzunluk, Tartma &amp; Sıvı Ölçme</h4>
+                        <div style="font-size:11px;color:#cbd5e1;">Karış/Metre (m-cm) • Kilogram (kg) • Bardak/Sürahi</div>
+                      </div>
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
+                    Karış, adım, kulaç ve Metre/Santimetre (1 m = 100 cm), Kilogram (kg) terazi tartımı ve bardak-sürahi sıvı ölçme deneyleri!
+                  </p>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <button class="action-btn" style="width:100%;background:#22c55e;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();mathMeasurementSubTab='learn';switchMainTab('math_measurement')">
+                      📏 1. Ölçme Atölyesi
+                    </button>
+                    <button class="action-btn" style="width:100%;background:#15803d;color:#fff;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();mathMeasurementSubTab='quiz';switchMainTab('math_measurement')">
+                      🎯 2. Ölçme Testi
+                    </button>
+                  </div>
+                </div>
+
+                <!-- YENİ 5: VERİ TOPLAMA VE DEĞERLENDİRME (ÇETELE, SIKLIK TABLOSU, GRAFİK) -->
+                <div class="card" style="margin-bottom:0;border:2px solid #6366f1;background:linear-gradient(145deg, rgba(99,102,241,0.18), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_data_graphs')">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <div style="font-size:36px;background:rgba(99,102,241,0.22);padding:8px;border-radius:14px;">📊</div>
+                      <div>
+                        <span style="font-size:10px;font-weight:900;background:#6366f1;color:#fff;padding:2px 8px;border-radius:6px;">
+                          YENİ • VERİ İŞLEME ÜNİTESİ
+                        </span>
+                        <h4 style="font-size:17px;color:#c7d2fe;font-weight:900;margin:3px 0 1px;">Tablo ve Grafik Okuma</h4>
+                        <div style="font-size:11px;color:#cbd5e1;">Çetele Tablosu • Sıklık Tablosu • Şekil Grafiği</div>
+                      </div>
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
+                    Çetele çubukları (beşli grup), Sıklık Tablosu, Nesne ve Şekil Grafiği oluşturma ve grafik yorumlama problemleri!
+                  </p>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <button class="action-btn" style="width:100%;background:#6366f1;color:#fff;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();mathDataGraphsSubTab='learn';switchMainTab('math_data_graphs')">
+                      📊 1. Tablo &amp; Grafik
+                    </button>
+                    <button class="action-btn" style="width:100%;background:#4338ca;color:#fff;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();mathDataGraphsSubTab='quiz';switchMainTab('math_data_graphs')">
+                      🎯 2. Grafik Testi
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -13318,10 +13467,812 @@
     }
 
     /* ========================================================
+       10. MEB 2. SINIF MATEMATİK TAM MÜFREDAT EKLENTİLERİ (5 YENİ MODÜL)
+       1) Doğal Sayılar: Basamak Değeri, En Yakın Onluğa Yuvarlama, Deste & Düzine, Tek/Çift
+       2) Kesirler: Bütün, Yarım ve Çeyrek (Görsel Dilimleme & Dönüşüm)
+       3) Uzunluk (Karış/Metre/cm), Tartma (kg/g) ve Sıvı Ölçme (Bardak/Sürahi)
+       4) Geometrik & Sayı Örüntüleri, Simetri Doğrusu ve Uzamsal İlişkiler
+       5) Veri Toplama ve Değerlendirme: Çetele, Sıklık Tablosu ve Şekil Grafiği
+    ======================================================== */
+
+    function renderMathModuleTopNav(moduleTitle, badgeText, colorHex) {
+      return `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="action-btn" style="background:#8b5cf6;color:#fff;font-size:12px;font-weight:900;padding:8px 14px;" onclick="selectHomeSubject('math')">
+              ⬅️ Matematik Konularına Dön
+            </button>
+            <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:12px;font-weight:800;padding:8px 14px;" onclick="selectHomeSubject('home')">
+              🏠 Ana Ders Menüsü
+            </button>
+          </div>
+          <span style="font-size:11px;font-weight:900;background:${colorHex}22;color:${colorHex};border:1px solid ${colorHex}66;padding:4px 12px;border-radius:999px;">
+            ${badgeText}
+          </span>
+        </div>
+      `;
+    }
+
+    // ORTAK TEST MOTORU (5 YENİ MATEMATİK ÜNİTESİ İÇİN)
+    const mebExtraQuizState = {
+      topicKey: 'numbers',
+      qIndex: 0,
+      score: 0,
+      answered: false,
+      wrongClicked: [],
+      firstTryCount: 0
+    };
+
+    const mebExtraQuizBanks = {
+      numbers: {
+        title: '🔟 Doğal Sayılar, Basamak Değeri, Yuvarlama & Deste-Düzine Testi',
+        backFn: "mathNumbersSubTab='learn';renderMathNumbersModule()",
+        questions: [
+          { q: '74 sayısının onlar basamağındaki rakamın BASAMAK DEĞERİ kaçtır?', opts: ['7', '70', '4', '40'], ans: '70', exp: '74 sayısında 7 onluk vardır. 7 onluğun basamak değeri 70\'tir.' },
+          { q: '1 Düzine kalem, 1 Deste kalemden kaç fazladır?', opts: ['2', '4', '10', '12'], ans: '2', exp: '1 Düzine = 12, 1 Deste = 10\'dur. 12 - 10 = 2 fazladır.' },
+          { q: '46 sayısı en yakın onluğa yuvarlandığında hangi sayı olur?', opts: ['40', '45', '50', '60'], ans: '50', exp: 'Birler basamağı 6 olduğu için (5 ve 5\'ten büyük) bir sonraki onluk olan 50\'ye yuvarlanır.' },
+          { q: '83 sayısı en yakın onluğa yuvarlandığında hangi sayı olur?', opts: ['70', '80', '85', '90'], ans: '80', exp: 'Birler basamağı 3 olduğu için (5\'ten küçük) kendi onluğu olan 80\'e yuvarlanır.' },
+          { q: 'Aşağıdaki sayılardan hangisi ÇİFT sayıdır?', opts: ['35', '47', '68', '91'], ans: '68', exp: 'Birler basamağında 0, 2, 4, 6, 8 olan sayılar çift sayıdır. 68 çift sayıdır.' },
+          { q: '5 onluk ve 9 birlikten oluşan doğal sayı kaçtır?', opts: ['59', '95', '50', '69'], ans: '59', exp: '5 onluk (50) + 9 birlik (9) = 59 eder.' },
+          { q: '2 Deste balon toplam kaç tane balondur?', opts: ['10', '12', '20', '24'], ans: '20', exp: '1 deste 10 tanedir. 2 deste: 10 + 10 = 20 balondur.' },
+          { q: 'Aşağıdaki karşılaştırmalardan hangisi DOĞRUDUR?', opts: ['63 > 71', '48 < 42', '85 > 58', '39 = 93'], ans: '85 > 58', exp: '85 sayısı 58 sayısından büyüktür (85 > 58).' },
+          { q: 'İki basamaklı en büyük ÇİFT doğal sayı kaçtır?', opts: ['90', '98', '99', '10'], ans: '98', exp: 'İki basamaklı en büyük sayı 99\'dur (tek). En büyük çift sayı ise 98\'dir.' },
+          { q: 'En yakın onluğu 40 olan en küçük doğal sayı kaçtır?', opts: ['34', '35', '39', '41'], ans: '35', exp: '35 sayısının birler basamağı 5 olduğu için 40\'a yuvarlanır.' }
+        ]
+      },
+      fractions: {
+        title: '🍕 Kesirler: Bütün, Yarım ve Çeyrek Testi',
+        backFn: "mathFractionsSubTab='learn';renderMathFractionsModule()",
+        questions: [
+          { q: '1 Bütün elma ortadan iki eş parçaya bölündüğünde her bir parçaya ne denir?', opts: ['Bütün', 'Yarım', 'Çeyrek', 'Deste'], ans: 'Yarım', exp: 'Bir bütünün 2 eş parçasından her birine YARIM denir.' },
+          { q: '1 Bütün pizzada toplam kaç tane ÇEYREK dilim vardır?', opts: ['2 çeyrek', '3 çeyrek', '4 çeyrek', '8 çeyrek'], ans: '4 çeyrek', exp: '1 Bütün = 4 eş Çeyrek parçadan oluşur.' },
+          { q: '1 Yarım ekmek kaç tane ÇEYREK ekmeğe eşittir?', opts: ['1 çeyrek', '2 çeyrek', '3 çeyrek', '4 çeyrek'], ans: '2 çeyrek', exp: 'Yarımı ortadan ikiye bölersek 2 tane Çeyrek elde ederiz.' },
+          { q: '6 tane YARIM portakal birleştirilirse kaç tane BÜTÜN portakal eder?', opts: ['2 bütün', '3 bütün', '4 bütün', '6 bütün'], ans: '3 bütün', exp: 'Her 2 yarım 1 bütün eder. 6 ÷ 2 = 3 bütün portakal eder.' },
+          { q: '8 tane ÇEYREK elma kaç tane BÜTÜN elma eder?', opts: ['2 bütün', '3 bütün', '4 bütün', '8 bütün'], ans: '2 bütün', exp: 'Her 4 çeyrek 1 bütün eder. 8 ÷ 4 = 2 bütün elma eder.' },
+          { q: '3 Bütün pasta eş dilimlere ayrılırsa kaç tane YARIM pasta olur?', opts: ['3 yarım', '6 yarım', '9 yarım', '12 yarım'], ans: '6 yarım', exp: '1 bütünde 2 yarım vardır. 3 × 2 = 6 yarım eder.' },
+          { q: '12 fındığın YARISI kaç fındıktır?', opts: ['3 fındık', '4 fındık', '6 fındık', '8 fındık'], ans: '6 fındık', exp: 'Bir sayının yarısını bulmak için 2\'ye böleriz: 12 ÷ 2 = 6.' },
+          { q: '16 cevizi 4 arkadaşa eşit paylaştırırsak (ÇEYREĞİ) kaç ceviz olur?', opts: ['2 ceviz', '4 ceviz', '6 ceviz', '8 ceviz'], ans: '4 ceviz', exp: 'Çeyreğini bulmak için 4 eş gruba böleriz: 16 ÷ 4 = 4 ceviz.' },
+          { q: '2 Bütün simitte toplam kaç tane ÇEYREK simit vardır?', opts: ['4 çeyrek', '6 çeyrek', '8 çeyrek', '10 çeyrek'], ans: '8 çeyrek', exp: '1 bütünde 4 çeyrek vardır. 2 × 4 = 8 çeyrek simit vardır.' },
+          { q: '4 tane ÇEYREK limon kaç tane YARIM limona eşittir?', opts: ['1 yarım', '2 yarım', '3 yarım', '4 yarım'], ans: '2 yarım', exp: 'Her 2 çeyrek 1 yarım eder. 4 çeyrek = 2 yarım limon eder.' }
+        ]
+      },
+      measurement: {
+        title: '📏⚖️🥛 Uzunluk, Tartma ve Sıvı Ölçme Testi',
+        backFn: "mathMeasurementSubTab='learn';renderMathMeasurementModule()",
+        questions: [
+          { q: 'Aşağıdakilerden hangisi STANDART uzunluk ölçme birimidir?', opts: ['Karış', 'Adım', 'Metre', 'Kulaç'], ans: 'Metre', exp: 'Karış, adım ve kulaç kişiden kişiye değişir; Metre (m) ise standarttır.' },
+          { q: '1 Metre (m) kaç Santimetreye (cm) eşittir?', opts: ['10 cm', '50 cm', '100 cm', '1000 cm'], ans: '100 cm', exp: '1 Metre tam 100 Santimetreye (100 cm) eşittir.' },
+          { q: 'Silgi veya kalem gibi küçük nesnelerin boyunu hangi birimle ölçeriz?', opts: ['Santimetre (cm)', 'Kilogram (kg)', 'Metre (m)', 'Litre'], ans: 'Santimetre (cm)', exp: 'Küçük nesnelerin uzunluğu cetvelle Santimetre (cm) cinsinden ölçülür.' },
+          { q: 'Manavdan aldığımız elma ve patateslerin kütlesini (ağırlığını) ne ile ölçeriz?', opts: ['Metre (m)', 'Kilogram (kg)', 'Santimetre (cm)', 'Karış'], ans: 'Kilogram (kg)', exp: 'Katı maddelerin kütlesi (ağırlığı) eşit kollu terazi veya baskülle Kilogram (kg) olarak ölçülür.' },
+          { q: '1 sürahi su 5 bardak dolusu su almaktadır. 3 sürahi su kaç bardak dolusu su alır?', opts: ['8 bardak', '10 bardak', '15 bardak', '20 bardak'], ans: '15 bardak', exp: '1 sürahi = 5 bardak ise, 3 sürahi: 3 × 5 = 15 bardak su alır.' },
+          { q: 'İki kolumuzu yana doğru açtığımızda parmak uçlarımız arasındaki uzunluğa ne denir?', opts: ['Karış', 'Kulaç', 'Adım', 'Parmak'], ans: 'Kulaç', exp: 'İki kolumuzu yana açtığımızda oluşan uzunluk ölçüsüne KULAÇ denir.' },
+          { q: 'Terazinin bir kefesinde 15 kg karpuz, diğer kefesinde 9 kg kavun var. Dengede olması için kaç kg eklenmeli?', opts: ['4 kg', '5 kg', '6 kg', '8 kg'], ans: '6 kg', exp: '15 - 9 = 6 kg daha eklenirse terazi dengelenir.' },
+          { q: '75 cm uzunluğundaki bir kurdelenin 1 Metre (100 cm) olması için kaç cm daha gerekir?', opts: ['15 cm', '20 cm', '25 cm', '35 cm'], ans: '25 cm', exp: '1 Metre = 100 cm\'dir. 100 - 75 = 25 cm daha gerekir.' },
+          { q: 'Bir çay bardağını en çabuk hangisiyle doldurabiliriz?', opts: ['Çay kaşığı', 'Yemek kaşığı', 'Kepçe', 'Damlalık'], ans: 'Kepçe', exp: 'Kepçe kaşıklardan daha çok sıvı aldığı için bardağı en çabuk doldurur.' },
+          { q: 'Her biri 3 kg olan 4 poşet portakal toplam kaç kilogram (kg) gelir?', opts: ['7 kg', '9 kg', '12 kg', '15 kg'], ans: '12 kg', exp: '4 × 3 = 12 kilogram (kg) gelir.' }
+        ]
+      },
+      patterns: {
+        title: '🦋🔄 Örüntüler, Simetri Doğrusu ve Uzamsal İlişkiler Testi',
+        backFn: "mathPatternsSubTab='learn';renderMathPatternsSymmetryModule()",
+        questions: [
+          { q: '🔺 🔵 🔵 🔺 🔵 🔵 🔺 ❓ örüntüsünde soru işareti yerine hangi şekil gelmelidir?', opts: ['🔺 Üçgen', '🔵 Daire', '🟩 Kare', '⭐ Yıldız'], ans: '🔵 Daire', exp: 'Örüntünün kuralı: 1 Üçgen, 2 Daire. Üçgenden sonra 🔵 Daire gelmelidir.' },
+          { q: '4 - 7 - 10 - 13 - ❓ - 19 sayı örüntüsünde boşluğa hangi sayı gelmelidir?', opts: ['14', '15', '16', '17'], ans: '16', exp: 'Sayılar +3 artarak ilerlemektedir: 13 + 3 = 16 olur.' },
+          { q: 'Bir şekli iki eş parçaya ayıran ve katlandığında üst üste çakıştıran çizgiye ne denir?', opts: ['Kenar çizgisi', 'Simetri doğrusu', 'Köşe noktası', 'Eğri çizgi'], ans: 'Simetri doğrusu', exp: 'Şekli birbirinin ayna görüntüsü olan iki eş parçaya bölen doğruya SİMETRİ DOĞRUSU denir.' },
+          { q: 'Aşağıdaki harflerden hangisi dikey simetri doğrusuna göre SİMETRİKTİR?', opts: ['A harfi', 'F harfi', 'G harfi', 'P harfi'], ans: 'A harfi', exp: 'A harfi tam ortadan dikey çizgiyle iki eş parçaya ayrılır.' },
+          { q: '20 - 18 - 16 - 14 - ❓ sayı örüntüsünün kuralı nedir ve sıradaki sayı kaçtır?', opts: ['2\'şer azalıyor, 12', '2\'şer artıyor, 16', '3\'er azalıyor, 11', '4\'er azalıyor, 10'], ans: '2\'şer azalıyor, 12', exp: 'Sayılar 2\'şer azalmaktadır. 14 - 2 = 12 gelir.' },
+          { q: 'Ali, Ayşe\'nin SAĞINDA; Can ise Ayşe\'nin SOLUNDADIR. Ortada (arasında) kim vardır?', opts: ['Ali', 'Ayşe', 'Can', 'Hiçbiri'], ans: 'Ayşe', exp: 'Ali sağda, Can solda olduğuna göre ikisinin ARASINDA Ayşe vardır.' },
+          { q: 'Kare şeklinin kaç tane simetri doğrusu vardır?', opts: ['1 tane', '2 tane', '3 tane', '4 tane'], ans: '4 tane', exp: 'Karenin yatay, dikey ve iki köşegen olmak üzere 4 simetri doğrusu vardır.' },
+          { q: '🍎 🍐 🍌 🍎 🍐 🍌 🍎 ❓ örüntüsünde elmadan sonra hangi meyve gelmelidir?', opts: ['🍎 Elma', '🍐 Armut', '🍌 Muz', '🍓 Çilek'], ans: '🍐 Armut', exp: 'Kural: Elma - Armut - Muz. Elmadan sonra 🍐 Armut gelir.' },
+          { q: 'Büyüklükleri ve biçimleri birebir aynı olan şekillere ne ad verilir?', opts: ['Farklı şekiller', 'Eş şekiller', 'Kırık şekiller', 'Uzak şekiller'], ans: 'Eş şekiller', exp: 'Biçimleri ve ölçüleri aynı olan şekillere EŞ ŞEKİLLER denir.' },
+          { q: '5 - 10 - 15 - ❓ - 25 - 30 örüntüsünde eksik olan sayı kaçtır?', opts: ['18', '20', '22', '24'], ans: '20', exp: '5\'er ritmik artan örüntüde 15\'ten sonra 20 gelir.' }
+        ]
+      },
+      data_graphs: {
+        title: '📊📋 Çetele, Sıklık Tablosu ve Grafik Yorumlama Testi',
+        backFn: "mathDataGraphsSubTab='learn';renderMathDataGraphsModule()",
+        questions: [
+          { q: 'Çetele tablosunda bir bağ (4 dikey çizgi ve 1 yatay/eğik çizgi: |||| ) kaç sayısını gösterir?', opts: ['4', '5', '6', '10'], ans: '5', exp: 'Çetele tablosunda her tam grup (4 dik + 1 bağ çizgisi) 5 sayısını gösterir.' },
+          { q: 'Verilerin çizgiler yerine doğrudan SAYILARLA gösterildiği tabloya ne denir?', opts: ['Çetele Tablosu', 'Sıklık Tablosu', 'Saat Tablosu', 'Takvim'], ans: 'Sıklık Tablosu', exp: 'Sayılarla gösterilen tabloya SIKLIK TABLOSU, çizgilerle gösterilene Çetele Tablosu denir.' },
+          { q: 'Çetele tablosunda 3 tane beşli grup ve 2 tek çizgi varsa bu sayı kaçtır?', opts: ['12', '15', '17', '22'], ans: '17', exp: '3 tane beşli grup = 15 eder. 2 çizgi daha eklenirse: 15 + 2 = 17 olur.' },
+          { q: 'Meyve grafiğinde: Elma 8, Çilek 12, Muz 6 öğrenci tarafından seçilmiştir. EN ÇOK sevilen meyve hangisidir?', opts: ['Elma', 'Çilek', 'Muz', 'Eşit'], ans: 'Çilek', exp: '12 öğrenci ile en yüksek sayıya sahip olan Çilek en çok sevilen meyvedir.' },
+          { q: 'Aynı grafikte (Elma: 8, Çilek: 12, Muz: 6) sınıfta TOPLAM kaç öğrenci oy kullanmıştır?', opts: ['20 öğrenci', '24 öğrenci', '26 öğrenci', '30 öğrenci'], ans: '26 öğrenci', exp: '8 + 12 + 6 = 26 öğrenci oy kullanmıştır.' },
+          { q: 'Çilek sevenler (12), Muz sevenlerden (6) kaç kişi fazladır?', opts: ['4 kişi', '6 kişi', '8 kişi', '18 kişi'], ans: '6 kişi', exp: '12 - 6 = 6 kişi fazladır.' },
+          { q: 'Her ⚽ sembolünün 2 öğrenciyi gösterdiği bir şekil grafiğinde, 5 tane ⚽ sembolü kaç öğrenciyi gösterir?', opts: ['5 öğrenci', '8 öğrenci', '10 öğrenci', '12 öğrenci'], ans: '10 öğrenci', exp: 'Her sembol 2 öğrenci ise: 5 × 2 = 10 öğrenciyi gösterir.' },
+          { q: 'Bir bahçedeki ağaçların sayısı ve türlerini göstermek için dikilen fidanların sıralanmasına ne denir?', opts: ['Ağaç Şeması', 'Simetri Doğrusu', 'Uzunluk Ölçüsü', 'Onluk Bozma'], ans: 'Ağaç Şeması', exp: 'Verileri dallar halinde sınıflandırmaya AĞAÇ ŞEMASI denir.' },
+          { q: 'Sıklık tablosunda Kitap: 9, Boyama: 5, Masal: 11 ise EN AZ okunan tür hangisidir?', opts: ['Kitap', 'Boyama', 'Masal', 'Hepsi eşit'], ans: 'Boyama', exp: 'En küçük sayı 5 olduğu için en az okunan Boyama kitabıdır.' },
+          { q: 'Her ⭐ şeklinin 3 puan olduğu bir grafikte 12 puan alan bir öğrencinin karşısında kaç ⭐ olur?', opts: ['3 yıldız', '4 yıldız', '6 yıldız', '12 yıldız'], ans: '4 yıldız', exp: '12 ÷ 3 = 4 tane yıldız (⭐) sembolü bulunur.' }
+        ]
+      }
+    };
+
+    function startMebExtraQuiz(topicKey) {
+      mebExtraQuizState.topicKey = topicKey;
+      mebExtraQuizState.qIndex = 0;
+      mebExtraQuizState.score = 0;
+      mebExtraQuizState.answered = false;
+      mebExtraQuizState.wrongClicked = [];
+      mebExtraQuizState.firstTryCount = 0;
+      renderMebExtraQuizUI();
+    }
+
+    function renderMebExtraQuizUI() {
+      const bank = mebExtraQuizBanks[mebExtraQuizState.topicKey] || mebExtraQuizBanks.numbers;
+      const total = bank.questions.length;
+
+      if (mebExtraQuizState.qIndex >= total) {
+        if (typeof awardStars === 'function') awardStars(15, bank.title);
+        if (typeof recordParentMilestone === 'function') {
+          recordParentMilestone('math_quiz', bank.title, `${mebExtraQuizState.score}/100 Puan • İlk Denemede Doğru: ${mebExtraQuizState.firstTryCount}/${total}`);
+        }
+        if (typeof launchConfetti === 'function') launchConfetti();
+        document.getElementById('appContent').innerHTML = `
+          ${renderMathModuleTopNav(bank.title, 'TEST TAMAMLANDI', '#10b981')}
+          <div class="card" style="text-align:center;border:2px solid #10b981;padding:24px;">
+            <div style="font-size:56px;">🏆🎉</div>
+            <h2 style="font-size:24px;color:#fde047;margin:8px 0;">Tebrikler! Testi Tamamladın!</h2>
+            <p style="font-size:14px;color:#cbd5e1;margin-bottom:14px;">${bank.title}</p>
+            <div class="score-badge-circle">
+              <div style="font-size:28px;font-weight:900;color:#fde047;">${mebExtraQuizState.score}</div>
+              <div style="font-size:11px;color:#cbd5e1;">PUAN</div>
+            </div>
+            <p style="font-size:13px;color:#6ee7b7;font-weight:800;margin:10px 0;">⭐ +15 Yıldız Kumbarana Eklendi!</p>
+            <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px;">
+              <button class="action-btn" style="background:#10b981;color:#fff;font-weight:900;padding:10px 18px;" onclick="startMebExtraQuiz('${mebExtraQuizState.topicKey}')">
+                🔄 Testi Tekrar Çöz
+              </button>
+              <button class="action-btn" style="background:#38bdf8;color:#0f172a;font-weight:900;padding:10px 18px;" onclick="${bank.backFn}">
+                📖 Konu Anlatımına Dön
+              </button>
+              <button class="action-btn" style="background:#8b5cf6;color:#fff;font-weight:900;padding:10px 18px;" onclick="selectHomeSubject('math')">
+                🔢 Tüm Matematik Konuları
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const item = bank.questions[mebExtraQuizState.qIndex];
+      const html = `
+        ${renderMathModuleTopNav(bank.title, `SORU ${mebExtraQuizState.qIndex + 1} / ${total}`, '#f59e0b')}
+        <div class="card" style="border:2px solid #f59e0b;background:linear-gradient(145deg,rgba(30,41,59,0.96),rgba(15,23,42,0.98));">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+            <span style="background:rgba(245,158,11,0.2);color:#fde047;font-size:12px;font-weight:900;padding:4px 12px;border-radius:999px;">
+              📝 Soru ${mebExtraQuizState.qIndex + 1} / ${total}
+            </span>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <span style="background:rgba(16,185,129,0.2);color:#6ee7b7;font-size:12px;font-weight:900;padding:4px 12px;border-radius:999px;">
+                ⭐ Puan: ${mebExtraQuizState.score}
+              </span>
+              <button class="action-btn" style="background:#334155;font-size:11px;padding:6px 10px;" onclick="${bank.backFn}">
+                📖 Konuya Dön
+              </button>
+            </div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:16px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <h3 style="font-size:18px;color:#fff;font-weight:900;line-height:1.4;margin:0;">${item.q}</h3>
+              <button class="action-btn" style="background:#0284c7;color:#fff;font-size:12px;padding:8px 12px;flex-shrink:0;" onclick="speakTurkishText(${JSON.stringify(item.q)})">
+                🔊 Dinle
+              </button>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;">
+            ${item.opts.map(opt => {
+              const isWrong = mebExtraQuizState.wrongClicked.includes(opt);
+              const isCorrect = mebExtraQuizState.answered && opt === item.ans;
+              let btnBg = 'rgba(30,41,59,0.9)';
+              let btnBorder = '#475569';
+              if (isCorrect) { btnBg = 'rgba(16,185,129,0.28)'; btnBorder = '#10b981'; }
+              else if (isWrong) { btnBg = 'rgba(239,68,68,0.25)'; btnBorder = '#ef4444'; }
+              return `
+                <button class="action-btn" style="background:${btnBg};border:2px solid ${btnBorder};color:#fff;font-size:16px;font-weight:900;padding:14px;text-align:center;" onclick="answerMebExtraQuiz(${JSON.stringify(opt).replace(/"/g, '&quot;')})">
+                  ${isCorrect ? '✅ ' : (isWrong ? '❌ ' : '')}${opt}
+                </button>
+              `;
+            }).join('')}
+          </div>
+
+          ${mebExtraQuizState.answered ? `
+            <div style="margin-top:14px;background:rgba(16,185,129,0.16);border:2px solid #10b981;border-radius:12px;padding:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+              <div>
+                <div style="font-weight:900;color:#6ee7b7;font-size:14px;">🎉 Harika! Doğru Cevap: ${item.ans}</div>
+                <div style="font-size:12px;color:#e2e8f0;margin-top:2px;">💡 ${item.exp}</div>
+              </div>
+              <button class="action-btn" style="background:#10b981;color:#fff;font-weight:900;padding:9px 16px;" onclick="mebExtraQuizState.qIndex++;mebExtraQuizState.answered=false;mebExtraQuizState.wrongClicked=[];renderMebExtraQuizUI();">
+                Sıradaki Soru ➔
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    function answerMebExtraQuiz(choice) {
+      if (mebExtraQuizState.answered) return;
+      const bank = mebExtraQuizBanks[mebExtraQuizState.topicKey] || mebExtraQuizBanks.numbers;
+      const item = bank.questions[mebExtraQuizState.qIndex];
+      if (choice === item.ans) {
+        mebExtraQuizState.answered = true;
+        if (mebExtraQuizState.wrongClicked.length === 0) {
+          mebExtraQuizState.score += 10;
+          mebExtraQuizState.firstTryCount += 1;
+        } else {
+          mebExtraQuizState.score += 5;
+        }
+        if (typeof playSuccessTone === 'function') playSuccessTone();
+        if (typeof speakTurkishText === 'function') speakTurkishText('Harika! Doğru cevap ' + item.ans);
+        if (typeof recordParentActivityLog === 'function') {
+          recordParentActivityLog('math_quiz', true, `${bank.title}: ${item.q}`, `Doğru: ${item.ans}`);
+        }
+      } else {
+        if (!mebExtraQuizState.wrongClicked.includes(choice)) {
+          mebExtraQuizState.wrongClicked.push(choice);
+        }
+        if (typeof playErrorTone === 'function') playErrorTone();
+        if (typeof speakTurkishText === 'function') speakTurkishText('Tekrar dene bakalım');
+        if (typeof recordParentActivityLog === 'function') {
+          recordParentActivityLog('math_quiz', false, `${bank.title}: ${item.q}`, `Seçilen: ${choice} | Doğru: ${item.ans}`);
+        }
+      }
+      renderMebExtraQuizUI();
+    }
+
+    /* --------------------------------------------------------
+       MODÜL 1: DOĞAL SAYILAR (BASAMAK DEĞERİ, YUVARLAMA, DESTE & DÜZİNE, TEK/ÇİFT)
+    -------------------------------------------------------- */
+    let mathNumbersSubTab = 'learn';
+    let mathNumbersActiveNum = 47;
+
+    function changeMathNumbersActive(deltaOrVal, isExact) {
+      if (isExact) {
+        mathNumbersActiveNum = Math.max(10, Math.min(98, deltaOrVal));
+      } else {
+        mathNumbersActiveNum = Math.max(10, Math.min(98, mathNumbersActiveNum + deltaOrVal));
+      }
+      renderMathNumbersModule();
+    }
+
+    function renderMathNumbersModule() {
+      if (mathNumbersSubTab === 'quiz') {
+        startMebExtraQuiz('numbers');
+        return;
+      }
+      const n = mathNumbersActiveNum;
+      const tens = Math.floor(n / 10);
+      const ones = n % 10;
+      const lowerTen = tens * 10;
+      const upperTen = (tens + 1) * 10;
+      const rounded = ones >= 5 ? upperTen : lowerTen;
+      const isEven = n % 2 === 0;
+
+      const html = `
+        ${renderMathModuleTopNav('Doğal Sayılar & Basamak Değeri', 'MEB 2. SINIF • SAYILAR VE İŞLEMLER', '#38bdf8')}
+
+        <div class="card" style="border:2px solid #38bdf8;background:linear-gradient(145deg,rgba(15,23,42,0.96),rgba(30,41,59,0.96));">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+            <div>
+              <span style="background:#38bdf8;color:#0f172a;font-size:11px;font-weight:900;padding:3px 10px;border-radius:999px;">1. ÜNİTE • DOĞAL SAYILAR</span>
+              <h2 style="font-size:21px;color:#fff;font-weight:900;margin-top:4px;">🔟 Basamak Değeri, En Yakın Onluğa Yuvarlama &amp; Deste-Düzine</h2>
+            </div>
+            <button class="action-btn" style="background:linear-gradient(135deg,#0284c7,#2563eb);color:#fff;font-weight:900;padding:10px 16px;" onclick="mathNumbersSubTab='quiz';renderMathNumbersModule()">
+              🎯 10 Soruluk Sayılar Testine Başla ➔
+            </button>
+          </div>
+
+          <!-- İNTERAKTİF SAYI VE YUVARLAMA MAKİNESİ -->
+          <div style="background:rgba(56,189,248,0.1);border:2px solid rgba(56,189,248,0.4);border-radius:16px;padding:16px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+              <div style="font-size:15px;font-weight:900;color:#bae6fd;">🎛️ İnteraktif Sayı Çözümleme &amp; Onluğa Yuvarlama Makinesi</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button class="action-btn" style="background:#334155;font-size:12px;padding:6px 10px;" onclick="changeMathNumbersActive(-10,false)">-10</button>
+                <button class="action-btn" style="background:#334155;font-size:12px;padding:6px 10px;" onclick="changeMathNumbersActive(-1,false)">-1</button>
+                <button class="action-btn" style="background:#38bdf8;color:#0f172a;font-weight:900;font-size:12px;padding:6px 12px;" onclick="changeMathNumbersActive(Math.floor(Math.random()*85)+11,true)">🎲 Rastgele Sayı</button>
+                <button class="action-btn" style="background:#334155;font-size:12px;padding:6px 10px;" onclick="changeMathNumbersActive(1,false)">+1</button>
+                <button class="action-btn" style="background:#334155;font-size:12px;padding:6px 10px;" onclick="changeMathNumbersActive(10,false)">+10</button>
+                <button class="action-btn" style="background:#10b981;color:#fff;font-size:12px;padding:6px 12px;" onclick="speakTurkishText('${n} sayısı, ${tens} onluk ve ${ones} birlikten oluşur. Basamak değerleri ${tens*10} ve ${ones}. En yakın onluğu ${rounded} sayısıdır.')">🔊 Sesli Anlat</button>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+              <!-- SAYI GÖSTERGESİ -->
+              <div style="background:rgba(15,23,42,0.85);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:11px;color:#94a3b8;font-weight:800;">SEÇİLEN DOĞAL SAYI</div>
+                <div style="font-size:52px;font-weight:900;color:#fde047;line-height:1.1;margin:6px 0;">${n}</div>
+                <span style="display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:900;background:${isEven ? 'rgba(16,185,129,0.2)' : 'rgba(245,158,11,0.2)'};color:${isEven ? '#6ee7b7' : '#fde047'};">
+                  ${isEven ? '✨ ÇİFT SAYI (Birler: 0,2,4,6,8)' : '🌟 TEK SAYI (Birler: 1,3,5,7,9)'}
+                </span>
+              </div>
+
+              <!-- BASAMAK TABLOSU -->
+              <div style="background:rgba(15,23,42,0.85);border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:12px;font-weight:900;color:#38bdf8;margin-bottom:8px;">📊 Basamak Adı &amp; Basamak Değeri</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center;">
+                  <div style="background:rgba(56,189,248,0.15);padding:8px;border-radius:10px;">
+                    <div style="font-size:11px;color:#bae6fd;font-weight:800;">ONLAR BASAMAĞI</div>
+                    <div style="font-size:26px;font-weight:900;color:#fff;">${tens} Onluk</div>
+                    <div style="font-size:12px;color:#fde047;font-weight:900;">Değeri: ${tens * 10}</div>
+                  </div>
+                  <div style="background:rgba(236,72,153,0.15);padding:8px;border-radius:10px;">
+                    <div style="font-size:11px;color:#fbcfe8;font-weight:800;">BİRLER BASAMAĞI</div>
+                    <div style="font-size:26px;font-weight:900;color:#fff;">${ones} Birlik</div>
+                    <div style="font-size:12px;color:#fde047;font-weight:900;">Değeri: ${ones}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- EN YAKIN ONLUĞA YUVARLAMA -->
+              <div style="background:rgba(15,23,42,0.85);border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:12px;font-weight:900;color:#6ee7b7;margin-bottom:6px;">🎯 En Yakın Onluğa Yuvarlama</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:900;margin:8px 0;">
+                  <span style="padding:4px 8px;border-radius:8px;background:${rounded === lowerTen ? '#10b981' : '#334155'};color:#fff;">${lowerTen}</span>
+                  <span style="color:#fde047;font-size:16px;">⬅️ ${n} ➡️</span>
+                  <span style="padding:4px 8px;border-radius:8px;background:${rounded === upperTen ? '#10b981' : '#334155'};color:#fff;">${upperTen}</span>
+                </div>
+                <div style="font-size:12px;color:#e2e8f0;line-height:1.4;">
+                  Birler basamağı <strong>${ones}</strong> (${ones >= 5 ? '5 veya 5\'ten büyük olduğu için ÜST onluğa' : '5\'ten küçük olduğu için KENDİ onluğuna'}) yuvarlanır: <strong style="color:#fde047;font-size:15px;">${rounded}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DESTE VE DÜZİNE KARTLARI -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;">
+            <div style="background:rgba(245,158,11,0.12);border:2px solid #f59e0b;border-radius:14px;padding:14px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <h4 style="font-size:16px;color:#fde047;font-weight:900;margin:0;">✏️ 1 DESTE = 10 TANE</h4>
+                <button class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:11px;padding:4px 10px;" onclick="speakTurkishText('Aynı türden 10 tane nesneye 1 deste denir.')">🔊 Dinle</button>
+              </div>
+              <div style="font-size:22px;margin:8px 0;letter-spacing:2px;">✏️✏️✏️✏️✏️ ✏️✏️✏️✏️✏️</div>
+              <p style="font-size:12px;color:#e2e8f0;margin:0;">Aynı cinsten <strong>10 varlığın</strong> oluşturduğu gruba <strong>1 Deste</strong> denir. (2 Deste = 20 tane)</p>
+            </div>
+
+            <div style="background:rgba(168,85,247,0.12);border:2px solid #a855f7;border-radius:14px;padding:14px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <h4 style="font-size:16px;color:#e9d5ff;font-weight:900;margin:0;">🍩 1 DÜZİNE = 12 TANE</h4>
+                <button class="action-btn" style="background:#a855f7;color:#fff;font-size:11px;padding:4px 10px;" onclick="speakTurkishText('Aynı türden 12 tane nesneye 1 düzine denir. 1 düzine, 1 desteden 2 fazladır.')">🔊 Dinle</button>
+              </div>
+              <div style="font-size:22px;margin:8px 0;letter-spacing:2px;">🍩🍩🍩🍩🍩🍩 🍩🍩🍩🍩🍩🍩</div>
+              <p style="font-size:12px;color:#e2e8f0;margin:0;">Aynı cinsten <strong>12 varlığın</strong> oluşturduğu gruba <strong>1 Düzine</strong> denir. (1 Düzine, 1 Desteden <strong>2 fazladır</strong>)</p>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    /* --------------------------------------------------------
+       MODÜL 2: KESİRLER (BÜTÜN, YARIM VE ÇEYREK ATÖLYESİ)
+    -------------------------------------------------------- */
+    let mathFractionsSubTab = 'learn';
+    let fractionCutMode = 'whole'; // 'whole', 'half', 'quarter'
+    let fractionGroupCount = 12;
+
+    function renderMathFractionsModule() {
+      if (mathFractionsSubTab === 'quiz') {
+        startMebExtraQuiz('fractions');
+        return;
+      }
+
+      const halfVal = fractionGroupCount / 2;
+      const quarterVal = fractionGroupCount / 4;
+
+      let svgCircle = '';
+      if (fractionCutMode === 'whole') {
+        svgCircle = `
+          <svg width="150" height="150" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="52" fill="#f59e0b" stroke="#fde047" stroke-width="5"/>
+            <circle cx="42" cy="45" r="6" fill="#dc2626"/>
+            <circle cx="78" cy="48" r="6" fill="#dc2626"/>
+            <circle cx="58" cy="78" r="6" fill="#dc2626"/>
+            <circle cx="60" cy="58" r="5" fill="#16a34a"/>
+          </svg>
+        `;
+      } else if (fractionCutMode === 'half') {
+        svgCircle = `
+          <svg width="150" height="150" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="52" fill="#f59e0b" stroke="#fde047" stroke-width="5"/>
+            <line x1="60" y1="6" x2="60" y2="114" stroke="#0f172a" stroke-width="6" stroke-dasharray="6,3"/>
+            <text x="32" y="65" fill="#fff" font-size="13" font-weight="900" text-anchor="middle">YARIM</text>
+            <text x="88" y="65" fill="#fff" font-size="13" font-weight="900" text-anchor="middle">YARIM</text>
+          </svg>
+        `;
+      } else {
+        svgCircle = `
+          <svg width="150" height="150" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="52" fill="#f59e0b" stroke="#fde047" stroke-width="5"/>
+            <line x1="60" y1="6" x2="60" y2="114" stroke="#0f172a" stroke-width="5"/>
+            <line x1="6" y1="60" x2="114" y2="60" stroke="#0f172a" stroke-width="5"/>
+            <text x="37" y="44" fill="#fff" font-size="10" font-weight="900" text-anchor="middle">ÇEYREK</text>
+            <text x="83" y="44" fill="#fff" font-size="10" font-weight="900" text-anchor="middle">ÇEYREK</text>
+            <text x="37" y="84" fill="#fff" font-size="10" font-weight="900" text-anchor="middle">ÇEYREK</text>
+            <text x="83" y="84" fill="#fff" font-size="10" font-weight="900" text-anchor="middle">ÇEYREK</text>
+          </svg>
+        `;
+      }
+
+      const html = `
+        ${renderMathModuleTopNav('Kesirler: Bütün, Yarım ve Çeyrek', 'MEB 2. SINIF • KESİRLER', '#ec4899')}
+
+        <div class="card" style="border:2px solid #ec4899;background:linear-gradient(145deg,rgba(15,23,42,0.96),rgba(30,41,59,0.96));">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+            <div>
+              <span style="background:#ec4899;color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:999px;">KESİRLER ATÖLYESİ</span>
+              <h2 style="font-size:21px;color:#fff;font-weight:900;margin-top:4px;">🍕 Bütün, Yarım ve Çeyrek Modellemesi</h2>
+            </div>
+            <button class="action-btn" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:900;padding:10px 16px;" onclick="mathFractionsSubTab='quiz';renderMathFractionsModule()">
+              🎯 10 Soruluk Kesirler Testine Başla ➔
+            </button>
+          </div>
+
+          <!-- PİZZA DİLİMLEME ATÖLYESİ -->
+          <div style="background:rgba(236,72,153,0.1);border:2px solid rgba(236,72,153,0.35);border-radius:16px;padding:16px;margin-bottom:16px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:center;">
+              <div style="text-align:center;">
+                ${svgCircle}
+                <div style="display:flex;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap;">
+                  <button class="action-btn" style="background:${fractionCutMode==='whole'?'#f59e0b':'#334155'};color:${fractionCutMode==='whole'?'#0f172a':'#fff'};font-weight:900;font-size:12px;padding:8px 12px;" onclick="fractionCutMode='whole';speakTurkishText('Bir bütün pizza. Hiç bölünmemiş tam parça.');renderMathFractionsModule()">
+                    🍕 1 Bütün
+                  </button>
+                  <button class="action-btn" style="background:${fractionCutMode==='half'?'#ec4899':'#334155'};color:#fff;font-weight:900;font-size:12px;padding:8px 12px;" onclick="fractionCutMode='half';speakTurkishText('Bir bütün ortadan iki eş parçaya bölündü. 1 Bütün, 2 Yarım eder.');renderMathFractionsModule()">
+                    🔪 2 Eş Yarım
+                  </button>
+                  <button class="action-btn" style="background:${fractionCutMode==='quarter'?'#10b981':'#334155'};color:#fff;font-weight:900;font-size:12px;padding:8px 12px;" onclick="fractionCutMode='quarter';speakTurkishText('Bir bütün dört eş parçaya bölündü. 1 Bütün, 4 Çeyrek eder. 1 Yarım ise 2 Çeyrek eder.');renderMathFractionsModule()">
+                    🔪 4 Eş Çeyrek
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <h4 style="font-size:17px;color:#fbcfe8;font-weight:900;margin:0 0 8px;">📌 Altın Kesir Kuralları (Unutma!)</h4>
+                <div style="display:grid;gap:8px;font-size:13px;color:#e2e8f0;">
+                  <div style="background:rgba(15,23,42,0.8);padding:10px 12px;border-radius:10px;border-left:4px solid #f59e0b;">
+                    🌕 <strong>1 Bütün</strong> = <strong>2 Yarım</strong> = <strong>4 Çeyrek</strong>
+                  </div>
+                  <div style="background:rgba(15,23,42,0.8);padding:10px 12px;border-radius:10px;border-left:4px solid #ec4899;">
+                    🌗 <strong>1 Yarım</strong> = <strong>2 Çeyrek</strong> (Yarımı ikiye bölersek 2 çeyrek olur)
+                  </div>
+                  <div style="background:rgba(15,23,42,0.8);padding:10px 12px;border-radius:10px;border-left:4px solid #10b981;">
+                    🌘 <strong>Dikkat:</strong> Parçaların kesir olması için mutlaka <strong>EŞ (eşit büyüklükte)</strong> olması gerekir!
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- NESNE GRUBUNUN YARISINI VE ÇEYREĞİNİ BULMA -->
+          <div style="background:rgba(16,185,129,0.1);border:2px solid rgba(16,185,129,0.35);border-radius:16px;padding:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+              <h4 style="font-size:16px;color:#6ee7b7;font-weight:900;margin:0;">🍓 Çokluğun Yarısını ve Çeyreğini Bulma Atölyesi</h4>
+              <div style="display:flex;gap:6px;">
+                ${[8, 12, 16, 20].map(cnt => `
+                  <button class="action-btn" style="background:${fractionGroupCount===cnt?'#10b981':'#334155'};color:#fff;font-size:12px;font-weight:900;padding:6px 12px;" onclick="fractionGroupCount=${cnt};renderMathFractionsModule()">
+                    ${cnt} Çilek
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+            <div style="font-size:22px;margin:8px 0;letter-spacing:3px;">${'🍓'.repeat(fractionGroupCount)}</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px;">
+              <div style="background:rgba(15,23,42,0.85);padding:12px;border-radius:12px;">
+                <div style="font-size:12px;color:#fde047;font-weight:900;">YARISI (2 Eş Gruba Böl)</div>
+                <div style="font-size:18px;color:#fff;font-weight:900;margin-top:4px;">${fractionGroupCount} ÷ 2 = <span style="color:#6ee7b7;">${halfVal} Çilek</span></div>
+              </div>
+              <div style="background:rgba(15,23,42,0.85);padding:12px;border-radius:12px;">
+                <div style="font-size:12px;color:#38bdf8;font-weight:900;">ÇEYREĞİ (4 Eş Gruba Böl)</div>
+                <div style="font-size:18px;color:#fff;font-weight:900;margin-top:4px;">${fractionGroupCount} ÷ 4 = <span style="color:#38bdf8;">${quarterVal} Çilek</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    /* --------------------------------------------------------
+       MODÜL 3: UZUNLUK, TARTMA VE SIVI ÖLÇME LABORATUVARI
+    -------------------------------------------------------- */
+    let mathMeasurementSubTab = 'learn';
+    let measureActiveCategory = 'length'; // 'length', 'weight', 'liquid'
+
+    function renderMathMeasurementModule() {
+      if (mathMeasurementSubTab === 'quiz') {
+        startMebExtraQuiz('measurement');
+        return;
+      }
+
+      const html = `
+        ${renderMathModuleTopNav('Uzunluk, Tartma ve Sıvı Ölçme', 'MEB 2. SINIF • ÖLÇME ÜNİTESİ', '#22c55e')}
+
+        <div class="card" style="border:2px solid #22c55e;background:linear-gradient(145deg,rgba(15,23,42,0.96),rgba(30,41,59,0.96));">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+            <div>
+              <span style="background:#22c55e;color:#0f172a;font-size:11px;font-weight:900;padding:3px 10px;border-radius:999px;">ÖLÇME LABORATUVARI</span>
+              <h2 style="font-size:21px;color:#fff;font-weight:900;margin-top:4px;">📏 Uzunluk (m/cm) • ⚖️ Tartma (kg) • 🥛 Sıvı Ölçme</h2>
+            </div>
+            <button class="action-btn" style="background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;font-weight:900;padding:10px 16px;" onclick="mathMeasurementSubTab='quiz';renderMathMeasurementModule()">
+              🎯 10 Soruluk Ölçme Testine Başla ➔
+            </button>
+          </div>
+
+          <!-- 3 SEKME: UZUNLUK / TARTMA / SIVI ÖLÇME -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-bottom:16px;">
+            <button class="action-btn" style="background:${measureActiveCategory==='length'?'#22c55e':'#334155'};color:${measureActiveCategory==='length'?'#0f172a':'#fff'};font-weight:900;padding:10px;" onclick="measureActiveCategory='length';renderMathMeasurementModule()">
+              📏 1. Uzunluk Ölçme (m &amp; cm)
+            </button>
+            <button class="action-btn" style="background:${measureActiveCategory==='weight'?'#f59e0b':'#334155'};color:${measureActiveCategory==='weight'?'#0f172a':'#fff'};font-weight:900;padding:10px;" onclick="measureActiveCategory='weight';renderMathMeasurementModule()">
+              ⚖️ 2. Tartma (Kilogram - kg)
+            </button>
+            <button class="action-btn" style="background:${measureActiveCategory==='liquid'?'#38bdf8':'#334155'};color:${measureActiveCategory==='liquid'?'#0f172a':'#fff'};font-weight:900;padding:10px;" onclick="measureActiveCategory='liquid';renderMathMeasurementModule()">
+              🥛 3. Sıvı Ölçme (Bardak &amp; Sürahi)
+            </button>
+          </div>
+
+          ${measureActiveCategory === 'length' ? `
+            <div style="background:rgba(34,197,94,0.1);border:2px solid rgba(34,197,94,0.35);border-radius:16px;padding:16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+                <h3 style="font-size:18px;color:#bbf7d0;font-weight:900;margin:0;">📏 Uzunluk Ölçme Birimleri</h3>
+                <button class="action-btn" style="background:#22c55e;color:#0f172a;font-size:12px;font-weight:900;padding:6px 12px;" onclick="speakTurkishText('Standart olmayan uzunluk birimleri: Parmak, Karış, Kulaç, Ayak ve Adım. Standart uzunluk birimi ise Metre ve Santimetredir. 1 Metre tam 100 Santimetre eder.')">🔊 Sesli Dinle</button>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;">
+                <div style="background:rgba(15,23,42,0.85);padding:14px;border-radius:12px;">
+                  <div style="font-size:13px;font-weight:900;color:#fde047;margin-bottom:6px;">🖐️ Standart Olmayan Birimler (Kişiden Kişiye Değişir)</div>
+                  <ul style="font-size:12px;color:#e2e8f0;line-height:1.6;padding-left:18px;">
+                    <li><strong>Parmak:</strong> Başparmağımızın eni</li>
+                    <li><strong>Karış:</strong> Açık elimizde başparmak ile serçe parmak arası</li>
+                    <li><strong>Kulaç:</strong> İki kolumuzu yana açtığımızdaki uzunluk</li>
+                    <li><strong>Ayak &amp; Adım:</strong> Yürürken ayaklarımız arası mesafe</li>
+                  </ul>
+                </div>
+                <div style="background:rgba(15,23,42,0.85);padding:14px;border-radius:12px;">
+                  <div style="font-size:13px;font-weight:900;color:#6ee7b7;margin-bottom:6px;">📐 Standart Birimler (Dünyanın Her Yerinde Aynı!)</div>
+                  <div style="font-size:15px;font-weight:900;color:#fff;margin-bottom:6px;">🌟 1 Metre (m) = 100 Santimetre (cm)</div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.5;margin:0;">
+                    • Kapı, sınıf, kumaş, boyumuz <strong>Metre (m)</strong> ile ölçülür.<br>
+                    • Silgi, kalem, defter gibi küçük nesneler cetvelle <strong>Santimetre (cm)</strong> olarak ölçülür.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ` : ''}
+
+          ${measureActiveCategory === 'weight' ? `
+            <div style="background:rgba(245,158,11,0.1);border:2px solid rgba(245,158,11,0.35);border-radius:16px;padding:16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+                <h3 style="font-size:18px;color:#fde047;font-weight:900;margin:0;">⚖️ Tartma (Kütle Ölçme): Kilogram (kg)</h3>
+                <button class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:12px;font-weight:900;padding:6px 12px;" onclick="speakTurkishText('Meyve, sebze, un, şeker gibi nesnelerin kütlesi terazi veya baskülle ölçülür. Tartma birimi Kilogramdır ve kısaca k g harfleriyle yazılır.')">🔊 Sesli Dinle</button>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;">
+                <div style="background:rgba(15,23,42,0.85);padding:14px;border-radius:12px;">
+                  <div style="font-size:28px;margin-bottom:4px;">🍉 ⚖️ 🍎</div>
+                  <div style="font-size:14px;font-weight:900;color:#fde047;">Eşit Kollu Terazi &amp; Dijital Baskül</div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.5;margin-top:4px;">
+                    Terazinin ağır olan kefesi <strong>aşağı iner</strong>, hafif olan kefesi <strong>yukarı çıkar</strong>. İki taraf eşit ağırlıktaysa terazi <strong>dengede</strong> durur!
+                  </p>
+                </div>
+                <div style="background:rgba(15,23,42,0.85);padding:14px;border-radius:12px;">
+                  <div style="font-size:14px;font-weight:900;color:#6ee7b7;">🛒 Günlük Hayatta Kilogram (kg)</div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.5;margin-top:4px;">
+                    • Karpuz, patates, soğan, elma, un, şeker <strong>Kilogram (kg)</strong> ile tartılır.<br>
+                    • Çok hafif nesneler (altın, baharat) ise <strong>Gram (g)</strong> ile tartılır.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ` : ''}
+
+          ${measureActiveCategory === 'liquid' ? `
+            <div style="background:rgba(56,189,248,0.1);border:2px solid rgba(56,189,248,0.35);border-radius:16px;padding:16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+                <h3 style="font-size:18px;color:#bae6fd;font-weight:900;margin:0;">🥛 Sıvı Ölçme (Standart Olmayan Kaplar)</h3>
+                <button class="action-btn" style="background:#38bdf8;color:#0f172a;font-size:12px;font-weight:900;padding:6px 12px;" onclick="speakTurkishText('Su, süt, meyve suyu, zeytinyağı gibi akışkan maddelere sıvı denir. 2. sınıfta sıvıları kaşık, fincan, bardak, sürahi ve kova ile ölçeriz.')">🔊 Sesli Dinle</button>
+              </div>
+              <div style="background:rgba(15,23,42,0.85);padding:14px;border-radius:12px;">
+                <div style="font-size:15px;font-weight:900;color:#fde047;margin-bottom:6px;">🥄 Azdan Çoğa Sıvı Kapları Sıralaması:</div>
+                <div style="font-size:16px;font-weight:900;color:#fff;margin-bottom:8px;">
+                  🥄 Kaşık &lt; ☕ Fincan &lt; 🥛 Su Bardağı &lt; 🫗 Sürahi &lt; 🪣 Kova &lt; 🛢️ Damacana
+                </div>
+                <p style="font-size:12px;color:#cbd5e1;margin:0;">
+                  💡 <strong>Örnek:</strong> 1 Sürahi = 5 Su Bardağı sıvı alıyorsa, 2 Sürahi = <strong>10 Su Bardağı</strong> sıvı alır!
+                </p>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    /* --------------------------------------------------------
+       MODÜL 4: GEOMETRİK & SAYI ÖRÜNTÜLERİ, SİMETRİ VE UZAMSAL İLİŞKİLER
+    -------------------------------------------------------- */
+    let mathPatternsSubTab = 'learn';
+
+    function renderMathPatternsSymmetryModule() {
+      if (mathPatternsSubTab === 'quiz') {
+        startMebExtraQuiz('patterns');
+        return;
+      }
+
+      const html = `
+        ${renderMathModuleTopNav('Örüntüler, Simetri & Uzamsal İlişkiler', 'MEB 2. SINIF • GEOMETRİ & SİMETRİ', '#14b8a6')}
+
+        <div class="card" style="border:2px solid #14b8a6;background:linear-gradient(145deg,rgba(15,23,42,0.96),rgba(30,41,59,0.96));">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+            <div>
+              <span style="background:#14b8a6;color:#0f172a;font-size:11px;font-weight:900;padding:3px 10px;border-radius:999px;">GEOMETRİ • SİMETRİ • YÖN</span>
+              <h2 style="font-size:21px;color:#fff;font-weight:900;margin-top:4px;">🦋 Simetri Doğrusu, Şekil/Sayı Örüntüleri &amp; Konum</h2>
+            </div>
+            <button class="action-btn" style="background:linear-gradient(135deg,#14b8a6,#0d9488);color:#0f172a;font-weight:900;padding:10px 16px;" onclick="mathPatternsSubTab='quiz';renderMathPatternsSymmetryModule()">
+              🎯 10 Soruluk Simetri &amp; Örüntü Testi ➔
+            </button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;">
+            <!-- 1. SİMETRİ DOĞRUSU -->
+            <div style="background:rgba(20,184,166,0.12);border:2px solid #14b8a6;border-radius:14px;padding:14px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <h4 style="font-size:16px;color:#99f6e4;font-weight:900;margin:0;">🦋 1. Simetri ve Simetri Doğrusu</h4>
+                <button class="action-btn" style="background:#14b8a6;color:#0f172a;font-size:11px;padding:4px 10px;" onclick="speakTurkishText('Bir şekli tam ortadan iki eş parçaya ayıran çizgiye simetri doğrusu denir. Katlandığında iki parça üst üste tam çakışır.')">🔊 Dinle</button>
+              </div>
+              <div style="text-align:center;font-size:38px;margin:10px 0;">🦋 &nbsp; 🅰️ &nbsp; 🌲 &nbsp; ❤️</div>
+              <p style="font-size:12px;color:#e2e8f0;line-height:1.5;margin:0;">
+                • <strong>Kare:</strong> 4 simetri doğrusu vardır.<br>
+                • <strong>Dikdörtgen:</strong> 2 simetri doğrusu vardır.<br>
+                • <strong>Çember / Daire:</strong> Sonsuz (pek çok) simetri doğrusu vardır.<br>
+                • <strong>A, T, M, Y, H, E, B</strong> harfleri simetriktir!
+              </p>
+            </div>
+
+            <!-- 2. GEOMETRİK VE SAYI ÖRÜNTÜLERİ -->
+            <div style="background:rgba(245,158,11,0.12);border:2px solid #f59e0b;border-radius:14px;padding:14px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <h4 style="font-size:16px;color:#fde047;font-weight:900;margin:0;">🔄 2. Şekil ve Sayı Örüntüleri</h4>
+                <button class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:11px;padding:4px 10px;" onclick="speakTurkishText('Belirli bir kurala göre düzenli tekrar eden şekil veya sayı dizilerine örüntü denir.')">🔊 Dinle</button>
+              </div>
+              <div style="background:rgba(15,23,42,0.85);padding:10px;border-radius:10px;margin:8px 0;font-size:14px;font-weight:900;color:#fff;">
+                🔺 🔵 🔵 🔺 🔵 🔵 🔺 <span style="color:#fde047;">🔵 (Kural: 1 Üçgen, 2 Daire)</span>
+              </div>
+              <div style="background:rgba(15,23,42,0.85);padding:10px;border-radius:10px;font-size:14px;font-weight:900;color:#fff;">
+                3 ➔ 7 ➔ 11 ➔ 15 ➔ <span style="color:#6ee7b7;">19 (Kural: +4 Artıyor)</span>
+              </div>
+            </div>
+
+            <!-- 3. UZAMSAL İLİŞKİLER VE EŞ ŞEKİLLER -->
+            <div style="background:rgba(168,85,247,0.12);border:2px solid #a855f7;border-radius:14px;padding:14px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <h4 style="font-size:16px;color:#e9d5ff;font-weight:900;margin:0;">🧭 3. Uzamsal İlişkiler (Yön &amp; Konum)</h4>
+                <button class="action-btn" style="background:#a855f7;color:#fff;font-size:11px;padding:4px 10px;" onclick="speakTurkishText('Nesnelerin yerini tarif ederken sağında, solunda, üstünde, altında, önünde, arkasında ve arasında ifadelerini kullanırız.')">🔊 Dinle</button>
+              </div>
+              <div style="background:rgba(15,23,42,0.85);padding:10px;border-radius:10px;margin:8px 0;text-align:center;font-size:20px;">
+                🐶 (Sol) &nbsp; 🏠 (Ortada/Arasında) &nbsp; 🐱 (Sağ)
+              </div>
+              <p style="font-size:12px;color:#e2e8f0;line-height:1.5;margin:0;">
+                • Ev, köpek ile kedinin <strong>arasındadır</strong>.<br>
+                • Biçimleri ve büyüklükleri birebir aynı olan şekillere <strong>Eş Şekiller</strong> denir.
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    /* --------------------------------------------------------
+       MODÜL 5: VERİ TOPLAMA VE DEĞERLENDİRME (ÇETELE, SIKLIK TABLOSU, GRAFİK)
+    -------------------------------------------------------- */
+    let mathDataGraphsSubTab = 'learn';
+    const classFruitVotes = { apple: 7, strawberry: 11, banana: 5 };
+
+    function addClassFruitVote(fruitKey, delta) {
+      classFruitVotes[fruitKey] = Math.max(1, Math.min(20, classFruitVotes[fruitKey] + delta));
+      renderMathDataGraphsModule();
+    }
+
+    function formatTallyMarks(count) {
+      const fives = Math.floor(count / 5);
+      const rem = count % 5;
+      let parts = [];
+      for (let i = 0; i < fives; i++) {
+        parts.push('<span style="display:inline-block;background:rgba(245,158,11,0.2);border:1px solid #f59e0b;padding:2px 6px;border-radius:6px;margin-right:4px;font-weight:900;color:#fde047;"><s>||||</s> (5)</span>');
+      }
+      if (rem > 0) {
+        parts.push(`<span style="font-weight:900;color:#38bdf8;letter-spacing:2px;">${'|'.repeat(rem)}</span>`);
+      }
+      return parts.join(' ');
+    }
+
+    function renderMathDataGraphsModule() {
+      if (mathDataGraphsSubTab === 'quiz') {
+        startMebExtraQuiz('data_graphs');
+        return;
+      }
+
+      const totalVotes = classFruitVotes.apple + classFruitVotes.strawberry + classFruitVotes.banana;
+
+      const html = `
+        ${renderMathModuleTopNav('Tablo ve Grafik Okuma', 'MEB 2. SINIF • VERİ İŞLEME', '#6366f1')}
+
+        <div class="card" style="border:2px solid #6366f1;background:linear-gradient(145deg,rgba(15,23,42,0.96),rgba(30,41,59,0.96));">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+            <div>
+              <span style="background:#6366f1;color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:999px;">VERİ TOPLAMA VE DEĞERLENDİRME</span>
+              <h2 style="font-size:21px;color:#fff;font-weight:900;margin-top:4px;">📊 Çetele Tablosu, Sıklık Tablosu ve Nesne Grafiği</h2>
+            </div>
+            <button class="action-btn" style="background:linear-gradient(135deg,#6366f1,#4338ca);color:#fff;font-weight:900;padding:10px 16px;" onclick="mathDataGraphsSubTab='quiz';renderMathDataGraphsModule()">
+              🎯 10 Soruluk Grafik Testine Başla ➔
+            </button>
+          </div>
+
+          <div style="background:rgba(99,102,241,0.12);border:2px solid rgba(99,102,241,0.4);border-radius:16px;padding:16px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+              <div style="font-size:15px;font-weight:900;color:#c7d2fe;">📋 Canlı Sınıf Anketi: En Sevilen Meyveler (+ / - ile Değiştir!)</div>
+              <button class="action-btn" style="background:#6366f1;color:#fff;font-size:12px;padding:6px 12px;" onclick="speakTurkishText('Çetele tablosunda verileri çizgilerle gösteririz, her 5 çizgi bir grup olur. Sıklık tablosunda ise verileri sayılarla yazarız. Sınıfımızda toplam ${totalVotes} öğrenci oy kullanmıştır.')">🔊 Tabloyu Sesli Anlat</button>
+            </div>
+
+            <div style="overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;font-size:13px;text-align:left;">
+                <thead>
+                  <tr style="background:rgba(15,23,42,0.9);color:#fde047;">
+                    <th style="padding:10px;border:1px solid #334155;">Meyve Adı</th>
+                    <th style="padding:10px;border:1px solid #334155;">Çetele Tablosu (Çizgiler)</th>
+                    <th style="padding:10px;border:1px solid #334155;">Sıklık Tablosu (Sayı)</th>
+                    <th style="padding:10px;border:1px solid #334155;">Nesne Grafiği</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="padding:10px;border:1px solid #334155;font-weight:900;color:#fff;">🍎 Elma</td>
+                    <td style="padding:10px;border:1px solid #334155;">${formatTallyMarks(classFruitVotes.apple)}</td>
+                    <td style="padding:10px;border:1px solid #334155;">
+                      <button class="action-btn" style="background:#334155;padding:3px 8px;" onclick="addClassFruitVote('apple',-1)">-</button>
+                      <strong style="font-size:16px;color:#fff;margin:0 8px;">${classFruitVotes.apple}</strong>
+                      <button class="action-btn" style="background:#10b981;padding:3px 8px;" onclick="addClassFruitVote('apple',1)">+</button>
+                    </td>
+                    <td style="padding:10px;border:1px solid #334155;font-size:16px;">${'🍎'.repeat(classFruitVotes.apple)}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;border:1px solid #334155;font-weight:900;color:#fff;">🍓 Çilek</td>
+                    <td style="padding:10px;border:1px solid #334155;">${formatTallyMarks(classFruitVotes.strawberry)}</td>
+                    <td style="padding:10px;border:1px solid #334155;">
+                      <button class="action-btn" style="background:#334155;padding:3px 8px;" onclick="addClassFruitVote('strawberry',-1)">-</button>
+                      <strong style="font-size:16px;color:#fff;margin:0 8px;">${classFruitVotes.strawberry}</strong>
+                      <button class="action-btn" style="background:#10b981;padding:3px 8px;" onclick="addClassFruitVote('strawberry',1)">+</button>
+                    </td>
+                    <td style="padding:10px;border:1px solid #334155;font-size:16px;">${'🍓'.repeat(classFruitVotes.strawberry)}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;border:1px solid #334155;font-weight:900;color:#fff;">🍌 Muz</td>
+                    <td style="padding:10px;border:1px solid #334155;">${formatTallyMarks(classFruitVotes.banana)}</td>
+                    <td style="padding:10px;border:1px solid #334155;">
+                      <button class="action-btn" style="background:#334155;padding:3px 8px;" onclick="addClassFruitVote('banana',-1)">-</button>
+                      <strong style="font-size:16px;color:#fff;margin:0 8px;">${classFruitVotes.banana}</strong>
+                      <button class="action-btn" style="background:#10b981;padding:3px 8px;" onclick="addClassFruitVote('banana',1)">+</button>
+                    </td>
+                    <td style="padding:10px;border:1px solid #334155;font-size:16px;">${'🍌'.repeat(classFruitVotes.banana)}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-top:12px;font-size:13px;color:#6ee7b7;font-weight:800;">
+              📌 Grafik Yorumu: Sınıfta toplam <strong>${totalVotes} öğrenci</strong> vardır. Çilek ile Muz arasındaki fark: <strong>${Math.abs(classFruitVotes.strawberry - classFruitVotes.banana)}</strong> öğrencidir.
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    /* ========================================================
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.9.3';
+    const CURRENT_APP_VERSION = '2.9.4';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
