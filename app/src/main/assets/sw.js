@@ -1,5 +1,5 @@
 // Lingo Ders Arkadaşım - Service Worker (Otomatik Güncelleme & Çevrimdışı Destek)
-const CACHE_NAME = 'lingo-ders-arkadasim-v2.8.0';
+const CACHE_NAME = 'lingo-ders-arkadasim-v2.8.1';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',

@@ -972,7 +972,7 @@
           📲 Ana Ekrana Ekle
         </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
-          🔄 Sürümü Yenile (v2.8.0)
+          🔄 Sürümü Yenile (v2.8.1)
         </button>
         <button onclick="openParentGateModal()" class="action-btn" style="background:#475569;color:#f8fafc;border:1px solid #64748b;font-size:11px;padding:7px 12px;font-weight:900;" title="Ebeveyn Kontrolü ve Günlük Gelişim Raporu">
           👨‍👩‍👧 Ebeveyn Ekranı
@@ -2759,12 +2759,24 @@
 
     function selectRhythmStepAndOpen(mode, stage) {
       stopRhythmAutoTeach();
+      if (typeof stopChildVoiceCount === 'function') stopChildVoiceCount();
       rhythmActiveMode = mode;
       rhythmActiveStage = stage || 'learn';
+      if (rhythmActiveStage === 'practice') {
+        rhythmPracticeStartTime = null; // openRhythmicCountingModule içinde temiz başlatılsın
+      }
       switchMainTab('rhythmic');
     }
 
     function openRhythmicCountingModule() {
+      if (rhythmActiveStage === 'practice') {
+        initRhythmPractice();
+        return;
+      }
+      if (rhythmActiveStage === 'exam') {
+        initRhythmExam(String(rhythmActiveMode));
+        return;
+      }
       renderRhythmicCounting();
       // Kullanıcı girdiğinde önce otomatik olarak öğretsin ve sesli saysın!
       if (rhythmActiveStage === 'learn' && !rhythmAutoPlaying) {
@@ -2922,6 +2934,14 @@
 
     // 2. AŞAMA: SIRA SENDE (ÇOCUĞUN SAYMASI & SÜRE/PARMAK HESABI ANALİZİ)
     function initRhythmPractice() {
+      if (typeof stopChildVoiceCount === 'function') stopChildVoiceCount();
+      // Sınav başlarken ilk mikrofon KAPALI gelsin; çocuk bir defa basınca sürekli açık kalsın
+      rhythmAutoMicEnabled = false;
+      rhythmVoiceListening = false;
+      rhythmLastHeardText = '';
+      rhythmLastVoiceStepMatched = 0;
+      rhythmLastVoiceMatchTime = 0;
+
       rhythmPracticeTargetStep = 1;
       rhythmPracticeWrongFeedback = '';
       rhythmPracticeCompleted = false;
@@ -2936,9 +2956,11 @@
       const info = rhythmData[rhythmActiveMode];
       const modeSay = (rhythmActiveMode === 2) ? "2'şer 2'şer" :
                       (rhythmActiveMode === 3) ? "3'er 3'er" :
-      speakTurkish(`Şimdi sıra sende! ${modeSay} ${info.maxNumber}'e kadar sen sayıyorsun! İlk sayımız kaç? Yüksek sesle söyle!`, 0.95, () => {
-        if (rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted) {
-          setTimeout(() => startChildVoiceCount(true), 250);
+                      (rhythmActiveMode === 4) ? "4'er 4'er" : "5'er 5'er";
+      speakTurkish(`Şimdi sıra sende! ${modeSay} ${info.maxNumber}'e kadar sen sayıyorsun! İstersen mikrofonu bir kez açıp arka arkaya söyleyebilirsin!`, 0.95, () => {
+        // Öğretmenin giriş konuşması bittiğinde çocuk henüz 1. adımdaysa süreyi şimdi başlat
+        if (rhythmPracticeTargetStep === 1 && !rhythmPracticeCompleted && rhythmPracticeStepStats.length === 0) {
+          rhythmPracticeStartTime = Date.now();
         }
       });
     }
@@ -2967,7 +2989,7 @@
       rhythmPracticeChoices = [correctNum, ...Array.from(distractors)].sort((a, b) => a - b);
     }
 
-    function handleChildCountChoice(chosenNum, btnElem) {
+    function handleChildCountChoice(chosenNum, btnElem, fromVoice = false) {
       recordActivity();
       if (btnElem && typeof btnElem.blur === 'function') btnElem.blur();
       if (document.activeElement && typeof document.activeElement.blur === 'function') {
@@ -2979,6 +3001,12 @@
       const info = rhythmData[rhythmActiveMode];
       const currentItem = info.steps[rhythmPracticeTargetStep - 1];
       if (!currentItem) return;
+
+      // Eğer başlangıç zamanı herhangi bir sebeple geçersizse hemen düzelt
+      const nowCheck = Date.now();
+      if (typeof rhythmPracticeStartTime !== 'number' || rhythmPracticeStartTime < 1700000000000 || rhythmPracticeStartTime > nowCheck) {
+        rhythmPracticeStartTime = nowCheck - (rhythmPracticeTargetStep * 2000);
+      }
 
       if (chosenNum === currentItem.num) {
         // Doğru seçim: Bu adımın kaçıncı denemede doğru bilindiğini kaydet
@@ -2994,25 +3022,33 @@
         recordParentActivityLog('math_rhythm', true, `${info.stepSize}'er Ritmik Sayma (${currentItem.step}. Adım)`, `Doğru sayı: ${currentItem.num} (${currentItem.tr})`);
 
         if (rhythmPracticeTargetStep >= info.steps.length) {
+          rhythmAutoMicEnabled = false;
           stopChildVoiceCount();
-          // TÜM SAYILAR AÇILDI! BAŞARI VE SÜRE HESAPLAMA
-          rhythmPracticeEndTime = Date.now();
-          rhythmPracticeDuration = Math.max(1, Math.round((rhythmPracticeEndTime - rhythmPracticeStartTime) / 1000));
+          // TÜM SAYILAR AÇILDI! BAŞARI VE SÜRE HESAPLAMA (Saçma büyük sayıları %100 engelleyen güvenli hesap)
+          const endMs = Date.now();
+          const validStartMs = (typeof rhythmPracticeStartTime === 'number' && rhythmPracticeStartTime > 1700000000000 && rhythmPracticeStartTime <= endMs)
+            ? rhythmPracticeStartTime
+            : (endMs - 18000);
+          rhythmPracticeEndTime = endMs;
+          const rawElapsedSec = Math.round((rhythmPracticeEndTime - validStartMs) / 1000);
+          rhythmPracticeDuration = Math.max(2, Math.min(300, rawElapsedSec));
+
           rhythmPracticeCompleted = true;
           renderRhythmicCounting();
           const stats = calculateRhythmPracticeScore(rhythmPracticeDuration, rhythmPracticeTotalMistakes);
           recordParentMilestone('math_rhythm', `${info.stepSize}'er ${rhythmCountDirection === 'backward' ? 'Geriye' : 'İleriye'} Ritmik Sayma`, `${stats.totalScore}/100 Puan • Süre: ${rhythmPracticeDuration} sn • Hata: ${rhythmPracticeTotalMistakes} (${stats.fingerCountingStatus})`);
           speakTurkish(`${currentItem.tr}! Harikasın şampiyon, tamamladın! Süren ${rhythmPracticeDuration} saniye, puanın 100 üzerinden ${stats.totalScore}! ${stats.voiceFeedback}`, 0.94);
         } else {
-          stopChildVoiceCount();
           rhythmPracticeTargetStep++;
           generateRhythmPracticeChoices();
           renderRhythmicCounting();
-          speakTurkish(`Aferin, ${currentItem.tr}! Sıradaki sayı kaç?`, 0.95, () => {
-            if (rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted) {
-              setTimeout(() => startChildVoiceCount(true), 250);
-            }
-          });
+
+          // Eğer sürekli mikrofon açıksa bekletmemek için uzun konuşma yapma, anında zil çal ve dinlemeye devam et!
+          if (fromVoice || rhythmAutoMicEnabled) {
+            playChimeSound('correct');
+          } else {
+            speakTurkish(`Aferin, ${currentItem.tr}! Sıradaki sayı kaç?`, 0.95);
+          }
         }
       } else {
         rhythmPracticeTotalMistakes++;
@@ -3020,11 +3056,11 @@
         recordParentActivityLog('math_rhythm', false, `${info.stepSize}'er Ritmik Sayma (${currentItem.step}. Adım)`, `Doğru sayı ${currentItem.num} iken ${chosenNum} seçti`);
         rhythmPracticeWrongFeedback = `❌ ${chosenNum} değil! İpucu: ${rhythmPracticeTargetStep} tane ${info.stepSize} (${rhythmPracticeTargetStep} × ${info.stepSize}) kaç eder?`;
         renderRhythmicCounting();
-        speakTurkish(`Tekrar dene! ${rhythmPracticeTargetStep} tane ${info.stepSize} kaç eder?`, 0.95, () => {
-          if (rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted) {
-            setTimeout(() => startChildVoiceCount(true), 250);
-          }
-        });
+        if (fromVoice || rhythmAutoMicEnabled) {
+          playChimeSound('wrong');
+        } else {
+          speakTurkish(`Tekrar dene! ${rhythmPracticeTargetStep} tane ${info.stepSize} kaç eder?`, 0.95);
+        }
       }
     }
 
@@ -3101,18 +3137,100 @@
       };
     }
 
-    let rhythmAutoMicEnabled = true;
+    // Başlangıçta mikrofon KAPALI; çocuk 1 kez basınca sürekli açık kalır
+    let rhythmAutoMicEnabled = false;
     let rhythmSpeechRecognizer = null;
     let rhythmAutoMicRestartTimer = null;
+    let rhythmLastHeardText = '';
+    let rhythmLastVoiceStepMatched = 0;
+    let rhythmLastVoiceMatchTime = 0;
+    let rhythmConsumedResultIdx = -1;
+    let rhythmConsumedWordCount = 0;
+
+    // Türkçe sayı okunuşlarını ve rakamları hızlıca eşleştiren yardımcı fonksiyon
+    function doesTranscriptMatchRhythmItem(rawTranscript, item) {
+      if (!rawTranscript || !item) return false;
+      const text = rawTranscript.toLowerCase().replace(/[.,!?-]/g, ' ').trim();
+      if (!text) return false;
+      const targetNumStr = String(item.num);
+      const targetTrLower = item.tr.toLowerCase().trim();
+      const targetTrCompact = targetTrLower.replace(/\s+/g, '');
+      const textCompact = text.replace(/\s+/g, '');
+
+      // 1. Kelime sınırıyla rakam kontrolü (örn. "3", "12", "24")
+      const tokens = text.split(/\s+/).filter(Boolean);
+      if (tokens.includes(targetNumStr)) return true;
+
+      // 2. Tek kelimelik sayılarda tam kelime eşleşmesi ("on" ile "on iki" karışmasın)
+      const isMultiWord = targetTrLower.includes(' ');
+      if (!isMultiWord) {
+        if (tokens.includes(targetTrLower)) return true;
+      } else {
+        if (text.includes(targetTrLower) || textCompact.includes(targetTrCompact)) return true;
+      }
+
+      // 3. Çocuk telaffuzlarında sık karşılaşılan yakın ses eşleşmeleri
+      const aliases = {
+        2: ['iki', '2'],
+        3: ['üç', 'uc', 'üc', '3'],
+        4: ['dört', 'dort', '4'],
+        5: ['beş', 'bes', '5'],
+        6: ['altı', 'alti', '6'],
+        8: ['sekiz', '8'],
+        9: ['dokuz', '9'],
+        10: ['on', '10'],
+        12: ['on iki', 'oniki', '12'],
+        14: ['on dört', 'ondört', 'ondort', '14'],
+        15: ['on beş', 'onbeş', 'onbes', '15'],
+        16: ['on altı', 'onaltı', 'onalti', '16'],
+        18: ['on sekiz', 'onsekiz', '18'],
+        20: ['yirmi', '20'],
+        21: ['yirmi bir', 'yirmibir', '21'],
+        24: ['yirmi dört', 'yirmidört', 'yirmidort', '24'],
+        25: ['yirmi beş', 'yirmibeş', 'yirmibes', '25'],
+        27: ['yirmi yedi', 'yirmiyedi', '27'],
+        28: ['yirmi sekiz', 'yirmisekiz', '28'],
+        30: ['otuz', '30'],
+        32: ['otuz iki', 'otuziki', '32'],
+        35: ['otuz beş', 'otuzbeş', 'otuzbes', '35'],
+        36: ['otuz altı', 'otuzaltı', 'otuzalti', '36'],
+        40: ['kırk', 'kirk', '40'],
+        45: ['kırk beş', 'kırkbeş', 'kirkbes', '45'],
+        50: ['elli', '50']
+      };
+      const itemAliases = aliases[item.num] || [];
+      for (const al of itemAliases) {
+        if (!isMultiWord) {
+          if (tokens.includes(al)) return true;
+        } else if (text.includes(al) || textCompact.includes(al.replace(/\s+/g, ''))) {
+          return true;
+        }
+      }
+      return false;
+    }
 
     function toggleRhythmAutoMic() {
-      rhythmAutoMicEnabled = !rhythmAutoMicEnabled;
-      if (!rhythmAutoMicEnabled) {
+      recordActivity();
+      if (rhythmAutoMicEnabled) {
+        // Kapat
+        rhythmAutoMicEnabled = false;
+        rhythmLastHeardText = '';
         stopChildVoiceCount();
+        renderRhythmicCounting();
       } else {
+        // Çocuk bir defa bastı: Sürekli dinleme modunu aktif et!
+        rhythmAutoMicEnabled = true;
+        rhythmLastHeardText = '🎙️ Mikrofon açıldı! Şimdi sıradaki sayıyı yüksek sesle söyle...';
+        if (window.speechSynthesis) {
+          try { window.speechSynthesis.cancel(); } catch (e) {}
+        }
+        // Eğer 1. basamaktaysa süreyi mikrofonu açtığı andan itibaren başlat
+        if (rhythmPracticeTargetStep === 1 && !rhythmPracticeCompleted && rhythmPracticeStepStats.length === 0) {
+          rhythmPracticeStartTime = Date.now();
+        }
         startChildVoiceCount(true);
+        renderRhythmicCounting();
       }
-      renderRhythmicCounting();
     }
 
     function stopChildVoiceCount() {
@@ -3121,10 +3239,17 @@
         rhythmAutoMicRestartTimer = null;
       }
       if (rhythmSpeechRecognizer) {
-        try { rhythmSpeechRecognizer.stop(); } catch (e) {}
+        try {
+          rhythmSpeechRecognizer.onend = null;
+          rhythmSpeechRecognizer.onerror = null;
+          rhythmSpeechRecognizer.onresult = null;
+          rhythmSpeechRecognizer.stop();
+        } catch (e) {}
         rhythmSpeechRecognizer = null;
       }
       rhythmVoiceListening = false;
+      rhythmConsumedResultIdx = -1;
+      rhythmConsumedWordCount = 0;
     }
 
     function startChildVoiceCount(isAuto = false) {
@@ -3141,8 +3266,14 @@
       if (!SpeechRec) {
         if (!isAuto) {
           speakTurkish(`Yüksek sesle ${currentItem.tr} dedin, harikasın!`, 0.95);
-          handleChildCountChoice(currentItem.num);
+          handleChildCountChoice(currentItem.num, null, true);
         }
+        return;
+      }
+
+      if (!isAuto && !rhythmAutoMicEnabled) {
+        // Kullanıcı doğrudan mikrofon butonuna bastıysa sürekli açık moda geçir
+        toggleRhythmAutoMic();
         return;
       }
 
@@ -3154,42 +3285,83 @@
         stopChildVoiceCount();
         const rec = new SpeechRec();
         rec.lang = 'tr-TR';
-        rec.interimResults = false;
+        // HIZLI VE SÜREKLİ ALGILAMA: Sessizlik beklemeden anında yakalaması için interimResults=true ve continuous=true
+        rec.continuous = true;
+        rec.interimResults = true;
         rec.maxAlternatives = 5;
         rhythmSpeechRecognizer = rec;
         rhythmVoiceListening = true;
+        rhythmConsumedResultIdx = -1;
+        rhythmConsumedWordCount = 0;
         renderRhythmicCounting();
 
         rec.onresult = (event) => {
-          rhythmVoiceListening = false;
-          rhythmSpeechRecognizer = null;
-          let transcripts = [];
-          for (let i = 0; i < event.results[0].length; i++) {
-            transcripts.push(event.results[0][i].transcript.toLowerCase().trim());
-          }
-          const combined = transcripts.join(' ');
-          const targetNumStr = String(currentItem.num);
-          const targetTrStr = currentItem.tr.toLowerCase();
+          const activeInfo = rhythmData[rhythmActiveMode];
+          if (!activeInfo || rhythmPracticeCompleted || rhythmActiveStage !== 'practice') return;
+          const targetItem = activeInfo.steps[rhythmPracticeTargetStep - 1];
+          if (!targetItem) return;
 
-          if (combined.includes(targetNumStr) || combined.includes(targetTrStr)) {
-            handleChildCountChoice(currentItem.num);
-          } else {
-            rhythmPracticeWrongFeedback = `🎙️ "${transcripts[0] || ''}" duyuldu. Yüksek sesle "${currentItem.tr} (${currentItem.num})" de veya baloncuğa dokun!`;
-            renderRhythmicCounting();
-            if (rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted) {
-              rhythmAutoMicRestartTimer = setTimeout(() => startChildVoiceCount(true), 800);
+          const latestIdx = event.results.length - 1;
+          const latestResult = event.results[latestIdx];
+          if (!latestResult) return;
+
+          if (latestIdx !== rhythmConsumedResultIdx) {
+            rhythmConsumedResultIdx = latestIdx;
+            rhythmConsumedWordCount = 0;
+          }
+
+          const primaryFull = (latestResult[0].transcript || '').toLowerCase().trim();
+          const primaryWords = primaryFull.split(/\s+/).filter(Boolean);
+          if (primaryWords.length < rhythmConsumedWordCount) {
+            rhythmConsumedWordCount = Math.max(0, primaryWords.length - 1);
+          }
+
+          // Yalnızca henüz işlenmemiş yeni kelimeleri al
+          const newPrimaryWords = primaryWords.slice(rhythmConsumedWordCount);
+          if (newPrimaryWords.length === 0) return;
+
+          let recentCandidates = [newPrimaryWords.slice(-3).join(' ')];
+          for (let i = 1; i < latestResult.length; i++) {
+            const altTr = (latestResult[i].transcript || '').toLowerCase().trim();
+            const altWords = altTr.split(/\s+/).filter(Boolean);
+            recentCandidates.push(altWords.slice(-3).join(' '));
+          }
+          const heardDisplay = recentCandidates[0] || '';
+
+          const nowMs = Date.now();
+          if (rhythmLastVoiceStepMatched === rhythmPracticeTargetStep && (nowMs - rhythmLastVoiceMatchTime) < 300) {
+            return;
+          }
+
+          const matched = recentCandidates.some(cand => doesTranscriptMatchRhythmItem(cand, targetItem));
+          if (matched) {
+            rhythmConsumedWordCount = primaryWords.length;
+            rhythmLastVoiceStepMatched = rhythmPracticeTargetStep;
+            rhythmLastVoiceMatchTime = nowMs;
+            rhythmLastHeardText = `✅ "${targetItem.num} (${targetItem.tr})" duyuldu! Şimdi sıradaki sayıyı söyle!`;
+            handleChildCountChoice(targetItem.num, null, true);
+          } else if (latestResult.isFinal && heardDisplay) {
+            // Az önce kabul edilen önceki basamağın gecikmeli final sonucuysa yoksay
+            const prevItem = rhythmPracticeTargetStep > 1 ? activeInfo.steps[rhythmPracticeTargetStep - 2] : null;
+            if (prevItem && doesTranscriptMatchRhythmItem(heardDisplay, prevItem)) {
+              rhythmConsumedWordCount = primaryWords.length;
+              return;
             }
+            rhythmConsumedWordCount = primaryWords.length;
+            rhythmLastHeardText = `🎙️ "${heardDisplay}" duyuldu. Sıradaki sayı: ${targetItem.tr} (${targetItem.num})`;
+            renderRhythmicCounting();
           }
         };
 
         rec.onerror = (err) => {
           rhythmVoiceListening = false;
           rhythmSpeechRecognizer = null;
-          if (err && err.error === 'no-speech' && rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted) {
-            rhythmAutoMicRestartTimer = setTimeout(() => startChildVoiceCount(true), 350);
-          } else if (err && (err.error === 'not-allowed' || err.error === 'service-not-allowed')) {
+          if (err && (err.error === 'not-allowed' || err.error === 'service-not-allowed')) {
             rhythmAutoMicEnabled = false;
+            rhythmLastHeardText = '⚠️ Mikrofon izni verilmedi. Lütfen mikrofon izni verin veya baloncuklara dokunun.';
             renderRhythmicCounting();
+          } else if (rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted && currentMainTab === 'rhythmic') {
+            rhythmAutoMicRestartTimer = setTimeout(() => startChildVoiceCount(true), 120);
           } else {
             renderRhythmicCounting();
           }
@@ -3198,8 +3370,8 @@
         rec.onend = () => {
           rhythmVoiceListening = false;
           rhythmSpeechRecognizer = null;
-          if (rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted) {
-            rhythmAutoMicRestartTimer = setTimeout(() => startChildVoiceCount(true), 350);
+          if (rhythmAutoMicEnabled && rhythmActiveStage === 'practice' && !rhythmPracticeCompleted && currentMainTab === 'rhythmic') {
+            rhythmAutoMicRestartTimer = setTimeout(() => startChildVoiceCount(true), 100);
           } else {
             renderRhythmicCounting();
           }
@@ -3723,30 +3895,29 @@
                     : `${info.steps[currentTarget.step - 2].num} sayısından sonra ${info.stepSize} eklersek sıradaki sayı kaç olur?`}
                 </div>
 
-                <!-- Sesle Söyleme + Otomatik Dinleme + Baloncuk Seçenekleri -->
+                <!-- Sesle Söyleme (İlk Başta Kapalı, 1 Kez Basınca Sürekli Açık) + Baloncuk Seçenekleri -->
                 <div style="margin-bottom:14px;">
-                  <div style="background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(6,182,212,0.18));border:2px solid ${rhythmVoiceListening ? '#10b981' : '#0284c7'};border-radius:14px;padding:12px 16px;max-width:540px;margin:0 auto 12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-                    <div style="display:flex;align-items:center;gap:10px;text-align:left;">
-                      <span style="font-size:30px;">${rhythmVoiceListening ? '🎙️' : '🎧'}</span>
+                  <div style="background:linear-gradient(135deg, ${rhythmAutoMicEnabled ? 'rgba(16,185,129,0.24), rgba(5,150,105,0.2)' : 'rgba(30,41,59,0.95), rgba(15,23,42,0.95)'});border:2px solid ${rhythmAutoMicEnabled ? '#10b981' : '#475569'};border-radius:16px;padding:14px 16px;max-width:560px;margin:0 auto 12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+                    <div style="display:flex;align-items:center;gap:12px;text-align:left;flex:1;min-width:220px;">
+                      <span style="font-size:32px;">${rhythmAutoMicEnabled ? '🎙️' : '🔇'}</span>
                       <div>
-                        <div style="font-size:14px;font-weight:900;color:${rhythmVoiceListening ? '#6ee7b7' : '#fde047'};">
-                          ${rhythmVoiceListening ? '🎙️ Seni Dinliyorum! Şimdi Yüksek Sesle Söyle!' : (rhythmAutoMicEnabled ? '🎙️ Otomatik Dinleme Açık (Sıradaki sayıyı söyle!)' : '🎙️ Manuel Mikrofon Modu')}
+                        <div style="font-size:14px;font-weight:900;color:${rhythmAutoMicEnabled ? '#6ee7b7' : '#fde047'};">
+                          ${rhythmAutoMicEnabled ? '🟢 Mikrofon AÇIK • Sürekli Seni Dinliyor!' : '⚪ Mikrofon Şu An Kapalı'}
                         </div>
-                        <div style="font-size:11px;color:#cbd5e1;">
-                          Butona basmana gerek yok; mikrofona söyle veya aşağıdaki baloncuğa dokun!
+                        <div style="font-size:12px;color:#cbd5e1;margin-top:2px;">
+                          ${rhythmAutoMicEnabled
+                            ? (rhythmLastHeardText || 'Hiç beklemeden sıradaki sayıları arka arkaya yüksek sesle söyle!')
+                            : 'Yandaki butona 1 kez bas; mikrofon sınav bitene kadar sürekli açık kalır!'}
                         </div>
                       </div>
                     </div>
-                    <div style="display:flex;gap:6px;">
-                      <button type="button" class="action-btn" style="background:${rhythmAutoMicEnabled ? '#10b981' : '#334155'};color:#fff;font-size:11px;font-weight:900;padding:6px 10px;" onclick="toggleRhythmAutoMic()">
-                        ${rhythmAutoMicEnabled ? '✅ Otomatik: AÇIK' : '❌ Otomatik: KAPALI'}
-                      </button>
-                      <button type="button" class="action-btn" style="background:#8b5cf6;color:#fff;font-size:11px;padding:6px 10px;" onclick="startChildVoiceCount(false)">
-                        ${rhythmVoiceListening ? '⏹️ Dinliyor' : '🎙️ Başlat'}
+                    <div>
+                      <button type="button" class="action-btn" style="background:${rhythmAutoMicEnabled ? '#ef4444' : 'linear-gradient(135deg,#10b981,#059669)'};color:#fff;font-size:13px;font-weight:900;padding:11px 18px;border-radius:12px;box-shadow:0 4px 14px rgba(16,185,129,0.3);" onclick="toggleRhythmAutoMic()">
+                        ${rhythmAutoMicEnabled ? '⏹️ Mikrofonu Kapat' : '🎙️ Mikrofonu Aç (Sürekli Dinle)'}
                       </button>
                     </div>
                   </div>
-                  <div style="font-size:12px;color:#94a3b8;">veya yüksek sesle söyleyip doğru sayı baloncuğuna dokun:</div>
+                  <div style="font-size:12px;color:#94a3b8;">veya doğru sayı baloncuğuna dokun:</div>
                 </div>
 
                 <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:10px;">
@@ -10938,7 +11109,7 @@
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.8.0';
+    const CURRENT_APP_VERSION = '2.8.1';
     let swRegistration = null;
     let updateBannerDismissed = false;
 

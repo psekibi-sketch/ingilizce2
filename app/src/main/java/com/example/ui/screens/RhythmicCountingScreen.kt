@@ -336,7 +336,7 @@ fun RhythmicCountingScreen(
     var practiceStep by remember { mutableIntStateOf(1) }
     var practiceCompleted by remember { mutableStateOf(false) }
     var practiceWrongFeedback by remember { mutableStateOf("") }
-    var practiceStartTime by remember { mutableLongStateOf(0L) }
+    var practiceStartTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
     var practiceDurationSeconds by remember { mutableLongStateOf(0L) }
     var practiceMistakes by remember { mutableIntStateOf(0) }
     var practiceCurrentAttempts by remember { mutableIntStateOf(1) }
@@ -524,6 +524,11 @@ fun RhythmicCountingScreen(
                             practiceStep = 1
                             practiceCompleted = false
                             practiceWrongFeedback = ""
+                            practiceStartTime = System.currentTimeMillis()
+                            practiceDurationSeconds = 0L
+                            practiceMistakes = 0
+                            practiceCurrentAttempts = 1
+                            practiceStepRecords.clear()
                             if (activeStage == 1) {
                                 currentHighlightStep = 1
                                 isAutoCounting = true
@@ -909,6 +914,11 @@ fun RhythmicCountingScreen(
                                     practiceStep = 1
                                     practiceCompleted = false
                                     practiceWrongFeedback = ""
+                                    practiceStartTime = System.currentTimeMillis()
+                                    practiceDurationSeconds = 0L
+                                    practiceMistakes = 0
+                                    practiceCurrentAttempts = 1
+                                    practiceStepRecords.clear()
                                 },
                                 shape = RoundedCornerShape(8.dp),
                                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
@@ -1109,7 +1119,9 @@ fun RhythmicCountingScreen(
                                                     practiceCurrentAttempts = 1
                                                     viewModel.speakTurkish("Aferin, ${currentTarget.tr}!")
                                                     if (practiceStep >= activeSteps.size) {
-                                                        practiceDurationSeconds = ((System.currentTimeMillis() - practiceStartTime) / 1000).coerceAtLeast(1)
+                                                        val nowMs = System.currentTimeMillis()
+                                                        val validStart = if (practiceStartTime in 1700000000000L..nowMs) practiceStartTime else (nowMs - 18000L)
+                                                        practiceDurationSeconds = ((nowMs - validStart) / 1000L).coerceIn(2L, 300L)
                                                         practiceCompleted = true
                                                     } else {
                                                         practiceStep++
