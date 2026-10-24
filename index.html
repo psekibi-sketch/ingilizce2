@@ -284,6 +284,18 @@
 
     .word-tile .tile-icon { font-size: 28px; margin-bottom: 6px; }
     .word-tile .en-text { font-size: 14px; font-weight: 700; color: #fff; }
+    .word-tile .phonetic-text {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      color: #fde047;
+      background: rgba(253, 224, 71, 0.13);
+      border: 1px solid rgba(253, 224, 71, 0.32);
+      border-radius: 999px;
+      padding: 2px 8px;
+      margin: 4px 0 2px;
+      letter-spacing: 0.2px;
+    }
     .word-tile .tr-text { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
     .speaker-icon {
@@ -975,7 +987,7 @@
           📲 Ana Ekrana Ekle
         </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
-          🔄 Sürümü Yenile (v2.9.5)
+          🔄 Sürümü Yenile (v2.9.6)
         </button>
         <button onclick="switchMainTab('pet_hub')" class="action-btn" style="background:#ec4899;color:#fff;font-size:11px;padding:7px 12px;font-weight:900;">
           🐾 Dostum &amp; Çark
@@ -6928,6 +6940,192 @@
     }
 
     /* ========================================================
+       İNGİLİZCE KELİME VE CÜMLELER İÇİN TÜRKÇE OKUNUŞ (TELAFFUZ) REHBERİ
+       2. Sınıf öğrencilerinin her İngilizce kelimeyi ve cümleyi
+       nasıl okuyacağını gösteren kapsamlı fonetik sözlük & dönüştürücü
+    ======================================================== */
+    const EN_PHONETIC_PHRASES = {
+      'hello': 'He-lo',
+      'hi': 'Hay',
+      'good morning': 'Gud mor-ning',
+      'good afternoon': 'Gud af-tır-nuun',
+      'good evening': 'Gud iiv-ning',
+      'good night': 'Gud nayt',
+      'goodbye': 'Gud-bay',
+      'bye-bye': 'Bay-bay',
+      'i am fine, thank you.': 'Ay em fayn, tenk yu.',
+      'i am fine': 'Ay em fayn',
+      'ok / so-so': 'O-key / So-so',
+      'how are you?': 'Hav ar yu?',
+      'what is your name?': 'Vat iz yor neym?',
+      'my name is ali.': 'May neym iz Ali.',
+      'how old are you?': 'Hav old ar yu?',
+      'i am seven years old.': 'Ay em se-vın yiırs old.',
+      'i am eight years old!': 'Ay em eyt yiırs old!',
+      'i am eight years old.': 'Ay em eyt yiırs old.',
+      'nice to meet you': 'Nays tu miit yu',
+      'nice to meet you!': 'Nays tu miit yu!',
+      'see you later': 'Sii yu ley-tır',
+      'have a nice day': 'Hev e nays dey',
+      'thank you': 'Tenk yu',
+      'you are welcome!': 'Yu ar vel-kım!',
+      'you\'re welcome!': 'Yor vel-kım!',
+      'here you are.': 'Hiır yu ar.',
+      'here you are!': 'Hiır yu ar!',
+      'may i come in, please?': 'Mey ay kam in, pliiz?',
+      'open the door please': 'O-pın dı dor pliiz',
+      'close the window please': 'Kloz dı vin-dov pliiz',
+      'close the window': 'Kloz dı vin-dov',
+      'sit down please': 'Sit davn pliiz',
+      'stand up': 'Stend ap',
+      'sit down': 'Sit davn',
+      'open your book': 'O-pın yor buk',
+      'close your book': 'Kloz yor buk',
+      'be quiet': 'Bii ku-a-yıt',
+      'touch your nose': 'Taç yor noz',
+      'this is my family': 'Dis iz may fe-mi-li',
+      'this is my brother': 'Dis iz may bra-dır',
+      'who is this?': 'Hu iz dis?',
+      'where is the dog?': 'Ver iz dı dog?',
+      'in the kitchen': 'İn dı ki-çın',
+      'he is in the living room': 'Hii iz in dı li-ving ruum',
+      'in the city': 'İn dı si-ti',
+      'the zoo is in the city': 'Dı zuu iz in dı si-ti',
+      'living room': 'Li-ving ruum',
+      'sitting room': 'Si-ting ruum',
+      'dining room': 'Day-ning ruum',
+      'coffee table': 'Ko-fi tey-bıl',
+      'school bag': 'Skuul beg',
+      'pencil case': 'Pen-sıl keys',
+      'teddy bear': 'Te-di beır',
+      'computer game': 'Kom-pü-tır geym',
+      'ice cream': 'Ays kriim',
+      'ride a bike': 'Rayd e bayk',
+      'sing a song': 'Sing e song',
+      'run fast': 'Ran fest',
+      'jump high': 'Camp hay',
+      'draw a picture': 'Drov e pik-çır',
+      'play football': 'Pley fut-bol',
+      'fly a kite': 'Flay e kayt',
+      'climb a tree': 'Klaym e trii',
+      'sunny and hot': 'Sa-ni end hat',
+      'snowy and cold': 'Snov-i end kold',
+      'enjoy your meal': 'En-coy yor miil',
+      'it is cold': 'İt iz kold',
+      'it is sunny': 'İt iz sa-ni',
+      'it is rainy': 'İt iz rey-ni',
+      'how many pencils?': 'Hav me-ni pen-sıls?'
+    };
+
+    const EN_PHONETIC_WORDS = {
+      'a': 'e', 'an': 'en', 'the': 'dı', 'is': 'iz', 'are': 'ar', 'am': 'em',
+      'i': 'ay', 'you': 'yu', 'he': 'hii', 'she': 'şii', 'it': 'it', 'we': 'vii', 'they': 'dey',
+      'my': 'may', 'your': 'yor', 'his': 'hiz', 'her': 'hör', 'our': 'a-vır',
+      'this': 'dis', 'that': 'det', 'there': 'der', 'here': 'hiır',
+      'in': 'in', 'on': 'on', 'under': 'an-dır', 'to': 'tu', 'for': 'for', 'with': 'vit', 'of': 'ov',
+      'and': 'end', 'but': 'bat', 'or': 'or', 'not': 'nat', 'no': 'no', 'yes': 'yes',
+      'have': 'hev', 'has': 'hez', 'got': 'gat', 'haven\'t': 'he-vınt', 'hasn\'t': 'he-zınt',
+      'can': 'ken', 'cannot': 'ke-nat', 'can\'t': 'kent', 'do': 'du', 'don\'t': 'dont', 'does': 'daz',
+      'like': 'layk', 'love': 'lav', 'play': 'pley', 'let\'s': 'lets', 'let': 'let', 'us': 'as',
+      'what': 'vat', 'where': 'ver', 'who': 'hu', 'how': 'hav', 'many': 'me-ni', 'old': 'old', 'years': 'yiırs',
+      'color': 'ka-lır', 'colour': 'ka-lır', 'today': 'tu-dey', 'weather': 've-dır', 'very': 've-ri', 'too': 'tuu',
+      'please': 'pliiz', 'thank': 'tenk', 'thanks': 'tenks', 'welcome': 'vel-kım', 'excuse': 'eks-küz', 'me': 'mii',
+      'look': 'luk', 'listen': 'li-sın', 'show': 'şov', 'touch': 'taç', 'give': 'giv', 'come': 'kam',
+      'open': 'o-pın', 'close': 'kloz', 'sit': 'sit', 'down': 'davn', 'stand': 'stend', 'up': 'ap', 'be': 'bii', 'quiet': 'ku-a-yıt',
+      'one': 'van', 'two': 'tu', 'three': 'trii', 'four': 'for', 'five': 'fayv',
+      'six': 'siks', 'seven': 'se-vın', 'eight': 'eyt', 'nine': 'nayn', 'ten': 'ten',
+      'eleven': 'i-le-vın', 'twelve': 'tuelv', 'thirteen': 'tör-tiin', 'fourteen': 'for-tiin', 'fifteen': 'fif-tiin',
+      'sixteen': 'siks-tiin', 'seventeen': 'se-vın-tiin', 'eighteen': 'ey-tiin', 'nineteen': 'nayn-tiin', 'twenty': 'tu-en-ti',
+      'monday': 'man-dey', 'tuesday': 'tuz-dey', 'wednesday': 'venz-dey', 'thursday': 'törz-dey',
+      'friday': 'fray-dey', 'saturday': 'sa-tır-dey', 'sunday': 'san-dey',
+      'red': 'red', 'blue': 'blu', 'yellow': 'ye-lo', 'green': 'griin', 'orange': 'o-rınc', 'oranges': 'o-rın-cız',
+      'purple': 'pör-pıl', 'pink': 'pink', 'black': 'blek', 'white': 'vayt', 'brown': 'bravn',
+      'hello': 'he-lo', 'hi': 'hay', 'good': 'gud', 'morning': 'mor-ning', 'afternoon': 'af-tır-nuun',
+      'evening': 'iiv-ning', 'night': 'nayt', 'goodbye': 'gud-bay', 'fine': 'fayn', 'great': 'greyt',
+      'tired': 'ta-yırd', 'sad': 'sed', 'happy': 'he-pi', 'nice': 'nays', 'meet': 'miit', 'name': 'neym',
+      'taxi': 'tak-si', 'cake': 'keyk', 'ambulance': 'am-bü-lans', 'gorilla': 'go-ril-la', 'kangaroo': 'kan-ga-ruu',
+      'lemon': 'le-mın', 'lemons': 'le-mıns', 'robot': 'ro-bot', 'robots': 'ro-bots',
+      'television': 'te-le-vi-jın', 'yogurt': 'yo-gurt', 'zebra': 'zeb-ra',
+      'book': 'buk', 'books': 'buks', 'pencil': 'pen-sıl', 'pencils': 'pen-sıls', 'case': 'keys',
+      'ruler': 'ru-lır', 'eraser': 'i-rey-zır', 'sharpener': 'şar-pı-nır', 'scissors': 'si-zırs',
+      'school': 'skuul', 'bag': 'beg', 'desk': 'desk', 'chair': 'çeır', 'board': 'bord', 'whiteboard': 'vayt-bord',
+      'door': 'dor', 'window': 'vin-dov', 'teacher': 'tii-çır', 'picture': 'pik-çır',
+      'head': 'hed', 'eye': 'ay', 'eyes': 'ayz', 'nose': 'noz', 'mouth': 'maut', 'ear': 'iır', 'ears': 'iırs',
+      'hair': 'heır', 'arm': 'arm', 'hand': 'hend', 'leg': 'leg', 'legs': 'legs', 'body': 'ba-di', 'shoulders': 'şol-dırs',
+      'glasses': 'gla-sız', 'coat': 'kot', 'shirt': 'şört', 'scarf': 'skarf', 'shoes': 'şuuz',
+      'trousers': 'trav-zırs', 't-shirt': 'ti-şört', 'dress': 'dres', 'hat': 'het', 'socks': 'saks',
+      'family': 'fe-mi-li', 'mother': 'ma-dır', 'mum': 'mam', 'father': 'fa-dır', 'dad': 'ded',
+      'grandfather': 'grend-fa-dır', 'grandpa': 'grend-pa', 'grandmother': 'grend-ma-dır', 'grandma': 'grend-ma',
+      'brother': 'bra-dır', 'sister': 'sis-tır', 'baby': 'bey-bi', 'son': 'san', 'daughter': 'do-tır', 'daughters': 'do-tırs',
+      'handsome': 'hend-sım', 'tall': 'tol', 'short': 'şort', 'beautiful': 'bü-ti-ful', 'headscarf': 'hed-skarf',
+      'friends': 'frends', 'little': 'li-tıl', 'big': 'big', 'small': 'smol', 'long': 'long', 'round': 'raund', 'fast': 'fest',
+      'house': 'haus', 'living': 'li-ving', 'sitting': 'si-ting', 'dining': 'day-ning', 'room': 'ruum',
+      'bedroom': 'bed-ruum', 'kitchen': 'ki-çın', 'bathroom': 'bet-ruum', 'garden': 'gar-dın', 'balcony': 'bal-ko-ni',
+      'sofa': 'so-fa', 'bed': 'bed', 'table': 'tey-bıl', 'coffee': 'ko-fi', 'fridge': 'fric', 'box': 'boks',
+      'city': 'si-ti', 'park': 'park', 'hospital': 'has-pi-tıl', 'zoo': 'zuu', 'cinema': 'si-ne-ma',
+      'library': 'layb-re-ri', 'museum': 'mü-zi-um', 'market': 'mar-kıt',
+      'bus': 'bas', 'car': 'kar', 'cars': 'kars', 'bike': 'bayk', 'train': 'treyn', 'trains': 'treyns', 'plane': 'pleyn', 'planes': 'pleyns',
+      'ball': 'bol', 'balls': 'bols', 'doll': 'dol', 'dolls': 'dols', 'teddy': 'te-di', 'bear': 'beır', 'bears': 'beırs',
+      'kite': 'kayt', 'kites': 'kayts', 'blocks': 'bloks', 'chess': 'çes', 'sets': 'sets', 'marbles': 'mar-bıls', 'game': 'geym',
+      'cat': 'ket', 'cats': 'kets', 'dog': 'dog', 'dogs': 'dogs', 'bird': 'börd', 'birds': 'börds',
+      'fish': 'fiş', 'rabbit': 're-bit', 'rabbits': 're-bits', 'turtle': 'tör-tıl', 'frog': 'frog',
+      'horse': 'hors', 'cow': 'kav', 'duck': 'dak', 'monkey': 'man-ki', 'elephant': 'e-li-fınt', 'lion': 'la-yın',
+      'tree': 'trii', 'trees': 'triiz', 'sky': 'skay', 'water': 'vo-tır', 'lake': 'leyk',
+      'climb': 'klaym', 'run': 'ran', 'fly': 'flay', 'swim': 'svim', 'jump': 'camp', 'walk': 'volk',
+      'slowly': 'slov-li', 'strongly': 'strong-li', 'high': 'hay', 'sing': 'sing', 'song': 'song',
+      'dance': 'dens', 'draw': 'drov', 'ride': 'rayd', 'football': 'fut-bol', 'drink': 'drink',
+      'apple': 'e-pıl', 'apples': 'e-pıls', 'banana': 'ba-na-na', 'bananas': 'ba-na-nas',
+      'strawberry': 'strov-be-ri', 'strawberries': 'strov-be-riz', 'watermelon': 'vo-tır-me-lın', 'watermelons': 'vo-tır-me-lıns',
+      'cherry': 'çe-ri', 'cherries': 'çe-riz', 'grapes': 'greyps', 'peach': 'piiç', 'peaches': 'pii-çız',
+      'milk': 'milk', 'ice': 'ays', 'cream': 'kriim', 'sweet': 'sviit', 'sour': 'sa-vır', 'juice': 'cuus',
+      'yummy': 'ya-mi', 'yuck': 'yak', 'birthday': 'bört-dey', 'cold': 'kold', 'hot': 'hat',
+      'sunny': 'sa-ni', 'rainy': 'rey-ni', 'snowy': 'snov-i', 'windy': 'vin-di', 'cloudy': 'klav-di',
+      'pear': 'peır', 'tea': 'tii', 'cauliflower': 'ko-li-fla-vır', 'broccoli': 'bro-ko-li',
+      'lettuce': 'le-tıs', 'ayran': 'ay-ran', 'courgette': 'kor-jet', 'meat': 'miit',
+      'chicken': 'çi-kın', 'potato': 'po-tey-to', 'potatoes': 'po-tey-toz', 'carrot': 'ke-rıt', 'carrots': 'ke-rıts',
+      'tomato': 'to-mey-to', 'bread': 'bred', 'breakfast': 'brek-fıst', 'lunch': 'lanç', 'dinner': 'di-nır',
+      'hungry': 'hang-ri', 'thirsty': 'törs-ti', 'delicious': 'di-li-şıs', 'enjoy': 'en-coy', 'meal': 'miil',
+      'queen': 'kuiin', 'sun': 'san', 'umbrella': 'amb-rel-la', 'van': 'ven', 'xylophone': 'zay-lo-fon', 'yo-yo': 'yo-yo'
+    };
+
+    function getEnPhonetic(text) {
+      if (!text) return '';
+      const raw = String(text).replace(/✓/g, '').trim();
+      const lower = raw.toLowerCase();
+      if (EN_PHONETIC_PHRASES[lower]) return EN_PHONETIC_PHRASES[lower];
+
+      // Cümle veya kelime grubunu kelime kelime Türkçe okunuşa çevir
+      const tokens = raw.split(/\s+/);
+      const converted = tokens.map((tok, idx) => {
+        const m = tok.match(/^([^a-zA-Z0-9']*)([a-zA-Z0-9'-]+)([^a-zA-Z0-9']*)$/);
+        if (!m) return tok;
+        const prefix = m[1] || '';
+        const core = m[2] || '';
+        const suffix = m[3] || '';
+        const coreLower = core.toLowerCase();
+        let phon = EN_PHONETIC_WORDS[coreLower];
+        if (!phon) {
+          // Basit heceleme yedek kuralı
+          phon = coreLower
+            .replace(/sh/g, 'ş')
+            .replace(/ch/g, 'ç')
+            .replace(/th/g, 'd')
+            .replace(/ee/g, 'ii')
+            .replace(/oo/g, 'uu')
+            .replace(/ck/g, 'k')
+            .replace(/w/g, 'v')
+            .replace(/qu/g, 'ku')
+            .replace(/x/g, 'ks');
+        }
+        if (idx === 0 || /^[A-Z]/.test(core)) {
+          phon = phon.charAt(0).toUpperCase() + phon.slice(1);
+        }
+        return prefix + phon + suffix;
+      });
+      return converted.join(' ');
+    }
+
+    /* ========================================================
        2.4. 7. ÜNİTE: IN MY HOUSE (EVİMİZ, ODALAR & EŞYALAR)
     ======================================================== */
     const u7Rooms = [
@@ -6974,6 +7172,7 @@
                 <span class="speaker-icon">🔊</span>
                 <div class="tile-icon">${item.icon}</div>
                 <div class="en-text">${item.en}</div>
+                <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                 <div class="tr-text">${item.tr}</div>
               </div>
             `).join('')}
@@ -6991,6 +7190,7 @@
                 <span class="speaker-icon">🔊</span>
                 <div class="tile-icon">${item.icon}</div>
                 <div class="en-text">${item.en}</div>
+                <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                 <div class="tr-text">${item.tr}</div>
               </div>
             `).join('')}
@@ -7047,6 +7247,7 @@
                 <span class="speaker-icon">🔊</span>
                 <div class="tile-icon">${item.icon}</div>
                 <div class="en-text">${item.en}</div>
+                <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                 <div class="tr-text">${item.tr}</div>
               </div>
             `).join('')}
@@ -7064,6 +7265,7 @@
                 <span class="speaker-icon">🔊</span>
                 <div class="tile-icon">${item.icon}</div>
                 <div class="en-text">${item.en}</div>
+                <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                 <div class="tr-text">${item.tr}</div>
               </div>
             `).join('')}
@@ -8742,14 +8944,17 @@
                   <span class="speaker-icon">🔊</span>
                   <div class="tile-icon">${item.icon}</div>
                   <div class="en-text">${item.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                   <div class="tr-text">${item.tr}</div>
                 </div>
               `).join('')}
             </div>
             <div style="margin-top:16px;background:rgba(99,102,241,0.1);padding:14px;border-radius:12px;border:1px solid rgba(99,102,241,0.3);">
               <h4 style="color:#818cf8;margin-bottom:6px;">💬 Temel Soru & Cevap:</h4>
-              <p style="font-size:15px;margin-bottom:4px;"><b>What is your name?</b> (Senin adın ne?)</p>
-              <p style="font-size:15px;color:#38bdf8;"><b>My name is Ali.</b> (Benim adım Ali.)</p>
+              <p style="font-size:15px;margin-bottom:2px;"><b>What is your name?</b> (Senin adın ne?)</p>
+              <p style="font-size:12px;color:#fde047;font-weight:800;margin-bottom:6px;">🗣️ Okunuşu: Vat iz yor neym?</p>
+              <p style="font-size:15px;color:#38bdf8;margin-bottom:2px;"><b>My name is Ali.</b> (Benim adım Ali.)</p>
+              <p style="font-size:12px;color:#fde047;font-weight:800;">🗣️ Okunuşu: May neym iz Ali.</p>
               <button class="action-btn" style="margin-top:10px;" onclick="speakText('What is your name? My name is Ali.')">🔊 Örnek Diyaloğu Dinle</button>
             </div>
           </div>
@@ -8762,7 +8967,7 @@
               <button class="reset-btn" onclick="resetUnit1Page(10)">🔄 Dersi Sıfırla</button>
             </div>
             <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">
-              "How are you?" sorusuna verilen cevapları dinleyin ve tekrar edin:
+              "How are you?" (🗣️ Okunuşu: <strong>Hav ar yu?</strong>) sorusuna verilen cevapları dinleyin ve tekrar edin:
             </p>
             <div class="word-grid">
               ${u1Feelings.map(item => `
@@ -8770,6 +8975,7 @@
                   <span class="speaker-icon">🔊</span>
                   <div class="tile-icon">${item.icon}</div>
                   <div class="en-text">${item.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                   <div class="tr-text">${item.tr}</div>
                 </div>
               `).join('')}
@@ -8787,7 +8993,7 @@
               <button class="reset-btn" onclick="resetUnit1Page(11)">🔄 Dersi Sıfırla</button>
             </div>
             <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">
-              1'den 10'a kadar sayıları dinleyin:
+              1'den 10'a kadar sayıları ve Türkçe okunuşlarını dinleyin:
             </p>
             <div class="word-grid">
               ${u1Numbers.map(item => `
@@ -8795,14 +9001,17 @@
                   <span class="speaker-icon">🔊</span>
                   <div class="tile-icon">${item.icon}</div>
                   <div class="en-text">${item.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                   <div class="tr-text">${item.num} - ${item.tr}</div>
                 </div>
               `).join('')}
             </div>
             <div style="margin-top:16px;background:rgba(16,185,129,0.1);padding:14px;border-radius:12px;border:1px solid rgba(16,185,129,0.3);text-align:center;">
               <h4 style="color:#34d399;margin-bottom:6px;">🎂 Yaş Sorma:</h4>
-              <p style="font-size:15px;margin-bottom:4px;"><b>How old are you?</b> (Kaç yaşındasın?)</p>
-              <p style="font-size:15px;color:#a7f3d0;"><b>I am seven years old.</b> (Ben 7 yaşındayım.)</p>
+              <p style="font-size:15px;margin-bottom:2px;"><b>How old are you?</b> (Kaç yaşındasın?)</p>
+              <p style="font-size:12px;color:#fde047;font-weight:800;margin-bottom:6px;">🗣️ Okunuşu: Hav old ar yu?</p>
+              <p style="font-size:15px;color:#a7f3d0;margin-bottom:2px;"><b>I am seven years old.</b> (Ben 7 yaşındayım.)</p>
+              <p style="font-size:12px;color:#fde047;font-weight:800;">🗣️ Okunuşu: Ay em se-vın yiırs old.</p>
               <button class="action-btn" style="margin-top:10px;background:#059669;" onclick="speakText('How old are you? I am seven years old.')">🔊 Dinle</button>
             </div>
           </div>
@@ -8815,7 +9024,7 @@
               <button class="reset-btn" onclick="resetUnit1Page(12)">🔄 Dersi Sıfırla</button>
             </div>
             <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">
-              Okul ödevi günleri sıralı sayma pratiği:
+              Okul ödevi günleri sıralı sayma ve okunuş pratiği:
             </p>
             <div class="word-grid">
               ${['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, i) => `
@@ -8823,6 +9032,7 @@
                   <span class="speaker-icon">🔊</span>
                   <div class="tile-icon">${i < 5 ? '💼' : '🎉'}</div>
                   <div class="en-text">${day}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(day)}</div>
                   <div class="tr-text">${['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'][i]}</div>
                 </div>
               `).join('')}
@@ -8840,7 +9050,7 @@
               <button class="reset-btn" onclick="resetUnit1Page(13)">🔄 Dersi Sıfırla</button>
             </div>
             <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">
-              Renkleri dinleyin ve Türkçe anlamlarını öğrenin:
+              Renkleri dinleyin, okunuşlarını ve Türkçe anlamlarını öğrenin:
             </p>
             <div class="word-grid">
               ${u1Colors.map(item => `
@@ -8848,6 +9058,7 @@
                   <span class="speaker-icon">🔊</span>
                   <div class="tile-icon">${item.icon}</div>
                   <div class="en-text" style="color:${item.hex === '#1e293b' ? '#94a3b8' : item.hex};">${item.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                   <div class="tr-text">${item.tr}</div>
                 </div>
               `).join('')}
@@ -8862,7 +9073,7 @@
               <button class="reset-btn" onclick="resetUnit1Page(14)">🔄 Dersi Sıfırla</button>
             </div>
             <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">
-              Günlük hayatta sıkça karşılaştığımız ortak İngilizce kelimeler:
+              Günlük hayatta sıkça karşılaştığımız ortak İngilizce kelimeler ve okunuşları:
             </p>
             <div class="word-grid">
               ${u1CommonWords.map(item => `
@@ -8870,6 +9081,7 @@
                   <span class="speaker-icon">🔊</span>
                   <div class="tile-icon">${item.icon}</div>
                   <div class="en-text">${item.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                   <div class="tr-text">${item.tr}</div>
                 </div>
               `).join('')}
@@ -9247,6 +9459,7 @@
                   <span class="speaker-icon">🔊</span>
                   <div class="tile-icon">${w.icon}</div>
                   <div class="en-text">${w.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(w.en)}</div>
                   <div class="tr-text">${w.tr}</div>
                 </div>
               `).join('')}
@@ -10037,6 +10250,7 @@
                     <span class="speaker-icon">🔊</span>
                     <div class="tile-icon">${item.icon}</div>
                     <div class="en-text">${item.en}</div>
+                    <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                     <div class="tr-text">${item.tr}</div>
                   </div>
                 `).join('')}
@@ -10877,6 +11091,7 @@
                     <span class="speaker-icon">🔊</span>
                     <div class="tile-icon">${item.icon}</div>
                     <div class="en-text">${item.en}</div>
+                    <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                     <div class="tr-text">${item.tr}</div>
                   </div>
                 `).join('')}
@@ -10961,21 +11176,25 @@
               <div class="word-tile" onclick="speakText('a baby')">
                 <div class="tile-icon">👶</div>
                 <div class="en-text">a baby ✓</div>
+                <div class="phonetic-text">🗣️ Okunuşu: E bey-bi</div>
                 <div class="tr-text">Bebek</div>
               </div>
               <div class="word-tile" onclick="speakText('a grandfather')">
                 <div class="tile-icon">👴</div>
                 <div class="en-text">a grandfather ✓</div>
+                <div class="phonetic-text">🗣️ Okunuşu: E grend-fa-dır</div>
                 <div class="tr-text">Büyükbaba / Dede</div>
               </div>
               <div class="word-tile" onclick="speakText('a sister')">
                 <div class="tile-icon">👧</div>
                 <div class="en-text">a sister ✓</div>
+                <div class="phonetic-text">🗣️ Okunuşu: E sis-tır</div>
                 <div class="tr-text">Kız Kardeş</div>
               </div>
               <div class="word-tile" onclick="speakText('a father')">
                 <div class="tile-icon">👨</div>
                 <div class="en-text">a father ✓</div>
+                <div class="phonetic-text">🗣️ Okunuşu: E fa-dır</div>
                 <div class="tr-text">Baba</div>
               </div>
             </div>
@@ -11091,6 +11310,7 @@
                 <div class="word-tile" onclick="speakText('${w.en}')">
                   <div class="tile-icon">${w.icon}</div>
                   <div class="en-text">${w.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(w.en)}</div>
                   <div class="tr-text">${w.tr}</div>
                 </div>
               `).join('')}
@@ -11261,6 +11481,7 @@
                   <span class="speaker-icon">🔊</span>
                   <div class="tile-icon">${item.icon}</div>
                   <div class="en-text">${item.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                   <div class="tr-text">${item.tr}</div>
                 </div>
               `).join('')}
@@ -11276,7 +11497,7 @@
             </div>
             <p style="color:var(--muted);font-size:13px;">Soruyu dinleyin ve doğru vücut bölümüne dokunun.</p>
             <div style="text-align:center;margin:16px 0;">
-              <button class="action-btn" onclick="speakText('Touch your nose')">🔊 "Touch your nose" Dinle</button>
+              <button class="action-btn" onclick="speakText('Touch your nose')">🔊 "Touch your nose" (Okunuşu: Taç yor noz) Dinle</button>
             </div>
             <div id="page26Feedback"></div>
             <div class="word-grid">
@@ -11289,6 +11510,7 @@
                 <div class="word-tile" onclick="checkPage26(${!!opt.correct}, '${opt.en}')">
                   <div class="tile-icon">${opt.icon}</div>
                   <div class="en-text">${opt.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(opt.en)}</div>
                   <div class="tr-text">${opt.tr}</div>
                 </div>
               `).join('')}
@@ -11302,13 +11524,14 @@
               <div class="card-title">👗 Sayfa 27: Clothes & Accessories (Giysiler)</div>
               <button class="reset-btn" onclick="renderUnit3()">🔄 Dersi Sıfırla</button>
             </div>
-            <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Giysi ve aksesuarlarımızın İngilizcelerini öğrenelim. Dinlemek için dokunun.</p>
+            <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Giysi ve aksesuarlarımızın İngilizcelerini ve okunuşlarını öğrenelim. Dinlemek için dokunun.</p>
             <div class="word-grid">
               ${u3Clothes.map(item => `
                 <div class="word-tile" onclick="speakText('${item.en}')">
                   <span class="speaker-icon">🔊</span>
                   <div class="tile-icon">${item.icon}</div>
                   <div class="en-text">${item.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                   <div class="tr-text">${item.tr}</div>
                 </div>
               `).join('')}
@@ -11322,7 +11545,7 @@
               <div class="card-title">🧩 Sayfa 28: Order the Words (Cümle Kurma)</div>
               <button class="reset-btn" onclick="resetPage28()">🔄 Baştan Başla</button>
             </div>
-            <p style="color:var(--muted);font-size:13px;">Kelimeleri sırayla seçerek doğru cümleyi kurun: <b>"Bu benim şapkam."</b></p>
+            <p style="color:var(--muted);font-size:13px;">Kelimeleri sırayla seçerek doğru cümleyi kurun: <b>"Bu benim şapkam."</b> (🗣️ Okunuşu: <b>Dis iz may het.</b>)</p>
             
             <div style="margin:14px 0;">
               <span style="font-size:12px;color:var(--muted)">Oluşturulan Cümle:</span>
@@ -11366,7 +11589,7 @@
               <button class="option-btn" style="flex:1" onclick="alertGiraffe(true)">Tall (Uzun) ✅</button>
               <button class="option-btn" style="flex:1" onclick="alertGiraffe(false)">Short (Kısa) ❌</button>
             </div>
-            <div id="p29Feedback" style="margin-top:12px;"></div>
+            <div id="p29Feedback" style="margin-top:10px;"></div>
           </div>
         `;
       } else if (currentUnit3Page === 30) {
@@ -11381,16 +11604,19 @@
               <div class="word-tile" onclick="speakText('It is cold. Wear your coat.')">
                 <div class="tile-icon">🥶</div>
                 <div class="en-text">It is cold</div>
+                <div class="phonetic-text">🗣️ Okunuşu: İt iz kold</div>
                 <div class="tr-text">Wear a coat 🧥</div>
               </div>
               <div class="word-tile" onclick="speakText('It is hot and sunny. Wear your hat.')">
                 <div class="tile-icon">☀️</div>
                 <div class="en-text">It is sunny</div>
+                <div class="phonetic-text">🗣️ Okunuşu: İt iz sa-ni</div>
                 <div class="tr-text">Wear a hat 🧢</div>
               </div>
               <div class="word-tile" onclick="speakText('It is rainy. Take an umbrella.')">
                 <div class="tile-icon">🌧️</div>
                 <div class="en-text">It is rainy</div>
+                <div class="phonetic-text">🗣️ Okunuşu: İt iz rey-ni</div>
                 <div class="tr-text">Take umbrella ☂️</div>
               </div>
             </div>
@@ -11573,6 +11799,7 @@
                   <span class="speaker-icon">🔊</span>
                   <div class="tile-icon">${item.icon}</div>
                   <div class="en-text">${item.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                   <div class="tr-text">${item.tr}</div>
                 </div>
               `).join('')}
@@ -11599,6 +11826,7 @@
                   <span class="speaker-icon">🔊</span>
                   <div class="tile-icon">${item.icon}</div>
                   <div class="en-text">${item.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                   <div class="tr-text">${item.tr}</div>
                 </div>
               `).join('')}
@@ -11615,7 +11843,8 @@
             <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Nesneleri sayalım ve cevaplayalım:</p>
             <div style="background:#0f172a;padding:16px;border-radius:12px;border:1px solid var(--border);text-align:center;">
               <div style="font-size:32px;letter-spacing:6px;margin-bottom:8px;">✏️ ✏️ ✏️ ✏️ ✏️</div>
-              <p style="font-weight:bold;margin-bottom:12px;">"How many pencils?" (Kaç kurşun kalem var?)</p>
+              <p style="font-weight:bold;margin-bottom:4px;">"How many pencils?" (Kaç kurşun kalem var?)</p>
+              <p style="font-size:12px;color:#fde047;font-weight:800;margin-bottom:12px;">🗣️ Okunuşu: Hav me-ni pen-sıls?</p>
               <div style="display:flex;gap:10px;justify-content:center;">
                 <button class="option-btn" style="padding:10px 20px;" onclick="checkCount(3, false)">3</button>
                 <button class="option-btn" style="padding:10px 20px;" onclick="checkCount(5, true)">5</button>
@@ -11632,7 +11861,7 @@
               <div class="card-title">🌸 Sayfa 21: Flower Password (Çiçek Şifresi)</div>
               <button class="reset-btn" onclick="renderUnit2()">🔄 Dersi Sıfırla</button>
             </div>
-            <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">Çiçek yapraklarındaki harfleri birleştirip gizli kelimeyi bulun: <b>S - C - H - O - O - L</b></p>
+            <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">Çiçek yapraklarındaki harfleri birleştirip gizli kelimeyi bulun: <b>S - C - H - O - O - L</b> (🗣️ Okunuşu: <b>Skuul</b>)</p>
             <div style="text-align:center;padding:16px;background:#0f172a;border-radius:12px;border:1px solid var(--border);">
               <div style="font-size:40px;margin-bottom:8px;">🌸 🔑</div>
               <p style="font-size:20px;font-weight:bold;color:#38bdf8;letter-spacing:4px;">_ C H O O L</p>
@@ -11660,6 +11889,7 @@
                   <span class="speaker-icon">🔊</span>
                   <div class="tile-icon">${item.icon}</div>
                   <div class="en-text">${item.en}</div>
+                  <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(item.en)}</div>
                   <div class="tr-text">${item.tr}</div>
                 </div>
               `).join('')}
@@ -11742,6 +11972,7 @@
                   <span style="font-weight:bold;color:var(--accent);width:24px;">${idx + 1}.</span>
                   <div>
                     <span style="font-weight:bold;font-size:15px;color:#fff;">${d.en}</span>
+                    <span style="font-size:11px;font-weight:800;color:#fde047;margin-left:6px;">[🗣️ Okunuşu: ${getEnPhonetic(d.en)}]</span>
                     <span style="font-size:12px;color:var(--muted);margin-left:6px;">(${d.tr})</span>
                   </div>
                   <button style="background:none;border:none;cursor:pointer;font-size:14px;" onclick="speakText('${d.en}')">🔊</button>
@@ -13241,7 +13472,7 @@
               </div>
             </div>
           ` : `
-            <!-- ÇOKTAN SEÇMELİ SORU (TÜRKÇE AÇIKLAMALI ŞIKLAR) -->
+            <!-- ÇOKTAN SEÇMELİ SORU (TÜRKÇE AÇIKLAMALI VE OKUNUŞLU ŞIKLAR) -->
             <div style="background:#0f172a;border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:18px;text-align:center;">
               <div style="font-size:14px;color:var(--muted);margin-bottom:6px;">${q.prompt}</div>
               <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;">
@@ -13250,6 +13481,11 @@
                   🔊
                 </button>
               </div>
+              ${q.audioText ? `
+                <div style="margin-top:6px;display:inline-block;background:rgba(253,224,71,0.14);border:1px solid rgba(253,224,71,0.35);color:#fde047;font-size:12px;font-weight:800;padding:3px 12px;border-radius:999px;">
+                  🗣️ İngilizce Okunuşu: [ ${q.phonetic || getEnPhonetic(q.audioText)} ]
+                </div>
+              ` : ''}
             </div>
 
             <!-- ŞIKLAR (SEÇENEKLER) -->
@@ -13524,8 +13760,11 @@
             <div class="flashcard">
               <div style="font-size:48px;margin-bottom:8px;">${card.icon || '📖'}</div>
               <h2 style="font-size:24px;color:#38bdf8;">${flashcardFlipped ? card.tr : card.en}</h2>
-              <p style="font-size:12px;color:var(--muted);margin-top:6px;">
-                ${flashcardFlipped ? 'İngilizcesi: ' + card.en : 'Dokununca Türkçesini gösterir'}
+              <div style="margin-top:8px;display:inline-block;background:rgba(253,224,71,0.15);border:1px solid rgba(253,224,71,0.4);color:#fde047;font-size:13px;font-weight:900;padding:4px 12px;border-radius:999px;">
+                🗣️ Okunuşu: ${getEnPhonetic(card.en)}
+              </div>
+              <p style="font-size:12px;color:var(--muted);margin-top:8px;">
+                ${flashcardFlipped ? 'İngilizcesi: ' + card.en : 'Dokununca Türkçesini gösterir (' + card.tr + ')'}
               </p>
             </div>
           </div>
@@ -13568,13 +13807,14 @@
             <div class="card-title">📖 Haftanın Günleri Telaffuz & Bilgi Rehberi</div>
             <button class="reset-btn" onclick="renderDaysGuide()">🔄 Yenile</button>
           </div>
-          <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Her güne tıklayarak doğru telaffuzunu dinleyebilirsiniz.</p>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Her güne tıklayarak doğru telaffuzunu dinleyebilir ve altındaki Türkçe okunuşunu okuyabilirsiniz.</p>
           <div class="word-grid">
             ${correctDaysOrder.map((d, idx) => `
               <div class="word-tile" onclick="speakText('${d.en}')">
                 <span class="speaker-icon">🔊</span>
                 <div class="tile-icon">📅</div>
                 <div class="en-text">${idx + 1}. ${d.en}</div>
+                <div class="phonetic-text">🗣️ Okunuşu: ${getEnPhonetic(d.en)}</div>
                 <div class="tr-text">${d.tr}</div>
               </div>
             `).join('')}
@@ -14583,7 +14823,12 @@
           </div>
 
           <div style="font-size:18px;font-weight:900;color:#fff;line-height:1.45;margin-bottom:16px;padding:14px;background:rgba(255,255,255,0.05);border-radius:14px;border:1px solid rgba(255,255,255,0.1);">
-            ${cur.q}
+            <div>${cur.q}</div>
+            ${cur.speakEn ? `
+              <div style="margin-top:8px;display:inline-block;background:rgba(253,224,71,0.14);border:1px solid rgba(253,224,71,0.35);color:#fde047;font-size:12px;font-weight:800;padding:4px 12px;border-radius:999px;">
+                🗣️ İngilizce Okunuşu: "${cur.speakEn}" ➔ [ ${getEnPhonetic(cur.speakEn)} ]
+              </div>
+            ` : ''}
           </div>
 
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
@@ -14688,24 +14933,25 @@
       }
 
       const toysVocab = [
-        { en: 'ball', tr: 'Top', icon: '⚽', ex: 'It is a round ball.' },
-        { en: 'doll', tr: 'Oyuncak Bebek', icon: '🪆', ex: 'I have got a doll.' },
-        { en: 'teddy bear', tr: 'Oyuncak Ayı', icon: '🧸', ex: 'My brown teddy bear.' },
-        { en: 'kite', tr: 'Uçurtma', icon: '🪁', ex: 'Fly a colorful kite!' },
-        { en: 'robot', tr: 'Robot', icon: '🤖', ex: 'This is my blue robot.' },
-        { en: 'car', tr: 'Oyuncak Araba', icon: '🚗', ex: 'A fast red car.' },
-        { en: 'train', tr: 'Oyuncak Tren', icon: '🚂', ex: 'A long green train.' },
-        { en: 'plane', tr: 'Oyuncak Uçak', icon: '✈️', ex: 'A white plane.' },
-        { en: 'blocks', tr: 'Oyun Blokları / Lego', icon: '🧱', ex: 'Let\'s play with blocks!' },
-        { en: 'chess', tr: 'Satranç', icon: '♟️', ex: 'Let\'s play chess!' },
-        { en: 'marbles', tr: 'Misket / Bilye', icon: '🔮', ex: 'Five glass marbles.' },
-        { en: 'computer game', tr: 'Bilgisayar Oyunu', icon: '🎮', ex: 'Play a game.' }
+        { en: 'ball', read: 'Bol', tr: 'Top', icon: '⚽', ex: 'It is a round ball.', exRead: 'İt iz e raund bol.' },
+        { en: 'doll', read: 'Dol', tr: 'Oyuncak Bebek', icon: '🪆', ex: 'I have got a doll.', exRead: 'Ay hev gat e dol.' },
+        { en: 'teddy bear', read: 'Te-di beır', tr: 'Oyuncak Ayı', icon: '🧸', ex: 'My brown teddy bear.', exRead: 'May bravn te-di beır.' },
+        { en: 'kite', read: 'Kayt', tr: 'Uçurtma', icon: '🪁', ex: 'Fly a colorful kite!', exRead: 'Flay e ka-lır-ful kayt!' },
+        { en: 'robot', read: 'Ro-bot', tr: 'Robot', icon: '🤖', ex: 'This is my blue robot.', exRead: 'Dis iz may blu ro-bot.' },
+        { en: 'car', read: 'Kar', tr: 'Oyuncak Araba', icon: '🚗', ex: 'A fast red car.', exRead: 'E fest red kar.' },
+        { en: 'train', read: 'Treyn', tr: 'Oyuncak Tren', icon: '🚂', ex: 'A long green train.', exRead: 'E long griin treyn.' },
+        { en: 'plane', read: 'Pleyn', tr: 'Oyuncak Uçak', icon: '✈️', ex: 'A white plane.', exRead: 'E vayt pleyn.' },
+        { en: 'blocks', read: 'Bloks', tr: 'Oyun Blokları / Lego', icon: '🧱', ex: 'Let\'s play with blocks!', exRead: 'Lets pley vit bloks!' },
+        { en: 'chess', read: 'Çes', tr: 'Satranç', icon: '♟️', ex: 'Let\'s play chess!', exRead: 'Lets pley çes!' },
+        { en: 'marbles', read: 'Mar-bıls', tr: 'Misket / Bilye', icon: '🔮', ex: 'Five glass marbles.', exRead: 'Fayv glas mar-bıls.' },
+        { en: 'computer game', read: 'Kom-pü-tır geym', tr: 'Bilgisayar Oyunu', icon: '🎮', ex: 'Play a game.', exRead: 'Pley e geym.' }
       ];
 
       const pluralToy = toyBoxSelectedCount.num > 1 ? (toyBoxSelectedToy.en === 'chess' ? 'chess sets' : toyBoxSelectedToy.en + 's') : toyBoxSelectedToy.en;
       const builtSentenceEn = toyBoxSelectedCount.num === 1
         ? `I have got one ${toyBoxSelectedColor.en} ${toyBoxSelectedToy.en}.`
         : `There are ${toyBoxSelectedCount.en} ${toyBoxSelectedColor.en} ${pluralToy}.`;
+      const builtSentenceRead = getEnPhonetic(builtSentenceEn);
       const builtSentenceTr = toyBoxSelectedCount.num === 1
         ? `Benim bir tane ${toyBoxSelectedColor.tr} ${toyBoxSelectedToy.tr} oyuncağım var.`
         : `Burada ${toyBoxSelectedCount.tr} (${toyBoxSelectedCount.num}) tane ${toyBoxSelectedColor.tr} ${toyBoxSelectedToy.tr} var.`;
@@ -14724,86 +14970,96 @@
             </button>
           </div>
           <p style="font-size:13px;color:#e2e8f0;margin:0 0 14px;">
-            Kartlara dokunarak oyuncakların İngilizce okunuşlarını dinle! Ardından aşağıdaki <strong>İnteraktif Oyuncak Kutusu</strong> ile kendi İngilizce cümleni kur!
+            Kartlara dokunarak oyuncakların İngilizce telaffuzlarını dinle ve <strong>🗣️ Okunuşu</strong> satırından nasıl okunduğunu öğren! Ardından aşağıdaki <strong>İnteraktif Oyuncak Kutusu</strong> ile kendi İngilizce cümleni kur!
           </p>
 
-          <!-- SESLİ KELİME KARTLARI -->
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;margin-bottom:18px;">
+          <!-- SESLİ VE OKUNUŞLU KELİME KARTLARI -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px;margin-bottom:18px;">
             ${toysVocab.map(item => `
               <div onclick="speakText('${item.en}. ${item.ex}')" style="background:#1e293b;border:1.5px solid rgba(245,158,11,0.4);border-radius:14px;padding:12px;text-align:center;cursor:pointer;transition:transform 0.15s;">
                 <div style="font-size:36px;margin-bottom:4px;">${item.icon}</div>
                 <div style="font-size:15px;font-weight:900;color:#fde047;">${item.en} 🔊</div>
-                <div style="font-size:12px;color:#cbd5e1;font-weight:700;margin-top:2px;">${item.tr}</div>
-                <div style="font-size:11px;color:#94a3b8;margin-top:4px;font-style:italic;">"${item.ex}"</div>
+                <div style="display:inline-block;background:rgba(253,224,71,0.14);border:1px solid rgba(253,224,71,0.35);color:#fde047;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;margin:4px 0;">
+                  🗣️ Okunuşu: ${item.read}
+                </div>
+                <div style="font-size:12px;color:#fff;font-weight:800;margin-top:2px;">🇹🇷 ${item.tr}</div>
+                <div style="font-size:11px;color:#94a3b8;margin-top:5px;font-style:italic;">"${item.ex}"</div>
+                <div style="font-size:10px;color:#38bdf8;font-weight:700;margin-top:2px;">📖 (${item.exRead})</div>
               </div>
             `).join('')}
           </div>
 
-          <!-- ÖNEMLİ SORU KALIPLARI -->
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:18px;">
+          <!-- ÖNEMLİ SORU KALIPLARI (OKUNUŞLU) -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;margin-bottom:18px;">
             <div style="background:#0f172a;padding:12px;border-radius:12px;border-left:4px solid #38bdf8;cursor:pointer;" onclick="speakText('How many kites are there? There are three kites.')">
               <div style="font-size:12px;color:#38bdf8;font-weight:900;">1. KAÇ TANE VAR? (HOW MANY...?) 🔊</div>
               <div style="font-size:14px;color:#fff;font-weight:800;margin-top:4px;">— How many kites are there?</div>
-              <div style="font-size:13px;color:#6ee7b7;font-weight:800;">— There are three kites. (3 uçurtma var.)</div>
+              <div style="font-size:11px;color:#fde047;font-weight:800;">🗣️ Okunuşu: Hav me-ni kayts ar der?</div>
+              <div style="font-size:13px;color:#6ee7b7;font-weight:800;margin-top:4px;">— There are three kites. (3 uçurtma var.)</div>
+              <div style="font-size:11px;color:#fde047;font-weight:800;">🗣️ Okunuşu: Der ar trii kayts.</div>
             </div>
             <div style="background:#0f172a;padding:12px;border-radius:12px;border-left:4px solid #ec4899;cursor:pointer;" onclick="speakText('What color is your ball? It is yellow and blue.')">
               <div style="font-size:12px;color:#f472b6;font-weight:900;">2. NE RENK? (WHAT COLOR IS IT?) 🔊</div>
               <div style="font-size:14px;color:#fff;font-weight:800;margin-top:4px;">— What color is your ball?</div>
-              <div style="font-size:13px;color:#fbcfe8;font-weight:800;">— It is yellow and blue. (O sarı ve mavidir.)</div>
+              <div style="font-size:11px;color:#fde047;font-weight:800;">🗣️ Okunuşu: Vat ka-lır iz yor bol?</div>
+              <div style="font-size:13px;color:#fbcfe8;font-weight:800;margin-top:4px;">— It is yellow and blue. (O sarı ve mavidir.)</div>
+              <div style="font-size:11px;color:#fde047;font-weight:800;">🗣️ Okunuşu: İt iz ye-lo end blu.</div>
             </div>
             <div style="background:#0f172a;padding:12px;border-radius:12px;border-left:4px solid #10b981;cursor:pointer;" onclick="speakText('Have you got a teddy bear? Yes, I have!')">
               <div style="font-size:12px;color:#6ee7b7;font-weight:900;">3. SENDE VAR MI? (HAVE YOU GOT...?) 🔊</div>
               <div style="font-size:14px;color:#fff;font-weight:800;margin-top:4px;">— Have you got a teddy bear?</div>
-              <div style="font-size:13px;color:#fde047;font-weight:800;">— Yes, I have! / No, I haven't.</div>
+              <div style="font-size:11px;color:#fde047;font-weight:800;">🗣️ Okunuşu: Hev yu gat e te-di beır?</div>
+              <div style="font-size:13px;color:#fde047;font-weight:800;margin-top:4px;">— Yes, I have! / No, I haven't.</div>
+              <div style="font-size:11px;color:#38bdf8;font-weight:800;">🗣️ Okunuşu: Yes, ay hev! / No, ay he-vınt.</div>
             </div>
           </div>
 
           <!-- İNTERAKTİF OYUNCAK KUTUSU VE CÜMLE KURMA ATÖLYESİ -->
           <div style="background:#0f172a;padding:16px;border-radius:16px;border:2px solid #38bdf8;">
-            <h4 style="color:#38bdf8;margin:0 0 8px;font-size:16px;font-weight:900;">🎨 İnteraktif Oyuncak Kutusu: Sayı + Renk + Oyuncak Seç ve İngilizce Söylet!</h4>
+            <h4 style="color:#38bdf8;margin:0 0 8px;font-size:16px;font-weight:900;">🎨 İnteraktif Oyuncak Kutusu: Sayı + Renk + Oyuncak Seç ve İngilizce Okunuşunu Gör!</h4>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px;">
               <div>
-                <div style="font-size:12px;color:#94a3b8;font-weight:800;margin-bottom:6px;">1️⃣ Kaç Tane? (How many?)</div>
+                <div style="font-size:12px;color:#94a3b8;font-weight:800;margin-bottom:6px;">1️⃣ Kaç Tane? (How many? - Hav me-ni?)</div>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;">
                   ${[
-                    {n:1,en:'one',tr:'bir'},{n:2,en:'two',tr:'iki'},{n:3,en:'three',tr:'üç'},
-                    {n:4,en:'four',tr:'dört'},{n:5,en:'five',tr:'beş'},{n:6,en:'six',tr:'altı'}
+                    {n:1,en:'one',read:'van',tr:'bir'},{n:2,en:'two',read:'tu',tr:'iki'},{n:3,en:'three',read:'trii',tr:'üç'},
+                    {n:4,en:'four',read:'for',tr:'dört'},{n:5,en:'five',read:'fayv',tr:'beş'},{n:6,en:'six',read:'siks',tr:'altı'}
                   ].map(c => `
                     <button class="action-btn" style="background:${toyBoxSelectedCount.num===c.n?'#f59e0b':'#1e293b'};color:${toyBoxSelectedCount.num===c.n?'#0f172a':'#fff'};padding:6px 10px;font-size:12px;font-weight:900;" onclick="selectToyBoxCount(${c.n},'${c.en}','${c.tr}')">
-                      ${c.n} (${c.en})
+                      ${c.n} ${c.en} (${c.read})
                     </button>
                   `).join('')}
                 </div>
               </div>
               <div>
-                <div style="font-size:12px;color:#94a3b8;font-weight:800;margin-bottom:6px;">2️⃣ Hangi Renk? (What color?)</div>
+                <div style="font-size:12px;color:#94a3b8;font-weight:800;margin-bottom:6px;">2️⃣ Hangi Renk? (What color? - Vat ka-lır?)</div>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;">
                   ${[
-                    {en:'red',tr:'kırmızı',hex:'#ef4444'},
-                    {en:'blue',tr:'mavi',hex:'#3b82f6'},
-                    {en:'yellow',tr:'sarı',hex:'#eab308'},
-                    {en:'green',tr:'yeşil',hex:'#10b981'},
-                    {en:'pink',tr:'pembe',hex:'#ec4899'}
+                    {en:'red',read:'red',tr:'kırmızı',hex:'#ef4444'},
+                    {en:'blue',read:'blu',tr:'mavi',hex:'#3b82f6'},
+                    {en:'yellow',read:'ye-lo',tr:'sarı',hex:'#eab308'},
+                    {en:'green',read:'griin',tr:'yeşil',hex:'#10b981'},
+                    {en:'pink',read:'pink',tr:'pembe',hex:'#ec4899'}
                   ].map(col => `
                     <button class="action-btn" style="background:${col.hex};color:#fff;border:${toyBoxSelectedColor.en===col.en?'3px solid #fff':'1px solid transparent'};padding:6px 10px;font-size:12px;font-weight:900;" onclick="selectToyBoxColor('${col.en}','${col.tr}','${col.hex}')">
-                      ${col.en}
+                      ${col.en} (${col.read})
                     </button>
                   `).join('')}
                 </div>
               </div>
               <div>
-                <div style="font-size:12px;color:#94a3b8;font-weight:800;margin-bottom:6px;">3️⃣ Hangi Oyuncak? (Which toy?)</div>
+                <div style="font-size:12px;color:#94a3b8;font-weight:800;margin-bottom:6px;">3️⃣ Hangi Oyuncak? (Which toy? - Viç toy?)</div>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;">
                   ${[
-                    {en:'ball',tr:'top',icon:'⚽'},
-                    {en:'doll',tr:'bebek',icon:'🪆'},
-                    {en:'kite',tr:'uçurtma',icon:'🪁'},
-                    {en:'robot',tr:'robot',icon:'🤖'},
-                    {en:'car',tr:'araba',icon:'🚗'},
-                    {en:'teddy bear',tr:'oyuncak ayı',icon:'🧸'}
+                    {en:'ball',read:'bol',tr:'top',icon:'⚽'},
+                    {en:'doll',read:'dol',tr:'bebek',icon:'🪆'},
+                    {en:'kite',read:'kayt',tr:'uçurtma',icon:'🪁'},
+                    {en:'robot',read:'ro-bot',tr:'robot',icon:'🤖'},
+                    {en:'car',read:'kar',tr:'araba',icon:'🚗'},
+                    {en:'teddy bear',read:'te-di beır',tr:'oyuncak ayı',icon:'🧸'}
                   ].map(t => `
                     <button class="action-btn" style="background:${toyBoxSelectedToy.en===t.en?'#38bdf8':'#1e293b'};color:${toyBoxSelectedToy.en===t.en?'#0f172a':'#fff'};padding:6px 10px;font-size:12px;font-weight:900;" onclick="selectToyBoxItem('${t.en}','${t.tr}','${t.icon}')">
-                      ${t.icon} ${t.en}
+                      ${t.icon} ${t.en} (${t.read})
                     </button>
                   `).join('')}
                 </div>
@@ -14815,7 +15071,10 @@
                 ${toyBoxSelectedToy.icon.repeat(toyBoxSelectedCount.num)}
               </div>
               <div style="font-size:19px;font-weight:900;color:#fde047;">"${builtSentenceEn}"</div>
-              <div style="font-size:13px;color:#cbd5e1;margin-top:4px;">🇹🇷 ${builtSentenceTr}</div>
+              <div style="margin-top:5px;display:inline-block;background:rgba(56,189,248,0.16);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;font-size:13px;font-weight:900;padding:4px 12px;border-radius:999px;">
+                🗣️ Okunuşu: "${builtSentenceRead}"
+              </div>
+              <div style="font-size:13px;color:#cbd5e1;margin-top:6px;">🇹🇷 ${builtSentenceTr}</div>
               <div style="margin-top:10px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
                 <button class="action-btn" style="background:#2563eb;color:#fff;font-weight:900;padding:8px 16px;" onclick="speakText('${builtSentenceEn}')">
                   🔊 Cümleyi İngilizce Dinle
@@ -14854,22 +15113,24 @@
       }
 
       const animalsList = [
-        { en: 'cat', tr: 'Kedi', icon: '🐱', abilityEn: 'climb a tree', abilityTr: 'ağaca tırmanabilir' },
-        { en: 'dog', tr: 'Köpek', icon: '🐶', abilityEn: 'run fast', abilityTr: 'hızlı koşabilir' },
-        { en: 'bird', tr: 'Kuş', icon: '🐦', abilityEn: 'fly in the sky', abilityTr: 'gökyüzünde uçabilir' },
-        { en: 'fish', tr: 'Balık', icon: '🐟', abilityEn: 'swim in the water', abilityTr: 'suda yüzebilir' },
-        { en: 'rabbit', tr: 'Tavşan', icon: '🐰', abilityEn: 'jump high', abilityTr: 'yükseğe zıplayabilir' },
-        { en: 'turtle', tr: 'Kaplumbağa', icon: '🐢', abilityEn: 'walk slowly', abilityTr: 'yavaş yürüyebilir' },
-        { en: 'frog', tr: 'Kurbağa', icon: '🐸', abilityEn: 'jump and swim', abilityTr: 'zıplayabilir ve yüzebilir' },
-        { en: 'horse', tr: 'At', icon: '🐎', abilityEn: 'run very fast', abilityTr: 'çok hızlı koşabilir' },
-        { en: 'cow', tr: 'İnek', icon: '🐄', abilityEn: 'give milk', abilityTr: 'süt verir' },
-        { en: 'duck', tr: 'Ördek', icon: '🦆', abilityEn: 'swim in the lake', abilityTr: 'gölde yüzebilir' },
-        { en: 'monkey', tr: 'Maymun', icon: '🐒', abilityEn: 'climb trees', abilityTr: 'ağaçlara tırmanabilir' },
-        { en: 'elephant', tr: 'Fil', icon: '🐘', abilityEn: 'walk strongly', abilityTr: 'güçlü yürür' }
+        { en: 'cat', read: 'Ket', tr: 'Kedi', icon: '🐱', abilityEn: 'climb a tree', abilityRead: 'İt ken klaym e trii', abilityTr: 'ağaca tırmanabilir' },
+        { en: 'dog', read: 'Dog', tr: 'Köpek', icon: '🐶', abilityEn: 'run fast', abilityRead: 'İt ken ran fest', abilityTr: 'hızlı koşabilir' },
+        { en: 'bird', read: 'Börd', tr: 'Kuş', icon: '🐦', abilityEn: 'fly in the sky', abilityRead: 'İt ken flay in dı skay', abilityTr: 'gökyüzünde uçabilir' },
+        { en: 'fish', read: 'Fiş', tr: 'Balık', icon: '🐟', abilityEn: 'swim in the water', abilityRead: 'İt ken svim in dı vo-tır', abilityTr: 'suda yüzebilir' },
+        { en: 'rabbit', read: 'Re-bit', tr: 'Tavşan', icon: '🐰', abilityEn: 'jump high', abilityRead: 'İt ken camp hay', abilityTr: 'yükseğe zıplayabilir' },
+        { en: 'turtle', read: 'Tör-tıl', tr: 'Kaplumbağa', icon: '🐢', abilityEn: 'walk slowly', abilityRead: 'İt ken volk slov-li', abilityTr: 'yavaş yürüyebilir' },
+        { en: 'frog', read: 'Frog', tr: 'Kurbağa', icon: '🐸', abilityEn: 'jump and swim', abilityRead: 'İt ken camp end svim', abilityTr: 'zıplayabilir ve yüzebilir' },
+        { en: 'horse', read: 'Hors', tr: 'At', icon: '🐎', abilityEn: 'run very fast', abilityRead: 'İt ken ran ve-ri fest', abilityTr: 'çok hızlı koşabilir' },
+        { en: 'cow', read: 'Kav', tr: 'İnek', icon: '🐄', abilityEn: 'give milk', abilityRead: 'İt ken giv milk', abilityTr: 'süt verir' },
+        { en: 'duck', read: 'Dak', tr: 'Ördek', icon: '🦆', abilityEn: 'swim in the lake', abilityRead: 'İt ken svim in dı leyk', abilityTr: 'gölde yüzebilir' },
+        { en: 'monkey', read: 'Man-ki', tr: 'Maymun', icon: '🐒', abilityEn: 'climb trees', abilityRead: 'İt ken klaym triiz', abilityTr: 'ağaçlara tırmanabilir' },
+        { en: 'elephant', read: 'E-li-fınt', tr: 'Fil', icon: '🐘', abilityEn: 'walk strongly', abilityRead: 'İt ken volk strong-li', abilityTr: 'güçlü yürür' }
       ];
 
       const locSentenceEn = `Where is the ${petStageAnimal.en}? It is ${petStagePrep.en} the box!`;
+      const locSentenceRead = getEnPhonetic(locSentenceEn);
       const abilitySentenceEn = `The ${petStageAnimal.en} can ${petStageAnimal.abilityEn}.`;
+      const abilitySentenceRead = getEnPhonetic(abilitySentenceEn);
 
       const html = `
         ${getEngExtraNavBarHtml('eng_animals_pets', 'My Pet & Animals', '#10b981')}
@@ -14885,16 +15146,20 @@
             </button>
           </div>
           <p style="font-size:13px;color:#e2e8f0;margin:0 0 14px;">
-            Hayvan kartlarına dokunarak telaffuzlarını ve neler yapabildiklerini (<strong>can fly / can swim / can jump</strong>) dinle!
+            Hayvan kartlarına dokunarak telaffuzlarını dinle, <strong>🗣️ Okunuşu</strong> satırından nasıl okunduğunu gör ve neler yapabildiklerini (<strong>can fly / can swim / can jump</strong>) öğren!
           </p>
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;margin-bottom:18px;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px;margin-bottom:18px;">
             ${animalsList.map(a => `
               <div onclick="selectPetStageAnimal('${a.en}','${a.tr}','${a.icon}','${a.abilityEn}','${a.abilityTr}')" style="background:#1e293b;border:2px solid ${petStageAnimal.en===a.en?'#10b981':'rgba(16,185,129,0.35)'};border-radius:14px;padding:12px;text-align:center;cursor:pointer;">
                 <div style="font-size:36px;margin-bottom:4px;">${a.icon}</div>
                 <div style="font-size:15px;font-weight:900;color:#6ee7b7;">${a.en} 🔊</div>
-                <div style="font-size:12px;color:#fff;font-weight:700;">${a.tr}</div>
-                <div style="font-size:11px;color:#fde047;margin-top:4px;">It can ${a.abilityEn}</div>
+                <div style="display:inline-block;background:rgba(253,224,71,0.14);border:1px solid rgba(253,224,71,0.35);color:#fde047;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;margin:4px 0;">
+                  🗣️ Okunuşu: ${a.read}
+                </div>
+                <div style="font-size:12px;color:#fff;font-weight:800;">🇹🇷 ${a.tr}</div>
+                <div style="font-size:11px;color:#fde047;margin-top:4px;">"It can ${a.abilityEn}"</div>
+                <div style="font-size:10px;color:#38bdf8;font-weight:700;margin-top:2px;">📖 (${a.abilityRead})</div>
               </div>
             `).join('')}
           </div>
@@ -14903,17 +15168,17 @@
           <div style="background:#0f172a;padding:16px;border-radius:16px;border:2px solid #f59e0b;">
             <h4 style="color:#fde047;margin:0 0 8px;font-size:16px;font-weight:900;">📦 İnteraktif "Where is the ${petStageAnimal.en}?" (In / On / Under) Sahnesi</h4>
             <p style="font-size:12px;color:#cbd5e1;margin:0 0 12px;">
-              Aşağıdan bir konum seç (<strong>IN = İçinde</strong>, <strong>ON = Üstünde</strong>, <strong>UNDER = Altında</strong>) ve hayvanın kutuya göre yerini İngilizce dinle!
+              Aşağıdan bir konum seç (<strong>IN [Okunuşu: İn] = İçinde</strong>, <strong>ON [Okunuşu: On] = Üstünde</strong>, <strong>UNDER [Okunuşu: An-dır] = Altında</strong>) ve hayvanın kutuya göre yerini İngilizce dinle!
             </p>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
               <button class="action-btn" style="background:${petStagePrep.en==='in'?'#10b981':'#1e293b'};color:#fff;font-weight:900;padding:9px 16px;" onclick="selectPetStagePrep('in','içinde','Kutunun İÇİNDE!','📦 Kutunun İçinde (IN the box)')">
-                📥 IN (İçinde)
+                📥 IN (Okunuşu: İn • İçinde)
               </button>
               <button class="action-btn" style="background:${petStagePrep.en==='on'?'#f59e0b':'#1e293b'};color:#fff;font-weight:900;padding:9px 16px;" onclick="selectPetStagePrep('on','üstünde','Kutunun ÜSTÜNDE!','📦 Kutunun Üstünde (ON the box)')">
-                ⬆️ ON (Üstünde)
+                ⬆️ ON (Okunuşu: On • Üstünde)
               </button>
               <button class="action-btn" style="background:${petStagePrep.en==='under'?'#ec4899':'#1e293b'};color:#fff;font-weight:900;padding:9px 16px;" onclick="selectPetStagePrep('under','altında','Kutunun ALTINDA!','📦 Kutunun Altında (UNDER the box)')">
-                ⬇️ UNDER (Altında)
+                ⬇️ UNDER (Okunuşu: An-dır • Altında)
               </button>
             </div>
 
@@ -14922,8 +15187,10 @@
                 ${petStagePrep.en === 'on' ? `${petStageAnimal.icon} ⬆️ 📦` : petStagePrep.en === 'in' ? `📦(${petStageAnimal.icon})` : `📦 ⬇️ ${petStageAnimal.icon}`}
               </div>
               <div style="font-size:18px;font-weight:900;color:#6ee7b7;">"${locSentenceEn}"</div>
-              <div style="font-size:15px;font-weight:800;color:#fde047;margin-top:4px;">"${abilitySentenceEn}"</div>
-              <div style="font-size:12px;color:#cbd5e1;margin-top:4px;">
+              <div style="font-size:12px;font-weight:800;color:#38bdf8;margin-top:2px;">🗣️ Okunuşu: "${locSentenceRead}"</div>
+              <div style="font-size:15px;font-weight:800;color:#fde047;margin-top:6px;">"${abilitySentenceEn}"</div>
+              <div style="font-size:12px;font-weight:800;color:#38bdf8;margin-top:2px;">🗣️ Okunuşu: "${abilitySentenceRead}"</div>
+              <div style="font-size:12px;color:#cbd5e1;margin-top:6px;">
                 🇹🇷 ${petStageAnimal.tr} nerede? Kutunun <strong>${petStagePrep.tr}</strong>! (${petStageAnimal.tr} ${petStageAnimal.abilityTr}.)
               </div>
               <div style="margin-top:12px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
@@ -14964,21 +15231,22 @@
       }
 
       const fruitsVocab = [
-        { en: 'apples', single: 'apple', tr: 'Elma', icon: '🍎', ex: 'I like red apples!' },
-        { en: 'bananas', single: 'banana', tr: 'Muz', icon: '🍌', ex: 'Touch the yellow banana.' },
-        { en: 'strawberries', single: 'strawberry', tr: 'Çilek', icon: '🍓', ex: 'Sweet strawberries, yummy!' },
-        { en: 'oranges', single: 'orange', tr: 'Portakal', icon: '🍊', ex: 'Orange juice is yummy.' },
-        { en: 'watermelons', single: 'watermelon', tr: 'Karpuz', icon: '🍉', ex: 'A big green watermelon.' },
-        { en: 'cherries', single: 'cherry', tr: 'Kiraz', icon: '🍒', ex: 'I like cherries.' },
-        { en: 'grapes', single: 'grapes', tr: 'Üzüm', icon: '🍇', ex: 'Purple grapes.' },
-        { en: 'peaches', single: 'peach', tr: 'Şeftali', icon: '🍑', ex: 'A soft peach.' },
-        { en: 'lemons', single: 'lemon', tr: 'Limon', icon: '🍋', ex: 'I don\'t like sour lemons!' },
-        { en: 'milk', single: 'milk', tr: 'Süt', icon: '🥛', ex: 'Drink your milk!' },
-        { en: 'cake', single: 'cake', tr: 'Pasta / Kek', icon: '🎂', ex: 'Yummy birthday cake!' },
-        { en: 'ice cream', single: 'ice cream', tr: 'Dondurma', icon: '🍦', ex: 'Cold ice cream!' }
+        { en: 'apples', single: 'apple', read: 'E-pıl', tr: 'Elma', icon: '🍎', ex: 'I like red apples!', exRead: 'Ay layk red e-pıls!' },
+        { en: 'bananas', single: 'banana', read: 'Ba-na-na', tr: 'Muz', icon: '🍌', ex: 'Touch the yellow banana.', exRead: 'Taç dı ye-lo ba-na-na.' },
+        { en: 'strawberries', single: 'strawberry', read: 'Strov-be-ri', tr: 'Çilek', icon: '🍓', ex: 'Sweet strawberries, yummy!', exRead: 'Sviit strov-be-riz, ya-mi!' },
+        { en: 'oranges', single: 'orange', read: 'O-rınc', tr: 'Portakal', icon: '🍊', ex: 'Orange juice is yummy.', exRead: 'O-rınc cuus iz ya-mi.' },
+        { en: 'watermelons', single: 'watermelon', read: 'Vo-tır-me-lın', tr: 'Karpuz', icon: '🍉', ex: 'A big green watermelon.', exRead: 'E big griin vo-tır-me-lın.' },
+        { en: 'cherries', single: 'cherry', read: 'Çe-ri', tr: 'Kiraz', icon: '🍒', ex: 'I like cherries.', exRead: 'Ay layk çe-riz.' },
+        { en: 'grapes', single: 'grapes', read: 'Greyps', tr: 'Üzüm', icon: '🍇', ex: 'Purple grapes.', exRead: 'Pör-pıl greyps.' },
+        { en: 'peaches', single: 'peach', read: 'Piiç', tr: 'Şeftali', icon: '🍑', ex: 'A soft peach.', exRead: 'E soft piiç.' },
+        { en: 'lemons', single: 'lemon', read: 'Le-mın', tr: 'Limon', icon: '🍋', ex: 'I don\'t like sour lemons!', exRead: 'Ay dont layk sa-vır le-mıns!' },
+        { en: 'milk', single: 'milk', read: 'Milk', tr: 'Süt', icon: '🥛', ex: 'Drink your milk!', exRead: 'Drink yor milk!' },
+        { en: 'cake', single: 'cake', read: 'Keyk', tr: 'Pasta / Kek', icon: '🎂', ex: 'Yummy birthday cake!', exRead: 'Ya-mi bört-dey keyk!' },
+        { en: 'ice cream', single: 'ice cream', read: 'Ays kriim', tr: 'Dondurma', icon: '🍦', ex: 'Cold ice cream!', exRead: 'Kold ays kriim!' }
       ];
 
       const plateSentenceEn = `I like ${fruitPlateLiked.en}, yummy! But I don't like ${fruitPlateDisliked.en}, yuck!`;
+      const plateSentenceRead = getEnPhonetic(plateSentenceEn);
 
       const html = `
         ${getEngExtraNavBarHtml('eng_fruits_food', 'Fruits & Likes', '#ec4899')}
@@ -14994,16 +15262,20 @@
             </button>
           </div>
           <p style="font-size:13px;color:#e2e8f0;margin:0 0 14px;">
-            Meyve ve yiyecek kartlarına tıklayarak telaffuzlarını dinle! Sevdiğimiz şeyler için <strong>"I like... Yummy! 😋"</strong>, sevmediklerimiz için <strong>"I don't like... Yuck! 😝"</strong> deriz.
+            Meyve ve yiyecek kartlarına tıklayarak telaffuzlarını dinle ve <strong>🗣️ Okunuşu</strong> satırından nasıl okunduğunu öğren! Sevdiğimiz şeyler için <strong>"I like... Yummy! 😋" (Ay layk... Ya-mi!)</strong>, sevmediklerimiz için <strong>"I don't like... Yuck! 😝" (Ay dont layk... Yak!)</strong> deriz.
           </p>
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:18px;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px;margin-bottom:18px;">
             ${fruitsVocab.map(f => `
               <div onclick="speakText('${f.single}. ${f.ex}')" style="background:#1e293b;border:1.5px solid rgba(236,72,153,0.4);border-radius:14px;padding:12px;text-align:center;cursor:pointer;">
                 <div style="font-size:36px;margin-bottom:4px;">${f.icon}</div>
                 <div style="font-size:15px;font-weight:900;color:#f9a8d4;">${f.single} 🔊</div>
-                <div style="font-size:12px;color:#fff;font-weight:700;">${f.tr}</div>
+                <div style="display:inline-block;background:rgba(253,224,71,0.14);border:1px solid rgba(253,224,71,0.35);color:#fde047;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;margin:4px 0;">
+                  🗣️ Okunuşu: ${f.read}
+                </div>
+                <div style="font-size:12px;color:#fff;font-weight:800;">🇹🇷 ${f.tr}</div>
                 <div style="font-size:11px;color:#cbd5e1;margin-top:4px;font-style:italic;">"${f.ex}"</div>
+                <div style="font-size:10px;color:#38bdf8;font-weight:700;margin-top:2px;">📖 (${f.exRead})</div>
               </div>
             `).join('')}
           </div>
@@ -15013,21 +15285,21 @@
             <h4 style="color:#6ee7b7;margin:0 0 8px;font-size:16px;font-weight:900;">🍽️ İnteraktif "Yummy 😋 &amp; Yuck 😝" Tabak Atölyesi</h4>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:14px;">
               <div style="background:#1e293b;padding:12px;border-radius:12px;border:1.5px solid #10b981;">
-                <div style="font-size:13px;font-weight:900;color:#6ee7b7;margin-bottom:8px;">😋 1. Sevdiğin Meyveyi Seç (I LIKE...):</div>
+                <div style="font-size:13px;font-weight:900;color:#6ee7b7;margin-bottom:8px;">😋 1. Sevdiğin Meyveyi Seç (I LIKE... / Ay layk...):</div>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;">
                   ${fruitsVocab.slice(0, 8).map(f => `
                     <button class="action-btn" style="background:${fruitPlateLiked.en===f.en?'#10b981':'#0f172a'};color:#fff;padding:6px 10px;font-size:12px;font-weight:800;" onclick="selectFruitPlateChoice('like','${f.en}','${f.tr}','${f.icon}')">
-                      ${f.icon} ${f.en}
+                      ${f.icon} ${f.en} (${getEnPhonetic(f.en)})
                     </button>
                   `).join('')}
                 </div>
               </div>
               <div style="background:#1e293b;padding:12px;border-radius:12px;border:1.5px solid #ef4444;">
-                <div style="font-size:13px;font-weight:900;color:#fca5a5;margin-bottom:8px;">😝 2. Sevmediğin Yiyeceği Seç (I DON'T LIKE...):</div>
+                <div style="font-size:13px;font-weight:900;color:#fca5a5;margin-bottom:8px;">😝 2. Sevmediğin Yiyeceği Seç (I DON'T LIKE... / Ay dont layk...):</div>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;">
                   ${fruitsVocab.map(f => `
                     <button class="action-btn" style="background:${fruitPlateDisliked.en===f.en?'#ef4444':'#0f172a'};color:#fff;padding:6px 10px;font-size:12px;font-weight:800;" onclick="selectFruitPlateChoice('dislike','${f.en}','${f.tr}','${f.icon}')">
-                      ${f.icon} ${f.en}
+                      ${f.icon} ${f.en} (${getEnPhonetic(f.en)})
                     </button>
                   `).join('')}
                 </div>
@@ -15039,7 +15311,10 @@
                 😋 ${fruitPlateLiked.icon} ❤️ &nbsp;&nbsp;|&nbsp;&nbsp; 😝 ${fruitPlateDisliked.icon} ❌
               </div>
               <div style="font-size:18px;font-weight:900;color:#fde047;">"${plateSentenceEn}"</div>
-              <div style="font-size:13px;color:#cbd5e1;margin-top:4px;">
+              <div style="margin-top:5px;display:inline-block;background:rgba(56,189,248,0.16);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;font-size:13px;font-weight:900;padding:4px 12px;border-radius:999px;">
+                🗣️ Okunuşu: "${plateSentenceRead}"
+              </div>
+              <div style="font-size:13px;color:#cbd5e1;margin-top:6px;">
                 🇹🇷 Ben <strong>${fruitPlateLiked.tr}</strong> severim, çok lezzetli! Ama <strong>${fruitPlateDisliked.tr}</strong> sevmem!
               </div>
               <div style="margin-top:10px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
@@ -15085,27 +15360,28 @@
       }
 
       const actionsList = [
-        { en: 'swim', tr: 'yüzebilirim', nameTr: 'Yüzmek', icon: '🏊' },
-        { en: 'ride a bike', tr: 'bisiklet sürebilirim', nameTr: 'Bisiklet Sürmek', icon: '🚴' },
-        { en: 'sing a song', tr: 'şarkı söyleyebilirim', nameTr: 'Şarkı Söylemek', icon: '🎤' },
-        { en: 'dance', tr: 'dans edebilirim', nameTr: 'Dans Etmek', icon: '💃' },
-        { en: 'run fast', tr: 'hızlı koşabilirim', nameTr: 'Hızlı Koşmak', icon: '🏃' },
-        { en: 'jump high', tr: 'yükseğe zıplayabilirim', nameTr: 'Zıplamak', icon: '🦘' },
-        { en: 'draw a picture', tr: 'resim çizebilirim', nameTr: 'Resim Çizmek', icon: '🎨' },
-        { en: 'play football', tr: 'futbol oynayabilirim', nameTr: 'Futbol Oynamak', icon: '⚽' },
-        { en: 'fly a kite', tr: 'uçurtma uçurabilirim', nameTr: 'Uçurtma Uçurmak', icon: '🪁' },
-        { en: 'climb a tree', tr: 'ağaca tırmanabilirim', nameTr: 'Ağaca Tırmanmak', icon: '🧗' }
+        { en: 'swim', read: 'Svim', tr: 'yüzebilirim', nameTr: 'Yüzmek', icon: '🏊' },
+        { en: 'ride a bike', read: 'Rayd e bayk', tr: 'bisiklet sürebilirim', nameTr: 'Bisiklet Sürmek', icon: '🚴' },
+        { en: 'sing a song', read: 'Sing e song', tr: 'şarkı söyleyebilirim', nameTr: 'Şarkı Söylemek', icon: '🎤' },
+        { en: 'dance', read: 'Dens', tr: 'dans edebilirim', nameTr: 'Dans Etmek', icon: '💃' },
+        { en: 'run fast', read: 'Ran fest', tr: 'hızlı koşabilirim', nameTr: 'Hızlı Koşmak', icon: '🏃' },
+        { en: 'jump high', read: 'Camp hay', tr: 'yükseğe zıplayabilirim', nameTr: 'Zıplamak', icon: '🦘' },
+        { en: 'draw a picture', read: 'Drov e pik-çır', tr: 'resim çizebilirim', nameTr: 'Resim Çizmek', icon: '🎨' },
+        { en: 'play football', read: 'Pley fut-bol', tr: 'futbol oynayabilirim', nameTr: 'Futbol Oynamak', icon: '⚽' },
+        { en: 'fly a kite', read: 'Flay e kayt', tr: 'uçurtma uçurabilirim', nameTr: 'Uçurtma Uçurmak', icon: '🪁' },
+        { en: 'climb a tree', read: 'Klaym e trii', tr: 'ağaca tırmanabilirim', nameTr: 'Ağaca Tırmanmak', icon: '🧗' }
       ];
 
       const weatherList = [
-        { en: 'sunny and hot', tr: 'Güneşli ve Sıcak', icon: '☀️' },
-        { en: 'rainy', tr: 'Yağmurlu', icon: '🌧️' },
-        { en: 'snowy and cold', tr: 'Karlı ve Soğuk', icon: '❄️' },
-        { en: 'windy', tr: 'Rüzgarlı', icon: '💨' },
-        { en: 'cloudy', tr: 'Bulutlu', icon: '⛅' }
+        { en: 'sunny and hot', read: 'İt iz sa-ni end hat', tr: 'Güneşli ve Sıcak', icon: '☀️' },
+        { en: 'rainy', read: 'İt iz rey-ni', tr: 'Yağmurlu', icon: '🌧️' },
+        { en: 'snowy and cold', read: 'İt iz snov-i end kold', tr: 'Karlı ve Soğuk', icon: '❄️' },
+        { en: 'windy', read: 'İt iz vin-di', tr: 'Rüzgarlı', icon: '💨' },
+        { en: 'cloudy', read: 'İt iz klav-di', tr: 'Bulutlu', icon: '⛅' }
       ];
 
       const fullSpeechEn = `Today it is ${selectedWeatherToday.en}. I can ${heroAbilityCan.en}, but I cannot ${heroAbilityCant.en}!`;
+      const fullSpeechRead = getEnPhonetic(fullSpeechEn);
 
       const html = `
         ${getEngExtraNavBarHtml('eng_actions_weather', 'Can/Can\'t & Weather', '#06b6d4')}
@@ -15121,25 +15397,32 @@
             </button>
           </div>
 
-          <h4 style="color:#fff;margin:0 0 8px;font-size:15px;font-weight:900;">🏃 1. Bölüm: Hareketler ve Yapabildiklerimiz (Actions &amp; "I can...")</h4>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:18px;">
+          <h4 style="color:#fff;margin:0 0 8px;font-size:15px;font-weight:900;">🏃 1. Bölüm: Hareketler ve Yapabildiklerimiz (Actions &amp; "I can..." [Ay ken...])</h4>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px;margin-bottom:18px;">
             ${actionsList.map(act => `
               <div onclick="selectHeroAbility('can','${act.en}','${act.tr}','${act.icon}')" style="background:#1e293b;border:1.5px solid rgba(6,182,212,0.45);border-radius:14px;padding:11px;text-align:center;cursor:pointer;">
                 <div style="font-size:34px;margin-bottom:4px;">${act.icon}</div>
                 <div style="font-size:14px;font-weight:900;color:#67e8f9;">${act.en} 🔊</div>
-                <div style="font-size:12px;color:#fff;font-weight:700;">${act.nameTr}</div>
+                <div style="display:inline-block;background:rgba(253,224,71,0.14);border:1px solid rgba(253,224,71,0.35);color:#fde047;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;margin:4px 0;">
+                  🗣️ Okunuşu: ${act.read}
+                </div>
+                <div style="font-size:12px;color:#fff;font-weight:800;">🇹🇷 ${act.nameTr}</div>
                 <div style="font-size:11px;color:#6ee7b7;margin-top:3px;">"I can ${act.en}!"</div>
+                <div style="font-size:10px;color:#38bdf8;font-weight:700;">(Ay ken ${act.read.toLowerCase()}!)</div>
               </div>
             `).join('')}
           </div>
 
-          <h4 style="color:#fde047;margin:0 0 8px;font-size:15px;font-weight:900;">☀️ 2. Bölüm: Hava Durumu (How is the weather today?)</h4>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px;">
+          <h4 style="color:#fde047;margin:0 0 8px;font-size:15px;font-weight:900;">☀️ 2. Bölüm: Hava Durumu (How is the weather today? — Hav iz dı ve-dır tu-dey?)</h4>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:10px;margin-bottom:18px;">
             ${weatherList.map(w => `
               <div onclick="selectWeatherCard('${w.en}','${w.tr}','${w.icon}')" style="background:#1e293b;border:2px solid ${selectedWeatherToday.en===w.en?'#fde047':'rgba(253,224,71,0.3)'};border-radius:14px;padding:12px;text-align:center;cursor:pointer;">
                 <div style="font-size:34px;margin-bottom:4px;">${w.icon}</div>
                 <div style="font-size:14px;font-weight:900;color:#fde047;">It is ${w.en} 🔊</div>
-                <div style="font-size:12px;color:#cbd5e1;font-weight:700;">${w.tr}</div>
+                <div style="display:inline-block;background:rgba(253,224,71,0.14);border:1px solid rgba(253,224,71,0.35);color:#fde047;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;margin:4px 0;">
+                  🗣️ Okunuşu: ${w.read}
+                </div>
+                <div style="font-size:12px;color:#cbd5e1;font-weight:800;">🇹🇷 ${w.tr}</div>
               </div>
             `).join('')}
           </div>
@@ -15152,7 +15435,10 @@
                 ${selectedWeatherToday.icon} &nbsp;|&nbsp; ✅ ${heroAbilityCan.icon} &nbsp;|&nbsp; ❌ ${heroAbilityCant.icon}
               </div>
               <div style="font-size:18px;font-weight:900;color:#fde047;">"${fullSpeechEn}"</div>
-              <div style="font-size:13px;color:#cbd5e1;margin-top:4px;">
+              <div style="margin-top:5px;display:inline-block;background:rgba(56,189,248,0.16);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;font-size:13px;font-weight:900;padding:4px 12px;border-radius:999px;">
+                🗣️ Okunuşu: "${fullSpeechRead}"
+              </div>
+              <div style="font-size:13px;color:#cbd5e1;margin-top:6px;">
                 🇹🇷 Bugün hava <strong>${selectedWeatherToday.tr}</strong>. Ben <strong>${heroAbilityCan.tr}</strong> ama <strong>${heroAbilityCant.tr}</strong>!
               </div>
               <div style="margin-top:10px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
@@ -15190,73 +15476,73 @@
         {
           title: '🤝 1. Tanışma & Yaşı Sorma (Meeting & Age)',
           lines: [
-            { speaker: '👧 Ayşe', en: 'Hello! Good morning! What is your name?', tr: 'Merhaba! Günaydın! Senin adın ne?' },
-            { speaker: '👦 Mert', en: 'Good morning! My name is Mert. Nice to meet you!', tr: 'Günaydın! Benim adım Mert. Tanıştığımıza memnun oldum!' },
-            { speaker: '👧 Ayşe', en: 'Nice to meet you, too! How old are you?', tr: 'Ben de memnun oldum! Kaç yaşındasın?' },
-            { speaker: '👦 Mert', en: 'I am eight years old!', tr: 'Ben sekiz yaşındayım!' }
+            { speaker: '👧 Ayşe', en: 'Hello! Good morning! What is your name?', read: 'He-lo! Gud mor-ning! Vat iz yor neym?', tr: 'Merhaba! Günaydın! Senin adın ne?' },
+            { speaker: '👦 Mert', en: 'Good morning! My name is Mert. Nice to meet you!', read: 'Gud mor-ning! May neym iz Mert. Nays tu miit yu!', tr: 'Günaydın! Benim adım Mert. Tanıştığımıza memnun oldum!' },
+            { speaker: '👧 Ayşe', en: 'Nice to meet you, too! How old are you?', read: 'Nays tu miit yu, tuu! Hav old ar yu?', tr: 'Ben de memnun oldum! Kaç yaşındasın?' },
+            { speaker: '👦 Mert', en: 'I am eight years old!', read: 'Ay em eyt yiırs old!', tr: 'Ben sekiz yaşındayım!' }
           ]
         },
         {
           title: '🙏 2. Sınıf İçi Nezaket & İzin İsteme (Polite Requests)',
           lines: [
-            { speaker: '👦 Can', en: 'Excuse me, teacher! May I come in, please?', tr: 'Affedersiniz öğretmenim! İçeri girebilir miyim lütfen?' },
-            { speaker: '👩‍🏫 Teacher', en: 'Yes, you may! Come in and sit down, please.', tr: 'Evet, girebilirsin! İçeri gel ve otur lütfen.' },
-            { speaker: '👦 Can', en: 'Give me the red pencil, please.', tr: 'Bana kırmızı kalemi verir misin lütfen?' },
-            { speaker: '👧 Elif', en: 'Here you are!', tr: 'Buyur, al bakalım!' },
-            { speaker: '👦 Can', en: 'Thank you very much! — You are welcome!', tr: 'Çok teşekkür ederim! — Rica ederim!' }
+            { speaker: '👦 Can', en: 'Excuse me, teacher! May I come in, please?', read: 'Eks-küz mii, tii-çır! Mey ay kam in, pliiz?', tr: 'Affedersiniz öğretmenim! İçeri girebilir miyim lütfen?' },
+            { speaker: '👩‍🏫 Teacher', en: 'Yes, you may! Come in and sit down, please.', read: 'Yes, yu mey! Kam in end sit davn, pliiz.', tr: 'Evet, girebilirsin! İçeri gel ve otur lütfen.' },
+            { speaker: '👦 Can', en: 'Give me the red pencil, please.', read: 'Giv mii dı red pen-sıl, pliiz.', tr: 'Bana kırmızı kalemi verir misin lütfen?' },
+            { speaker: '👧 Elif', en: 'Here you are!', read: 'Hiır yu ar!', tr: 'Buyur, al bakalım!' },
+            { speaker: '👦 Can', en: 'Thank you very much! — You are welcome!', read: 'Tenk yu ve-ri maç! — Yu ar vel-kım!', tr: 'Çok teşekkür ederim! — Rica ederim!' }
           ]
         },
         {
           title: '👨‍👩‍👧 3. Ailemi ve Evimi Tanıtıyorum (Family & Home)',
           lines: [
-            { speaker: '👧 Zeynep', en: 'Look! Who is this?', tr: 'Bak! Bu kim?' },
-            { speaker: '👦 Kerem', en: 'This is my mother and this is my father.', tr: 'Bu benim annem ve bu da benim babam.' },
-            { speaker: '👧 Zeynep', en: 'Where is your little brother?', tr: 'Küçük erkek kardeşin nerede?' },
-            { speaker: '👦 Kerem', en: 'He is in the living room!', tr: 'O oturma odasında!' }
+            { speaker: '👧 Zeynep', en: 'Look! Who is this?', read: 'Luk! Hu iz dis?', tr: 'Bak! Bu kim?' },
+            { speaker: '👦 Kerem', en: 'This is my mother and this is my father.', read: 'Dis iz may ma-dır end dis iz may fa-dır.', tr: 'Bu benim annem ve bu da benim babam.' },
+            { speaker: '👧 Zeynep', en: 'Where is your little brother?', read: 'Ver iz yor li-tıl bra-dır?', tr: 'Küçük erkek kardeşin nerede?' },
+            { speaker: '👦 Kerem', en: 'He is in the living room!', read: 'Hii iz in dı li-ving ruum!', tr: 'O oturma odasında!' }
           ]
         }
       ];
 
       const numbers11to20 = [
-        { num: 11, en: 'eleven', tr: 'on bir' },
-        { num: 12, en: 'twelve', tr: 'on iki' },
-        { num: 13, en: 'thirteen', tr: 'on üç' },
-        { num: 14, en: 'fourteen', tr: 'on dört' },
-        { num: 15, en: 'fifteen', tr: 'on beş' },
-        { num: 16, en: 'sixteen', tr: 'on altı' },
-        { num: 17, en: 'seventeen', tr: 'on yedi' },
-        { num: 18, en: 'eighteen', tr: 'on sekiz' },
-        { num: 19, en: 'nineteen', tr: 'on dokuz' },
-        { num: 20, en: 'twenty', tr: 'yirmi' }
+        { num: 11, en: 'eleven', read: 'İ-le-vın', tr: 'on bir' },
+        { num: 12, en: 'twelve', read: 'Tuelv', tr: 'on iki' },
+        { num: 13, en: 'thirteen', read: 'Tör-tiin', tr: 'on üç' },
+        { num: 14, en: 'fourteen', read: 'For-tiin', tr: 'on dört' },
+        { num: 15, en: 'fifteen', read: 'Fif-tiin', tr: 'on beş' },
+        { num: 16, en: 'sixteen', read: 'Siks-tiin', tr: 'on altı' },
+        { num: 17, en: 'seventeen', read: 'Se-vın-tiin', tr: 'on yedi' },
+        { num: 18, en: 'eighteen', read: 'Ey-tiin', tr: 'on sekiz' },
+        { num: 19, en: 'nineteen', read: 'Nayn-tiin', tr: 'on dokuz' },
+        { num: 20, en: 'twenty', read: 'Tu-en-ti', tr: 'yirmi' }
       ];
 
       const alphabetPhonics = [
-        { l: 'A a', w: 'Apple', tr: 'Elma', i: '🍎' },
-        { l: 'B b', w: 'Ball', tr: 'Top', i: '⚽' },
-        { l: 'C c', w: 'Cat', tr: 'Kedi', i: '🐱' },
-        { l: 'D d', w: 'Dog', tr: 'Köpek', i: '🐶' },
-        { l: 'E e', w: 'Elephant', tr: 'Fil', i: '🐘' },
-        { l: 'F f', w: 'Fish', tr: 'Balık', i: '🐟' },
-        { l: 'G g', w: 'Grapes', tr: 'Üzüm', i: '🍇' },
-        { l: 'H h', w: 'House', tr: 'Ev', i: '🏠' },
-        { l: 'I i', w: 'Ice cream', tr: 'Dondurma', i: '🍦' },
-        { l: 'J j', w: 'Jump', tr: 'Zıplamak', i: '🦘' },
-        { l: 'K k', w: 'Kite', tr: 'Uçurtma', i: '🪁' },
-        { l: 'L l', w: 'Lion', tr: 'Aslan', i: '🦁' },
-        { l: 'M m', w: 'Monkey', tr: 'Maymun', i: '🐒' },
-        { l: 'N n', w: 'Nose', tr: 'Burun', i: '👃' },
-        { l: 'O o', w: 'Orange', tr: 'Portakal', i: '🍊' },
-        { l: 'P p', w: 'Pencil', tr: 'Kalem', i: '✏️' },
-        { l: 'Q q', w: 'Queen', tr: 'Kraliçe', i: '👑' },
-        { l: 'R r', w: 'Rabbit', tr: 'Tavşan', i: '🐰' },
-        { l: 'S s', w: 'Sun', tr: 'Güneş', i: '☀️' },
-        { l: 'T t', w: 'Train', tr: 'Tren', i: '🚂' },
-        { l: 'U u', w: 'Umbrella', tr: 'Şemsiye', i: '☂️' },
-        { l: 'V v', w: 'Van', tr: 'Minibüs', i: '🚐' },
-        { l: 'W w', w: 'Watermelon', tr: 'Karpuz', i: '🍉' },
-        { l: 'X x', w: 'Xylophone', tr: 'Ksilofon', i: '🎼' },
-        { l: 'Y y', w: 'Yo-yo', tr: 'Yoyo', i: '🪀' },
-        { l: 'Z z', w: 'Zebra', tr: 'Zebra', i: '🦓' }
+        { l: 'A a', lRead: 'Ey', w: 'Apple', wRead: 'E-pıl', tr: 'Elma', i: '🍎' },
+        { l: 'B b', lRead: 'Bii', w: 'Ball', wRead: 'Bol', tr: 'Top', i: '⚽' },
+        { l: 'C c', lRead: 'Sii', w: 'Cat', wRead: 'Ket', tr: 'Kedi', i: '🐱' },
+        { l: 'D d', lRead: 'Dii', w: 'Dog', wRead: 'Dog', tr: 'Köpek', i: '🐶' },
+        { l: 'E e', lRead: 'İi', w: 'Elephant', wRead: 'E-li-fınt', tr: 'Fil', i: '🐘' },
+        { l: 'F f', lRead: 'Ef', w: 'Fish', wRead: 'Fiş', tr: 'Balık', i: '🐟' },
+        { l: 'G g', lRead: 'Cii', w: 'Grapes', wRead: 'Greyps', tr: 'Üzüm', i: '🍇' },
+        { l: 'H h', lRead: 'Eyç', w: 'House', wRead: 'Haus', tr: 'Ev', i: '🏠' },
+        { l: 'I i', lRead: 'Ay', w: 'Ice cream', wRead: 'Ays kriim', tr: 'Dondurma', i: '🍦' },
+        { l: 'J j', lRead: 'Cey', w: 'Jump', wRead: 'Camp', tr: 'Zıplamak', i: '🦘' },
+        { l: 'K k', lRead: 'Key', w: 'Kite', wRead: 'Kayt', tr: 'Uçurtma', i: '🪁' },
+        { l: 'L l', lRead: 'El', w: 'Lion', wRead: 'La-yın', tr: 'Aslan', i: '🦁' },
+        { l: 'M m', lRead: 'Em', w: 'Monkey', wRead: 'Man-ki', tr: 'Maymun', i: '🐒' },
+        { l: 'N n', lRead: 'En', w: 'Nose', wRead: 'Noz', tr: 'Burun', i: '👃' },
+        { l: 'O o', lRead: 'Ov', w: 'Orange', wRead: 'O-rınc', tr: 'Portakal', i: '🍊' },
+        { l: 'P p', lRead: 'Pii', w: 'Pencil', wRead: 'Pen-sıl', tr: 'Kalem', i: '✏️' },
+        { l: 'Q q', lRead: 'Kyu', w: 'Queen', wRead: 'Kuiin', tr: 'Kraliçe', i: '👑' },
+        { l: 'R r', lRead: 'Ar', w: 'Rabbit', wRead: 'Re-bit', tr: 'Tavşan', i: '🐰' },
+        { l: 'S s', lRead: 'Es', w: 'Sun', wRead: 'San', tr: 'Güneş', i: '☀️' },
+        { l: 'T t', lRead: 'Tii', w: 'Train', wRead: 'Treyn', tr: 'Tren', i: '🚂' },
+        { l: 'U u', lRead: 'Yu', w: 'Umbrella', wRead: 'Amb-rel-la', tr: 'Şemsiye', i: '☂️' },
+        { l: 'V v', lRead: 'Vii', w: 'Van', wRead: 'Ven', tr: 'Minibüs', i: '🚐' },
+        { l: 'W w', lRead: 'Da-bıl-yu', w: 'Watermelon', wRead: 'Vo-tır-me-lın', tr: 'Karpuz', i: '🍉' },
+        { l: 'X x', lRead: 'Eks', w: 'Xylophone', wRead: 'Zay-lo-fon', tr: 'Ksilofon', i: '🎼' },
+        { l: 'Y y', lRead: 'Vay', w: 'Yo-yo', wRead: 'Yo-yo', tr: 'Yoyo', i: '🪀' },
+        { l: 'Z z', lRead: 'Zed / Zii', w: 'Zebra', wRead: 'Zeb-ra', tr: 'Zebra', i: '🦓' }
       ];
 
       const activeDialog = roleplayScenarios[maarifSelectedRoleplayIdx] || roleplayScenarios[0];
@@ -15291,6 +15577,7 @@
                   <div>
                     <div style="font-size:12px;font-weight:900;color:#38bdf8;">${line.speaker}</div>
                     <div style="font-size:15px;font-weight:900;color:#fff;margin-top:2px;">"${line.en}"</div>
+                    <div style="font-size:12px;font-weight:800;color:#fde047;margin-top:3px;">🗣️ Okunuşu: ${line.read}</div>
                     <div style="font-size:12px;color:#cbd5e1;margin-top:2px;">🇹🇷 ${line.tr}</div>
                   </div>
                   <span style="background:#2563eb;color:#fff;padding:6px 10px;border-radius:10px;font-size:12px;font-weight:900;white-space:nowrap;">🔊 Dinle</span>
@@ -15307,12 +15594,15 @@
                 🔊 11'den 20'ye Hepsini Say!
               </button>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;">
               ${numbers11to20.map(n => `
                 <div onclick="speakText('${n.en}')" style="background:#1e293b;border:1.5px solid rgba(245,158,11,0.45);border-radius:12px;padding:10px;text-align:center;cursor:pointer;">
                   <div style="font-size:24px;font-weight:900;color:#fde047;">${n.num}</div>
                   <div style="font-size:15px;font-weight:900;color:#fff;">${n.en} 🔊</div>
-                  <div style="font-size:11px;color:#94a3b8;">${n.tr}</div>
+                  <div style="display:inline-block;background:rgba(253,224,71,0.14);border:1px solid rgba(253,224,71,0.35);color:#fde047;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;margin:4px 0;">
+                    🗣️ Okunuşu: ${n.read}
+                  </div>
+                  <div style="font-size:11px;color:#cbd5e1;font-weight:700;">🇹🇷 ${n.tr}</div>
                 </div>
               `).join('')}
             </div>
@@ -15320,13 +15610,17 @@
 
           <!-- 3. BÖLÜM: A-Z İNGİLİZCE SESLİ ALFABE VE FONETİK KARTLARI -->
           <div style="background:#0f172a;padding:16px;border-radius:16px;border:2px solid #10b981;">
-            <h4 style="color:#6ee7b7;margin:0 0 10px;font-size:16px;font-weight:900;">🔤 3. Bölüm: A–Z İngilizce Sesli Alfabe &amp; Kelime Kartları (Phonics)</h4>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:8px;">
+            <h4 style="color:#6ee7b7;margin:0 0 10px;font-size:16px;font-weight:900;">🔤 3. Bölüm: A–Z İngilizce Sesli Alfabe &amp; Kelime Okunuş Kartları (Phonics)</h4>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;">
               ${alphabetPhonics.map(item => `
                 <div onclick="speakText('${item.l.split(' ')[0]} is for ${item.w}')" style="background:#1e293b;border:1px solid rgba(16,185,129,0.4);border-radius:12px;padding:9px;text-align:center;cursor:pointer;">
                   <div style="font-size:18px;font-weight:900;color:#6ee7b7;">${item.l} <span style="font-size:22px;">${item.i}</span></div>
-                  <div style="font-size:13px;font-weight:800;color:#fff;margin-top:3px;">${item.w} 🔊</div>
-                  <div style="font-size:11px;color:#94a3b8;">${item.tr}</div>
+                  <div style="font-size:10px;color:#38bdf8;font-weight:800;">Harf Okunuşu: [${item.lRead}]</div>
+                  <div style="font-size:14px;font-weight:900;color:#fff;margin-top:3px;">${item.w} 🔊</div>
+                  <div style="display:inline-block;background:rgba(253,224,71,0.14);border:1px solid rgba(253,224,71,0.35);color:#fde047;font-size:11px;font-weight:800;padding:2px 7px;border-radius:999px;margin:3px 0;">
+                    🗣️ Okunuşu: ${item.wRead}
+                  </div>
+                  <div style="font-size:11px;color:#cbd5e1;font-weight:700;">🇹🇷 ${item.tr}</div>
                 </div>
               `).join('')}
             </div>
@@ -15340,7 +15634,7 @@
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.9.5';
+    const CURRENT_APP_VERSION = '2.9.6';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
