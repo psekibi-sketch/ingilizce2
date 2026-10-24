@@ -942,6 +942,9 @@
         </div>
       </div>
       <div class="header-widgets">
+        <button id="starCoinBadge" onclick="switchMainTab('pet_hub')" title="Yıldız Kumbarası & Lingo Dostum" style="background:rgba(245,158,11,0.18);border:1.5px solid rgba(245,158,11,0.55);color:#fde047;padding:5px 10px;border-radius:12px;font-size:12px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+          <span id="headerPetEmoji">🐱</span> ⭐ <span id="headerStarCount">0</span>
+        </button>
         <div class="timer-badge" id="studyTimerBadge" title="Günlük kullanım süresi (Ekranda açık olduğu sürece devam eder, arka plana geçince durur)">
           ⏱️ <span id="studyTimerText">00:00</span>
         </div>
@@ -972,13 +975,19 @@
           📲 Ana Ekrana Ekle
         </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
-          🔄 Sürümü Yenile (v2.8.1)
+          🔄 Sürümü Yenile (v2.9.0)
+        </button>
+        <button onclick="switchMainTab('pet_hub')" class="action-btn" style="background:#ec4899;color:#fff;font-size:11px;padding:7px 12px;font-weight:900;">
+          🐾 Dostum &amp; Çark
+        </button>
+        <button onclick="switchMainTab('fun_games')" class="action-btn" style="background:#8b5cf6;color:#fff;font-size:11px;padding:7px 12px;font-weight:900;">
+          🎈 Oyun &amp; Düello
         </button>
         <button onclick="openParentGateModal()" class="action-btn" style="background:#475569;color:#f8fafc;border:1px solid #64748b;font-size:11px;padding:7px 12px;font-weight:900;" title="Ebeveyn Kontrolü ve Günlük Gelişim Raporu">
           👨‍👩‍👧 Ebeveyn Ekranı
         </button>
         <button onclick="openBadgesModal()" class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;">
-          🏆 Rozet Vitrini (<span id="unlockedBadgesCount">0</span>/14)
+          🏆 Rozet Vitrini (<span id="unlockedBadgesCount">0</span>/18)
         </button>
       </div>
     </div>
@@ -1077,7 +1086,11 @@
       { id: 'math_addition_hero', title: "Toplama Ustası", icon: '➕', desc: "Eldeli ve eldesiz toplama işlemlerini başarıyla çözdü!", color: '#10b981' },
       { id: 'math_subtraction_hero', title: "Çıkarma Şampiyonu", icon: '➖', desc: "Onluk bozmalı ve bozmasız çıkarma işlemlerini başarıyla tamamladı!", color: '#ef4444' },
       { id: 'math_mult_hero', title: "Çarpma Sihirbazı", icon: '✖️', desc: "2. sınıf çarpma işlemi ve kat problemlerini başarıyla çözdü!", color: '#8b5cf6' },
-      { id: 'math_div_hero', title: "Bölme Ustası", icon: '➗', desc: "Eşit paylaştırma ve bölme işlemlerini başarıyla tamamladı!", color: '#06b6d4' }
+      { id: 'math_div_hero', title: "Bölme Ustası", icon: '➗', desc: "Eşit paylaştırma ve bölme işlemlerini başarıyla tamamladı!", color: '#06b6d4' },
+      { id: 'geometry_master', title: "Geometri Mimarı", icon: '🔺', desc: "Geometrik Şekiller ve Cisimler ödev testini başarıyla tamamladı!", color: '#a855f7' },
+      { id: 'clock_money_hero', title: "Zaman ve Kumbara Ustası", icon: '⏰', desc: "Saatler ve Paralarımız (TL Market) görevlerini başarıyla çözdü!", color: '#eab308' },
+      { id: 'duel_champion', title: "Oyun & Düello Şampiyonu", icon: '🏅', desc: "Balon Patlatma, 60 Saniye veya 2 Kişilik Düello yarışmasını tamamladı!", color: '#ec4899' },
+      { id: 'pet_caretaker', title: "Süper Dost Bakıcısı", icon: '🐾', desc: "Lingo Dostunu besledi veya Günlük Şans Çarkını çevirdi!", color: '#14b8a6' }
     ];
 
     function getUnlockedBadges() {
@@ -1329,9 +1342,12 @@
       math_subtraction: { title: '➖ 2. Sınıf Çıkarma İşlemi & Testi', color: '#ef4444' },
       math_multiplication: { title: '✖️ 2. Sınıf Çarpma İşlemi & Testi', color: '#8b5cf6' },
       math_division: { title: '➗ 2. Sınıf Bölme İşlemi & Testi', color: '#06b6d4' },
+      math_geometry: { title: '🔺📦 Geometrik Şekiller ve Cisimler', color: '#a855f7' },
+      math_clock_money: { title: '⏰🪙 Saatler & Paralarımız (TL)', color: '#eab308' },
       math_problems: { title: '🧠 Hikayeli Problemler', color: '#f59e0b' },
       english_quiz: { title: '🇬🇧 İngilizce Test & Telaffuz', color: '#ec4899' },
-      english_units: { title: '📘 İngilizce Ünite Alıştırmaları', color: '#14b8a6' }
+      english_units: { title: '📘 İngilizce Ünite Alıştırmaları', color: '#14b8a6' },
+      fun_games: { title: '🎈 Eğitsel Oyunlar & 2 Kişilik Düello', color: '#f43f5e' }
     };
 
     function getTodayDateKey() {
@@ -1593,6 +1609,10 @@
         }
         allLogs[todayKey] = todayLog;
         saveAllParentLogs(allLogs);
+        if (isSuccess) {
+          if (typeof addStarCoins === 'function') addStarCoins(2, false);
+          if (typeof updateDailyQuestProgress === 'function') updateDailyQuestProgress(categoryKey);
+        }
       } catch (e) {}
     }
 
@@ -1611,6 +1631,7 @@
         if (todayLog.milestones.length > 60) todayLog.milestones.pop();
         allLogs[todayKey] = todayLog;
         saveAllParentLogs(allLogs);
+        if (typeof addStarCoins === 'function') addStarCoins(10, true);
       } catch (e) {}
     }
 
@@ -2193,7 +2214,26 @@
       } else if (tabId === 'unit8') {
         document.getElementById('subHeaderTitle').textContent = '8. Ünite: In the City (Şehir Mekanları & Taşıtlar)';
         renderUnitCity();
+      } else if (tabId === 'math_geometry') {
+        document.getElementById('subHeaderTitle').textContent = '🔺📦 2. Sınıf Geometrik Şekiller ve Geometrik Cisimler (Konu & Ödev Tahtası)';
+        renderMathGeometry();
+      } else if (tabId === 'math_geometry_quiz') {
+        document.getElementById('subHeaderTitle').textContent = '📐 2. Sınıf Geometrik Şekiller ve Cisimler Testi (3 Seviyeli & Dinamik)';
+        renderMathGeometryQuiz();
+      } else if (tabId === 'math_clock') {
+        document.getElementById('subHeaderTitle').textContent = '⏰ 2. Sınıf Saatleri Öğreniyorum (İnteraktif Analog & Dijital Saat)';
+        renderMathClock();
+      } else if (tabId === 'math_money') {
+        document.getElementById('subHeaderTitle').textContent = '🪙 2. Sınıf Paralarımız (TL & Kuruş) ve Kırtasiye Market Oyunu';
+        renderMathMoney();
+      } else if (tabId === 'pet_hub') {
+        document.getElementById('subHeaderTitle').textContent = '🐾 Lingo Dostum, Yıldız Kumbarası, Günlük Şans Çarkı & Görev Sandığı';
+        renderPetAndWheelHub();
+      } else if (tabId === 'fun_games') {
+        document.getElementById('subHeaderTitle').textContent = '🎈 Eğitsel Oyunlar: Balon Patlatma, 60 Saniye Şampiyonu & 2 Kişilik Düello';
+        renderFunGamesHub();
       }
+      if (typeof updateHeaderStarUI === 'function') updateHeaderStarUI();
       if (tabId !== 'menu') {
         const subTitleEl = document.getElementById('subHeaderTitle');
         if (subTitleEl) recordParentVisitedLesson(subTitleEl.textContent);
@@ -2234,8 +2274,37 @@
       const showMath = currentHomeSubject === 'math';
       const showEnglish = currentHomeSubject === 'english';
       const isHomeOnly = currentHomeSubject === 'home';
+      const petSummary = typeof getPetSummaryForMenu === 'function' ? getPetSummaryForMenu() : { petEmoji: '🐱', petName: 'Pamuk Kedi', level: 1, stars: 20, questsDone: 0, avatarEmoji: '🦸' };
 
       const html = `
+        <!-- EĞLENCE, DİJİTAL DOSTUM, GÜNLÜK ÇARK VE OYUN MERKEZİ ÜST BANNER -->
+        <div class="card" style="border:2px solid rgba(245,158,11,0.5);background:linear-gradient(135deg,rgba(245,158,11,0.16),rgba(236,72,153,0.14),rgba(15,23,42,0.95));margin-bottom:18px;padding:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:58px;height:58px;border-radius:16px;background:rgba(255,255,255,0.08);border:2px solid #f59e0b;display:flex;align-items:center;justify-content:center;font-size:34px;position:relative;cursor:pointer;" onclick="switchMainTab('pet_hub')">
+                ${petSummary.petEmoji}
+                <span style="position:absolute;bottom:-6px;right:-6px;background:#10b981;color:#fff;font-size:10px;font-weight:900;padding:1px 6px;border-radius:999px;">Sv.${petSummary.level}</span>
+              </div>
+              <div>
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                  <span style="background:rgba(245,158,11,0.25);color:#fde047;font-size:11px;font-weight:900;padding:2px 9px;border-radius:999px;">${petSummary.avatarEmoji} Yıldız Kumbarası: ⭐ ${petSummary.stars}</span>
+                  <span style="background:rgba(16,185,129,0.22);color:#6ee7b7;font-size:11px;font-weight:900;padding:2px 9px;border-radius:999px;">🎁 Günlük Görev: ${petSummary.questsDone}/3</span>
+                </div>
+                <div style="font-size:17px;font-weight:900;color:#fff;margin-top:3px;">${petSummary.petName} Seni Bekliyor! 🎡</div>
+                <div style="font-size:12px;color:#cbd5e1;">Ders çalışarak ⭐ kazan, dostunu büyüt, şans çarkını çevir ve 2 kişilik düello yap!</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="action-btn" style="background:linear-gradient(135deg,#f59e0b,#db2777);color:#fff;padding:9px 14px;font-size:12px;font-weight:900;" onclick="switchMainTab('pet_hub')">
+                🐾 Dostum &amp; 🎡 Şans Çarkı
+              </button>
+              <button class="action-btn" style="background:linear-gradient(135deg,#10b981,#0284c7);color:#fff;padding:9px 14px;font-size:12px;font-weight:900;" onclick="switchMainTab('fun_games')">
+                🎈 Oyunlar &amp; ⚔️ 2 Kişilik Düello
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- EN ÜST: 2 ANA BAŞLIK SEÇİCİ HUB (İNGİLİZCE & MATEMATİK) -->
         <div style="margin-bottom:20px;">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
@@ -2264,9 +2333,9 @@
               <div style="display:flex;align-items:center;gap:14px;">
                 <div style="font-size:42px;background:rgba(255,255,255,0.12);padding:10px;border-radius:16px;">🔢</div>
                 <div style="flex:1;">
-                  <span style="background:#ec4899;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">YENİ ÖDEV & DERS</span>
+                  <span style="background:#ec4899;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">YENİ: GEOMETRİK ŞEKİLLER &amp; CİSİMLER</span>
                   <h3 style="font-size:20px;font-weight:900;color:#fff;margin:3px 0;">MATEMATİK DERSİ</h3>
-                  <p style="font-size:12px;color:#fce7f3;margin:0;">2'şer, 3'er, 4'er, 5'er Ritmik Sayma • Çarpım Tablosu • Sınav</p>
+                  <p style="font-size:12px;color:#fce7f3;margin:0;">Geometrik Şekiller ve Cisimler • Saatler &amp; Paralarımız • Dört İşlem • Ritmik Sayma</p>
                 </div>
                 <div style="font-size:20px;color:#fde047;">➔</div>
               </div>
@@ -2277,11 +2346,40 @@
               <div style="display:flex;align-items:center;gap:14px;">
                 <div style="font-size:42px;background:rgba(255,255,255,0.12);padding:10px;border-radius:16px;">🇬🇧</div>
                 <div style="flex:1;">
-                  <span style="background:#2563eb;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">TÜM 6 ÜNİTE</span>
+                  <span style="background:#2563eb;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">TÜM 8 ÜNİTE</span>
                   <h3 style="font-size:20px;font-weight:900;color:#fff;margin:3px 0;">İNGİLİZCE DERSİ</h3>
-                  <p style="font-size:12px;color:#bae6fd;margin:0;">Sayfa 9-56 • 20 Sorulu Büyük Sınav • Kelimeler & Günler</p>
+                  <p style="font-size:12px;color:#bae6fd;margin:0;">Sayfa 9-56 + Evimiz &amp; Şehir • 20 Sorulu Büyük Sınav • Kelimeler &amp; Günler</p>
                 </div>
                 <div style="font-size:20px;color:#38bdf8;">➔</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- HIZLI ÖDEV & YENİ MODÜLLER KISAYOL KARTLARI (ANA EKRANDA DOĞRUDAN ERİŞİM) -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin-top:14px;">
+            <div class="card" style="margin-bottom:0;border:2px solid #a855f7;background:linear-gradient(135deg,rgba(168,85,247,0.22),rgba(15,23,42,0.95));padding:14px;cursor:pointer;" onclick="switchMainTab('math_geometry')">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:28px;">🔺📦</span>
+                <span style="background:#a855f7;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:999px;">ÖĞRETMEN ÖDEVİ</span>
+              </div>
+              <h4 style="font-size:16px;font-weight:900;color:#e9d5ff;margin:0 0 4px;">Geometrik Şekiller ve Cisimler</h4>
+              <p style="font-size:11px;color:#cbd5e1;margin:0 0 10px;">Üçgen, Kare, Dikdörtgen, Çember/Daire + Küp, Prizmalar, Silindir, Koni, Küre!</p>
+              <div style="display:flex;gap:6px;">
+                <button class="action-btn" style="flex:1;background:#a855f7;color:#fff;font-size:11px;padding:7px;" onclick="event.stopPropagation();switchMainTab('math_geometry')">📐 Konu &amp; Ödev</button>
+                <button class="action-btn" style="flex:1;background:#db2777;color:#fff;font-size:11px;padding:7px;" onclick="event.stopPropagation();switchMainTab('math_geometry_quiz')">📝 Test Çöz</button>
+              </div>
+            </div>
+
+            <div class="card" style="margin-bottom:0;border:2px solid #eab308;background:linear-gradient(135deg,rgba(234,179,8,0.2),rgba(15,23,42,0.95));padding:14px;cursor:pointer;" onclick="switchMainTab('math_clock')">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:28px;">⏰🪙</span>
+                <span style="background:#eab308;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:999px;">SAAT &amp; TL MARKET</span>
+              </div>
+              <h4 style="font-size:16px;font-weight:900;color:#fef08a;margin:0 0 4px;">Saatler &amp; Paralarımız (TL)</h4>
+              <p style="font-size:11px;color:#cbd5e1;margin:0 0 10px;">Tam, buçuk, çeyrek saatler (Akrep-Yelkovan) ve Kırtasiye Kasası para oyunu!</p>
+              <div style="display:flex;gap:6px;">
+                <button class="action-btn" style="flex:1;background:#eab308;color:#0f172a;font-size:11px;padding:7px;font-weight:900;" onclick="event.stopPropagation();switchMainTab('math_clock')">⏰ Saatler</button>
+                <button class="action-btn" style="flex:1;background:#f97316;color:#fff;font-size:11px;padding:7px;font-weight:900;" onclick="event.stopPropagation();switchMainTab('math_money')">🪙 Paralarımız</button>
               </div>
             </div>
           </div>
@@ -2527,6 +2625,60 @@
                   <button class="action-btn" style="width:100%;background:#f59e0b;color:#0f172a;font-size:13px;font-weight:900;padding:8px;" onclick="event.stopPropagation();switchMainTab('math_problems')">
                     Problemleri Çöz ➔
                   </button>
+                </div>
+
+                <!-- 6. GEOMETRİK ŞEKİLLER VE CİSİMLER KARTI -->
+                <div class="card" style="margin-bottom:0;border:2px solid #a855f7;background:linear-gradient(145deg, rgba(168,85,247,0.16), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_geometry')">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <div style="font-size:36px;background:rgba(168,85,247,0.2);padding:8px;border-radius:14px;">🔺📦</div>
+                      <div>
+                        <span style="font-size:10px;font-weight:900;background:#a855f7;color:#fff;padding:2px 8px;border-radius:6px;">
+                          ŞEKİLLER &amp; CİSİMLER ÖDEVİ
+                        </span>
+                        <h4 style="font-size:17px;color:#e9d5ff;font-weight:900;margin:3px 0 1px;">Geometrik Şekiller ve Cisimler</h4>
+                        <div style="font-size:11px;color:#cbd5e1;">Kenar, Köşe, Yüz ve Ayrıt Sayıları</div>
+                      </div>
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
+                    Üçgen, Kare, Dikdörtgen, Çember, Daire ve Küp, Kare/Dikdörtgen/Üçgen Prizma, Silindir, Koni, Küre konu anlatımı ve testi!
+                  </p>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <button class="action-btn" style="width:100%;background:#a855f7;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_geometry')">
+                      📐 1. Konu &amp; Tahta
+                    </button>
+                    <button class="action-btn" style="width:100%;background:#db2777;color:#fff;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_geometry_quiz')">
+                      🎯 2. Geometri Testi
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 7. SAATLERİ ÖĞRENİYORUM & PARALARIMIZ (TL) KARTI -->
+                <div class="card" style="margin-bottom:0;border:2px solid #eab308;background:linear-gradient(145deg, rgba(234,179,8,0.16), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_clock')">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <div style="font-size:36px;background:rgba(234,179,8,0.2);padding:8px;border-radius:14px;">⏰🪙</div>
+                      <div>
+                        <span style="font-size:10px;font-weight:900;background:#eab308;color:#0f172a;padding:2px 8px;border-radius:6px;">
+                          ZAMAN ÖLÇME &amp; PARALARIMIZ
+                        </span>
+                        <h4 style="font-size:17px;color:#fef08a;font-weight:900;margin:3px 0 1px;">Saatler &amp; Paralarımız (TL)</h4>
+                        <div style="font-size:11px;color:#cbd5e1;">İnteraktif Saat &amp; Kırtasiye Kasası</div>
+                      </div>
+                    </div>
+                  </div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
+                    Tam, buçuk ve çeyrek saatleri akrep-yelkovan ile ayarla; Kuruş ve TL banknotlarla market alışverişi yap!
+                  </p>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <button class="action-btn" style="width:100%;background:#eab308;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_clock')">
+                      ⏰ 1. Saatler
+                    </button>
+                    <button class="action-btn" style="width:100%;background:#f97316;color:#fff;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_money')">
+                      🪙 2. TL Market
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -6129,6 +6281,1494 @@
         </div>
       `;
       document.getElementById('appContent').innerHTML = html;
+    }
+
+    /* ========================================================
+       YENİ MODÜL 1: 2. SINIF GEOMETRİK ŞEKİLLER VE CİSİMLER
+       (Konu Anlatımı + İnteraktif Ödev Tahtası + 3 Seviyeli Dinamik Test)
+    ======================================================== */
+    const GEOMETRY_SHAPES_DATA = [
+      {
+        id: 'ucgen',
+        name: 'Üçgen (Triangle)',
+        category: 'sekil',
+        edges: 3,
+        corners: 3,
+        curved: false,
+        color: '#f59e0b',
+        svg: `<svg width="90" height="90" viewBox="0 0 100 100"><polygon points="50,12 88,84 12,84" fill="rgba(245,158,11,0.28)" stroke="#f59e0b" stroke-width="5"/><circle cx="50" cy="12" r="5" fill="#fff"/><circle cx="88" cy="84" r="5" fill="#fff"/><circle cx="12" cy="84" r="5" fill="#fff"/></svg>`,
+        rule: '3 düz kenarı ve 3 sivri köşesi vardır. Kenar uzunlukları birbirine eşit veya farklı olabilir.',
+        examples: '🍕 Pizza dilimi, ⚠️ Trafik levhası, ⛺ Çadır ön yüzü, 📐 Gönye cetveli'
+      },
+      {
+        id: 'kare',
+        name: 'Kare (Square)',
+        category: 'sekil',
+        edges: 4,
+        corners: 4,
+        curved: false,
+        color: '#10b981',
+        svg: `<svg width="90" height="90" viewBox="0 0 100 100"><rect x="18" y="18" width="64" height="64" fill="rgba(16,185,129,0.28)" stroke="#10b981" stroke-width="5"/><circle cx="18" cy="18" r="5" fill="#fff"/><circle cx="82" cy="18" r="5" fill="#fff"/><circle cx="18" cy="82" r="5" fill="#fff"/><circle cx="82" cy="82" r="5" fill="#fff"/></svg>`,
+        rule: '4 düz kenarı ve 4 köşesi vardır. EN ÖNEMLİ KURALI: 4 kenarının uzunluğu da birbirine TAM EŞİTTİR!',
+        examples: '♟️ Satranç tahtası, 🪟 Kare pencere, 🧣 Mendil, 🔲 Yer karosu'
+      },
+      {
+        id: 'dikdortgen',
+        name: 'Dikdörtgen (Rectangle)',
+        category: 'sekil',
+        edges: 4,
+        corners: 4,
+        curved: false,
+        color: '#3b82f6',
+        svg: `<svg width="105" height="90" viewBox="0 0 120 100"><rect x="10" y="24" width="100" height="52" fill="rgba(59,130,246,0.28)" stroke="#3b82f6" stroke-width="5"/><circle cx="10" cy="24" r="5" fill="#fff"/><circle cx="110" cy="24" r="5" fill="#fff"/><circle cx="10" cy="76" r="5" fill="#fff"/><circle cx="110" cy="76" r="5" fill="#fff"/></svg>`,
+        rule: '4 kenarı ve 4 köşesi vardır. Karşılıklı kenarlarının uzunlukları birbirine eşittir (2 uzun kenar, 2 kısa kenar).',
+        examples: '🚪 Oda kapısı, 📺 Televizyon ekranı, 📘 Ders kitabı kapağı, 🇹🇷 Türk Bayrağı'
+      },
+      {
+        id: 'cember',
+        name: 'Çember (Ring / Hoop)',
+        category: 'sekil',
+        edges: 0,
+        corners: 0,
+        curved: true,
+        color: '#ec4899',
+        svg: `<svg width="90" height="90" viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="none" stroke="#ec4899" stroke-width="7"/></svg>`,
+        rule: 'KENARI YOKTUR (0 kenar) ve KÖŞESİ YOKTUR (0 köşe). İçi BOŞ olan yuvarlak şekildir.',
+        examples: '🥯 Simit, 💍 Yüzük, 🛞 Bisiklet çemberi, ⭕ Hulahop çemberi'
+      },
+      {
+        id: 'daire',
+        name: 'Daire (Circle / Disc)',
+        category: 'sekil',
+        edges: 0,
+        corners: 0,
+        curved: true,
+        color: '#a855f7',
+        svg: `<svg width="90" height="90" viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="rgba(168,85,247,0.45)" stroke="#a855f7" stroke-width="5"/></svg>`,
+        rule: 'KENARI YOKTUR (0 kenar) ve KÖŞESİ YOKTUR (0 köşe). Çemberin içi DOLU olan halidir (Dairesel bölge)!',
+        examples: '🪙 Madeni para (1 TL), 🍽️ Tabak, 💿 CD, ⏱️ Duvar saati yüzeyi'
+      }
+    ];
+
+    const GEOMETRY_SOLIDS_DATA = [
+      {
+        id: 'kup',
+        name: 'Küp (Cube)',
+        category: 'cisim',
+        faces: 6,
+        corners: 8,
+        edges: 12,
+        faceShape: '6 yüzünün tamamı birbirine eş KARESEL bölgedir.',
+        color: '#10b981',
+        emoji: '🎲',
+        svg: `<svg width="95" height="95" viewBox="0 0 100 100">
+          <polygon points="32,16 84,16 68,34 16,34" fill="rgba(16,185,129,0.45)" stroke="#10b981" stroke-width="3"/>
+          <rect x="16" y="34" width="52" height="50" fill="rgba(16,185,129,0.28)" stroke="#10b981" stroke-width="3"/>
+          <polygon points="68,34 84,16 84,66 68,84" fill="rgba(16,185,129,0.6)" stroke="#10b981" stroke-width="3"/>
+        </svg>`,
+        examples: '🎲 Oyun zarı, 🧊 Küp şeker, 🧩 Zeka küpü (Rubik Küp), 📦 Kare hediye kutusu'
+      },
+      {
+        id: 'kare_prizma',
+        name: 'Kare Prizma',
+        category: 'cisim',
+        faces: 6,
+        corners: 8,
+        edges: 12,
+        faceShape: 'Alt ve üst tabanı KARE (2 kare yüz), yan yüzleri ise 4 eş DİKDÖRTGENDİR.',
+        color: '#3b82f6',
+        emoji: '🧃',
+        svg: `<svg width="95" height="95" viewBox="0 0 100 100">
+          <polygon points="36,10 76,10 64,22 24,22" fill="rgba(59,130,246,0.5)" stroke="#3b82f6" stroke-width="3"/>
+          <rect x="24" y="22" width="40" height="68" fill="rgba(59,130,246,0.28)" stroke="#3b82f6" stroke-width="3"/>
+          <polygon points="64,22 76,10 76,78 64,90" fill="rgba(59,130,246,0.65)" stroke="#3b82f6" stroke-width="3"/>
+        </svg>`,
+        examples: '🥛 Uzun süt kutusu, 🧴 Şampuan kutusu, 🏢 Buzdolabı, 🕯️ Kare mum'
+      },
+      {
+        id: 'dikdortgen_prizma',
+        name: 'Dikdörtgen Prizma',
+        category: 'cisim',
+        faces: 6,
+        corners: 8,
+        edges: 12,
+        faceShape: '6 yüzünün tamamı DİKDÖRTGENSEL bölgedir. Karşılıklı yüzleri birbirine eşittir.',
+        color: '#f59e0b',
+        emoji: '🧱',
+        svg: `<svg width="105" height="95" viewBox="0 0 110 100">
+          <polygon points="26,22 98,22 84,36 12,36" fill="rgba(245,158,11,0.5)" stroke="#f59e0b" stroke-width="3"/>
+          <rect x="12" y="36" width="72" height="44" fill="rgba(245,158,11,0.28)" stroke="#f59e0b" stroke-width="3"/>
+          <polygon points="84,36 98,22 98,66 84,80" fill="rgba(245,158,11,0.65)" stroke="#f59e0b" stroke-width="3"/>
+        </svg>`,
+        examples: '🔥 Kibrit kutusu, 🧱 Tuğla, 📕 Kalın kitap, 👟 Ayakkabı kutusu, 🧽 Bulaşık süngeri'
+      },
+      {
+        id: 'ucgen_prizma',
+        name: 'Üçgen Prizma',
+        category: 'cisim',
+        faces: 5,
+        corners: 6,
+        edges: 9,
+        faceShape: 'Alt ve üst tabanı ÜÇGEN (2 üçgen yüz), yan yüzleri ise 3 DİKDÖRTGENDİR (Toplam 5 yüz).',
+        color: '#ec4899',
+        emoji: '⛺',
+        svg: `<svg width="95" height="95" viewBox="0 0 100 100">
+          <polygon points="36,18 68,78 12,78" fill="rgba(236,72,153,0.35)" stroke="#ec4899" stroke-width="3"/>
+          <polygon points="36,18 64,12 92,68 68,78" fill="rgba(236,72,153,0.55)" stroke="#ec4899" stroke-width="3"/>
+        </svg>`,
+        examples: '⛺ Kamp çadırı, 🏠 Evin çatısı, 🍫 Üçgen çikolata kutusu, 🧀 Üçgen peynir dilimi'
+      },
+      {
+        id: 'silindir',
+        name: 'Silindir (Cylinder)',
+        category: 'cisim',
+        faces: 3,
+        corners: 0,
+        edges: 0,
+        faceShape: 'Alt ve üstte 2 düz DAİRE yüzü ve ortada 1 eğri yüzeyi vardır (Toplam 3 yüz). Köşesi ve ayrıtı YOKTUR (0)!',
+        color: '#06b6d4',
+        emoji: '🥫',
+        svg: `<svg width="95" height="95" viewBox="0 0 100 100">
+          <path d="M24,24 L24,76 A26,10 0 0,0 76,76 L76,24 Z" fill="rgba(6,182,212,0.3)" stroke="#06b6d4" stroke-width="3"/>
+          <ellipse cx="50" cy="24" rx="26" ry="10" fill="rgba(6,182,212,0.55)" stroke="#06b6d4" stroke-width="3"/>
+          <ellipse cx="50" cy="76" rx="26" ry="10" fill="none" stroke="#06b6d4" stroke-width="2" stroke-dasharray="4,3"/>
+        </svg>`,
+        examples: '🥫 Konserve kutusu, 🔋 Kalem pil, 🧻 Kağıt havlu rulosu, 🥤 Su bardağı, 🪵 Oklava'
+      },
+      {
+        id: 'koni',
+        name: 'Koni (Cone)',
+        category: 'cisim',
+        faces: 2,
+        corners: 0,
+        edges: 0,
+        faceShape: 'Altta 1 düz DAİRE yüzü ve üstte 1 eğri yüzeyi vardır (Toplam 2 yüz). Köşesi ve ayrıtı YOKTUR (0)!',
+        color: '#f97316',
+        emoji: '🍦',
+        svg: `<svg width="95" height="95" viewBox="0 0 100 100">
+          <path d="M50,14 L22,76 A28,10 0 0,0 78,76 Z" fill="rgba(249,115,22,0.35)" stroke="#f97316" stroke-width="3"/>
+          <ellipse cx="50" cy="76" rx="28" ry="10" fill="rgba(249,115,22,0.5)" stroke="#f97316" stroke-width="3"/>
+        </svg>`,
+        examples: '🍦 Dondurma külahı, 🎉 Doğum günü şapkası, 🚧 Trafik dubası (koni), 🥕 Havuç'
+      },
+      {
+        id: 'kure',
+        name: 'Küre (Sphere)',
+        category: 'cisim',
+        faces: 1,
+        corners: 0,
+        edges: 0,
+        faceShape: '1 tane eğri yüzeyi vardır. Düz yüzü, köşesi ve ayrıtı YOKTUR (0)! Her yöne yuvarlanabilir.',
+        color: '#a855f7',
+        emoji: '⚽',
+        svg: `<svg width="95" height="95" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="36" fill="rgba(168,85,247,0.38)" stroke="#a855f7" stroke-width="3.5"/>
+          <ellipse cx="50" cy="50" rx="36" ry="12" fill="none" stroke="#e9d5ff" stroke-width="2" stroke-dasharray="4,3"/>
+          <circle cx="38" cy="36" r="6" fill="rgba(255,255,255,0.35)"/>
+        </svg>`,
+        examples: '⚽ Futbol topu, 🌍 Dünya modeli (Yerküre), 🍊 Portakal, 🔮 Misket (Bilye), 🍉 Karpuz'
+      }
+    ];
+
+    let geometryHomeworkCurrent = null;
+    let geometryHomeworkStreak = 0;
+
+    function renderMathGeometry() {
+      const shapesHtml = GEOMETRY_SHAPES_DATA.map(s => `
+        <div class="card" style="margin-bottom:0;background:rgba(15,23,42,0.85);border:2px solid ${s.color};padding:14px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">
+              <span style="background:${s.color}22;color:${s.color};border:1px solid ${s.color};padding:3px 10px;border-radius:999px;font-size:11px;font-weight:900;">2B GEOMETRİK ŞEKİL</span>
+              <button onclick="speakTurkish('${s.name.split(' ')[0]}. ${s.rule}')" style="background:rgba(255,255,255,0.08);border:none;color:#fff;border-radius:8px;padding:4px 8px;cursor:pointer;font-size:12px;">🔊 Dinle</button>
+            </div>
+            <div style="display:flex;justify-content:center;margin:6px 0;">${s.svg}</div>
+            <h4 style="font-size:18px;font-weight:900;color:#fff;text-align:center;margin-bottom:8px;">${s.name}</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;text-align:center;">
+              <div style="background:rgba(255,255,255,0.05);padding:6px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:10px;color:#94a3b8;font-weight:700;">KENAR SAYISI</div>
+                <div style="font-size:18px;font-weight:900;color:#fde047;">${s.edges}</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.05);padding:6px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:10px;color:#94a3b8;font-weight:700;">KÖŞE SAYISI</div>
+                <div style="font-size:18px;font-weight:900;color:#38bdf8;">${s.corners}</div>
+              </div>
+            </div>
+            <p style="font-size:12px;color:#e2e8f0;line-height:1.45;margin-bottom:8px;">📌 ${s.rule}</p>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);padding:8px 10px;border-radius:10px;font-size:11px;color:#cbd5e1;">
+            <strong>Günlük Hayat Örnekleri:</strong><br>${s.examples}
+          </div>
+        </div>
+      `).join('');
+
+      const solidsHtml = GEOMETRY_SOLIDS_DATA.map(c => `
+        <div class="card" style="margin-bottom:0;background:rgba(15,23,42,0.85);border:2px solid ${c.color};padding:14px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">
+              <span style="background:${c.color}22;color:${c.color};border:1px solid ${c.color};padding:3px 10px;border-radius:999px;font-size:11px;font-weight:900;">3B GEOMETRİK CİSİM ${c.emoji}</span>
+              <button onclick="speakTurkish('${c.name.split(' ')[0]}. ${c.faces} yüzü, ${c.corners} köşesi ve ${c.edges} ayrıtı vardır. ${c.faceShape}')" style="background:rgba(255,255,255,0.08);border:none;color:#fff;border-radius:8px;padding:4px 8px;cursor:pointer;font-size:12px;">🔊 Dinle</button>
+            </div>
+            <div style="display:flex;justify-content:center;margin:6px 0;">${c.svg}</div>
+            <h4 style="font-size:18px;font-weight:900;color:#fff;text-align:center;margin-bottom:8px;">${c.emoji} ${c.name}</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;text-align:center;">
+              <div style="background:rgba(255,255,255,0.05);padding:6px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:10px;color:#94a3b8;font-weight:700;">YÜZ</div>
+                <div style="font-size:17px;font-weight:900;color:#10b981;">${c.faces}</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.05);padding:6px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:10px;color:#94a3b8;font-weight:700;">KÖŞE</div>
+                <div style="font-size:17px;font-weight:900;color:#38bdf8;">${c.corners}</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.05);padding:6px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);">
+                <div style="font-size:10px;color:#94a3b8;font-weight:700;">AYRIT</div>
+                <div style="font-size:17px;font-weight:900;color:#fde047;">${c.edges}</div>
+              </div>
+            </div>
+            <p style="font-size:12px;color:#e2e8f0;line-height:1.45;margin-bottom:8px;">📌 <strong>Yüzlerinin Şekli:</strong> ${c.faceShape}</p>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);padding:8px 10px;border-radius:10px;font-size:11px;color:#cbd5e1;">
+            <strong>Günlük Hayat Nesneleri:</strong><br>${c.examples}
+          </div>
+        </div>
+      `).join('');
+
+      const html = `
+        <div class="card" style="border-color:rgba(168,85,247,0.5);background:linear-gradient(180deg, rgba(168,85,247,0.14), rgba(15,23,42,0.95));">
+          <div class="card-header-bar">
+            <div>
+              <span class="unit-badge" style="background:rgba(168,85,247,0.25);color:#e9d5ff;border-color:rgba(168,85,247,0.4);">🔺📦 2. SINIF MÜFREDAT &amp; ÖĞRETMEN ÖDEV REHBERİ</span>
+              <div class="card-title">Geometrik Şekiller ve Geometrik Cisimler Akademisi</div>
+            </div>
+            <button class="action-btn" style="background:linear-gradient(135deg,#db2777,#9333ea);color:#fff;padding:10px 18px;font-size:13px;font-weight:900;" onclick="switchMainTab('math_geometry_quiz')">
+              📝 Şekil &amp; Cisim Testine Geç ➔
+            </button>
+          </div>
+
+          <!-- ÖĞRETMENİN ALTIN ÖZET TABLOSU -->
+          <div style="background:rgba(245,158,11,0.12);border:2px solid rgba(245,158,11,0.4);border-radius:16px;padding:14px;margin-bottom:18px;">
+            <div style="font-size:15px;font-weight:900;color:#fde047;margin-bottom:6px;">💡 Öğretmenimizin Ödev İpuçları (Çok Önemli!)</div>
+            <ul style="font-size:13px;color:#e2e8f0;line-height:1.6;padding-left:18px;margin:0;">
+              <li><strong>Geometrik Şekil (Düzlemsel):</strong> Kağıt üzerine çizdiğimiz düz şekillerdir (<em>Üçgen, Kare, Dikdörtgen, Çember, Daire</em>). <strong>Kenar</strong> ve <strong>Köşe</strong> sayıları vardır.</li>
+              <li><strong>Geometrik Cisim (3 Boyutlu):</strong> Elimizle tutabildiğimiz, yer kaplayan nesnelerdir (<em>Küp, Kare Prizma, Dikdörtgen Prizma, Üçgen Prizma, Silindir, Koni, Küre</em>). <strong>Yüz</strong>, <strong>Köşe</strong> ve <strong>Ayrıt (Kenar)</strong> sayıları vardır.</li>
+              <li><strong>Ayrıt Nedir?</strong> Geometrik cisimlerde iki yüzün birleştiği düz çizgilere <strong>ayrıt</strong> denir.</li>
+              <li><strong>Küp, Kare Prizma ve Dikdörtgen Prizma Kardeşliği:</strong> Üçünün de <strong>6 Yüzü, 8 Köşesi ve 12 Ayrıtı</strong> vardır!</li>
+              <li><strong>Yuvarlak Cisimler:</strong> <strong>Silindir, Koni ve Küre</strong>'nin <strong>KÖŞESİ (0)</strong> ve <strong>AYRITI (0) YOKTUR!</strong></li>
+            </ul>
+          </div>
+
+          <!-- BÖLÜM 1: GEOMETRİK ŞEKİLLER -->
+          <h3 style="font-size:20px;font-weight:900;color:#fde047;margin:14px 0 10px 0;">1️⃣ Geometrik Şekiller (Kenar ve Köşe Sayıları)</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(235px, 1fr));gap:14px;margin-bottom:24px;">
+            ${shapesHtml}
+          </div>
+
+          <!-- BÖLÜM 2: GEOMETRİK CİSİMLER -->
+          <h3 style="font-size:20px;font-weight:900;color:#38bdf8;margin:18px 0 10px 0;">2️⃣ Geometrik Cisimler (Yüz, Köşe, Ayrıt ve Günlük Nesneler)</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(245px, 1fr));gap:14px;margin-bottom:24px;">
+            ${solidsHtml}
+          </div>
+
+          <!-- BÖLÜM 3: HIZLI ÖDEV ÖZET TABLOSU -->
+          <div class="card" style="background:rgba(15,23,42,0.9);border:1px solid rgba(56,189,248,0.35);margin-bottom:20px;overflow-x:auto;">
+            <h4 style="font-size:16px;font-weight:900;color:#38bdf8;margin-bottom:10px;">📋 Ödev İçin Hızlı Karşılaştırma Tablosu (Geometrik Cisimler)</h4>
+            <table style="width:100%;border-collapse:collapse;font-size:12px;text-align:left;">
+              <thead>
+                <tr style="background:rgba(56,189,248,0.15);color:#bae6fd;">
+                  <th style="padding:8px;border:1px solid rgba(255,255,255,0.1);">Geometrik Cisim</th>
+                  <th style="padding:8px;border:1px solid rgba(255,255,255,0.1);text-align:center;">Yüz Sayısı</th>
+                  <th style="padding:8px;border:1px solid rgba(255,255,255,0.1);text-align:center;">Köşe Sayısı</th>
+                  <th style="padding:8px;border:1px solid rgba(255,255,255,0.1);text-align:center;">Ayrıt Sayısı</th>
+                  <th style="padding:8px;border:1px solid rgba(255,255,255,0.1);">Örnek Nesne</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${GEOMETRY_SOLIDS_DATA.map(c => `
+                  <tr>
+                    <td style="padding:8px;border:1px solid rgba(255,255,255,0.08);font-weight:800;color:#fff;">${c.emoji} ${c.name}</td>
+                    <td style="padding:8px;border:1px solid rgba(255,255,255,0.08);text-align:center;color:#10b981;font-weight:900;">${c.faces}</td>
+                    <td style="padding:8px;border:1px solid rgba(255,255,255,0.08);text-align:center;color:#38bdf8;font-weight:900;">${c.corners}</td>
+                    <td style="padding:8px;border:1px solid rgba(255,255,255,0.08);text-align:center;color:#fde047;font-weight:900;">${c.edges}</td>
+                    <td style="padding:8px;border:1px solid rgba(255,255,255,0.08);color:#cbd5e1;">${c.examples.split(',')[0]}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- BÖLÜM 4: İNTERAKTİF ÖDEV TAHTASI -->
+          <div class="card" style="background:linear-gradient(135deg,rgba(16,185,129,0.14),rgba(59,130,246,0.14));border:2px solid #10b981;margin-bottom:0;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+              <div>
+                <h3 style="font-size:18px;font-weight:900;color:#6ee7b7;margin-bottom:2px;">🎯 İnteraktif Geometri Ödev Tahtası (Hemen Dene!)</h3>
+                <p style="font-size:12px;color:#cbd5e1;">Soruyu oku, şekil veya cismin özelliğini bul ve yıldızları topla!</p>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span id="geoBoardStreakBadge" style="background:rgba(245,158,11,0.25);color:#fde047;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:900;">🔥 Seri: ${geometryHomeworkStreak}</span>
+                <button class="action-btn" style="background:#10b981;color:#fff;padding:8px 14px;font-size:12px;" onclick="nextGeometryHomeworkTask()">🔄 Yeni Ödev Sorusu</button>
+              </div>
+            </div>
+            <div id="geometryHomeworkBoardArea"></div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('appContent').innerHTML = html;
+      nextGeometryHomeworkTask();
+    }
+
+    function nextGeometryHomeworkTask() {
+      const taskPool = [
+        { q: '🎲 Zar ve küp şeker hangi geometrik cisme örnektir?', ans: 'Küp', opts: ['Küp', 'Küre', 'Silindir', 'Koni'], hint: '6 yüzü de birbirine eş karedir.' },
+        { q: '🥫 Konserve kutusu ve kalem pil hangi geometrik cisme benzer?', ans: 'Silindir', opts: ['Silindir', 'Koni', 'Küp', 'Üçgen Prizma'], hint: 'Alt ve üst tabanı dairedir.' },
+        { q: '🍦 Dondurma külahı ve doğum günü şapkası hangi geometrik cisimdir?', ans: 'Koni', opts: ['Koni', 'Küre', 'Kare Prizma', 'Silindir'], hint: 'Altta 1 daire yüzü ve sivri tepesi vardır.' },
+        { q: '⚽ Futbol topu, portakal ve Dünya modeli hangi geometrik cisimdir?', ans: 'Küre', opts: ['Küre', 'Daire', 'Çember', 'Silindir'], hint: '1 eğri yüzeyi vardır, köşesi ve ayrıtı yoktur.' },
+        { q: '⛺ Kamp çadırı ve evin çatısı hangi geometrik cisme örnektir?', ans: 'Üçgen Prizma', opts: ['Üçgen Prizma', 'Kare Prizma', 'Küp', 'Koni'], hint: '5 yüzü, 6 köşesi ve 9 ayrıtı vardır.' },
+        { q: '📦 Küp, Kare Prizma ve Dikdörtgen Prizmanın kaç YÜZÜ vardır?', ans: '6 Yüzü', opts: ['6 Yüzü', '4 Yüzü', '8 Yüzü', '12 Yüzü'], hint: 'Bir zarın üzerindeki sayıları düşün (1 den 6 ya kadar)!' },
+        { q: '📦 Küp, Kare Prizma ve Dikdörtgen Prizmanın kaç KÖŞESİ ve kaç AYRITI vardır?', ans: '8 Köşe ve 12 Ayrıt', opts: ['8 Köşe ve 12 Ayrıt', '6 Köşe ve 8 Ayrıt', '4 Köşe ve 4 Ayrıt', '0 Köşe ve 0 Ayrıt'], hint: 'Alt tabanda 4, üst tabanda 4 köşe = 8 köşe; 12 ayrıt!' },
+        { q: '🥯 Simit ve yüzük gibi içi BOŞ yuvarlak şekle ne denir?', ans: 'Çember', opts: ['Çember', 'Daire', 'Küre', 'Kare'], hint: 'İçi boşsa Çember, içi doluysa Daire!' },
+        { q: '🪙 Madeni 1 TL para ve yemek tabağı gibi içi DOLU düz şekle ne denir?', ans: 'Daire', opts: ['Daire', 'Çember', 'Küp', 'Üçgen'], hint: 'Çemberin içi dolu halidir, 0 kenar ve 0 köşesi vardır.' },
+        { q: '🔺 Üçgenin kaç kenarı ve kaç köşesi vardır?', ans: '3 Kenar ve 3 Köşe', opts: ['3 Kenar ve 3 Köşe', '4 Kenar ve 4 Köşe', '0 Kenar ve 0 Köşe', '5 Kenar ve 5 Köşe'], hint: 'Adı üstünde: ÜÇ-gen!' },
+        { q: '🟩 Karenin tüm kenarları nasıldır?', ans: '4 kenarı da birbirine eşittir', opts: ['4 kenarı da birbirine eşittir', '2 uzun 2 kısa kenarı vardır', '3 kenarı vardır', 'Kenarı yoktur'], hint: 'Karede bütün kenar uzunlukları aynıdır.' },
+        { q: '⛺ Üçgen Prizmanın kaç YÜZÜ, kaç KÖŞESİ ve kaç AYRITI vardır?', ans: '5 Yüz, 6 Köşe, 9 Ayrıt', opts: ['5 Yüz, 6 Köşe, 9 Ayrıt', '6 Yüz, 8 Köşe, 12 Ayrıt', '3 Yüz, 0 Köşe, 0 Ayrıt', '2 Yüz, 0 Köşe, 0 Ayrıt'], hint: '2 üçgen taban + 3 dikdörtgen yan yüz = 5 yüz!' }
+      ];
+      geometryHomeworkCurrent = taskPool[Math.floor(Math.random() * taskPool.length)];
+      const shuffled = [...geometryHomeworkCurrent.opts].sort(() => Math.random() - 0.5);
+      const area = document.getElementById('geometryHomeworkBoardArea');
+      if (!area) return;
+      area.innerHTML = `
+        <div style="background:rgba(15,23,42,0.85);padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);">
+          <div style="font-size:16px;font-weight:900;color:#fff;margin-bottom:6px;">❓ ${geometryHomeworkCurrent.q}</div>
+          <div style="font-size:12px;color:#fde047;margin-bottom:14px;">💡 İpucu: ${geometryHomeworkCurrent.hint}</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));gap:10px;">
+            ${shuffled.map(opt => `
+              <button class="action-btn" style="background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.2);color:#fff;padding:12px;font-size:13px;font-weight:800;" onclick="checkGeometryHomeworkAnswer('${opt.replace(/'/g, "\\'")}', this)">
+                ${opt}
+              </button>
+            `).join('')}
+          </div>
+          <div id="geoBoardFeedback" style="margin-top:12px;font-size:14px;font-weight:900;text-align:center;min-height:22px;"></div>
+        </div>
+      `;
+    }
+
+    function checkGeometryHomeworkAnswer(selected, btnEl) {
+      if (!geometryHomeworkCurrent) return;
+      const fb = document.getElementById('geoBoardFeedback');
+      if (selected === geometryHomeworkCurrent.ans) {
+        geometryHomeworkStreak += 1;
+        playChimeSound('correct');
+        btnEl.style.background = '#10b981';
+        btnEl.style.borderColor = '#059669';
+        if (fb) {
+          fb.style.color = '#6ee7b7';
+          fb.innerHTML = `🎉 Harika! Doğru Cevap: <strong>${geometryHomeworkCurrent.ans}</strong> (+2 ⭐ Kazandın!)`;
+        }
+        const badge = document.getElementById('geoBoardStreakBadge');
+        if (badge) badge.textContent = '🔥 Seri: ' + geometryHomeworkStreak;
+        speakTurkish('Tebrikler, doğru cevap ' + geometryHomeworkCurrent.ans);
+        recordParentActivityLog('math_geometry', true, `Geometri Ödev Tahtası: ${geometryHomeworkCurrent.q}`, `Doğru: ${selected}`);
+        setTimeout(() => { nextGeometryHomeworkTask(); }, 1300);
+      } else {
+        geometryHomeworkStreak = 0;
+        playChimeSound('wrong');
+        btnEl.style.background = '#ef4444';
+        if (fb) {
+          fb.style.color = '#fca5a5';
+          fb.innerHTML = `❌ Tekrar dene! İpucu: ${geometryHomeworkCurrent.hint}`;
+        }
+        const badge = document.getElementById('geoBoardStreakBadge');
+        if (badge) badge.textContent = '🔥 Seri: 0';
+        recordParentActivityLog('math_geometry', false, `Geometri Ödev Tahtası: ${geometryHomeworkCurrent.q}`, `Yanlış: ${selected} (Doğru: ${geometryHomeworkCurrent.ans})`);
+      }
+    }
+
+    /* ========================================================
+       GEOMETRİK ŞEKİLLER VE CİSİMLER 3 SEVİYELİ DİNAMİK TEST
+    ======================================================== */
+    let geoQuizState = {
+      level: 'mixed', // 'shapes' | 'solids' | 'mixed'
+      questions: [],
+      index: 0,
+      score: 0,
+      wrongInCurrent: 0,
+      answered: false,
+      startTime: 0
+    };
+
+    function buildGeometryDynamicQuestions(level) {
+      const shapesPool = [
+        { q: '3 kenarı ve 3 köşesi olan geometrik şekil hangisidir?', visual: '🔺', correct: 'Üçgen', options: ['Üçgen', 'Kare', 'Dikdörtgen', 'Çember'], exp: 'Üçgenin 3 düz kenarı ve 3 köşesi vardır.' },
+        { q: '4 kenarı birbirine TAM EŞİT olan ve 4 köşesi bulunan şekil hangisidir?', visual: '🟩', correct: 'Kare', options: ['Kare', 'Dikdörtgen', 'Üçgen', 'Daire'], exp: 'Karenin 4 kenar uzunluğu da birbirine eşittir.' },
+        { q: 'Karşılıklı kenarları birbirine eşit olan (2 uzun, 2 kısa kenarlı) 4 köşeli şekil hangisidir?', visual: '🚪📘', correct: 'Dikdörtgen', options: ['Dikdörtgen', 'Kare', 'Üçgen', 'Çember'], exp: 'Dikdörtgenin karşılıklı kenar uzunlukları birbirine eşittir.' },
+        { q: 'Kenarı ve köşesi OLMAYAN (0 kenar, 0 köşe), simit ve yüzük gibi içi BOŞ şekil hangisidir?', visual: '🥯💍', correct: 'Çember', options: ['Çember', 'Daire', 'Küre', 'Üçgen'], exp: 'İçi boş yuvarlak şekle Çember denir.' },
+        { q: 'Kenarı ve köşesi OLMAYAN, madeni 1 TL para gibi içi DOLU yuvarlak şekil hangisidir?', visual: '🪙🍽️', correct: 'Daire', options: ['Daire', 'Çember', 'Kare', 'Koni'], exp: 'Çemberin içi dolu haline Daire denir.' },
+        { q: 'Kare ve Dikdörtgenin ortak özelliği aşağıdakilerden hangisidir?', visual: '🟩🟦', correct: 'İkisinin de 4 kenarı ve 4 köşesi vardır', options: ['İkisinin de 4 kenarı ve 4 köşesi vardır', 'İkisinin de 3 köşesi vardır', 'Kenarları eğridir', 'Köşeleri yoktur'], exp: 'Hem kare hem de dikdörtgen 4 kenarlı ve 4 köşelidir.' },
+        { q: 'Aşağıdaki geometrik şekillerden hangisinin KÖŞESİ YOKTUR?', visual: '⭕', correct: 'Çember ve Daire', options: ['Çember ve Daire', 'Üçgen', 'Kare', 'Dikdörtgen'], exp: 'Çember ve dairenin köşesi ve düz kenarı yoktur (0).' },
+        { q: 'Bir üçgen ile bir karenin köşe sayıları TOPLAMI kaçtır?', visual: '🔺 + 🟩', correct: '7', options: ['7', '6', '8', '5'], exp: 'Üçgen (3 köşe) + Kare (4 köşe) = 7 köşe eder.' },
+        { q: 'Pizza dilimi ve trafik uyarı levhası hangi geometrik şekle benzer?', visual: '🍕⚠️', correct: 'Üçgen', options: ['Üçgen', 'Daire', 'Kare', 'Dikdörtgen'], exp: '3 kenarı ve 3 köşesi olduğu için Üçgen şeklindedir.' },
+        { q: 'Sınıfımızın kapısı ve televizyon ekranı hangi geometrik şekle örnektir?', visual: '🚪📺', correct: 'Dikdörtgen', options: ['Dikdörtgen', 'Çember', 'Üçgen', 'Koni'], exp: '2 uzun ve 2 kısa kenarı olduğu için Dikdörtgen şeklindedir.' }
+      ];
+
+      const solidsPool = [
+        { q: '6 yüzünün tamamı birbirine eş KARESEL bölge olan geometrik cisim hangisidir?', visual: '🎲🧊', correct: 'Küp', options: ['Küp', 'Kare Prizma', 'Silindir', 'Küre'], exp: 'Küpün 6 yüzü de birbirine eş karedir (Örn: Zar, küp şeker).' },
+        { q: 'Küp, Kare Prizma ve Dikdörtgen Prizmanın kaç YÜZÜ, kaç KÖŞESİ ve kaç AYRITI vardır?', visual: '📦🎲', correct: '6 Yüz, 8 Köşe, 12 Ayrıt', options: ['6 Yüz, 8 Köşe, 12 Ayrıt', '5 Yüz, 6 Köşe, 9 Ayrıt', '3 Yüz, 0 Köşe, 0 Ayrıt', '4 Yüz, 4 Köşe, 8 Ayrıt'], exp: 'Bu üç prizma kardeşin de 6 yüzü, 8 köşesi ve 12 ayrıtı vardır.' },
+        { q: 'Alt ve üst tabanı KARE (2 kare yüz), yan yüzleri ise 4 eş DİKDÖRTGEN olan cisim hangisidir?', visual: '🥛🧴', correct: 'Kare Prizma', options: ['Kare Prizma', 'Küp', 'Üçgen Prizma', 'Silindir'], exp: 'Kare prizmanın 2 tabanı kare, 4 yan yüzü dikdörtgendir.' },
+        { q: '6 yüzünün tamamı DİKDÖRTGENSEL bölge olan (kibrit kutusu, tuğla gibi) cisim hangisidir?', visual: '🧱👟', correct: 'Dikdörtgen Prizma', options: ['Dikdörtgen Prizma', 'Küp', 'Koni', 'Üçgen Prizma'], exp: 'Kibrit kutusu, tuğla ve ayakkabı kutusu Dikdörtgen Prizmadır.' },
+        { q: 'Kamp çadırı ve ev çatısı gibi 5 yüzü, 6 köşesi ve 9 ayrıtı olan cisim hangisidir?', visual: '⛺🍫', correct: 'Üçgen Prizma', options: ['Üçgen Prizma', 'Kare Prizma', 'Koni', 'Küp'], exp: 'Üçgen prizmanın 2 üçgen tabanı ve 3 dikdörtgen yan yüzü (toplam 5 yüzü) vardır.' },
+        { q: 'Konserve kutusu ve kalem pil gibi alt ve üstte 2 daire yüzü olan, köşesiz cisim hangisidir?', visual: '🥫🔋', correct: 'Silindir', options: ['Silindir', 'Koni', 'Küre', 'Kare Prizma'], exp: 'Silindirin toplam 3 yüzü vardır (2 daire + 1 eğri yüzey), köşesi ve ayrıtı yoktur.' },
+        { q: 'Dondurma külahı ve doğum günü şapkası hangi geometrik cisme örnektir?', visual: '🍦🎉', correct: 'Koni', options: ['Koni', 'Silindir', 'Üçgen Prizma', 'Küre'], exp: 'Koninin altta 1 daire yüzü ve üstte 1 eğri yüzeyi (toplam 2 yüzü) vardır.' },
+        { q: 'Futbol topu, portakal ve Dünya modeli hangi geometrik cisme örnektir?', visual: '⚽🌍🍊', correct: 'Küre', options: ['Küre', 'Daire', 'Çember', 'Silindir'], exp: 'Top ve portakal 3 boyutlu olduğu için Küredir (1 eğri yüzeyi vardır).' },
+        { q: 'Aşağıdaki geometrik cisimlerden hangisinin KÖŞESİ ve AYRITI YOKTUR?', visual: '🥫🍦⚽', correct: 'Silindir, Koni ve Küre', options: ['Silindir, Koni ve Küre', 'Küp ve Kare Prizma', 'Üçgen Prizma', 'Dikdörtgen Prizma'], exp: 'Silindir, Koni ve Kürenin köşesi (0) ve ayrıtı (0) yoktur.' },
+        { q: 'Bir Silindirin düz yüzlerini kağıt üzerine koyup etrafını çizersek hangi şekil oluşur?', visual: '🥫 ➔ ✏️', correct: 'Çember / Daire', options: ['Çember / Daire', 'Kare', 'Üçgen', 'Dikdörtgen'], exp: 'Silindirin alt ve üst tabanı daire olduğu için etrafını çizince Çember oluşur.' },
+        { q: 'Bir Küpün bir yüzünü kağıt üzerine koyup etrafını kalemle çizersek hangi şekil çıkar?', visual: '🎲 ➔ ✏️', correct: 'Kare', options: ['Kare', 'Üçgen', 'Çember', 'Beşgen'], exp: 'Küpün tüm yüzleri karesel bölgedir.' }
+      ];
+
+      let chosen = [];
+      if (level === 'shapes') {
+        chosen = [...shapesPool].sort(() => Math.random() - 0.5).slice(0, 10);
+      } else if (level === 'solids') {
+        chosen = [...solidsPool].sort(() => Math.random() - 0.5).slice(0, 10);
+      } else {
+        const s1 = [...shapesPool].sort(() => Math.random() - 0.5).slice(0, 5);
+        const s2 = [...solidsPool].sort(() => Math.random() - 0.5).slice(0, 5);
+        chosen = [...s1, ...s2].sort(() => Math.random() - 0.5);
+      }
+
+      return chosen.map(item => ({
+        ...item,
+        shuffledOptions: [...item.options].sort(() => Math.random() - 0.5)
+      }));
+    }
+
+    function renderMathGeometryQuiz(level) {
+      if (level) geoQuizState.level = level;
+      geoQuizState.questions = buildGeometryDynamicQuestions(geoQuizState.level);
+      geoQuizState.index = 0;
+      geoQuizState.score = 0;
+      geoQuizState.wrongInCurrent = 0;
+      geoQuizState.answered = false;
+      geoQuizState.startTime = Date.now();
+      renderActiveGeometryQuiz();
+    }
+
+    function renderActiveGeometryQuiz() {
+      const qList = geoQuizState.questions;
+      if (geoQuizState.index >= qList.length) {
+        const durSec = Math.max(1, Math.round((Date.now() - geoQuizState.startTime) / 1000));
+        const pct = Math.round((geoQuizState.score / (qList.length * 10)) * 100);
+        playChimeSound('fanfare');
+        if (pct >= 70) unlockBadge('geometry_master');
+        recordParentMilestone('math_geometry', `Geometrik Şekiller ve Cisimler Testi (${geoQuizState.level})`, `${geoQuizState.score} Puan (%${pct}) • ${durSec} sn`);
+
+        document.getElementById('appContent').innerHTML = `
+          <div class="card" style="text-align:center;padding:30px 20px;border:2px solid #a855f7;">
+            <div style="font-size:64px;margin-bottom:10px;">🏆🔺📦</div>
+            <h2 style="font-size:26px;font-weight:900;color:#fff;margin-bottom:8px;">Geometri Testi Tamamlandı!</h2>
+            <p style="font-size:15px;color:#e9d5ff;margin-bottom:18px;">
+              Toplam Puanın: <strong>${geoQuizState.score} / ${qList.length * 10}</strong> (%${pct}) • Süre: <strong>${durSec} sn</strong>
+            </p>
+            <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
+              <button class="action-btn" style="background:#a855f7;color:#fff;padding:12px 20px;" onclick="renderMathGeometryQuiz('${geoQuizState.level}')">🔄 Yeni Sorularla Tekrar Çöz</button>
+              <button class="action-btn" style="background:#10b981;color:#fff;padding:12px 20px;" onclick="switchMainTab('math_geometry')">📐 Konu Anlatımına Dön</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const q = qList[geoQuizState.index];
+      const html = `
+        <div class="card" style="border-color:rgba(168,85,247,0.5);">
+          <div class="card-header-bar">
+            <div>
+              <span class="unit-badge" style="background:rgba(168,85,247,0.25);color:#e9d5ff;">📐 GEOMETRİ ÖDEV TESTİ</span>
+              <div class="card-title">Geometrik Şekiller &amp; Cisimler Sınavı</div>
+            </div>
+            <button class="action-btn" style="background:rgba(255,255,255,0.08);color:#fff;padding:8px 14px;font-size:12px;" onclick="switchMainTab('math_geometry')">
+              📘 Konu &amp; Tabloya Bak
+            </button>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <button class="action-btn" style="background:${geoQuizState.level === 'shapes' ? '#f59e0b' : 'rgba(255,255,255,0.07)'};color:#fff;padding:8px 14px;font-size:12px;" onclick="renderMathGeometryQuiz('shapes')">
+              🔺 Sadece Şekiller (2B)
+            </button>
+            <button class="action-btn" style="background:${geoQuizState.level === 'solids' ? '#3b82f6' : 'rgba(255,255,255,0.07)'};color:#fff;padding:8px 14px;font-size:12px;" onclick="renderMathGeometryQuiz('solids')">
+              📦 Sadece Cisimler (3B)
+            </button>
+            <button class="action-btn" style="background:${geoQuizState.level === 'mixed' ? '#a855f7' : 'rgba(255,255,255,0.07)'};color:#fff;padding:8px 14px;font-size:12px;" onclick="renderMathGeometryQuiz('mixed')">
+              🌟 Karışık Öğretmen Ödevi (Şekil + Cisim)
+            </button>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:13px;font-weight:800;color:#cbd5e1;">
+            <span>Soru: ${geoQuizState.index + 1} / ${qList.length}</span>
+            <span style="color:#fde047;">⭐ Puan: ${geoQuizState.score}</span>
+          </div>
+
+          <div style="background:rgba(15,23,42,0.9);border:2px solid rgba(168,85,247,0.4);border-radius:18px;padding:22px;text-align:center;margin-bottom:16px;">
+            <div style="font-size:48px;margin-bottom:10px;">${q.visual}</div>
+            <div style="font-size:18px;font-weight:900;color:#fff;line-height:1.45;margin-bottom:10px;">${q.q}</div>
+            <button onclick="speakTurkish('${q.q.replace(/'/g, '')}')" style="background:rgba(168,85,247,0.2);border:1px solid #a855f7;color:#e9d5ff;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:800;cursor:pointer;">
+              🔊 Soruyu Sesli Oku
+            </button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:12px;">
+            ${q.shuffledOptions.map(opt => `
+              <button class="action-btn" style="background:rgba(30,41,59,0.95);border:2px solid rgba(255,255,255,0.15);color:#fff;padding:15px;font-size:15px;font-weight:900;border-radius:14px;" onclick="answerGeometryQuiz('${opt.replace(/'/g, "\\'")}', this)">
+                ${opt}
+              </button>
+            `).join('')}
+          </div>
+
+          <div id="geoQuizFeedback" style="margin-top:16px;text-align:center;font-size:14px;font-weight:900;min-height:24px;"></div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    function answerGeometryQuiz(selected, btnEl) {
+      if (geoQuizState.answered) return;
+      const q = geoQuizState.questions[geoQuizState.index];
+      const fb = document.getElementById('geoQuizFeedback');
+      if (selected === q.correct) {
+        geoQuizState.answered = true;
+        playChimeSound('correct');
+        const pts = geoQuizState.wrongInCurrent === 0 ? 10 : 5;
+        geoQuizState.score += pts;
+        btnEl.style.background = '#10b981';
+        btnEl.style.borderColor = '#059669';
+        if (fb) {
+          fb.style.color = '#6ee7b7';
+          fb.innerHTML = `✅ Harika! ${q.exp} (+${pts} Puan)`;
+        }
+        speakTurkish('Doğru! ' + q.correct);
+        recordParentActivityLog('math_geometry', true, q.q, `Doğru cevap: ${selected}`);
+        setTimeout(() => {
+          geoQuizState.index += 1;
+          geoQuizState.wrongInCurrent = 0;
+          geoQuizState.answered = false;
+          renderActiveGeometryQuiz();
+        }, 1400);
+      } else {
+        geoQuizState.wrongInCurrent += 1;
+        playChimeSound('wrong');
+        btnEl.style.background = '#ef4444';
+        btnEl.style.borderColor = '#dc2626';
+        if (fb) {
+          fb.style.color = '#fca5a5';
+          fb.innerHTML = `❌ Dikkat! İpucu: ${q.exp}`;
+        }
+        recordParentActivityLog('math_geometry', false, q.q, `Seçilen: ${selected} (Doğru: ${q.correct})`);
+      }
+    }
+
+    /* ========================================================
+       YENİ MODÜL 2: 2. SINIF SAATLERİ ÖĞRENİYORUM & PARALARIMIZ (TL)
+    ======================================================== */
+    let clockGameState = {
+      hour: 3,
+      minute: 0,
+      targetHour: 7,
+      targetMinute: 30,
+      score: 0,
+      solvedCount: 0
+    };
+
+    function formatClockTurkishText(h, m) {
+      if (m === 0) return `Saat tam ${h}`;
+      if (m === 30) return `Saat ${h} buçuk (${h}:30)`;
+      if (m === 15) return `Saat ${h}'i çeyrek geçiyor (${h}:15)`;
+      if (m === 45) {
+        const nextH = h === 12 ? 1 : h + 1;
+        return `Saat ${nextH}'e çeyrek var (${h}:45)`;
+      }
+      return `Saat ${h}:${m < 10 ? '0' + m : m}`;
+    }
+
+    function buildInteractiveClockSvg(h, m) {
+      const hourAngle = ((h % 12) + m / 60) * 30;
+      const minAngle = m * 6;
+      const hRad = (hourAngle - 90) * (Math.PI / 180);
+      const mRad = (minAngle - 90) * (Math.PI / 180);
+      const hx = 110 + 46 * Math.cos(hRad);
+      const hy = 110 + 46 * Math.sin(hRad);
+      const mx = 110 + 72 * Math.cos(mRad);
+      const my = 110 + 72 * Math.sin(mRad);
+
+      let numbersSvg = '';
+      for (let i = 1; i <= 12; i++) {
+        const ang = (i * 30 - 90) * (Math.PI / 180);
+        const nx = 110 + 82 * Math.cos(ang);
+        const ny = 115 + 82 * Math.sin(ang);
+        numbersSvg += `<text x="${nx}" y="${ny}" text-anchor="middle" fill="#f8fafc" font-size="15" font-weight="900">${i}</text>`;
+      }
+
+      return `
+        <svg width="220" height="220" viewBox="0 0 220 220">
+          <circle cx="110" cy="110" r="102" fill="#0f172a" stroke="#eab308" stroke-width="7"/>
+          <circle cx="110" cy="110" r="92" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2" stroke-dasharray="3,6"/>
+          ${numbersSvg}
+          <!-- Yelkovan (Uzun Mavi Kol - Dakika) -->
+          <line x1="110" y1="110" x2="${mx}" y2="${my}" stroke="#38bdf8" stroke-width="6" stroke-linecap="round"/>
+          <!-- Akrep (Kısa Kırmızı Kol - Saat) -->
+          <line x1="110" y1="110" x2="${hx}" y2="${hy}" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="110" cy="110" r="7" fill="#fde047"/>
+        </svg>
+      `;
+    }
+
+    function generateNewClockTarget() {
+      const hours = [1,2,3,4,5,6,7,8,9,10,11,12];
+      const mins = [0, 15, 30, 45];
+      clockGameState.targetHour = hours[Math.floor(Math.random() * hours.length)];
+      clockGameState.targetMinute = mins[Math.floor(Math.random() * mins.length)];
+    }
+
+    function renderMathClock() {
+      if (!clockGameState.targetHour) generateNewClockTarget();
+      const digitalStr = `${String(clockGameState.hour).padStart(2, '0')}:${String(clockGameState.minute).padStart(2, '0')}`;
+      const targetStr = formatClockTurkishText(clockGameState.targetHour, clockGameState.targetMinute);
+
+      const html = `
+        <div class="card" style="border-color:rgba(234,179,8,0.5);">
+          <div class="card-header-bar">
+            <div>
+              <span class="unit-badge" style="background:rgba(234,179,8,0.25);color:#fef08a;">⏰ 2. SINIF ZAMAN ÖLÇME</span>
+              <div class="card-title">Saatleri Öğreniyorum (Tam, Buçuk ve Çeyrek Saatler)</div>
+            </div>
+            <button class="action-btn" style="background:#f97316;color:#fff;padding:9px 14px;font-size:12px;" onclick="switchMainTab('math_money')">
+              🪙 Paralarımız (TL) Dersi ➔
+            </button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:10px;margin-bottom:18px;">
+            <div style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);padding:12px;border-radius:12px;">
+              <strong style="color:#fca5a5;">🔴 Akrep (Kısa Kol):</strong><br>
+              <span style="font-size:12px;color:#e2e8f0;">Her zaman <strong>SAATİ</strong> gösterir. Yavaş ilerler.</span>
+            </div>
+            <div style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.4);padding:12px;border-radius:12px;">
+              <strong style="color:#7dd3fc;">🔵 Yelkovan (Uzun Kol):</strong><br>
+              <span style="font-size:12px;color:#e2e8f0;"><strong>DAKİKAYI</strong> gösterir. Her sayı arası 5 dakikadır!</span>
+            </div>
+            <div style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.4);padding:12px;border-radius:12px;">
+              <strong style="color:#6ee7b7;">📌 Altın Kurallar:</strong><br>
+              <span style="font-size:12px;color:#e2e8f0;">Yelkovan <strong>12</strong>'de = Tam Saat (:00)<br>Yelkovan <strong>6</strong>'da = Buçuk (:30)<br>Yelkovan <strong>3</strong>'te = Çeyrek Geçiyor (:15)</span>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(270px, 1fr));gap:18px;align-items:center;">
+            <!-- ANALOG VE DİJİTAL SAAT SİMÜLATÖRÜ -->
+            <div style="background:rgba(15,23,42,0.9);border:2px solid rgba(234,179,8,0.4);border-radius:18px;padding:18px;text-align:center;">
+              <div id="clockSvgContainer" style="display:flex;justify-content:center;margin-bottom:10px;">
+                ${buildInteractiveClockSvg(clockGameState.hour, clockGameState.minute)}
+              </div>
+              <div style="display:inline-block;background:#020617;border:2px solid #38bdf8;color:#38bdf8;font-family:monospace;font-size:28px;font-weight:900;padding:6px 18px;border-radius:12px;margin-bottom:8px;">
+                ${digitalStr}
+              </div>
+              <div style="font-size:15px;font-weight:900;color:#fde047;margin-bottom:12px;">
+                🗣️ ${formatClockTurkishText(clockGameState.hour, clockGameState.minute)}
+              </div>
+              <div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+                <button class="action-btn" style="background:#ef4444;color:#fff;padding:8px 12px;font-size:12px;" onclick="adjustInteractiveClock(-1, 0)">🔴 Saat -1</button>
+                <button class="action-btn" style="background:#ef4444;color:#fff;padding:8px 12px;font-size:12px;" onclick="adjustInteractiveClock(1, 0)">🔴 Saat +1</button>
+                <button class="action-btn" style="background:#0284c7;color:#fff;padding:8px 12px;font-size:12px;" onclick="adjustInteractiveClock(0, 15)">🔵 +15 Dk (Çeyrek)</button>
+                <button class="action-btn" style="background:#0284c7;color:#fff;padding:8px 12px;font-size:12px;" onclick="adjustInteractiveClock(0, 30)">🔵 +30 Dk (Buçuk)</button>
+              </div>
+              <button onclick="speakTurkish(formatClockTurkishText(clockGameState.hour, clockGameState.minute))" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:6px 14px;border-radius:999px;font-size:12px;cursor:pointer;">
+                🔊 Saati Sesli Söyle
+              </button>
+            </div>
+
+            <!-- SAATİ AYARLA GÖREV OYUNU -->
+            <div style="background:rgba(30,41,59,0.9);border:2px solid #10b981;border-radius:18px;padding:20px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <span style="background:rgba(16,185,129,0.2);color:#6ee7b7;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:900;">🎯 SAAT USTASI GÖREVİ</span>
+                <span style="color:#fde047;font-weight:900;font-size:13px;">⭐ Puan: ${clockGameState.score}</span>
+              </div>
+              <h4 style="font-size:17px;font-weight:900;color:#fff;margin-bottom:8px;">Saati Aşağıdaki Zamana Ayarla:</h4>
+              <div style="background:rgba(245,158,11,0.18);border:2px dashed #f59e0b;border-radius:14px;padding:14px;text-align:center;margin-bottom:14px;">
+                <div style="font-size:20px;font-weight:900;color:#fde047;">⏰ "${targetStr}"</div>
+                <div style="font-size:12px;color:#cbd5e1;margin-top:4px;">Soldaki kırmızı (Saat) ve mavi (Dakika) butonlarla saati ayarla ve Kontrol Et'e bas!</div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="action-btn" style="flex:1;background:#10b981;color:#fff;padding:12px;font-size:14px;font-weight:900;" onclick="checkInteractiveClockMission()">
+                  ✅ Saati Kontrol Et
+                </button>
+                <button class="action-btn" style="background:rgba(255,255,255,0.08);color:#fff;padding:12px;font-size:12px;" onclick="generateNewClockTarget();renderMathClock();">
+                  🔄 Başka Saat Sor
+                </button>
+              </div>
+              <div id="clockMissionFeedback" style="margin-top:12px;font-size:14px;font-weight:900;text-align:center;min-height:22px;"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    function adjustInteractiveClock(deltaH, deltaM) {
+      let totalMins = clockGameState.hour * 60 + clockGameState.minute + deltaH * 60 + deltaM;
+      while (totalMins <= 0) totalMins += 12 * 60;
+      let newH = Math.floor(totalMins / 60) % 12;
+      if (newH === 0) newH = 12;
+      let newM = totalMins % 60;
+      clockGameState.hour = newH;
+      clockGameState.minute = newM;
+      renderMathClock();
+    }
+
+    function checkInteractiveClockMission() {
+      const fb = document.getElementById('clockMissionFeedback');
+      if (clockGameState.hour === clockGameState.targetHour && clockGameState.minute === clockGameState.targetMinute) {
+        clockGameState.score += 10;
+        clockGameState.solvedCount += 1;
+        playChimeSound('correct');
+        if (clockGameState.solvedCount >= 5) unlockBadge('clock_money_hero');
+        if (fb) {
+          fb.style.color = '#6ee7b7';
+          fb.innerHTML = `🎉 Harikasın! Saati tam doğru ayarladın! (+10 Puan & +2 ⭐)`;
+        }
+        speakTurkish('Tebrikler! ' + formatClockTurkishText(clockGameState.hour, clockGameState.minute));
+        recordParentActivityLog('math_clock_money', true, `Saat Ayarlama: ${formatClockTurkishText(clockGameState.targetHour, clockGameState.targetMinute)}`, 'Doğru ayarlandı');
+        setTimeout(() => {
+          generateNewClockTarget();
+          renderMathClock();
+        }, 1400);
+      } else {
+        playChimeSound('wrong');
+        if (fb) {
+          fb.style.color = '#fca5a5';
+          fb.innerHTML = `❌ Şu an saat ${String(clockGameState.hour).padStart(2, '0')}:${String(clockGameState.minute).padStart(2, '0')}. İstenen: ${String(clockGameState.targetHour).padStart(2, '0')}:${String(clockGameState.targetMinute).padStart(2, '0')}!`;
+        }
+        recordParentActivityLog('math_clock_money', false, `Saat Ayarlama`, `Hedef ${clockGameState.targetHour}:${clockGameState.targetMinute}`);
+      }
+    }
+
+    /* ========================================================
+       PARALARIMIZ (TL & KURUŞ) VE KIRTASİYE MARKET OYUNU
+    ======================================================== */
+    const STATIONERY_ITEMS = [
+      { name: 'Boyama Kitabı', emoji: '🎨', price: 35 },
+      { name: 'Kırmızı Kalem Kutusu', emoji: '✏️', price: 45 },
+      { name: 'Geometri Cetvel Seti', emoji: '📐', price: 25 },
+      { name: 'Resim Defteri', emoji: '📓', price: 30 },
+      { name: 'Oyun Hamuru Seti', emoji: '🧸', price: 55 },
+      { name: 'Suluk Matara', emoji: '🥤', price: 65 },
+      { name: 'Masal Kitabı', emoji: '📖', price: 40 },
+      { name: 'Futbol Topu', emoji: '⚽', price: 85 }
+    ];
+
+    let moneyGameState = {
+      currentItem: STATIONERY_ITEMS[0],
+      paidTotal: 0,
+      paidNotes: [],
+      score: 0,
+      solvedCount: 0
+    };
+
+    function pickNewMoneyItem() {
+      moneyGameState.currentItem = STATIONERY_ITEMS[Math.floor(Math.random() * STATIONERY_ITEMS.length)];
+      moneyGameState.paidTotal = 0;
+      moneyGameState.paidNotes = [];
+    }
+
+    function renderMathMoney() {
+      const item = moneyGameState.currentItem;
+      const html = `
+        <div class="card" style="border-color:rgba(249,115,22,0.5);">
+          <div class="card-header-bar">
+            <div>
+              <span class="unit-badge" style="background:rgba(249,115,22,0.25);color:#fed7aa;">🪙 2. SINIF PARALARIMIZ (TL &amp; KURUŞ)</span>
+              <div class="card-title">Paralarımızı Tanıyalım &amp; Kırtasiye Market Oyunu</div>
+            </div>
+            <button class="action-btn" style="background:#eab308;color:#0f172a;padding:9px 14px;font-size:12px;font-weight:900;" onclick="switchMainTab('math_clock')">
+              ⏰ Saatler Dersine Geç
+            </button>
+          </div>
+
+          <div style="background:rgba(249,115,22,0.12);border:1.5px solid rgba(249,115,22,0.4);border-radius:14px;padding:12px 16px;margin-bottom:18px;font-size:13px;color:#e2e8f0;line-height:1.5;">
+            🇹🇷 <strong>Türk Lirası (TL - ₺) ve Kuruş (Kr):</strong><br>
+            • <strong>Madeni Paralarımız:</strong> 1 Kr, 5 Kr, 10 Kr, 25 Kr, 50 Kr ve <strong>1 TL</strong>. (Unutma: <strong>100 Kuruş = 1 TL</strong> yani iki tane 50 Kr = 1 TL eder!)<br>
+            • <strong>Kağıt Paralarımız (Banknotlar):</strong> <strong>5 TL, 10 TL, 20 TL, 50 TL, 100 TL ve 200 TL</strong>.
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(270px, 1fr));gap:16px;">
+            <!-- ÜRÜN VİTRİNİ -->
+            <div style="background:rgba(15,23,42,0.9);border:2px solid #f97316;border-radius:18px;padding:20px;text-align:center;">
+              <div style="font-size:12px;font-weight:900;color:#fdba74;margin-bottom:6px;">🛒 KIRTASİYE VİTRİNİ</div>
+              <div style="font-size:58px;margin-bottom:6px;">${item.emoji}</div>
+              <h3 style="font-size:22px;font-weight:900;color:#fff;margin-bottom:6px;">${item.name}</h3>
+              <div style="display:inline-block;background:rgba(16,185,129,0.2);border:2px solid #10b981;color:#6ee7b7;font-size:24px;font-weight:900;padding:6px 20px;border-radius:999px;margin-bottom:14px;">
+                Etiket Fiyatı: ${item.price} TL
+              </div>
+              <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:10px;">
+                <div style="font-size:12px;color:#94a3b8;">Kasaya Koyduğun Para Toplamı:</div>
+                <div style="font-size:26px;font-weight:900;color:#fde047;">${moneyGameState.paidTotal} TL</div>
+                <div style="font-size:12px;color:#cbd5e1;margin-top:4px;min-height:20px;">
+                  ${moneyGameState.paidNotes.length ? moneyGameState.paidNotes.map(n => `<span style="background:rgba(255,255,255,0.1);padding:2px 7px;border-radius:6px;margin:2px;display:inline-block;">${n} TL</span>`).join(' + ') : 'Henüz para eklenmedi'}
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;justify-content:center;">
+                <button class="action-btn" style="background:#ef4444;color:#fff;padding:8px 14px;font-size:12px;" onclick="moneyGameState.paidTotal=0;moneyGameState.paidNotes=[];renderMathMoney();">🗑️ Kasayı Sıfırla</button>
+                <button class="action-btn" style="background:rgba(255,255,255,0.1);color:#fff;padding:8px 14px;font-size:12px;" onclick="pickNewMoneyItem();renderMathMoney();">🔄 Başka Ürün Seç</button>
+              </div>
+            </div>
+
+            <!-- CÜZDANDAN PARA SEÇİMİ -->
+            <div style="background:rgba(30,41,59,0.9);border:2px solid #10b981;border-radius:18px;padding:20px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <span style="font-size:13px;font-weight:900;color:#6ee7b7;">👛 Cüzdanından Paraları Seçip Öde:</span>
+                <span style="font-size:13px;font-weight:900;color:#fde047;">⭐ Puan: ${moneyGameState.score}</span>
+              </div>
+              <p style="font-size:12px;color:#cbd5e1;margin-bottom:12px;">Ürünün fiyatı olan <strong>${item.price} TL</strong>'yi tamamlayacak paraların üzerine tıkla:</p>
+              <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin-bottom:14px;">
+                ${[1, 5, 10, 20, 50, 100].map(val => `
+                  <button class="action-btn" style="background:${val === 1 ? 'linear-gradient(135deg,#eab308,#ca8a04)' : 'linear-gradient(135deg,#059669,#0284c7)'};color:#fff;padding:12px;font-size:15px;font-weight:900;border-radius:12px;" onclick="addMoneyToRegister(${val})">
+                    ${val === 1 ? '🪙 1 TL' : '💵 ' + val + ' TL'}
+                  </button>
+                `).join('')}
+              </div>
+              <button class="action-btn" style="width:100%;background:#10b981;color:#fff;padding:12px;font-size:15px;font-weight:900;" onclick="checkMoneyPayment()">
+                ✅ Kasada Ödemeyi Tamamla
+              </button>
+              <div id="moneyGameFeedback" style="margin-top:12px;font-size:14px;font-weight:900;text-align:center;min-height:22px;"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    function addMoneyToRegister(amount) {
+      moneyGameState.paidTotal += amount;
+      moneyGameState.paidNotes.push(amount);
+      renderMathMoney();
+    }
+
+    function checkMoneyPayment() {
+      const item = moneyGameState.currentItem;
+      const fb = document.getElementById('moneyGameFeedback');
+      if (moneyGameState.paidTotal === item.price) {
+        moneyGameState.score += 10;
+        moneyGameState.solvedCount += 1;
+        playChimeSound('correct');
+        if (moneyGameState.solvedCount >= 5) unlockBadge('clock_money_hero');
+        if (fb) {
+          fb.style.color = '#6ee7b7';
+          fb.innerHTML = `🎉 Tebrikler! ${item.name} için tam ${item.price} TL ödedin! (+10 Puan & +2 ⭐)`;
+        }
+        speakTurkish('Harika! Tam ' + item.price + ' Türk Lirası ödedin.');
+        recordParentActivityLog('math_clock_money', true, `Market Oyunu: ${item.name} (${item.price} TL)`, `Ödenen: ${moneyGameState.paidNotes.join('+')} TL`);
+        setTimeout(() => {
+          pickNewMoneyItem();
+          renderMathMoney();
+        }, 1400);
+      } else if (moneyGameState.paidTotal < item.price) {
+        playChimeSound('wrong');
+        const diff = item.price - moneyGameState.paidTotal;
+        if (fb) {
+          fb.style.color = '#fde047';
+          fb.innerHTML = `⚠️ ${diff} TL daha eklemelisin! (${moneyGameState.paidTotal} TL verdin, fiyat ${item.price} TL)`;
+        }
+      } else {
+        playChimeSound('wrong');
+        const change = moneyGameState.paidTotal - item.price;
+        if (fb) {
+          fb.style.color = '#fca5a5';
+          fb.innerHTML = `💡 Fazla para verdin (${moneyGameState.paidTotal} TL). Para üstü ${change} TL olur. Tam ${item.price} TL oluşturmayı dene!`;
+        }
+      }
+    }
+
+    /* ========================================================
+       YENİ MODÜL 3: DİJİTAL DERS DOSTUM ("LİNGO DOSTUM"),
+       YILDIZ KUMBARASI, AVATAR MARKETİ, GÜNLÜK ŞANS ÇARKI VE 3 GÖREV SANDIĞI
+    ======================================================== */
+    const LINGO_PET_STORAGE_KEY = 'lingo_pet_and_stars_v1';
+    const PET_TYPES = [
+      { id: 'cat', name: 'Pamuk Kedi', emoji: '🐱', evolvedEmoji: '🦁', soundText: 'Miyav! Birlikte ders çalışmaya bayılıyorum!' },
+      { id: 'dog', name: 'Cesur Köpek', emoji: '🐶', evolvedEmoji: '🐺', soundText: 'Hav hav! Bugün tüm soruları çözelim!' },
+      { id: 'dragon', name: 'Ateş Ejderhası', emoji: '🐲', evolvedEmoji: '🐉', soundText: 'Harika gidiyorsun şampiyon!' },
+      { id: 'robot', name: 'Boni Robot', emoji: '🤖', evolvedEmoji: '🚀', soundText: 'Bip bop! Matematik ve İngilizce enerjim tam!' }
+    ];
+
+    const AVATAR_LIST = [
+      { id: 'hero', emoji: '🦸', name: 'Süper Kahraman', cost: 0 },
+      { id: 'astronaut', emoji: '👩‍🚀', name: 'Uzay Kaşifi', cost: 15 },
+      { id: 'scientist', emoji: '🧑‍🔬', name: 'Bilim İnsanı', cost: 20 },
+      { id: 'artist', emoji: '🧑‍🎨', name: 'Ressam', cost: 20 },
+      { id: 'king', emoji: '🤴', name: 'Altın Taçlı Şampiyon', cost: 35 }
+    ];
+
+    const PET_ITEMS_SHOP = [
+      { id: 'milk', name: 'Sıcak Süt & Mama', emoji: '🥛', cost: 6, xp: 15 },
+      { id: 'apple', name: 'Vitaminli Elma', emoji: '🍎', cost: 8, xp: 20 },
+      { id: 'glasses', name: 'Bilgin Gözlüğü', emoji: '🤓', cost: 15, xp: 35 },
+      { id: 'crown', name: 'Şampiyonluk Tacı', emoji: '👑', cost: 25, xp: 60 }
+    ];
+
+    function getPetState() {
+      try {
+        const raw = localStorage.getItem(LINGO_PET_STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const today = getTodayDateKey();
+          if (parsed.questDate !== today) {
+            parsed.questDate = today;
+            parsed.quests = { rhythm: 0, math: 0, english: 0, chestClaimed: false };
+          }
+          return parsed;
+        }
+      } catch (e) {}
+      return {
+        stars: 20,
+        petId: 'cat',
+        xp: 0,
+        level: 1,
+        accessories: [],
+        avatarId: 'hero',
+        unlockedAvatars: ['hero'],
+        lastWheelDate: '',
+        questDate: getTodayDateKey(),
+        quests: { rhythm: 0, math: 0, english: 0, chestClaimed: false }
+      };
+    }
+
+    function savePetState(state) {
+      try {
+        localStorage.setItem(LINGO_PET_STORAGE_KEY, JSON.stringify(state));
+        updateHeaderStarUI();
+      } catch (e) {}
+    }
+
+    function addStarCoins(amount, showToast = false) {
+      const st = getPetState();
+      st.stars = (st.stars || 0) + amount;
+      savePetState(st);
+      if (showToast && typeof showUpdateToast === 'function') {
+        showUpdateToast(`⭐ +${amount} Yıldız Kumbarana Eklendi! (Toplam: ${st.stars} ⭐)`);
+      }
+    }
+
+    function updateDailyQuestProgress(category) {
+      const st = getPetState();
+      if (!st.quests) st.quests = { rhythm: 0, math: 0, english: 0, chestClaimed: false };
+      if (category === 'math_rhythm' || category === 'rhythm_practice' || category === 'rhythm_exam') {
+        st.quests.rhythm = Math.min(3, (st.quests.rhythm || 0) + 1);
+      } else if (category && category.startsWith('math_')) {
+        st.quests.math = Math.min(5, (st.quests.math || 0) + 1);
+      } else if (category && category.startsWith('english_')) {
+        st.quests.english = Math.min(5, (st.quests.english || 0) + 1);
+      }
+      savePetState(st);
+    }
+
+    function getPetSummaryForMenu() {
+      const st = getPetState();
+      const petObj = PET_TYPES.find(p => p.id === st.petId) || PET_TYPES[0];
+      const avObj = AVATAR_LIST.find(a => a.id === st.avatarId) || AVATAR_LIST[0];
+      const q = st.quests || { rhythm: 0, math: 0, english: 0 };
+      const done = (q.rhythm >= 1 ? 1 : 0) + (q.math >= 3 ? 1 : 0) + (q.english >= 3 ? 1 : 0);
+      return {
+        petEmoji: st.level >= 3 ? petObj.evolvedEmoji : petObj.emoji,
+        petName: petObj.name,
+        level: st.level || 1,
+        stars: st.stars || 0,
+        questsDone: done,
+        avatarEmoji: avObj.emoji
+      };
+    }
+
+    function updateHeaderStarUI() {
+      const summary = getPetSummaryForMenu();
+      const countEl = document.getElementById('headerStarCount');
+      const emojiEl = document.getElementById('headerPetEmoji');
+      if (countEl) countEl.textContent = summary.stars;
+      if (emojiEl) emojiEl.textContent = summary.petEmoji;
+    }
+
+    function renderPetAndWheelHub() {
+      const st = getPetState();
+      const petObj = PET_TYPES.find(p => p.id === st.petId) || PET_TYPES[0];
+      const today = getTodayDateKey();
+      const canSpinToday = st.lastWheelDate !== today;
+      const xpInLevel = st.xp % 100;
+      const q = st.quests || { rhythm: 0, math: 0, english: 0, chestClaimed: false };
+      const q1Done = q.rhythm >= 1;
+      const q2Done = q.math >= 3;
+      const q3Done = q.english >= 3;
+      const allQuestsDone = q1Done && q2Done && q3Done;
+
+      const html = `
+        <div class="card" style="border-color:rgba(245,158,11,0.5);background:linear-gradient(180deg,rgba(245,158,11,0.12),rgba(15,23,42,0.95));">
+          <div class="card-header-bar">
+            <div>
+              <span class="unit-badge" style="background:rgba(245,158,11,0.25);color:#fde047;">🐾 YILDIZ KUMBARASI &amp; EĞLENCE MERKEZİ</span>
+              <div class="card-title">Lingo Dostum, Günlük Şans Çarkı &amp; Görev Sandığı</div>
+            </div>
+            <div style="background:rgba(245,158,11,0.2);border:2px solid #f59e0b;color:#fde047;padding:8px 16px;border-radius:999px;font-size:16px;font-weight:900;">
+              ⭐ Kumbara: ${st.stars} Yıldız
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px;margin-bottom:20px;">
+            <!-- DİJİTAL DOSTUM KARTI -->
+            <div style="background:rgba(15,23,42,0.9);border:2px solid #ec4899;border-radius:18px;padding:18px;text-align:center;">
+              <div style="font-size:12px;font-weight:900;color:#f472b6;margin-bottom:6px;">DİJİTAL DERS ARKADAŞIM</div>
+              <div style="font-size:72px;line-height:1.1;margin:8px 0;cursor:pointer;" onclick="speakTurkish('${petObj.soundText}')">
+                ${st.level >= 3 ? petObj.evolvedEmoji : petObj.emoji}
+                ${(st.accessories || []).join('')}
+              </div>
+              <h3 style="font-size:20px;font-weight:900;color:#fff;margin-bottom:4px;">${petObj.name} (Seviye ${st.level})</h3>
+              <p style="font-size:12px;color:#cbd5e1;margin-bottom:10px;">"${petObj.soundText}"</p>
+              <div style="background:rgba(255,255,255,0.08);height:14px;border-radius:999px;overflow:hidden;margin-bottom:6px;">
+                <div style="width:${xpInLevel}%;height:100%;background:linear-gradient(90deg,#ec4899,#f59e0b);transition:width 0.3s;"></div>
+              </div>
+              <div style="font-size:11px;color:#94a3b8;margin-bottom:14px;">Gelişim Puanı: ${xpInLevel} / 100 XP (Seviye 3'te Evrimleşir!)</div>
+
+              <div style="font-size:12px;font-weight:800;color:#fde047;margin-bottom:8px;">Dostunu Seç:</div>
+              <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+                ${PET_TYPES.map(p => `
+                  <button class="action-btn" style="background:${st.petId === p.id ? '#ec4899' : 'rgba(255,255,255,0.08)'};color:#fff;padding:7px 12px;font-size:12px;" onclick="selectLingoPet('${p.id}')">
+                    ${p.emoji} ${p.name.split(' ')[0]}
+                  </button>
+                `).join('')}
+              </div>
+
+              <div style="font-size:12px;font-weight:800;color:#6ee7b7;margin-bottom:8px;">🛒 Yıldızlarla Dostunu Besle &amp; Süsle:</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                ${PET_ITEMS_SHOP.map(item => `
+                  <button class="action-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:8px;font-size:11px;font-weight:800;" onclick="buyPetItem('${item.id}')">
+                    ${item.emoji} ${item.name}<br><span style="color:#fde047;">⭐ ${item.cost} (+${item.xp} XP)</span>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- GÜNLÜK ŞANS ÇARKI VE GÜNÜN 3 GÖREVİ SANDIĞI -->
+            <div style="display:flex;flex-direction:column;gap:16px;">
+              <!-- GÜNLÜK ŞANS ÇARKI -->
+              <div style="background:rgba(15,23,42,0.9);border:2px solid #f59e0b;border-radius:18px;padding:18px;text-align:center;">
+                <div style="font-size:44px;margin-bottom:6px;" id="dailyWheelIcon">🎡</div>
+                <h3 style="font-size:18px;font-weight:900;color:#fde047;margin-bottom:6px;">Günlük Şans Çarkı</h3>
+                <p style="font-size:12px;color:#cbd5e1;margin-bottom:12px;">Her gün 1 kez çevir, kumbarana sürpriz yıldızlar (+15, +25, +50 ⭐) kazan!</p>
+                <button class="action-btn" style="background:${canSpinToday ? 'linear-gradient(135deg,#f59e0b,#ea580c)' : 'rgba(255,255,255,0.1)'};color:#fff;padding:12px 24px;font-size:14px;font-weight:900;" onclick="spinDailyWheel()">
+                  ${canSpinToday ? '🎡 Şans Çarkını Çevir!' : '✅ Bugünkü Çark Çevrildi (Yarın Tekrar Gel)'}
+                </button>
+                <div id="wheelSpinResult" style="margin-top:10px;font-size:14px;font-weight:900;color:#6ee7b7;"></div>
+              </div>
+
+              <!-- GÜNÜN 3 GÖREVİ VE SÜRPRİZ SANDIK -->
+              <div style="background:rgba(15,23,42,0.9);border:2px solid #10b981;border-radius:18px;padding:18px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                  <h3 style="font-size:17px;font-weight:900;color:#6ee7b7;margin:0;">🎁 Günün 3 Görevi Sandığı</h3>
+                  <span style="font-size:12px;font-weight:900;color:#fde047;">Ödül: +30 ⭐</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;font-size:12px;">
+                  <div style="background:rgba(255,255,255,0.05);padding:8px 12px;border-radius:10px;display:flex;justify-content:space-between;">
+                    <span>${q1Done ? '✅' : '⬜'} 1. Ritmik Sayma Pratiği Yap</span>
+                    <strong style="color:#6ee7b7;">${Math.min(1, q.rhythm)} / 1</strong>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.05);padding:8px 12px;border-radius:10px;display:flex;justify-content:space-between;">
+                    <span>${q2Done ? '✅' : '⬜'} 2. Matematikte 3 Doğru Soru Çöz</span>
+                    <strong style="color:#38bdf8;">${Math.min(3, q.math)} / 3</strong>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.05);padding:8px 12px;border-radius:10px;display:flex;justify-content:space-between;">
+                    <span>${q3Done ? '✅' : '⬜'} 3. İngilizcede 3 Doğru Soru Çöz</span>
+                    <strong style="color:#f472b6;">${Math.min(3, q.english)} / 3</strong>
+                  </div>
+                </div>
+                <button class="action-btn" style="width:100%;background:${allQuestsDone && !q.chestClaimed ? '#10b981' : 'rgba(255,255,255,0.08)'};color:#fff;padding:10px;font-size:13px;font-weight:900;" onclick="claimDailyQuestChest()">
+                  ${q.chestClaimed ? '🎉 Bugünün Sandığı Açıldı (+30 ⭐ Alındı)' : (allQuestsDone ? '🎁 Sürpriz Sandığı Aç (+30 ⭐ Kazan!)' : '🔒 3 Görevi Tamamla ve Sandığı Aç')}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ÖĞRENCİ AVATAR SEÇİMİ -->
+          <div style="background:rgba(15,23,42,0.85);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:16px;">
+            <h4 style="font-size:15px;font-weight:900;color:#38bdf8;margin-bottom:10px;">🦸 Öğrenci Avatarını Seç:</h4>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              ${AVATAR_LIST.map(av => {
+                const unlocked = (st.unlockedAvatars || ['hero']).includes(av.id);
+                const selected = st.avatarId === av.id;
+                return `
+                  <button class="action-btn" style="background:${selected ? '#0284c7' : 'rgba(255,255,255,0.06)'};border:2px solid ${selected ? '#38bdf8' : 'rgba(255,255,255,0.12)'};color:#fff;padding:10px 14px;font-size:13px;" onclick="selectOrBuyAvatar('${av.id}')">
+                    <span style="font-size:22px;">${av.emoji}</span> ${av.name}
+                    <span style="font-size:11px;color:#fde047;margin-left:4px;">${unlocked ? (selected ? '(Seçili)' : '(Açık)') : '⭐ ' + av.cost}</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    function selectLingoPet(petId) {
+      const st = getPetState();
+      st.petId = petId;
+      savePetState(st);
+      renderPetAndWheelHub();
+    }
+
+    function buyPetItem(itemId) {
+      const item = PET_ITEMS_SHOP.find(i => i.id === itemId);
+      if (!item) return;
+      const st = getPetState();
+      if (st.stars < item.cost) {
+        showUpdateToast(`⚠️ Yeterli yıldızın yok! (${item.cost} ⭐ gerekli, ders çalışarak kazanabilirsin)`);
+        return;
+      }
+      st.stars -= item.cost;
+      st.xp = (st.xp || 0) + item.xp;
+      st.level = 1 + Math.floor(st.xp / 100);
+      if ((itemId === 'glasses' || itemId === 'crown') && !(st.accessories || []).includes(item.emoji)) {
+        st.accessories = [...(st.accessories || []), item.emoji];
+      }
+      savePetState(st);
+      playChimeSound('correct');
+      unlockBadge('pet_caretaker');
+      speakTurkish('Teşekkür ederim! Çok mutlu oldum!');
+      renderPetAndWheelHub();
+    }
+
+    function spinDailyWheel() {
+      const st = getPetState();
+      const today = getTodayDateKey();
+      if (st.lastWheelDate === today) {
+        showUpdateToast('🎡 Bugünkü şans çarkını zaten çevirdin! Yarın tekrar çevirebilirsin.');
+        return;
+      }
+      const rewards = [15, 20, 25, 30, 50];
+      const won = rewards[Math.floor(Math.random() * rewards.length)];
+      st.stars = (st.stars || 0) + won;
+      st.lastWheelDate = today;
+      savePetState(st);
+      playChimeSound('fanfare');
+      unlockBadge('pet_caretaker');
+      speakTurkish(`Harika! Şans çarkından ${won} yıldız kazandın!`);
+      renderPetAndWheelHub();
+      const resEl = document.getElementById('wheelSpinResult');
+      if (resEl) resEl.innerHTML = `🎉 Tebrikler! Çarktan Tam <strong>+${won} ⭐ Yıldız</strong> Kazandın!`;
+    }
+
+    function claimDailyQuestChest() {
+      const st = getPetState();
+      const q = st.quests || { rhythm: 0, math: 0, english: 0, chestClaimed: false };
+      if (q.chestClaimed) return;
+      if (q.rhythm >= 1 && q.math >= 3 && q.english >= 3) {
+        q.chestClaimed = true;
+        st.stars = (st.stars || 0) + 30;
+        savePetState(st);
+        playChimeSound('fanfare');
+        speakTurkish('Tebrikler! Günün görev sandığını açtın ve 30 yıldız kazandın!');
+        renderPetAndWheelHub();
+      } else {
+        showUpdateToast('🔒 Sandığı açmak için 3 günlük görevi tamamlamalısın!');
+      }
+    }
+
+    function selectOrBuyAvatar(avId) {
+      const av = AVATAR_LIST.find(a => a.id === avId);
+      if (!av) return;
+      const st = getPetState();
+      if (!st.unlockedAvatars) st.unlockedAvatars = ['hero'];
+      if (st.unlockedAvatars.includes(avId)) {
+        st.avatarId = avId;
+        savePetState(st);
+        renderPetAndWheelHub();
+      } else if (st.stars >= av.cost) {
+        st.stars -= av.cost;
+        st.unlockedAvatars.push(avId);
+        st.avatarId = avId;
+        savePetState(st);
+        playChimeSound('correct');
+        showUpdateToast(`🎉 ${av.emoji} ${av.name} avatarı açıldı!`);
+        renderPetAndWheelHub();
+      } else {
+        showUpdateToast(`⚠️ Bu avatar için ${av.cost} ⭐ gerekli!`);
+      }
+    }
+
+    /* ========================================================
+       YENİ MODÜL 4: EĞİTSEL OYUNLAR VE 2 KİŞİLİK DÜELLO MERKEZİ
+       (1. Balon Patlatma, 2. 60 Saniye Şampiyonu, 3. 2 Kişilik Düello)
+    ======================================================== */
+    let funGamesTab = 'balloon'; // 'balloon' | 'time60' | 'duel'
+    let balloonGameState = { score: 0, round: 1, prompt: '', correct: '', options: [] };
+    let time60State = { active: false, timeLeft: 60, score: 0, bestScore: parseInt(localStorage.getItem('lingo_best_60s') || '0', 10), currentQ: null, timerId: null };
+    let duelState = { p1Score: 0, p2Score: 0, turn: 1, round: 1, maxRounds: 6, currentQ: null };
+
+    function generateQuickGameQuestion() {
+      const types = ['math_add', 'math_sub', 'geo', 'eng'];
+      const t = types[Math.floor(Math.random() * types.length)];
+      if (t === 'math_add') {
+        const a = Math.floor(Math.random() * 25) + 5;
+        const b = Math.floor(Math.random() * 20) + 4;
+        const ans = String(a + b);
+        const opts = new Set([ans, String(a + b + 2), String(Math.max(1, a + b - 3)), String(a + b + 10)]);
+        return { prompt: `➕ ${a} + ${b} = ?`, correct: ans, options: Array.from(opts).sort(() => Math.random() - 0.5) };
+      } else if (t === 'math_sub') {
+        const a = Math.floor(Math.random() * 30) + 18;
+        const b = Math.floor(Math.random() * 14) + 3;
+        const ans = String(a - b);
+        const opts = new Set([ans, String(a - b + 2), String(Math.max(1, a - b - 2)), String(a - b + 5)]);
+        return { prompt: `➖ ${a} - ${b} = ?`, correct: ans, options: Array.from(opts).sort(() => Math.random() - 0.5) };
+      } else if (t === 'geo') {
+        const gPool = [
+          { prompt: '🎲 Küpün kaç yüzü vardır?', correct: '6 Yüzü', options: ['6 Yüzü', '4 Yüzü', '8 Yüzü', '3 Yüzü'] },
+          { prompt: '🔺 Üçgenin kaç köşesi vardır?', correct: '3 Köşesi', options: ['3 Köşesi', '4 Köşesi', '0 Köşesi', '6 Köşesi'] },
+          { prompt: '⚽ Top hangi geometrik cisimdir?', correct: 'Küre', options: ['Küre', 'Küp', 'Koni', 'Silindir'] },
+          { prompt: '🍦 Dondurma külahı hangi cisimdir?', correct: 'Koni', options: ['Koni', 'Silindir', 'Kare Prizma', 'Küre'] },
+          { prompt: '🥫 Konserve kutusu hangi cisimdir?', correct: 'Silindir', options: ['Silindir', 'Küp', 'Üçgen', 'Koni'] }
+        ];
+        const pick = gPool[Math.floor(Math.random() * gPool.length)];
+        return { prompt: pick.prompt, correct: pick.correct, options: [...pick.options].sort(() => Math.random() - 0.5) };
+      } else {
+        const ePool = [
+          { prompt: '🇬🇧 "Apple" ne demektir?', correct: 'Elma 🍎', options: ['Elma 🍎', 'Muz 🍌', 'Kedi 🐱', 'Okul 🏫'] },
+          { prompt: '🇬🇧 "Dog" ne demektir?', correct: 'Köpek 🐶', options: ['Köpek 🐶', 'Kuş 🐦', 'Balık 🐟', 'Aslan 🦁'] },
+          { prompt: '🇬🇧 "Sunny" hava nasıldır?', correct: 'Güneşli ☀️', options: ['Güneşli ☀️', 'Yağmurlu 🌧️', 'Karlı ❄️', 'Rüzgarlı 💨'] },
+          { prompt: '🇬🇧 "Hospital" neresidir?', correct: 'Hastane 🏥', options: ['Hastane 🏥', 'Okul 🏫', 'Park 🛝', 'Fırın 🥖'] }
+        ];
+        const pick = ePool[Math.floor(Math.random() * ePool.length)];
+        return { prompt: pick.prompt, correct: pick.correct, options: [...pick.options].sort(() => Math.random() - 0.5) };
+      }
+    }
+
+    function renderFunGamesHub(subTab) {
+      if (subTab) {
+        if (time60State.timerId) {
+          clearInterval(time60State.timerId);
+          time60State.timerId = null;
+          time60State.active = false;
+        }
+        funGamesTab = subTab;
+      }
+
+      let bodyHtml = '';
+      if (funGamesTab === 'balloon') {
+        const q = generateQuickGameQuestion();
+        balloonGameState.prompt = q.prompt;
+        balloonGameState.correct = q.correct;
+        balloonGameState.options = q.options;
+        const colors = ['#ef4444', '#3b82f6', '#10b981', '#a855f7'];
+        bodyHtml = `
+          <div style="background:rgba(15,23,42,0.9);border:2px solid #38bdf8;border-radius:18px;padding:20px;text-align:center;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <span style="font-size:13px;font-weight:900;color:#7dd3fc;">🎈 Doğru Balona Dokun ve Patlat!</span>
+              <span style="font-size:14px;font-weight:900;color:#fde047;">⭐ Puan: ${balloonGameState.score}</span>
+            </div>
+            <div style="font-size:22px;font-weight:900;color:#fff;background:rgba(255,255,255,0.06);padding:14px;border-radius:14px;margin-bottom:18px;">
+              ${balloonGameState.prompt}
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:14px;">
+              ${balloonGameState.options.map((opt, idx) => `
+                <button onclick="popBalloonOption('${opt.replace(/'/g, "\\'")}', this)" style="background:radial-gradient(circle at 30% 30%, ${colors[idx % 4]}, #0f172a);border:3px solid ${colors[idx % 4]};color:#fff;border-radius:999px;padding:24px 12px;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.45);transition:transform 0.2s;">
+                  🎈<br>${opt}
+                </button>
+              `).join('')}
+            </div>
+            <div id="balloonFeedback" style="margin-top:14px;font-size:14px;font-weight:900;min-height:22px;"></div>
+          </div>
+        `;
+      } else if (funGamesTab === 'time60') {
+        if (!time60State.currentQ) time60State.currentQ = generateQuickGameQuestion();
+        bodyHtml = `
+          <div style="background:rgba(15,23,42,0.9);border:2px solid #f59e0b;border-radius:18px;padding:20px;text-align:center;">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+              <span style="background:rgba(239,68,68,0.2);color:#fca5a5;padding:6px 14px;border-radius:999px;font-size:15px;font-weight:900;">⏱️ Kalan Süre: <span id="time60Clock">${time60State.timeLeft}</span> sn</span>
+              <span style="color:#6ee7b7;font-size:15px;font-weight:900;">🎯 Skor: ${time60State.score}</span>
+              <span style="color:#fde047;font-size:13px;font-weight:900;">🏆 Rekorun: ${time60State.bestScore}</span>
+            </div>
+            ${!time60State.active ? `
+              <div style="padding:20px 10px;">
+                <div style="font-size:52px;margin-bottom:8px;">⚡⏱️</div>
+                <h3 style="font-size:20px;font-weight:900;color:#fff;margin-bottom:8px;">60 Saniye Şampiyonu Yarışması</h3>
+                <p style="font-size:13px;color:#cbd5e1;margin-bottom:16px;">60 saniye içinde en çok Matematik, Geometri ve İngilizce sorusunu çöz, kendi rekorunu kır!</p>
+                <button class="action-btn" style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;padding:12px 26px;font-size:15px;font-weight:900;" onclick="start60SecChallenge()">
+                  🚀 60 Saniyeyi Başlat!
+                </button>
+              </div>
+            ` : `
+              <div style="font-size:22px;font-weight:900;color:#fff;background:rgba(255,255,255,0.06);padding:14px;border-radius:14px;margin-bottom:14px;">
+                ${time60State.currentQ.prompt}
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                ${time60State.currentQ.options.map(opt => `
+                  <button class="action-btn" style="background:rgba(30,41,59,0.95);border:2px solid rgba(255,255,255,0.2);color:#fff;padding:14px;font-size:15px;font-weight:900;" onclick="answer60SecQuestion('${opt.replace(/'/g, "\\'")}')">
+                    ${opt}
+                  </button>
+                `).join('')}
+              </div>
+            `}
+          </div>
+        `;
+      } else if (funGamesTab === 'duel') {
+        if (!duelState.currentQ) duelState.currentQ = generateQuickGameQuestion();
+        const isFinished = duelState.round > duelState.maxRounds;
+        bodyHtml = `
+          <div style="background:rgba(15,23,42,0.9);border:2px solid #ec4899;border-radius:18px;padding:20px;text-align:center;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+              <div style="background:${duelState.turn === 1 && !isFinished ? 'rgba(59,130,246,0.28)' : 'rgba(255,255,255,0.05)'};border:2px solid #3b82f6;border-radius:14px;padding:10px;">
+                <div style="font-size:12px;font-weight:900;color:#93c5fd;">🔵 1. OYUNCU (MAVİ KÖŞE)</div>
+                <div style="font-size:24px;font-weight:900;color:#fff;">${duelState.p1Score} Puan</div>
+              </div>
+              <div style="background:${duelState.turn === 2 && !isFinished ? 'rgba(239,68,68,0.28)' : 'rgba(255,255,255,0.05)'};border:2px solid #ef4444;border-radius:14px;padding:10px;">
+                <div style="font-size:12px;font-weight:900;color:#fca5a5;">🔴 2. OYUNCU (KIRMIZI KÖŞE)</div>
+                <div style="font-size:24px;font-weight:900;color:#fff;">${duelState.p2Score} Puan</div>
+              </div>
+            </div>
+            ${isFinished ? `
+              <div style="padding:18px;">
+                <div style="font-size:54px;margin-bottom:8px;">🏆⚔️</div>
+                <h3 style="font-size:22px;font-weight:900;color:#fde047;margin-bottom:8px;">
+                  ${duelState.p1Score > duelState.p2Score ? '🔵 1. Oyuncu (Mavi Köşe) Kazandı!' : (duelState.p2Score > duelState.p1Score ? '🔴 2. Oyuncu (Kırmızı Köşe) Kazandı!' : '🤝 Dostluk Kazandı! Berabere!')}
+                </h3>
+                <button class="action-btn" style="background:#10b981;color:#fff;padding:12px 24px;font-size:14px;font-weight:900;" onclick="resetDuelGame()">🔄 Yeni Düello Başlat</button>
+              </div>
+            ` : `
+              <div style="margin-bottom:10px;font-size:13px;font-weight:900;color:${duelState.turn === 1 ? '#93c5fd' : '#fca5a5'};">
+                Tur ${duelState.round} / ${duelState.maxRounds} • Sıra: ${duelState.turn === 1 ? '🔵 1. Oyuncuda' : '🔴 2. Oyuncuda'}
+              </div>
+              <div style="font-size:20px;font-weight:900;color:#fff;background:rgba(255,255,255,0.06);padding:14px;border-radius:14px;margin-bottom:14px;">
+                ${duelState.currentQ.prompt}
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                ${duelState.currentQ.options.map(opt => `
+                  <button class="action-btn" style="background:rgba(30,41,59,0.95);border:2px solid rgba(255,255,255,0.2);color:#fff;padding:14px;font-size:15px;font-weight:900;" onclick="answerDuelQuestion('${opt.replace(/'/g, "\\'")}')">
+                    ${opt}
+                  </button>
+                `).join('')}
+              </div>
+            `}
+          </div>
+        `;
+      }
+
+      const html = `
+        <div class="card" style="border-color:rgba(16,185,129,0.5);">
+          <div class="card-header-bar">
+            <div>
+              <span class="unit-badge" style="background:rgba(16,185,129,0.25);color:#6ee7b7;">🎈 OYUN &amp; YARIŞMA MERKEZİ</span>
+              <div class="card-title">Balon Patlatma, 60 Saniye Şampiyonu &amp; 2 Kişilik Düello</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <button class="action-btn" style="background:${funGamesTab === 'balloon' ? '#0284c7' : 'rgba(255,255,255,0.07)'};color:#fff;padding:10px 16px;font-size:13px;" onclick="renderFunGamesHub('balloon')">
+              🎈 Balon Patlatma
+            </button>
+            <button class="action-btn" style="background:${funGamesTab === 'time60' ? '#f59e0b' : 'rgba(255,255,255,0.07)'};color:#fff;padding:10px 16px;font-size:13px;" onclick="renderFunGamesHub('time60')">
+              ⏱️ 60 Saniye Şampiyonu
+            </button>
+            <button class="action-btn" style="background:${funGamesTab === 'duel' ? '#ec4899' : 'rgba(255,255,255,0.07)'};color:#fff;padding:10px 16px;font-size:13px;" onclick="renderFunGamesHub('duel')">
+              ⚔️ 2 Kişilik Düello (Kardeş/Arkadaş)
+            </button>
+          </div>
+          ${bodyHtml}
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    function popBalloonOption(selected, btnEl) {
+      const fb = document.getElementById('balloonFeedback');
+      if (selected === balloonGameState.correct) {
+        balloonGameState.score += 10;
+        playChimeSound('correct');
+        btnEl.style.transform = 'scale(1.18)';
+        btnEl.innerHTML = '💥 PATLADI!<br>✅';
+        if (fb) {
+          fb.style.color = '#6ee7b7';
+          fb.innerHTML = '🎉 Süper! Doğru balonu patlattın! (+10 Puan & +2 ⭐)';
+        }
+        if (balloonGameState.score >= 30) unlockBadge('duel_champion');
+        recordParentActivityLog('fun_games', true, `Balon Patlatma: ${balloonGameState.prompt}`, `Doğru: ${selected}`);
+        setTimeout(() => { renderFunGamesHub('balloon'); }, 800);
+      } else {
+        playChimeSound('wrong');
+        btnEl.style.opacity = '0.4';
+        if (fb) {
+          fb.style.color = '#fca5a5';
+          fb.innerHTML = '❌ O balon değil, diğer balonlara dikkatli bak!';
+        }
+      }
+    }
+
+    function start60SecChallenge() {
+      time60State.active = true;
+      time60State.timeLeft = 60;
+      time60State.score = 0;
+      time60State.currentQ = generateQuickGameQuestion();
+      renderFunGamesHub('time60');
+      time60State.timerId = setInterval(() => {
+        time60State.timeLeft -= 1;
+        const el = document.getElementById('time60Clock');
+        if (el) el.textContent = time60State.timeLeft;
+        if (time60State.timeLeft <= 0) {
+          clearInterval(time60State.timerId);
+          time60State.timerId = null;
+          time60State.active = false;
+          playChimeSound('fanfare');
+          if (time60State.score > time60State.bestScore) {
+            time60State.bestScore = time60State.score;
+            localStorage.setItem('lingo_best_60s', String(time60State.bestScore));
+          }
+          unlockBadge('duel_champion');
+          recordParentMilestone('fun_games', '60 Saniye Şampiyonu', `${time60State.score} Puan`);
+          renderFunGamesHub('time60');
+        }
+      }, 1000);
+    }
+
+    function answer60SecQuestion(selected) {
+      if (!time60State.active) return;
+      if (selected === time60State.currentQ.correct) {
+        playChimeSound('correct');
+        time60State.score += 10;
+        addStarCoins(2, false);
+      } else {
+        playChimeSound('wrong');
+      }
+      time60State.currentQ = generateQuickGameQuestion();
+      renderFunGamesHub('time60');
+    }
+
+    function answerDuelQuestion(selected) {
+      if (selected === duelState.currentQ.correct) {
+        playChimeSound('correct');
+        if (duelState.turn === 1) duelState.p1Score += 10;
+        else duelState.p2Score += 10;
+        addStarCoins(2, false);
+      } else {
+        playChimeSound('wrong');
+      }
+      if (duelState.turn === 1) {
+        duelState.turn = 2;
+      } else {
+        duelState.turn = 1;
+        duelState.round += 1;
+        if (duelState.round > duelState.maxRounds) {
+          playChimeSound('fanfare');
+          unlockBadge('duel_champion');
+          recordParentMilestone('fun_games', '2 Kişilik Düello Maçı', `Mavi: ${duelState.p1Score} - Kırmızı: ${duelState.p2Score}`);
+        }
+      }
+      duelState.currentQ = generateQuickGameQuestion();
+      renderFunGamesHub('duel');
+    }
+
+    function resetDuelGame() {
+      duelState.p1Score = 0;
+      duelState.p2Score = 0;
+      duelState.turn = 1;
+      duelState.round = 1;
+      duelState.currentQ = generateQuickGameQuestion();
+      renderFunGamesHub('duel');
     }
 
 
@@ -11109,7 +12749,7 @@
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.8.1';
+    const CURRENT_APP_VERSION = '2.9.0';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
