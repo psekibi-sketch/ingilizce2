@@ -932,11 +932,11 @@
   <header id="mainAppHeader">
     <div class="header-top">
       <div class="logo-group">
-        <button id="headerHomeBtn" onclick="switchMainTab('menu')" title="Ana Menüye Dön" style="display:none;background:linear-gradient(135deg, #6366f1, #06b6d4);color:#fff;border:none;border-radius:12px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(99,102,241,0.35);">
+        <button id="headerHomeBtn" onclick="selectHomeSubject('home')" title="Ana Menüye Dön" style="display:none;background:linear-gradient(135deg, #6366f1, #06b6d4);color:#fff;border:none;border-radius:12px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(99,102,241,0.35);">
           🏠 Ana Menü
         </button>
-        <div class="logo-icon" onclick="switchMainTab('menu')" style="cursor:pointer;" title="Ana Menüye Dön">📚</div>
-        <div class="title-area" onclick="switchMainTab('menu')" style="cursor:pointer;">
+        <div class="logo-icon" onclick="selectHomeSubject('home')" style="cursor:pointer;" title="Ana Menüye Dön">📚</div>
+        <div class="title-area" onclick="selectHomeSubject('home')" style="cursor:pointer;">
           <h1 id="headerMainTitle">Lingo Ders Arkadaşım</h1>
           <p id="subHeaderTitle">2. Sınıf • İngilizce & Matematik Paketi</p>
         </div>
@@ -975,7 +975,7 @@
           📲 Ana Ekrana Ekle
         </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
-          🔄 Sürümü Yenile (v2.9.1)
+          🔄 Sürümü Yenile (v2.9.2)
         </button>
         <button onclick="switchMainTab('pet_hub')" class="action-btn" style="background:#ec4899;color:#fff;font-size:11px;padding:7px 12px;font-weight:900;">
           🐾 Dostum &amp; Çark
@@ -1491,7 +1491,7 @@
       return {
         id: 'full_snapshot',
         backupSchema: 'LINGO_BACKUP_V1',
-        appVersion: typeof CURRENT_APP_VERSION !== 'undefined' ? CURRENT_APP_VERSION : '2.9.1',
+        appVersion: typeof CURRENT_APP_VERSION !== 'undefined' ? CURRENT_APP_VERSION : '2.9.2',
         savedAt: nowIso,
         parentLogs: (parentLogs && typeof parentLogs === 'object') ? parentLogs : {},
         petState: (petState && typeof petState === 'object') ? petState : null,
@@ -2748,7 +2748,16 @@
     function selectHomeSubject(subj) {
       recordActivity();
       currentHomeSubject = subj;
-      renderUnitsOverview();
+      if (currentMainTab !== 'menu') {
+        switchMainTab('menu');
+      } else {
+        renderUnitsOverview();
+      }
+      const headerHomeBtn = document.getElementById('headerHomeBtn');
+      if (headerHomeBtn) {
+        headerHomeBtn.style.display = subj === 'home' ? 'none' : 'inline-flex';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     /* ========================================================
@@ -2854,35 +2863,6 @@
                   <p style="font-size:12px;color:#bae6fd;margin:0;">Sayfa 9-56 + Evimiz &amp; Şehir • 20 Sorulu Büyük Sınav • Kelimeler &amp; Günler</p>
                 </div>
                 <div style="font-size:20px;color:#38bdf8;">➔</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- HIZLI ÖDEV & YENİ MODÜLLER KISAYOL KARTLARI (ANA EKRANDA DOĞRUDAN ERİŞİM) -->
-          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin-top:14px;">
-            <div class="card" style="margin-bottom:0;border:2px solid #a855f7;background:linear-gradient(135deg,rgba(168,85,247,0.22),rgba(15,23,42,0.95));padding:14px;cursor:pointer;" onclick="switchMainTab('math_geometry')">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-                <span style="font-size:28px;">🔺📦</span>
-                <span style="background:#a855f7;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:999px;">ÖĞRETMEN ÖDEVİ</span>
-              </div>
-              <h4 style="font-size:16px;font-weight:900;color:#e9d5ff;margin:0 0 4px;">Geometrik Şekiller ve Cisimler</h4>
-              <p style="font-size:11px;color:#cbd5e1;margin:0 0 10px;">Üçgen, Kare, Dikdörtgen, Çember/Daire + Küp, Prizmalar, Silindir, Koni, Küre!</p>
-              <div style="display:flex;gap:6px;">
-                <button class="action-btn" style="flex:1;background:#a855f7;color:#fff;font-size:11px;padding:7px;" onclick="event.stopPropagation();switchMainTab('math_geometry')">📐 Konu &amp; Ödev</button>
-                <button class="action-btn" style="flex:1;background:#db2777;color:#fff;font-size:11px;padding:7px;" onclick="event.stopPropagation();switchMainTab('math_geometry_quiz')">📝 Test Çöz</button>
-              </div>
-            </div>
-
-            <div class="card" style="margin-bottom:0;border:2px solid #eab308;background:linear-gradient(135deg,rgba(234,179,8,0.2),rgba(15,23,42,0.95));padding:14px;cursor:pointer;" onclick="switchMainTab('math_clock')">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-                <span style="font-size:28px;">⏰🪙</span>
-                <span style="background:#eab308;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:999px;">SAAT &amp; TL MARKET</span>
-              </div>
-              <h4 style="font-size:16px;font-weight:900;color:#fef08a;margin:0 0 4px;">Saatler &amp; Paralarımız (TL)</h4>
-              <p style="font-size:11px;color:#cbd5e1;margin:0 0 10px;">Tam, buçuk, çeyrek saatler (Akrep-Yelkovan) ve Kırtasiye Kasası para oyunu!</p>
-              <div style="display:flex;gap:6px;">
-                <button class="action-btn" style="flex:1;background:#eab308;color:#0f172a;font-size:11px;padding:7px;font-weight:900;" onclick="event.stopPropagation();switchMainTab('math_clock')">⏰ Saatler</button>
-                <button class="action-btn" style="flex:1;background:#f97316;color:#fff;font-size:11px;padding:7px;font-weight:900;" onclick="event.stopPropagation();switchMainTab('math_money')">🪙 Paralarımız</button>
               </div>
             </div>
           </div>
@@ -3129,7 +3109,28 @@
                     Problemleri Çöz ➔
                   </button>
                 </div>
+              </div>
+            </div>
 
+            <!-- ========================================================
+                 3. BÖLÜM: 2. SINIF MATEMATİK — GEOMETRİ VE ÖLÇME KONULARI
+                 (Geometrik Şekiller ve Cisimler • Saatleri Okuma • Paralarımız TL & Kuruş)
+            ======================================================== -->
+            <div style="margin-top:24px;border-top:2px dashed rgba(168,85,247,0.35);padding-top:20px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span style="font-size:28px;">📐</span>
+                  <div>
+                    <h3 style="font-size:19px;color:#fff;font-weight:900;margin:0;">2. SINIF GEOMETRİ, SAATLER &amp; PARALARIMIZ (MATEMATİK)</h3>
+                    <p style="font-size:12px;color:#e9d5ff;margin:0;">MEB 2. Sınıf Matematik Müfredatı • Geometrik Şekiller ve Cisimler • Zaman Ölçme (Saatler) • Paralarımız (TL)</p>
+                  </div>
+                </div>
+                <span style="font-size:11px;font-weight:900;background:rgba(168,85,247,0.22);color:#e9d5ff;padding:4px 10px;border-radius:999px;">
+                  GEOMETRİ &amp; ÖLÇME ÜNİTELERİ
+                </span>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:14px;">
                 <!-- 6. GEOMETRİK ŞEKİLLER VE CİSİMLER KARTI -->
                 <div class="card" style="margin-bottom:0;border:2px solid #a855f7;background:linear-gradient(145deg, rgba(168,85,247,0.16), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_geometry')">
                   <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
@@ -3137,7 +3138,7 @@
                       <div style="font-size:36px;background:rgba(168,85,247,0.2);padding:8px;border-radius:14px;">🔺📦</div>
                       <div>
                         <span style="font-size:10px;font-weight:900;background:#a855f7;color:#fff;padding:2px 8px;border-radius:6px;">
-                          ŞEKİLLER &amp; CİSİMLER ÖDEVİ
+                          MATEMATİK • GEOMETRİ ÖDEVİ
                         </span>
                         <h4 style="font-size:17px;color:#e9d5ff;font-weight:900;margin:3px 0 1px;">Geometrik Şekiller ve Cisimler</h4>
                         <div style="font-size:11px;color:#cbd5e1;">Kenar, Köşe, Yüz ve Ayrıt Sayıları</div>
@@ -3157,31 +3158,48 @@
                   </div>
                 </div>
 
-                <!-- 7. SAATLERİ ÖĞRENİYORUM & PARALARIMIZ (TL) KARTI -->
+                <!-- 7. SAATLERİ ÖĞRENİYORUM (ZAMAN ÖLÇME) KARTI -->
                 <div class="card" style="margin-bottom:0;border:2px solid #eab308;background:linear-gradient(145deg, rgba(234,179,8,0.16), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_clock')">
                   <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
                     <div style="display:flex;align-items:center;gap:10px;">
-                      <div style="font-size:36px;background:rgba(234,179,8,0.2);padding:8px;border-radius:14px;">⏰🪙</div>
+                      <div style="font-size:36px;background:rgba(234,179,8,0.2);padding:8px;border-radius:14px;">⏰</div>
                       <div>
                         <span style="font-size:10px;font-weight:900;background:#eab308;color:#0f172a;padding:2px 8px;border-radius:6px;">
-                          ZAMAN ÖLÇME &amp; PARALARIMIZ
+                          MATEMATİK • ZAMAN ÖLÇME
                         </span>
-                        <h4 style="font-size:17px;color:#fef08a;font-weight:900;margin:3px 0 1px;">Saatler &amp; Paralarımız (TL)</h4>
-                        <div style="font-size:11px;color:#cbd5e1;">İnteraktif Saat &amp; Kırtasiye Kasası</div>
+                        <h4 style="font-size:17px;color:#fef08a;font-weight:900;margin:3px 0 1px;">Saatleri Öğreniyorum</h4>
+                        <div style="font-size:11px;color:#cbd5e1;">Tam, Buçuk ve Çeyrek Saatler (Akrep &amp; Yelkovan)</div>
                       </div>
                     </div>
                   </div>
                   <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
-                    Tam, buçuk ve çeyrek saatleri akrep-yelkovan ile ayarla; Kuruş ve TL banknotlarla market alışverişi yap!
+                    Analog ve dijital saat üzerinde akrep ile yelkovanı hareket ettirerek tam, buçuk ve çeyrek saatleri sesli öğren ve ayarla!
                   </p>
-                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                    <button class="action-btn" style="width:100%;background:#eab308;color:#0f172a;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_clock')">
-                      ⏰ 1. Saatler
-                    </button>
-                    <button class="action-btn" style="width:100%;background:#f97316;color:#fff;font-size:12px;font-weight:900;padding:9px 6px;" onclick="event.stopPropagation();switchMainTab('math_money')">
-                      🪙 2. TL Market
-                    </button>
+                  <button class="action-btn" style="width:100%;background:#eab308;color:#0f172a;font-size:12px;font-weight:900;padding:9px;" onclick="event.stopPropagation();switchMainTab('math_clock')">
+                    ⏰ İnteraktif Saat Dersini Aç ➔
+                  </button>
+                </div>
+
+                <!-- 8. PARALARIMIZ (TL & KURUŞ) KARTI -->
+                <div class="card" style="margin-bottom:0;border:2px solid #f97316;background:linear-gradient(145deg, rgba(249,115,22,0.16), rgba(15,23,42,0.95));cursor:pointer;" onclick="switchMainTab('math_money')">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <div style="font-size:36px;background:rgba(249,115,22,0.2);padding:8px;border-radius:14px;">🪙</div>
+                      <div>
+                        <span style="font-size:10px;font-weight:900;background:#f97316;color:#fff;padding:2px 8px;border-radius:6px;">
+                          MATEMATİK • PARALARIMIZ
+                        </span>
+                        <h4 style="font-size:17px;color:#fed7aa;font-weight:900;margin:3px 0 1px;">Paralarımız (TL &amp; Kuruş)</h4>
+                        <div style="font-size:11px;color:#cbd5e1;">Madeni &amp; Kağıt Paralar • Kırtasiye Kasası</div>
+                      </div>
+                    </div>
                   </div>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
+                    Türk Lirası ve Kuruş ilişkisi (100 Kr = 1 TL), banknotlarımızı tanıma ve Kırtasiye Marketinde etiket fiyatını ödeme oyunu!
+                  </p>
+                  <button class="action-btn" style="width:100%;background:#f97316;color:#fff;font-size:12px;font-weight:900;padding:9px;" onclick="event.stopPropagation();switchMainTab('math_money')">
+                    🪙 Paralarımız &amp; Kırtasiye Marketi Aç ➔
+                  </button>
                 </div>
               </div>
             </div>
@@ -7036,10 +7054,23 @@
       `).join('');
 
       const html = `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:9px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('math')">
+            ⬅️ Matematik Menüsüne Dön
+          </button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="action-btn" style="background:#eab308;color:#0f172a;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_clock')">
+              ⏰ Saatler Dersine Geç
+            </button>
+            <button class="action-btn" style="background:#f97316;color:#fff;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_money')">
+              🪙 Paralarımız Dersine Geç
+            </button>
+          </div>
+        </div>
         <div class="card" style="border-color:rgba(168,85,247,0.5);background:linear-gradient(180deg, rgba(168,85,247,0.14), rgba(15,23,42,0.95));">
           <div class="card-header-bar">
             <div>
-              <span class="unit-badge" style="background:rgba(168,85,247,0.25);color:#e9d5ff;border-color:rgba(168,85,247,0.4);">🔺📦 2. SINIF MÜFREDAT &amp; ÖĞRETMEN ÖDEV REHBERİ</span>
+              <span class="unit-badge" style="background:rgba(168,85,247,0.25);color:#e9d5ff;border-color:rgba(168,85,247,0.4);">🔺📦 2. SINIF MATEMATİK • GEOMETRİ ÖDEV REHBERİ</span>
               <div class="card-title">Geometrik Şekiller ve Geometrik Cisimler Akademisi</div>
             </div>
             <button class="action-btn" style="background:linear-gradient(135deg,#db2777,#9333ea);color:#fff;padding:10px 18px;font-size:13px;font-weight:900;" onclick="switchMainTab('math_geometry_quiz')">
@@ -7281,10 +7312,18 @@
 
       const q = qList[geoQuizState.index];
       const html = `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:9px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('math')">
+            ⬅️ Matematik Menüsüne Dön
+          </button>
+          <button class="action-btn" style="background:#a855f7;color:#fff;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_geometry')">
+            📐 Geometri Konu Anlatımına Dön
+          </button>
+        </div>
         <div class="card" style="border-color:rgba(168,85,247,0.5);">
           <div class="card-header-bar">
             <div>
-              <span class="unit-badge" style="background:rgba(168,85,247,0.25);color:#e9d5ff;">📐 GEOMETRİ ÖDEV TESTİ</span>
+              <span class="unit-badge" style="background:rgba(168,85,247,0.25);color:#e9d5ff;">📐 2. SINIF MATEMATİK • GEOMETRİ ÖDEV TESTİ</span>
               <div class="card-title">Geometrik Şekiller &amp; Cisimler Sınavı</div>
             </div>
             <button class="action-btn" style="background:rgba(255,255,255,0.08);color:#fff;padding:8px 14px;font-size:12px;" onclick="switchMainTab('math_geometry')">
@@ -7435,10 +7474,23 @@
       const targetStr = formatClockTurkishText(clockGameState.targetHour, clockGameState.targetMinute);
 
       const html = `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:9px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('math')">
+            ⬅️ Matematik Menüsüne Dön
+          </button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="action-btn" style="background:#a855f7;color:#fff;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_geometry')">
+              🔺📦 Geometrik Şekiller &amp; Cisimler
+            </button>
+            <button class="action-btn" style="background:#f97316;color:#fff;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_money')">
+              🪙 Paralarımız (TL) Dersi ➔
+            </button>
+          </div>
+        </div>
         <div class="card" style="border-color:rgba(234,179,8,0.5);">
           <div class="card-header-bar">
             <div>
-              <span class="unit-badge" style="background:rgba(234,179,8,0.25);color:#fef08a;">⏰ 2. SINIF ZAMAN ÖLÇME</span>
+              <span class="unit-badge" style="background:rgba(234,179,8,0.25);color:#fef08a;">⏰ 2. SINIF MATEMATİK • ZAMAN ÖLÇME</span>
               <div class="card-title">Saatleri Öğreniyorum (Tam, Buçuk ve Çeyrek Saatler)</div>
             </div>
             <button class="action-btn" style="background:#f97316;color:#fff;padding:9px 14px;font-size:12px;" onclick="switchMainTab('math_money')">
@@ -7580,10 +7632,23 @@
     function renderMathMoney() {
       const item = moneyGameState.currentItem;
       const html = `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:9px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('math')">
+            ⬅️ Matematik Menüsüne Dön
+          </button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="action-btn" style="background:#a855f7;color:#fff;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_geometry')">
+              🔺📦 Geometrik Şekiller &amp; Cisimler
+            </button>
+            <button class="action-btn" style="background:#eab308;color:#0f172a;font-size:12px;font-weight:900;padding:8px 14px;" onclick="switchMainTab('math_clock')">
+              ⏰ Saatler Dersine Geç
+            </button>
+          </div>
+        </div>
         <div class="card" style="border-color:rgba(249,115,22,0.5);">
           <div class="card-header-bar">
             <div>
-              <span class="unit-badge" style="background:rgba(249,115,22,0.25);color:#fed7aa;">🪙 2. SINIF PARALARIMIZ (TL &amp; KURUŞ)</span>
+              <span class="unit-badge" style="background:rgba(249,115,22,0.25);color:#fed7aa;">🪙 2. SINIF MATEMATİK • PARALARIMIZ (TL &amp; KURUŞ)</span>
               <div class="card-title">Paralarımızı Tanıyalım &amp; Kırtasiye Market Oyunu</div>
             </div>
             <button class="action-btn" style="background:#eab308;color:#0f172a;padding:9px 14px;font-size:12px;font-weight:900;" onclick="switchMainTab('math_clock')">
@@ -13254,7 +13319,7 @@
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.9.1';
+    const CURRENT_APP_VERSION = '2.9.2';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
