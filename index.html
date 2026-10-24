@@ -975,7 +975,7 @@
           📲 Ana Ekrana Ekle
         </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
-          🔄 Sürümü Yenile (v2.9.3)
+          🔄 Sürümü Yenile (v2.9.5)
         </button>
         <button onclick="switchMainTab('pet_hub')" class="action-btn" style="background:#ec4899;color:#fff;font-size:11px;padding:7px 12px;font-weight:900;">
           🐾 Dostum &amp; Çark
@@ -2744,6 +2744,21 @@
       } else if (tabId === 'math_data_graphs') {
         document.getElementById('subHeaderTitle').textContent = '📊📋 2. Sınıf Veri Toplama: Çetele, Sıklık Tablosu ve Nesne/Şekil Grafiği';
         renderMathDataGraphsModule();
+      } else if (tabId === 'eng_toys_games') {
+        document.getElementById('subHeaderTitle').textContent = '🧸🪁 9. Ünite: Toys & Games (Oyuncaklar, Oyunlar, Renkler & Kaç Tane?)';
+        renderEngToysGamesModule();
+      } else if (tabId === 'eng_animals_pets') {
+        document.getElementById('subHeaderTitle').textContent = '🐾🐶 10. Ünite: My Pet & Animals (Hayvanlar, Konumlar In/On/Under & Yetenekler)';
+        renderEngAnimalsPetsModule();
+      } else if (tabId === 'eng_fruits_food') {
+        document.getElementById('subHeaderTitle').textContent = '🍓🍎 11. Ünite: Fruits, Food & Drinks (Meyveler, Yiyecekler & I Like / Don\'t Like)';
+        renderEngFruitsFoodModule();
+      } else if (tabId === 'eng_actions_weather') {
+        document.getElementById('subHeaderTitle').textContent = '🚴☀️ 12. Ünite: Actions, Abilities & Weather (Yapabildiklerimiz: Can / Can\'t & Hava Durumu)';
+        renderEngActionsWeatherModule();
+      } else if (tabId === 'eng_maarif_dialogues') {
+        document.getElementById('subHeaderTitle').textContent = '🗣️🔤 13. Ünite: Maarif Konuşma Atölyesi, Sayılar (1-20) & Sesli Alfabe (A-Z)';
+        renderEngMaarifDialoguesModule();
       } else if (tabId === 'pet_hub') {
         document.getElementById('subHeaderTitle').textContent = '🐾 Lingo Dostum, Yıldız Kumbarası, Günlük Şans Çarkı & Görev Sandığı';
         renderPetAndWheelHub();
@@ -2781,14 +2796,14 @@
     ======================================================== */
     function renderUnitsOverview() {
       const unitsData = [
-        { id: 'unit1', num: '1. Ünite', title: 'Words & Greetings', pages: 'Sayfa 9 - 16', icon: '👋', desc: 'Selamlaşma, duygular (fine, happy, tired), 1-10 sayılar, renkler ve günler.', color: '#3b82f6' },
-        { id: 'unit2', num: '2. Ünite', title: 'Classroom Life', pages: 'Sayfa 17 - 24', icon: '🏫', desc: 'Sınıf eşyaları, yönergeler (Open the door), çiçek şifresi, hikaye ve sayma.', color: '#10b981' },
-        { id: 'unit3', num: '3. Ünite', title: 'Personal Life', pages: 'Sayfa 25 - 32', icon: '👤', desc: 'Vücut organları (head, nose, eye), giysiler, boyama ve alıştırmalar.', color: '#8b5cf6' },
-        { id: 'unit4', num: '4. Ünite', title: 'Family Life', pages: 'Sayfa 33 - 40', icon: '👨‍👩‍👧‍👦', desc: 'Aile bireyleri (mother, father, baby, grandfather), cümle kurma.', color: '#f59e0b' },
-        { id: 'unit5', num: '5. Ünite', title: 'Homes & Houses', pages: 'Sayfa 41 - 48', icon: '🏡', desc: 'Evin bölümleri (bedroom, kitchen, bathroom), mobilyalar, Where is the dog?', color: '#ec4899' },
-        { id: 'unit6', num: '6. Ünite', title: 'Life in the City', pages: 'Sayfa 49 - 56', icon: '🌆', desc: 'Şehir mekanları (school, park, hospital, zoo, museum, cinema) ve dünya.', color: '#06b6d4' },
-        { id: 'unit7', num: '7. Ünite', title: 'In My House', pages: 'Ders & Odalar', icon: '🏠', desc: 'Evin bölümleri (living room, bedroom, kitchen), eşyalar (sofa, bed, table) ve nerede soruları.', color: '#ec4899' },
-        { id: 'unit8', num: '8. Ünite', title: 'In the City', pages: 'Ders & Mekanlar', icon: '🚗', desc: 'Şehir mekanları (school, park, hospital, zoo, cinema) ve ulaşım araçları.', color: '#06b6d4' }
+        { id: 'unit1', num: '1. Ünite • Maarif Tema 1', title: 'Words & Greetings', pages: 'Sayfa 9 - 16', icon: '👋', desc: 'Selamlaşma, duygular (fine, happy, tired), 1-10 sayılar, renkler ve günler.', color: '#3b82f6' },
+        { id: 'unit2', num: '2. Ünite • Maarif Tema 2', title: 'Classroom Life', pages: 'Sayfa 17 - 24', icon: '🏫', desc: 'Sınıf eşyaları, yönergeler (Open the door), çiçek şifresi, hikaye ve sayma.', color: '#10b981' },
+        { id: 'unit3', num: '3. Ünite • Maarif Tema 3', title: 'Personal Life', pages: 'Sayfa 25 - 32', icon: '👤', desc: 'Vücut organları (head, nose, eye), giysiler, boyama ve alıştırmalar.', color: '#8b5cf6' },
+        { id: 'unit4', num: '4. Ünite • Maarif Tema 4', title: 'Family Life', pages: 'Sayfa 33 - 40', icon: '👨‍👩‍👧‍👦', desc: 'Aile bireyleri (mother, father, baby, grandfather), cümle kurma.', color: '#f59e0b' },
+        { id: 'unit5', num: '5. Ünite • Maarif Tema 5', title: 'Homes & Houses', pages: 'Sayfa 41 - 48', icon: '🏡', desc: 'Evin bölümleri (bedroom, kitchen, bathroom), mobilyalar, Where is the dog?', color: '#ec4899' },
+        { id: 'unit6', num: '6. Ünite • Maarif Tema 6', title: 'Life in the City', pages: 'Sayfa 49 - 56', icon: '🌆', desc: 'Şehir mekanları (school, park, hospital, zoo, museum, cinema) ve dünya.', color: '#06b6d4' },
+        { id: 'unit7', num: '7. Ünite • Özel Atölye', title: 'In My House', pages: 'Ders & Odalar', icon: '🏠', desc: 'Evin bölümleri (living room, bedroom, kitchen), eşyalar (sofa, bed, table) ve nerede soruları.', color: '#ec4899' },
+        { id: 'unit8', num: '8. Ünite • Özel Atölye', title: 'In the City', pages: 'Ders & Mekanlar', icon: '🚗', desc: 'Şehir mekanları (school, park, hospital, zoo, cinema) ve ulaşım araçları.', color: '#06b6d4' }
       ];
 
       const mathModules = [
@@ -2874,9 +2889,9 @@
               <div style="display:flex;align-items:center;gap:14px;">
                 <div style="font-size:42px;background:rgba(255,255,255,0.12);padding:10px;border-radius:16px;">🇬🇧</div>
                 <div style="flex:1;">
-                  <span style="background:#2563eb;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">TÜM 8 ÜNİTE</span>
+                  <span style="background:#2563eb;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">TAM MEB &amp; MAARİF MODELİ (13 ÜNİTE &amp; TEMA)</span>
                   <h3 style="font-size:20px;font-weight:900;color:#fff;margin:3px 0;">İNGİLİZCE DERSİ</h3>
-                  <p style="font-size:12px;color:#bae6fd;margin:0;">Sayfa 9-56 + Evimiz &amp; Şehir • 20 Sorulu Büyük Sınav • Kelimeler &amp; Günler</p>
+                  <p style="font-size:12px;color:#bae6fd;margin:0;">Sayfa 9-56 • Ev &amp; Şehir • Oyuncaklar • Hayvanlar • Meyveler • Yetenekler (Can) &amp; Hava • Maarif Konuşma &amp; Alfabe</p>
                 </div>
                 <div style="font-size:20px;color:#38bdf8;">➔</div>
               </div>
@@ -3359,7 +3374,7 @@
 
         ${showEnglish ? `
           <!-- ========================================================
-               2. ANA BAŞLIK: İNGİLİZCE DERSİ
+               2. ANA BAŞLIK: İNGİLİZCE DERSİ (MEB & TÜRKİYE YÜZYILI MAARİF MODELİ TAM MÜFREDAT)
           ======================================================== -->
           <div style="margin-bottom:24px;">
             <div style="margin-bottom:14px;">
@@ -3367,36 +3382,46 @@
                 ⬅️ Ana Ders Menüsüne Dön
               </button>
             </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid rgba(59,130,246,0.3);">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid rgba(59,130,246,0.3);flex-wrap:wrap;">
               <div style="display:flex;align-items:center;gap:10px;">
                 <span style="font-size:28px;">🇬🇧</span>
                 <div>
-                  <h3 style="font-size:20px;color:#fff;font-weight:900;margin:0;">2. ANA BAŞLIK: İNGİLİZCE</h3>
-                  <p style="font-size:12px;color:#bae6fd;margin:0;">2. Sınıf Tüm 6 Ünite • Sayfa 9'dan 56'ya Kadar Müfredat & Testler</p>
+                  <h3 style="font-size:20px;color:#fff;font-weight:900;margin:0;">2. ANA BAŞLIK: İNGİLİZCE (TAM MÜFREDAT - 13 KONU)</h3>
+                  <p style="font-size:12px;color:#bae6fd;margin:0;">MEB Türkiye Yüzyılı Maarif Modeli Temaları (Sayfa 9-56) + Tamamlayıcı 2. Sınıf Üniteleri, Konuşma Atölyesi &amp; Sesli Testler</p>
                 </div>
               </div>
-              <button class="action-btn" style="background:#2563eb;font-size:12px;font-weight:800;padding:7px 14px;" onclick="switchMainTab('unit1')">
-                1. Üniteden Başla ➔
-              </button>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="action-btn" style="background:#2563eb;font-size:12px;font-weight:800;padding:7px 14px;" onclick="switchMainTab('unit1')">
+                  1. Üniteden Başla ➔
+                </button>
+                <button class="action-btn" style="background:#10b981;font-size:12px;font-weight:800;padding:7px 14px;" onclick="switchMainTab('eng_maarif_dialogues')">
+                  🗣️ Maarif Konuşma Atölyesi
+                </button>
+              </div>
             </div>
 
             <!-- 20 SORULU BÜYÜK İNGİLİZCE SINAVI KARTI -->
-            <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg, rgba(37,99,235,0.18), rgba(30,41,59,0.95));border:2px solid #3b82f6;cursor:pointer;" onclick="switchMainTab('quiz')">
+            <div class="card" style="margin-bottom:18px;background:linear-gradient(135deg, rgba(37,99,235,0.18), rgba(30,41,59,0.95));border:2px solid #3b82f6;cursor:pointer;" onclick="switchMainTab('quiz')">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
                 <div style="display:flex;align-items:center;gap:14px;">
                   <div style="font-size:40px;">📝</div>
                   <div>
                     <div style="display:inline-block;background:#3b82f6;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;margin-bottom:4px;">İNGİLİZCE BÜYÜK SINAVI</div>
-                    <h4 style="font-size:18px;color:#93c5fd;margin:0 0 4px;font-weight:900;">20 Sorulu Puanlı Büyük Sınav & Konu Testleri</h4>
-                    <p style="font-size:12px;color:#cbd5e1;margin:0;">Puan kazandıran (+10 Puan), seri çarpanlı (🔥 Seri), sesli dinleme ve hata hakkı veren sınav.</p>
+                    <h4 style="font-size:18px;color:#93c5fd;margin:0 0 4px;font-weight:900;">20 Sorulu Puanlı Büyük Sınav &amp; Ünite Testleri</h4>
+                    <p style="font-size:12px;color:#cbd5e1;margin:0;">Puan kazandıran (+10 Puan), seri çarpanlı (🔥 Seri), sesli dinleme ve hata hakkı veren genel İngilizce sınavı.</p>
                   </div>
                 </div>
                 <button class="action-btn" style="background:#2563eb;color:#fff;white-space:nowrap;font-weight:800;" onclick="event.stopPropagation();switchMainTab('quiz');">İngilizce Sınavına Gir ➔</button>
               </div>
             </div>
 
-            <!-- TÜM 6 ÜNİTE KARTLARI (1'DEN 6'YA SIRALI) -->
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:14px;margin-bottom:16px;">
+            <!-- 1. BÖLÜM: MEB TÜRKİYE YÜZYILI MAARİF MODELİ TEMALARI & DERS KİTABI ÜNİTELERİ (1-8) -->
+            <div style="margin-bottom:10px;">
+              <span style="display:inline-block;background:rgba(59,130,246,0.2);color:#93c5fd;border:1px solid rgba(59,130,246,0.4);font-size:11px;font-weight:900;padding:4px 10px;border-radius:999px;">
+                📘 1. BÖLÜM: MEB TÜRKİYE YÜZYILI MAARİF MODELİ DERS KİTABI TEMALARI (1 - 8. ÜNİTELER)
+              </span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:14px;margin-bottom:22px;">
               ${unitsData.map(u => `
                 <div class="card" style="margin-bottom:0;border:1px solid var(--border);transition:all 0.2s;cursor:pointer;" onclick="switchMainTab('${u.id}')">
                   <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
@@ -3410,13 +3435,106 @@
                   </div>
                   <p style="font-size:12px;color:var(--muted);line-height:1.4;margin-bottom:12px;min-height:34px;">${u.desc}</p>
                   <button class="action-btn" style="width:100%;background:${u.color};font-size:13px;padding:8px;" onclick="event.stopPropagation();switchMainTab('${u.id}');">
-                    Derslere Başla ➔
+                    Derslere &amp; Etkinliklere Başla ➔
                   </button>
                 </div>
               `).join('')}
             </div>
 
-            <!-- İNGİLİZCE ETKİLEŞİMLİ PRATİK ARAÇLARI -->
+            <!-- 2. BÖLÜM: MEB 2. SINIF TAMAMLAYICI ÜNİTELER & MAARİF KONUŞMA STÜDYOSU (9-13. ÜNİTELER) -->
+            <div style="margin-bottom:10px;">
+              <span style="display:inline-block;background:rgba(16,185,129,0.2);color:#6ee7b7;border:1px solid rgba(16,185,129,0.45);font-size:11px;font-weight:900;padding:4px 10px;border-radius:999px;">
+                🌟 2. BÖLÜM: MEB 2. SINIF TAMAMLAYICI İNGİLİZCE KONULARI &amp; MAARİF KONUŞMA ATÖLYESİ (YENİ EKLENENLER)
+              </span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(290px, 1fr));gap:14px;margin-bottom:22px;">
+              <!-- 9. ÜNİTE: TOYS & GAMES -->
+              <div class="card" style="margin-bottom:0;background:linear-gradient(135deg, rgba(245,158,11,0.16), rgba(30,41,59,0.95));border:2px solid #f59e0b;cursor:pointer;" onclick="openEngExtraTopic('eng_toys_games','lesson')">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                  <div style="font-size:36px;background:rgba(245,158,11,0.2);padding:8px;border-radius:14px;">🧸🪁</div>
+                  <div>
+                    <span style="background:#f59e0b;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">9. ÜNİTE • TOYS &amp; GAMES</span>
+                    <h4 style="font-size:16px;color:#fde047;margin:3px 0 0;font-weight:900;">Oyuncaklar, Oyunlar &amp; Kaç Tane?</h4>
+                  </div>
+                </div>
+                <p style="font-size:12px;color:#cbd5e1;margin:0 0 10px;">Ball, doll, kite, teddy bear, robot, blocks, chess • <strong>How many...?</strong> • <strong>What color is it?</strong> • <strong>Have you got a...?</strong></p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="action-btn" style="flex:1;background:#d97706;color:#fff;font-size:12px;font-weight:800;padding:8px;" onclick="event.stopPropagation();openEngExtraTopic('eng_toys_games','lesson');">📖 1. Konu &amp; Oyuncak Kutusu</button>
+                  <button class="action-btn" style="flex:1;background:#b45309;color:#fff;font-size:12px;font-weight:800;padding:8px;" onclick="event.stopPropagation();openEngExtraTopic('eng_toys_games','quiz');">🎯 2. Ünite Testi (10 Soru)</button>
+                </div>
+              </div>
+
+              <!-- 10. ÜNİTE: MY PET & ANIMALS -->
+              <div class="card" style="margin-bottom:0;background:linear-gradient(135deg, rgba(16,185,129,0.16), rgba(30,41,59,0.95));border:2px solid #10b981;cursor:pointer;" onclick="openEngExtraTopic('eng_animals_pets','lesson')">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                  <div style="font-size:36px;background:rgba(16,185,129,0.2);padding:8px;border-radius:14px;">🐾🐶</div>
+                  <div>
+                    <span style="background:#10b981;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">10. ÜNİTE • ANIMALS &amp; PETS</span>
+                    <h4 style="font-size:16px;color:#6ee7b7;margin:3px 0 0;font-weight:900;">Evcil Hayvanlar, Doğa &amp; In / On / Under</h4>
+                  </div>
+                </div>
+                <p style="font-size:12px;color:#cbd5e1;margin:0 0 10px;">Cat, dog, bird, fish, rabbit, turtle, frog, lion, monkey • <strong>Where is the cat? (in / on / under)</strong> • <strong>It can fly / swim / jump!</strong></p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="action-btn" style="flex:1;background:#059669;color:#fff;font-size:12px;font-weight:800;padding:8px;" onclick="event.stopPropagation();openEngExtraTopic('eng_animals_pets','lesson');">📖 1. Konu &amp; Konum Sahnesi</button>
+                  <button class="action-btn" style="flex:1;background:#047857;color:#fff;font-size:12px;font-weight:800;padding:8px;" onclick="event.stopPropagation();openEngExtraTopic('eng_animals_pets','quiz');">🎯 2. Ünite Testi (10 Soru)</button>
+                </div>
+              </div>
+
+              <!-- 11. ÜNİTE: FRUITS, YUMMY FOOD & DRINKS -->
+              <div class="card" style="margin-bottom:0;background:linear-gradient(135deg, rgba(236,72,153,0.16), rgba(30,41,59,0.95));border:2px solid #ec4899;cursor:pointer;" onclick="openEngExtraTopic('eng_fruits_food','lesson')">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                  <div style="font-size:36px;background:rgba(236,72,153,0.2);padding:8px;border-radius:14px;">🍓🍎</div>
+                  <div>
+                    <span style="background:#ec4899;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">11. ÜNİTE • FRUITS &amp; LIKES</span>
+                    <h4 style="font-size:16px;color:#f9a8d4;margin:3px 0 0;font-weight:900;">Meyveler, İçecekler &amp; I Like / Don't Like</h4>
+                  </div>
+                </div>
+                <p style="font-size:12px;color:#cbd5e1;margin:0 0 10px;">Apple, banana, strawberry, cherry, watermelon, milk, cake • <strong>I like... Yummy! 😋 / I don't like... Yuck! 😝 / Do you like...?</strong></p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="action-btn" style="flex:1;background:#db2777;color:#fff;font-size:12px;font-weight:800;padding:8px;" onclick="event.stopPropagation();openEngExtraTopic('eng_fruits_food','lesson');">📖 1. Konu &amp; Meyve Tabağı</button>
+                  <button class="action-btn" style="flex:1;background:#be185d;color:#fff;font-size:12px;font-weight:800;padding:8px;" onclick="event.stopPropagation();openEngExtraTopic('eng_fruits_food','quiz');">🎯 2. Ünite Testi (10 Soru)</button>
+                </div>
+              </div>
+
+              <!-- 12. ÜNİTE: ACTIONS, ABILITIES (CAN / CAN'T) & WEATHER -->
+              <div class="card" style="margin-bottom:0;background:linear-gradient(135deg, rgba(6,182,212,0.16), rgba(30,41,59,0.95));border:2px solid #06b6d4;cursor:pointer;" onclick="openEngExtraTopic('eng_actions_weather','lesson')">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                  <div style="font-size:36px;background:rgba(6,182,212,0.2);padding:8px;border-radius:14px;">🚴☀️</div>
+                  <div>
+                    <span style="background:#06b6d4;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">12. ÜNİTE • CAN / CAN'T &amp; WEATHER</span>
+                    <h4 style="font-size:16px;color:#67e8f9;margin:3px 0 0;font-weight:900;">Hareketler, Yapabildiklerimiz &amp; Hava Durumu</h4>
+                  </div>
+                </div>
+                <p style="font-size:12px;color:#cbd5e1;margin:0 0 10px;">Dance, sing, swim, ride a bike, play football • <strong>I can / I can't / Can you...?</strong> • <strong>Sunny, rainy, snowy, hot, cold</strong>.</p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="action-btn" style="flex:1;background:#0891b2;color:#fff;font-size:12px;font-weight:800;padding:8px;" onclick="event.stopPropagation();openEngExtraTopic('eng_actions_weather','lesson');">📖 1. Konu &amp; Yetenek Stüdyosu</button>
+                  <button class="action-btn" style="flex:1;background:#0e7490;color:#fff;font-size:12px;font-weight:800;padding:8px;" onclick="event.stopPropagation();openEngExtraTopic('eng_actions_weather','quiz');">🎯 2. Ünite Testi (10 Soru)</button>
+                </div>
+              </div>
+
+              <!-- 13. ÜNİTE: MAARİF KONUŞMA ATÖLYESİ, SAYILAR 1-20 & SESLİ ALFABE -->
+              <div class="card" style="margin-bottom:0;background:linear-gradient(135deg, rgba(139,92,246,0.18), rgba(30,41,59,0.95));border:2px solid #8b5cf6;cursor:pointer;" onclick="openEngExtraTopic('eng_maarif_dialogues','lesson')">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                  <div style="font-size:36px;background:rgba(139,92,246,0.2);padding:8px;border-radius:14px;">🗣️🔤</div>
+                  <div>
+                    <span style="background:#8b5cf6;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">13. ÜNİTE • MAARİF KONUŞMA &amp; FONETİK</span>
+                    <h4 style="font-size:16px;color:#c4b5fd;margin:3px 0 0;font-weight:900;">Günlük Diyaloglar, Sayılar (1-20) &amp; A-Z Alfabe</h4>
+                  </div>
+                </div>
+                <p style="font-size:12px;color:#cbd5e1;margin:0 0 10px;">Nezaket ifadeleri (<strong>May I...? / Here you are / Thank you</strong>), Kendini Tanıtma, <strong>11-20 Sayılar</strong> ve <strong>A-Z Sesli Alfabe &amp; Phonics</strong>.</p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="action-btn" style="flex:1;background:#7c3aed;color:#fff;font-size:12px;font-weight:800;padding:8px;" onclick="event.stopPropagation();openEngExtraTopic('eng_maarif_dialogues','lesson');">📖 1. Diyalog &amp; Alfabe Sahnesi</button>
+                  <button class="action-btn" style="flex:1;background:#6d28d9;color:#fff;font-size:12px;font-weight:800;padding:8px;" onclick="event.stopPropagation();openEngExtraTopic('eng_maarif_dialogues','quiz');">🎯 2. Ünite Testi (10 Soru)</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. BÖLÜM: İNGİLİZCE ETKİLEŞİMLİ PRATİK ARAÇLARI -->
+            <div style="margin-bottom:10px;">
+              <span style="display:inline-block;background:rgba(244,63,94,0.2);color:#fda4af;border:1px solid rgba(244,63,94,0.45);font-size:11px;font-weight:900;padding:4px 10px;border-radius:999px;">
+                🎧 3. BÖLÜM: DİNLEME, GÜNLER VE KELİME OYUNLARI
+              </span>
+            </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));gap:12px;">
               <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;border:2px solid #f43f5e;" onclick="switchMainTab('listen_match')">
                 <div style="font-size:32px;margin-bottom:6px;">🎧</div>
@@ -3433,7 +3551,7 @@
               <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;" onclick="switchMainTab('flashcards')">
                 <div style="font-size:32px;margin-bottom:6px;">🃏</div>
                 <div style="font-weight:700;color:#fff;font-size:14px;">Sesli Kelime Kartları</div>
-                <p style="font-size:11px;color:var(--muted);margin:4px 0 10px;">Tüm 6 ünitenin resimli ve sesli telaffuz kartları.</p>
+                <p style="font-size:11px;color:var(--muted);margin:4px 0 10px;">Ünitelerin resimli ve sesli telaffuz kartları.</p>
                 <button class="action-btn" style="font-size:11px;padding:6px 12px;background:#8b5cf6;">İncele</button>
               </div>
               <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;" onclick="switchMainTab('guide')">
@@ -14269,10 +14387,960 @@
     }
 
     /* ========================================================
+       YENİ 2. SINIF MEB & TÜRKİYE YÜZYILI MAARİF MODELİ İNGİLİZCE KONULARI
+       (9. Toys & Games, 10. Animals & Pets, 11. Fruits & Likes,
+        12. Actions Can/Can't & Weather, 13. Maarif Speaking, 1-20 Numbers & Alphabet)
+    ======================================================== */
+    let engExtraTopicMode = 'lesson'; // 'lesson' | 'quiz'
+    let engExtraQuizState = {
+      topicId: 'eng_toys_games',
+      qIndex: 0,
+      score: 0,
+      answered: false,
+      selectedChoice: null,
+      questions: []
+    };
+
+    // İnteraktif atölye durumları
+    let toyBoxSelectedToy = { en: 'ball', tr: 'top', icon: '⚽' };
+    let toyBoxSelectedColor = { en: 'red', tr: 'kırmızı', hex: '#ef4444' };
+    let toyBoxSelectedCount = { num: 3, en: 'three', tr: 'üç' };
+
+    let petStageAnimal = { en: 'cat', tr: 'kedi', icon: '🐱', abilityEn: 'run and jump', abilityTr: 'koşabilir ve zıplayabilir' };
+    let petStagePrep = { en: 'in', tr: 'içinde (in)', descTr: 'Kedi kutunun İÇİNDE!', boxLabel: '📦 Kutunun İçinde (IN the box)' };
+
+    let fruitPlateLiked = { en: 'strawberries', singular: 'strawberry', tr: 'çilek', icon: '🍓' };
+    let fruitPlateDisliked = { en: 'lemons', singular: 'lemon', tr: 'limon', icon: '🍋' };
+
+    let heroAbilityCan = { en: 'ride a bike', tr: 'bisiklet sürebilirim', icon: '🚴' };
+    let heroAbilityCant = { en: 'fly', tr: 'uçamam', icon: '🦅' };
+    let selectedWeatherToday = { en: 'sunny and hot', tr: 'güneşli ve sıcak', icon: '☀️' };
+
+    let maarifSelectedRoleplayIdx = 0;
+
+    function openEngExtraTopic(topicId, mode) {
+      engExtraTopicMode = mode || 'lesson';
+      if (engExtraTopicMode === 'quiz') {
+        initEngExtraTopicQuiz(topicId);
+      }
+      switchMainTab(topicId);
+    }
+
+    function getEngExtraNavBarHtml(topicId, title, badgeColor) {
+      return `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:12px;font-weight:800;padding:8px 14px;" onclick="selectHomeSubject('english')">
+              ⬅️ İngilizce Konularına Dön
+            </button>
+            <button class="action-btn" style="background:#1e293b;color:#cbd5e1;border:1px solid #475569;font-size:12px;font-weight:800;padding:8px 14px;" onclick="selectHomeSubject('home')">
+              🏠 Ana Ders Menüsü
+            </button>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="action-btn" style="background:${engExtraTopicMode === 'lesson' ? badgeColor : '#1e293b'};color:#fff;border:2px solid ${badgeColor};font-size:12px;font-weight:900;padding:8px 14px;" onclick="openEngExtraTopic('${topicId}','lesson')">
+              📖 1. Sesli Konu &amp; Atölye
+            </button>
+            <button class="action-btn" style="background:${engExtraTopicMode === 'quiz' ? '#10b981' : '#1e293b'};color:#fff;border:2px solid #10b981;font-size:12px;font-weight:900;padding:8px 14px;" onclick="openEngExtraTopic('${topicId}','quiz')">
+              🎯 2. 10 Sorulu Sesli Test
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function getEngExtraQuestionsForTopic(topicId) {
+      const banks = {
+        eng_toys_games: [
+          { q: '🧸 "Teddy bear" kelimesinin Türkçe anlamı nedir?', speakEn: 'Teddy bear', options: ['Oyuncak ayı', 'Uçurtma', 'Oyuncak bebek', 'Satranç'], ans: 'Oyuncak ayı', exp: 'Teddy bear = Oyuncak ayı demektir.' },
+          { q: '🪁 Gökyüzünde uçurduğumuz "Uçurtma" İngilizce ne demektir?', speakEn: 'Kite', options: ['Kite', 'Train', 'Blocks', 'Doll'], ans: 'Kite', exp: 'Kite = Uçurtma demektir. (Fly a kite: Uçurtma uçurmak)' },
+          { q: '⚽⚽⚽⚽ "How many balls are there?" (Kaç tane top var?) sorusunun cevabı hangisidir?', speakEn: 'How many balls are there? There are four balls.', options: ['There are four balls.', 'There are two balls.', 'It is a doll.', 'Yes, I do.'], ans: 'There are four balls.', exp: '4 tane top olduğu için "There are four balls" (Dört top var) deriz.' },
+          { q: '🚗🔴 "What color is the car?" (Araba ne renktir? -> Kırmızı) sorusunun cevabı nedir?', speakEn: 'What color is the car? It is red.', options: ['It is red.', 'It is three.', 'I have a kite.', 'In the kitchen.'], ans: 'It is red.', exp: 'Red = Kırmızı. "It is red" (O kırmızıdır).' },
+          { q: '🤖 "Have you got a robot?" (Senin bir robotun var mı?) sorusuna "Evet, var" demek için hangisi söylenir?', speakEn: 'Have you got a robot? Yes, I have.', options: ['Yes, I have.', 'No, it isn\'t.', 'I am fine.', 'Good morning.'], ans: 'Yes, I have.', exp: '"Have you got...?" sorusuna olumlu cevap verirken "Yes, I have." denir.' },
+          { q: '🧱 Üst üste dizdiğimiz "Oyun blokları / Legolar" İngilizce ne demektir?', speakEn: 'Blocks', options: ['Blocks', 'Chess', 'Plane', 'Marbles'], ans: 'Blocks', exp: 'Blocks = Oyun blokları / Yapı taşları demektir.' },
+          { q: '🪆 "I have got a pink doll." cümlesinin Türkçe anlamı nedir?', speakEn: 'I have got a pink doll.', options: ['Pembe bir oyuncak bebeğim var.', 'Mavi bir trenim var.', 'Sarı bir uçurtmam var.', 'Yeşil bir topum var.'], ans: 'Pembe bir oyuncak bebeğim var.', exp: 'Pink = Pembe, Doll = Oyuncak bebek. "I have got a pink doll."' },
+          { q: '♟️ İki kişiyle taşları hareket ettirerek oynanan "Satranç" oyununun İngilizcesi nedir?', speakEn: 'Chess', options: ['Chess', 'Ball', 'Robot', 'Car'], ans: 'Chess', exp: 'Chess = Satranç demektir. (Let\'s play chess!)' },
+          { q: '🚂 "Train" ve ✈️ "Plane" kelimelerinin Türkçe karşılıkları sırasıyla nedir?', speakEn: 'Train and Plane', options: ['Tren ve Uçak', 'Araba ve Gemi', 'Top ve Bebek', 'Bisiklet ve Uçurtma'], ans: 'Tren ve Uçak', exp: 'Train = Tren, Plane = Uçak demektir.' },
+          { q: '🔮 Camdan yapılan küçük renkli "Misket / Bilye" oyuncaklarına İngilizce ne denir?', speakEn: 'Marbles', options: ['Marbles', 'Blocks', 'Dolls', 'Kites'], ans: 'Marbles', exp: 'Marbles = Misketler / Bilyeler demektir.' }
+        ],
+        eng_animals_pets: [
+          { q: '🐰 Uzun kulaklı ve havuç seven "Tavşan" İngilizce ne demektir?', speakEn: 'Rabbit', options: ['Rabbit', 'Turtle', 'Duck', 'Horse'], ans: 'Rabbit', exp: 'Rabbit = Tavşan demektir.' },
+          { q: '🐢 Sırtında kabuğu olan ve yavaş yürüyen "Kaplumbağa" İngilizce ne demektir?', speakEn: 'Turtle', options: ['Turtle', 'Frog', 'Bird', 'Monkey'], ans: 'Turtle', exp: 'Turtle = Kaplumbağa demektir.' },
+          { q: '🐱📦 Kedi kutunun İÇİNDE ise "Where is the cat?" sorusuna nasıl cevap veririz?', speakEn: 'Where is the cat? It is in the box.', options: ['It is IN the box.', 'It is ON the box.', 'It is UNDER the box.', 'It is a dog.'], ans: 'It is IN the box.', exp: 'IN = İçinde demektir. "It is in the box" (Kutunun içinde).' },
+          { q: '🐶🪑 Köpek sandalyenin ALTINDA ise hangi edatı (kelimeyi) kullanırız?', speakEn: 'The dog is under the chair.', options: ['UNDER (Altında)', 'ON (Üstünde)', 'IN (İçinde)', 'BIG (Büyük)'], ans: 'UNDER (Altında)', exp: 'UNDER = Altında demektir. "The dog is under the chair."' },
+          { q: '🐦 "A bird can _______." (Bir kuş uçabilir.) boşluğuna hangisi gelmelidir?', speakEn: 'A bird can fly.', options: ['fly (uçmak)', 'swim (yüzmek)', 'read (okumak)', 'drive (araba sürmek)'], ans: 'fly (uçmak)', exp: 'Fly = Uçmak. "A bird can fly" (Kuş uçabilir).' },
+          { q: '🐟 "A fish can swim, but it can\'t walk." cümlesinin anlamı nedir?', speakEn: 'A fish can swim, but it cannot walk.', options: ['Balık yüzebilir ama yürüyemez.', 'Balık uçabilir ama koşamaz.', 'Kuş yüzebilir ama uçamaz.', 'Kurbağa şarkı söyleyebilir.'], ans: 'Balık yüzebilir ama yürüyemez.', exp: 'Fish = Balık, swim = yüzmek, walk = yürümek.' },
+          { q: '🐸 Yeşil renkli ve "jump" (zıplama) yeteneğiyle ünlü hayvan hangisidir?', speakEn: 'Frog', options: ['Frog (Kurbağa)', 'Cow (İnek)', 'Sheep (Koyun)', 'Fish (Balık)'], ans: 'Frog (Kurbağa)', exp: 'Frog = Kurbağa. "The green frog can jump!"' },
+          { q: '🐄 Çiftlikte yaşayan ve bize süt veren "İnek" ile 🐎 "At" kelimelerinin İngilizcesi nedir?', speakEn: 'Cow and Horse', options: ['Cow & Horse', 'Duck & Bird', 'Lion & Monkey', 'Cat & Dog'], ans: 'Cow & Horse', exp: 'Cow = İnek, Horse = At demektir.' },
+          { q: '🐘 Uzun hortumlu, çok büyük olan "Fil" İngilizce ne demektir?', speakEn: 'Elephant', options: ['Elephant', 'Monkey', 'Lion', 'Duck'], ans: 'Elephant', exp: 'Elephant = Fil demektir.' },
+          { q: '🐦🌳 Kuş ağacın ÜSTÜNDE ise "Where is the bird?" sorusunun cevabı nedir?', speakEn: 'It is on the tree.', options: ['It is ON the tree.', 'It is UNDER the tree.', 'It is a rabbit.', 'I like milk.'], ans: 'It is ON the tree.', exp: 'ON = Üzerinde / Üstünde demektir.' }
+        ],
+        eng_fruits_food: [
+          { q: '🍓 Kırmızı ve tatlı olan "Çilek" meyvesinin İngilizcesi nedir?', speakEn: 'Strawberry', options: ['Strawberry', 'Watermelon', 'Banana', 'Lemon'], ans: 'Strawberry', exp: 'Strawberry = Çilek demektir.' },
+          { q: '🍉 Yazın severek yediğimiz dışı yeşil, içi kırmızı "Karpuz" İngilizce ne demektir?', speakEn: 'Watermelon', options: ['Watermelon', 'Orange', 'Apple', 'Grapes'], ans: 'Watermelon', exp: 'Watermelon = Karpuz demektir.' },
+          { q: '😋 "I like bananas. Yummy!" diyen bir çocuk ne anlatmaktadır?', speakEn: 'I like bananas. Yummy!', options: ['Muzu severim. Çok lezzetli!', 'Muzu hiç sevmem.', 'Elma yemek istemiyorum.', 'Limon çok ekşi.'], ans: 'Muzu severim. Çok lezzetli!', exp: 'I like = Severim, Yummy = Çok lezzetli / Nefis!' },
+          { q: '😝 "I don\'t like lemons. Yuck!" cümlesinin Türkçe anlamı nedir?', speakEn: 'I do not like lemons. Yuck!', options: ['Limonu sevmem. Öğk/Ekşi!', 'Limonu çok severim.', 'Portakal suyu istiyorum.', 'Çilek çok tatlıdır.'], ans: 'Limonu sevmem. Öğk/Ekşi!', exp: 'I don\'t like = Sevmem. Yuck = Tadını beğenmedim!' },
+          { q: '🍎 "Do you like apples?" (Elma sever misin?) sorusuna "Evet, severim" demek için ne söylenir?', speakEn: 'Do you like apples? Yes, I do.', options: ['Yes, I do.', 'No, I can\'t.', 'It is a table.', 'I am eight.'], ans: 'Yes, I do.', exp: '"Do you like...?" sorusuna "Yes, I do." (Evet, severim) veya "No, I don\'t." (Hayır, sevmem) ile cevap verilir.' },
+          { q: '🍒 Çift olarak salkımda duran kırmızı "Kiraz" ve 🍇 "Üzüm" İngilizce ne demektir?', speakEn: 'Cherry and Grapes', options: ['Cherry & Grapes', 'Peach & Melon', 'Apple & Orange', 'Cake & Milk'], ans: 'Cherry & Grapes', exp: 'Cherry = Kiraz, Grapes = Üzüm demektir.' },
+          { q: '🥛 Sabahları içtiğimiz sağlıklı beyaz içecek "Süt" İngilizce ne demektir?', speakEn: 'Milk', options: ['Milk', 'Water', 'Cake', 'Ice cream'], ans: 'Milk', exp: 'Milk = Süt, Water = Su demektir.' },
+          { q: '🎂 Doğum günlerinde üflediğimiz "Pasta" ve yazın yediğimiz 🍦 "Dondurma" İngilizce nedir?', speakEn: 'Cake and Ice cream', options: ['Cake & Ice cream', 'Bread & Water', 'Apple & Banana', 'Lemon & Orange'], ans: 'Cake & Ice cream', exp: 'Cake = Pasta/Kek, Ice cream = Dondurma demektir.' },
+          { q: '🍑 Tüylü kabuklu tatlı "Şeftali" meyvesinin İngilizcesi hangisidir?', speakEn: 'Peach', options: ['Peach', 'Lemon', 'Melon', 'Cherry'], ans: 'Peach', exp: 'Peach = Şeftali demektir.' },
+          { q: '🍌 "Show me the yellow banana!" yönergesi bizden ne yapmamızı ister?', speakEn: 'Show me the yellow banana!', options: ['Bana sarı muzu göster!', 'Kırmızı elmayı ye!', 'Sütü bardağa dök!', 'Yeşil kurbağayı yakala!'], ans: 'Bana sarı muzu göster!', exp: 'Show me = Bana göster, yellow banana = sarı muz.' }
+        ],
+        eng_actions_weather: [
+          { q: '🚴 "I can ride a bike." cümlesinin Türkçe anlamı nedir?', speakEn: 'I can ride a bike.', options: ['Bisiklet sürebilirim.', 'Resim çizebilirim.', 'Şarkı söyleyebilirim.', 'Yüzebilirim.'], ans: 'Bisiklet sürebilirim.', exp: 'Ride a bike = Bisiklet sürmek. "I can ride a bike."' },
+          { q: '🏊 "Can you swim?" (Yüzebilir misin?) sorusuna "Evet, yüzebilirim!" demek için hangisi seçilir?', speakEn: 'Can you swim? Yes, I can.', options: ['Yes, I can.', 'No, I don\'t.', 'Yes, it is.', 'There are three.'], ans: 'Yes, I can.', exp: '"Can you...?" ile başlayan sorulara "Yes, I can." veya "No, I can\'t." diye cevap verilir.' },
+          { q: '🎤 "Sing a song" ve 💃 "Dance" ifadelerinin anlamı nedir?', speakEn: 'Sing a song and dance', options: ['Şarkı söylemek ve Dans etmek', 'Koşmak ve Zıplamak', 'Uyumak ve Yemek yemek', 'Kitap okumak ve Yazmak'], ans: 'Şarkı söylemek ve Dans etmek', exp: 'Sing a song = Şarkı söylemek, Dance = Dans etmek.' },
+          { q: '🎨 "She can draw a picture." cümlesinde "draw a picture" ne demektir?', speakEn: 'She can draw a picture.', options: ['Resim çizmek', 'Ağaca tırmanmak', 'Futbol oynamak', 'Uçurtma uçurmak'], ans: 'Resim çizmek', exp: 'Draw a picture = Resim çizmek demektir.' },
+          { q: '☀️ "How is the weather today? — It is SUNNY and HOT." cümlesinde hava nasıldır?', speakEn: 'It is sunny and hot.', options: ['Güneşli ve sıcak', 'Yağmurlu ve soğuk', 'Karlı ve rüzgarlı', 'Bulutlu ve serin'], ans: 'Güneşli ve sıcak', exp: 'Sunny = Güneşli, Hot = Sıcak demektir.' },
+          { q: '🌧️ Şemsiyemizi açmamızı gerektiren "Yağmurlu" havanın İngilizcesi nedir?', speakEn: 'Rainy', options: ['Rainy', 'Sunny', 'Snowy', 'Hot'], ans: 'Rainy', exp: 'Rainy = Yağmurlu demektir. (Take your umbrella!)' },
+          { q: '❄️⛄ Kardan adam yaptığımız "Karlı ve Soğuk" hava İngilizce nasıl söylenir?', speakEn: 'Snowy and cold', options: ['Snowy and cold', 'Sunny and hot', 'Windy and warm', 'Rainy and hot'], ans: 'Snowy and cold', exp: 'Snowy = Karlı, Cold = Soğuk demektir.' },
+          { q: '💨 Uçurtma uçurmak için harika olan "Rüzgarlı" havanın İngilizcesi nedir?', speakEn: 'Windy', options: ['Windy', 'Cloudy', 'Snowy', 'Sunny'], ans: 'Windy', exp: 'Windy = Rüzgarlı, Cloudy = Bulutlu demektir.' },
+          { q: '🦅 "I can run fast, but I CAN\'T fly." diyen bir çocuk hangisini YAPAMAZ?', speakEn: 'I can run fast, but I cannot fly.', options: ['Uçamaz (can\'t fly)', 'Koşamaz (can\'t run)', 'Zıplayamaz (can\'t jump)', 'Yüzemez (can\'t swim)'], ans: 'Uçamaz (can\'t fly)', exp: 'Can\'t = Yapamam. "I can\'t fly" = Uçamam.' },
+          { q: '⚽ "Let\'s play football in the park!" cümlesi arkadaşımıza ne teklif eder?', speakEn: 'Let us play football in the park!', options: ['Haydi parkta futbol oynayalım!', 'Haydi mutfakta yemek yapalım!', 'Haydi odada uyuyalım!', 'Haydi televizyon izleyelim!'], ans: 'Haydi parkta futbol oynayalım!', exp: 'Let\'s = Haydi yapalım! Play football = Futbol oynamak.' }
+        ],
+        eng_maarif_dialogues: [
+          { q: '🚪 Sınıfa girerken öğretmenimizden kibarca izin istemek için ne söyleriz?', speakEn: 'May I come in, please?', options: ['May I come in, please?', 'Good night!', 'How many kites?', 'It is under the bed.'], ans: 'May I come in, please?', exp: 'May I come in? = İçeri girebilir miyim? (Nezaket kalıbı)' },
+          { q: '✏️ Arkadaşımıza bir kalem uzatırken "Buyurun / Al bakalım" anlamında ne deriz?', speakEn: 'Here you are.', options: ['Here you are.', 'What is your name?', 'I can\'t swim.', 'Good morning.'], ans: 'Here you are.', exp: 'Bir şey verirken "Here you are" (Buyurun), alan kişi ise "Thank you" (Teşekkür ederim) der.' },
+          { q: '🙏 Birisi bize "Thank you!" (Teşekkür ederim) dediğinde "Rica ederim / Bir şey değil" demek için ne söylenir?', speakEn: 'You are welcome!', options: ['You\'re welcome!', 'I am hungry.', 'Open the window.', 'Ten apples.'], ans: 'You\'re welcome!', exp: 'Thank you -> You\'re welcome! (Rica ederim).' },
+          { q: '🎂 "How old are you?" (Kaç yaşındasın?) sorusuna 8 yaşındaki bir 2. sınıf öğrencisi nasıl cevap verir?', speakEn: 'How old are you? I am eight years old.', options: ['I am eight years old.', 'My name is Ali.', 'It is sunny.', 'Yes, I have.'], ans: 'I am eight years old.', exp: 'Eight = 8. "I am eight years old" = 8 yaşındayım.' },
+          { q: '🔢 "Eleven, Twelve, Thirteen, Fourteen, _______" sayı dizisinde 14\'ten sonra gelen "15" İngilizce nedir?', speakEn: 'Eleven, twelve, thirteen, fourteen, fifteen', options: ['Fifteen (15)', 'Twenty (20)', 'Eighteen (18)', 'Seven (7)'], ans: 'Fifteen (15)', exp: '11=Eleven, 12=Twelve, 13=Thirteen, 14=Fourteen, 15=Fifteen.' },
+          { q: '🔢 "Twenty" sayısı hangi sayının İngilizce yazılışıdır?', speakEn: 'Twenty', options: ['20 (Yirmi)', '12 (On iki)', '16 (On altı)', '10 (On)'], ans: '20 (Yirmi)', exp: 'Twenty = 20 (Yirmi), Twelve = 12 (On iki) demektir.' },
+          { q: '🔢 "12" ve "18" sayılarının İngilizce karşılıkları hangisinde doğru verilmiştir?', speakEn: 'Twelve and Eighteen', options: ['Twelve (12) & Eighteen (18)', 'Ten (10) & Eleven (11)', 'Thirteen (13) & Fifteen (15)', 'Nineteen (19) & Twenty (20)'], ans: 'Twelve (12) & Eighteen (18)', exp: 'Twelve = 12, Eighteen = 18 demektir.' },
+          { q: '🔤 İngilizce alfabede "A is for Apple 🍎, B is for Ball ⚽, C is for _______ 🐱" boşluğuna hangi kelime gelir?', speakEn: 'A is for Apple, B is for Ball, C is for Cat.', options: ['Cat (Kedi)', 'Dog (Köpek)', 'Fish (Balık)', 'Zebra (Zebra)'], ans: 'Cat (Kedi)', exp: 'C harfi ile başlayan kelime Cat (Kedi) kelimesidir.' },
+          { q: '🌞 Sabah okula geldiğimizde öğretmenimize "Günaydın!" ve gece yatarken ailemize "İyi geceler!" demek için hangilerini kullanırız?', speakEn: 'Good morning and Good night', options: ['Good morning & Good night', 'Goodbye & Hello', 'Thank you & Sorry', 'Sit down & Stand up'], ans: 'Good morning & Good night', exp: 'Good morning = Günaydın, Good night = İyi geceler.' },
+          { q: '🤝 Yeni tanıştığımız bir arkadaşımıza "Tanıştığımıza memnun oldum!" demek için ne söyleriz?', speakEn: 'Nice to meet you!', options: ['Nice to meet you!', 'Close your book!', 'Where is the zoo?', 'I don\'t like milk.'], ans: 'Nice to meet you!', exp: 'Nice to meet you! = Tanıştığımıza memnun oldum!' }
+        ]
+      };
+      return banks[topicId] || banks.eng_toys_games;
+    }
+
+    function initEngExtraTopicQuiz(topicId) {
+      const raw = getEngExtraQuestionsForTopic(topicId);
+      const cloned = raw.map(item => {
+        const shuffledOpts = [...item.options].sort(() => Math.random() - 0.5);
+        return { ...item, options: shuffledOpts };
+      });
+      engExtraQuizState = {
+        topicId,
+        qIndex: 0,
+        score: 0,
+        answered: false,
+        selectedChoice: null,
+        questions: cloned
+      };
+    }
+
+    function renderEngExtraTopicQuizHtml(topicId, topicTitle, badgeColor) {
+      if (!engExtraQuizState.questions || engExtraQuizState.questions.length === 0 || engExtraQuizState.topicId !== topicId) {
+        initEngExtraTopicQuiz(topicId);
+      }
+      const st = engExtraQuizState;
+      if (st.qIndex >= st.questions.length) {
+        const pct = Math.round((st.score / st.questions.length) * 100);
+        return `
+          <div class="card" style="text-align:center;padding:24px;border:2px solid #10b981;background:linear-gradient(135deg,rgba(16,185,129,0.16),rgba(15,23,42,0.96));">
+            <div style="font-size:56px;margin-bottom:8px;">🏆🎉</div>
+            <h3 style="font-size:22px;color:#fff;font-weight:900;margin:0 0 6px;">${topicTitle} Testi Tamamlandı!</h3>
+            <p style="font-size:15px;color:#6ee7b7;font-weight:800;margin:0 0 14px;">
+              Doğru Sayısı: ${st.score} / ${st.questions.length} (%${pct} Başarı)
+            </p>
+            <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
+              <button class="action-btn" style="background:#10b981;color:#fff;padding:10px 18px;font-weight:900;" onclick="initEngExtraTopicQuiz('${topicId}');switchMainTab('${topicId}');">
+                🔄 Testi Tekrar Çöz
+              </button>
+              <button class="action-btn" style="background:${badgeColor};color:#fff;padding:10px 18px;font-weight:900;" onclick="openEngExtraTopic('${topicId}','lesson')">
+                📖 Konu &amp; Atölyeye Dön
+              </button>
+              <button class="action-btn" style="background:#334155;color:#fff;padding:10px 18px;font-weight:900;" onclick="selectHomeSubject('english')">
+                🇬🇧 Tüm İngilizce Konuları
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      const cur = st.questions[st.qIndex];
+      const safeSpeakEn = (cur.speakEn || '').replace(/'/g, "\\'");
+      const safeQuestionTr = cur.q.replace(/'/g, "\\'");
+      return `
+        <div class="card" style="border:2px solid ${badgeColor};background:linear-gradient(135deg,rgba(30,41,59,0.98),rgba(15,23,42,0.98));">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+            <span style="background:${badgeColor};color:#fff;font-size:11px;font-weight:900;padding:4px 10px;border-radius:999px;">
+              🎯 SORU ${st.qIndex + 1} / ${st.questions.length}
+            </span>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span style="font-size:13px;font-weight:900;color:#fde047;">⭐ Doğru: ${st.score}</span>
+              ${cur.speakEn ? `
+                <button class="action-btn" style="background:#2563eb;color:#fff;font-size:11px;padding:6px 10px;font-weight:800;" onclick="speakText('${safeSpeakEn}')">
+                  🔊 İngilizce Dinle
+                </button>
+              ` : ''}
+              <button class="action-btn" style="background:#334155;color:#fff;font-size:11px;padding:6px 10px;" onclick="speakTurkishText('${safeQuestionTr}')">
+                🇹🇷 Soruyu Oku
+              </button>
+            </div>
+          </div>
+
+          <div style="font-size:18px;font-weight:900;color:#fff;line-height:1.45;margin-bottom:16px;padding:14px;background:rgba(255,255,255,0.05);border-radius:14px;border:1px solid rgba(255,255,255,0.1);">
+            ${cur.q}
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+            ${cur.options.map((opt, idx) => {
+              let btnBg = '#1e293b';
+              let borderCol = '#475569';
+              if (st.answered) {
+                if (opt === cur.ans) {
+                  btnBg = 'rgba(16,185,129,0.28)';
+                  borderCol = '#10b981';
+                } else if (opt === st.selectedChoice) {
+                  btnBg = 'rgba(239,68,68,0.28)';
+                  borderCol = '#ef4444';
+                }
+              }
+              return `
+                <button class="action-btn" style="background:${btnBg};border:2px solid ${borderCol};color:#fff;font-size:15px;font-weight:800;padding:13px 14px;text-align:left;justify-content:flex-start;" onclick="answerEngExtraQuizQuestion('${topicId}', ${idx})">
+                  <span style="background:rgba(255,255,255,0.12);padding:3px 8px;border-radius:8px;margin-right:8px;font-size:12px;">${['A','B','C','D'][idx]}</span> ${opt}
+                </button>
+              `;
+            }).join('')}
+          </div>
+
+          ${st.answered ? `
+            <div style="margin-top:14px;padding:12px 14px;border-radius:12px;background:${st.selectedChoice === cur.ans ? 'rgba(16,185,129,0.18)' : 'rgba(239,68,68,0.18)'};border:1.5px solid ${st.selectedChoice === cur.ans ? '#10b981' : '#ef4444'};display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+              <div>
+                <div style="font-weight:900;font-size:14px;color:${st.selectedChoice === cur.ans ? '#6ee7b7' : '#fca5a5'};">
+                  ${st.selectedChoice === cur.ans ? '✅ Harika! Doğru Cevap (+2 ⭐)' : '❌ Doğru Cevap: ' + cur.ans}
+                </div>
+                <div style="font-size:12px;color:#e2e8f0;margin-top:3px;">💡 ${cur.exp}</div>
+              </div>
+              <button class="action-btn" style="background:#3b82f6;color:#fff;font-weight:900;padding:9px 16px;" onclick="nextEngExtraQuizQuestion('${topicId}')">
+                ${st.qIndex + 1 < st.questions.length ? 'Sonraki Soru ➔' : 'Sonucu Gör 🏆'}
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function answerEngExtraQuizQuestion(topicId, optionIdx) {
+      const st = engExtraQuizState;
+      if (st.answered) return;
+      const cur = st.questions[st.qIndex];
+      const chosen = cur.options[optionIdx];
+      st.answered = true;
+      st.selectedChoice = chosen;
+      const isCorrect = chosen === cur.ans;
+      if (isCorrect) {
+        st.score++;
+        if (typeof playSuccessTone === 'function') playSuccessTone();
+        if (typeof awardStars === 'function') awardStars(2, 'İngilizce Ünite Testi Doğru Cevap');
+        if (cur.speakEn) speakText(cur.speakEn);
+      } else {
+        if (typeof playErrorTone === 'function') playErrorTone();
+        speakTurkishText('Doğru cevap: ' + cur.ans + '. ' + cur.exp);
+      }
+      if (typeof recordParentActivityLog === 'function') {
+        recordParentActivityLog('english', isCorrect, cur.q, `Seçilen: ${chosen} | Doğru: ${cur.ans}`);
+      }
+      switchMainTab(topicId);
+    }
+
+    function nextEngExtraQuizQuestion(topicId) {
+      engExtraQuizState.qIndex++;
+      engExtraQuizState.answered = false;
+      engExtraQuizState.selectedChoice = null;
+      if (engExtraQuizState.qIndex >= engExtraQuizState.questions.length) {
+        if (typeof launchConfetti === 'function') launchConfetti();
+        if (typeof recordParentMilestone === 'function') {
+          recordParentMilestone('quiz', `İngilizce Ünite Testi (${topicId})`, `${engExtraQuizState.score}/${engExtraQuizState.questions.length} Doğru`);
+        }
+      }
+      switchMainTab(topicId);
+    }
+
+    /* --------------------------------------------------------
+       9. ÜNİTE: TOYS & GAMES (OYUNCAKLAR, OYUNLAR, RENKLER & KAÇ TANE?)
+    -------------------------------------------------------- */
+    function selectToyBoxItem(en, tr, icon) {
+      toyBoxSelectedToy = { en, tr, icon };
+      speakText(en);
+      renderEngToysGamesModule();
+    }
+    function selectToyBoxColor(en, tr, hex) {
+      toyBoxSelectedColor = { en, tr, hex };
+      speakText(en);
+      renderEngToysGamesModule();
+    }
+    function selectToyBoxCount(num, en, tr) {
+      toyBoxSelectedCount = { num, en, tr };
+      speakText(en);
+      renderEngToysGamesModule();
+    }
+
+    function renderEngToysGamesModule() {
+      if (engExtraTopicMode === 'quiz') {
+        document.getElementById('appContent').innerHTML =
+          getEngExtraNavBarHtml('eng_toys_games', 'Toys & Games', '#f59e0b') +
+          renderEngExtraTopicQuizHtml('eng_toys_games', '9. Ünite: Toys & Games (Oyuncaklar ve Oyunlar)', '#f59e0b');
+        return;
+      }
+
+      const toysVocab = [
+        { en: 'ball', tr: 'Top', icon: '⚽', ex: 'It is a round ball.' },
+        { en: 'doll', tr: 'Oyuncak Bebek', icon: '🪆', ex: 'I have got a doll.' },
+        { en: 'teddy bear', tr: 'Oyuncak Ayı', icon: '🧸', ex: 'My brown teddy bear.' },
+        { en: 'kite', tr: 'Uçurtma', icon: '🪁', ex: 'Fly a colorful kite!' },
+        { en: 'robot', tr: 'Robot', icon: '🤖', ex: 'This is my blue robot.' },
+        { en: 'car', tr: 'Oyuncak Araba', icon: '🚗', ex: 'A fast red car.' },
+        { en: 'train', tr: 'Oyuncak Tren', icon: '🚂', ex: 'A long green train.' },
+        { en: 'plane', tr: 'Oyuncak Uçak', icon: '✈️', ex: 'A white plane.' },
+        { en: 'blocks', tr: 'Oyun Blokları / Lego', icon: '🧱', ex: 'Let\'s play with blocks!' },
+        { en: 'chess', tr: 'Satranç', icon: '♟️', ex: 'Let\'s play chess!' },
+        { en: 'marbles', tr: 'Misket / Bilye', icon: '🔮', ex: 'Five glass marbles.' },
+        { en: 'computer game', tr: 'Bilgisayar Oyunu', icon: '🎮', ex: 'Play a game.' }
+      ];
+
+      const pluralToy = toyBoxSelectedCount.num > 1 ? (toyBoxSelectedToy.en === 'chess' ? 'chess sets' : toyBoxSelectedToy.en + 's') : toyBoxSelectedToy.en;
+      const builtSentenceEn = toyBoxSelectedCount.num === 1
+        ? `I have got one ${toyBoxSelectedColor.en} ${toyBoxSelectedToy.en}.`
+        : `There are ${toyBoxSelectedCount.en} ${toyBoxSelectedColor.en} ${pluralToy}.`;
+      const builtSentenceTr = toyBoxSelectedCount.num === 1
+        ? `Benim bir tane ${toyBoxSelectedColor.tr} ${toyBoxSelectedToy.tr} oyuncağım var.`
+        : `Burada ${toyBoxSelectedCount.tr} (${toyBoxSelectedCount.num}) tane ${toyBoxSelectedColor.tr} ${toyBoxSelectedToy.tr} var.`;
+
+      const html = `
+        ${getEngExtraNavBarHtml('eng_toys_games', 'Toys & Games', '#f59e0b')}
+
+        <div class="card" style="border:2px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,0.16),rgba(15,23,42,0.96));">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+            <div>
+              <span style="background:#f59e0b;color:#0f172a;font-size:11px;font-weight:900;padding:3px 10px;border-radius:999px;">MEB 2. SINIF • 9. ÜNİTE</span>
+              <h3 style="font-size:21px;color:#fde047;font-weight:900;margin:4px 0 0;">🧸🪁 Toys &amp; Games (Oyuncaklar, Oyunlar &amp; Kaç Tane?)</h3>
+            </div>
+            <button class="action-btn" style="background:#f59e0b;color:#0f172a;font-weight:900;font-size:12px;" onclick="speakText('Unit nine. Toys and Games! How many toys have you got?')">
+              🔊 Üniteyi Dinle
+            </button>
+          </div>
+          <p style="font-size:13px;color:#e2e8f0;margin:0 0 14px;">
+            Kartlara dokunarak oyuncakların İngilizce okunuşlarını dinle! Ardından aşağıdaki <strong>İnteraktif Oyuncak Kutusu</strong> ile kendi İngilizce cümleni kur!
+          </p>
+
+          <!-- SESLİ KELİME KARTLARI -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;margin-bottom:18px;">
+            ${toysVocab.map(item => `
+              <div onclick="speakText('${item.en}. ${item.ex}')" style="background:#1e293b;border:1.5px solid rgba(245,158,11,0.4);border-radius:14px;padding:12px;text-align:center;cursor:pointer;transition:transform 0.15s;">
+                <div style="font-size:36px;margin-bottom:4px;">${item.icon}</div>
+                <div style="font-size:15px;font-weight:900;color:#fde047;">${item.en} 🔊</div>
+                <div style="font-size:12px;color:#cbd5e1;font-weight:700;margin-top:2px;">${item.tr}</div>
+                <div style="font-size:11px;color:#94a3b8;margin-top:4px;font-style:italic;">"${item.ex}"</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- ÖNEMLİ SORU KALIPLARI -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:18px;">
+            <div style="background:#0f172a;padding:12px;border-radius:12px;border-left:4px solid #38bdf8;cursor:pointer;" onclick="speakText('How many kites are there? There are three kites.')">
+              <div style="font-size:12px;color:#38bdf8;font-weight:900;">1. KAÇ TANE VAR? (HOW MANY...?) 🔊</div>
+              <div style="font-size:14px;color:#fff;font-weight:800;margin-top:4px;">— How many kites are there?</div>
+              <div style="font-size:13px;color:#6ee7b7;font-weight:800;">— There are three kites. (3 uçurtma var.)</div>
+            </div>
+            <div style="background:#0f172a;padding:12px;border-radius:12px;border-left:4px solid #ec4899;cursor:pointer;" onclick="speakText('What color is your ball? It is yellow and blue.')">
+              <div style="font-size:12px;color:#f472b6;font-weight:900;">2. NE RENK? (WHAT COLOR IS IT?) 🔊</div>
+              <div style="font-size:14px;color:#fff;font-weight:800;margin-top:4px;">— What color is your ball?</div>
+              <div style="font-size:13px;color:#fbcfe8;font-weight:800;">— It is yellow and blue. (O sarı ve mavidir.)</div>
+            </div>
+            <div style="background:#0f172a;padding:12px;border-radius:12px;border-left:4px solid #10b981;cursor:pointer;" onclick="speakText('Have you got a teddy bear? Yes, I have!')">
+              <div style="font-size:12px;color:#6ee7b7;font-weight:900;">3. SENDE VAR MI? (HAVE YOU GOT...?) 🔊</div>
+              <div style="font-size:14px;color:#fff;font-weight:800;margin-top:4px;">— Have you got a teddy bear?</div>
+              <div style="font-size:13px;color:#fde047;font-weight:800;">— Yes, I have! / No, I haven't.</div>
+            </div>
+          </div>
+
+          <!-- İNTERAKTİF OYUNCAK KUTUSU VE CÜMLE KURMA ATÖLYESİ -->
+          <div style="background:#0f172a;padding:16px;border-radius:16px;border:2px solid #38bdf8;">
+            <h4 style="color:#38bdf8;margin:0 0 8px;font-size:16px;font-weight:900;">🎨 İnteraktif Oyuncak Kutusu: Sayı + Renk + Oyuncak Seç ve İngilizce Söylet!</h4>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px;">
+              <div>
+                <div style="font-size:12px;color:#94a3b8;font-weight:800;margin-bottom:6px;">1️⃣ Kaç Tane? (How many?)</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  ${[
+                    {n:1,en:'one',tr:'bir'},{n:2,en:'two',tr:'iki'},{n:3,en:'three',tr:'üç'},
+                    {n:4,en:'four',tr:'dört'},{n:5,en:'five',tr:'beş'},{n:6,en:'six',tr:'altı'}
+                  ].map(c => `
+                    <button class="action-btn" style="background:${toyBoxSelectedCount.num===c.n?'#f59e0b':'#1e293b'};color:${toyBoxSelectedCount.num===c.n?'#0f172a':'#fff'};padding:6px 10px;font-size:12px;font-weight:900;" onclick="selectToyBoxCount(${c.n},'${c.en}','${c.tr}')">
+                      ${c.n} (${c.en})
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+              <div>
+                <div style="font-size:12px;color:#94a3b8;font-weight:800;margin-bottom:6px;">2️⃣ Hangi Renk? (What color?)</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  ${[
+                    {en:'red',tr:'kırmızı',hex:'#ef4444'},
+                    {en:'blue',tr:'mavi',hex:'#3b82f6'},
+                    {en:'yellow',tr:'sarı',hex:'#eab308'},
+                    {en:'green',tr:'yeşil',hex:'#10b981'},
+                    {en:'pink',tr:'pembe',hex:'#ec4899'}
+                  ].map(col => `
+                    <button class="action-btn" style="background:${col.hex};color:#fff;border:${toyBoxSelectedColor.en===col.en?'3px solid #fff':'1px solid transparent'};padding:6px 10px;font-size:12px;font-weight:900;" onclick="selectToyBoxColor('${col.en}','${col.tr}','${col.hex}')">
+                      ${col.en}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+              <div>
+                <div style="font-size:12px;color:#94a3b8;font-weight:800;margin-bottom:6px;">3️⃣ Hangi Oyuncak? (Which toy?)</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  ${[
+                    {en:'ball',tr:'top',icon:'⚽'},
+                    {en:'doll',tr:'bebek',icon:'🪆'},
+                    {en:'kite',tr:'uçurtma',icon:'🪁'},
+                    {en:'robot',tr:'robot',icon:'🤖'},
+                    {en:'car',tr:'araba',icon:'🚗'},
+                    {en:'teddy bear',tr:'oyuncak ayı',icon:'🧸'}
+                  ].map(t => `
+                    <button class="action-btn" style="background:${toyBoxSelectedToy.en===t.en?'#38bdf8':'#1e293b'};color:${toyBoxSelectedToy.en===t.en?'#0f172a':'#fff'};padding:6px 10px;font-size:12px;font-weight:900;" onclick="selectToyBoxItem('${t.en}','${t.tr}','${t.icon}')">
+                      ${t.icon} ${t.en}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+
+            <div style="background:#1e293b;border-radius:14px;padding:14px;text-align:center;border:2px dashed ${toyBoxSelectedColor.hex};">
+              <div style="font-size:38px;letter-spacing:6px;margin-bottom:6px;">
+                ${toyBoxSelectedToy.icon.repeat(toyBoxSelectedCount.num)}
+              </div>
+              <div style="font-size:19px;font-weight:900;color:#fde047;">"${builtSentenceEn}"</div>
+              <div style="font-size:13px;color:#cbd5e1;margin-top:4px;">🇹🇷 ${builtSentenceTr}</div>
+              <div style="margin-top:10px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
+                <button class="action-btn" style="background:#2563eb;color:#fff;font-weight:900;padding:8px 16px;" onclick="speakText('${builtSentenceEn}')">
+                  🔊 Cümleyi İngilizce Dinle
+                </button>
+                <button class="action-btn" style="background:#10b981;color:#fff;font-weight:900;padding:8px 16px;" onclick="openEngExtraTopic('eng_toys_games','quiz')">
+                  🎯 Şimdi 10 Sorulu Teste Geç ➔
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    /* --------------------------------------------------------
+       10. ÜNİTE: MY PET & ANIMALS (HAYVANLAR, IN/ON/UNDER & YETENEKLER)
+    -------------------------------------------------------- */
+    function selectPetStageAnimal(en, tr, icon, abilityEn, abilityTr) {
+      petStageAnimal = { en, tr, icon, abilityEn, abilityTr };
+      speakText(`The ${en} can ${abilityEn}.`);
+      renderEngAnimalsPetsModule();
+    }
+    function selectPetStagePrep(en, tr, descTr, boxLabel) {
+      petStagePrep = { en, tr, descTr, boxLabel };
+      speakText(`The ${petStageAnimal.en} is ${en} the box.`);
+      renderEngAnimalsPetsModule();
+    }
+
+    function renderEngAnimalsPetsModule() {
+      if (engExtraTopicMode === 'quiz') {
+        document.getElementById('appContent').innerHTML =
+          getEngExtraNavBarHtml('eng_animals_pets', 'My Pet & Animals', '#10b981') +
+          renderEngExtraTopicQuizHtml('eng_animals_pets', '10. Ünite: My Pet & Animals (Hayvanlar ve Konumlar)', '#10b981');
+        return;
+      }
+
+      const animalsList = [
+        { en: 'cat', tr: 'Kedi', icon: '🐱', abilityEn: 'climb a tree', abilityTr: 'ağaca tırmanabilir' },
+        { en: 'dog', tr: 'Köpek', icon: '🐶', abilityEn: 'run fast', abilityTr: 'hızlı koşabilir' },
+        { en: 'bird', tr: 'Kuş', icon: '🐦', abilityEn: 'fly in the sky', abilityTr: 'gökyüzünde uçabilir' },
+        { en: 'fish', tr: 'Balık', icon: '🐟', abilityEn: 'swim in the water', abilityTr: 'suda yüzebilir' },
+        { en: 'rabbit', tr: 'Tavşan', icon: '🐰', abilityEn: 'jump high', abilityTr: 'yükseğe zıplayabilir' },
+        { en: 'turtle', tr: 'Kaplumbağa', icon: '🐢', abilityEn: 'walk slowly', abilityTr: 'yavaş yürüyebilir' },
+        { en: 'frog', tr: 'Kurbağa', icon: '🐸', abilityEn: 'jump and swim', abilityTr: 'zıplayabilir ve yüzebilir' },
+        { en: 'horse', tr: 'At', icon: '🐎', abilityEn: 'run very fast', abilityTr: 'çok hızlı koşabilir' },
+        { en: 'cow', tr: 'İnek', icon: '🐄', abilityEn: 'give milk', abilityTr: 'süt verir' },
+        { en: 'duck', tr: 'Ördek', icon: '🦆', abilityEn: 'swim in the lake', abilityTr: 'gölde yüzebilir' },
+        { en: 'monkey', tr: 'Maymun', icon: '🐒', abilityEn: 'climb trees', abilityTr: 'ağaçlara tırmanabilir' },
+        { en: 'elephant', tr: 'Fil', icon: '🐘', abilityEn: 'walk strongly', abilityTr: 'güçlü yürür' }
+      ];
+
+      const locSentenceEn = `Where is the ${petStageAnimal.en}? It is ${petStagePrep.en} the box!`;
+      const abilitySentenceEn = `The ${petStageAnimal.en} can ${petStageAnimal.abilityEn}.`;
+
+      const html = `
+        ${getEngExtraNavBarHtml('eng_animals_pets', 'My Pet & Animals', '#10b981')}
+
+        <div class="card" style="border:2px solid #10b981;background:linear-gradient(135deg,rgba(16,185,129,0.16),rgba(15,23,42,0.96));">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+            <div>
+              <span style="background:#10b981;color:#0f172a;font-size:11px;font-weight:900;padding:3px 10px;border-radius:999px;">MEB 2. SINIF • 10. ÜNİTE</span>
+              <h3 style="font-size:21px;color:#6ee7b7;font-weight:900;margin:4px 0 0;">🐾🐶 My Pet &amp; Animals (Hayvanlar, Konumlar: In / On / Under &amp; Yetenekler)</h3>
+            </div>
+            <button class="action-btn" style="background:#10b981;color:#0f172a;font-weight:900;font-size:12px;" onclick="speakText('Unit ten. My Pet and Animals! Where is the cat? It is on the table!')">
+              🔊 Üniteyi Dinle
+            </button>
+          </div>
+          <p style="font-size:13px;color:#e2e8f0;margin:0 0 14px;">
+            Hayvan kartlarına dokunarak telaffuzlarını ve neler yapabildiklerini (<strong>can fly / can swim / can jump</strong>) dinle!
+          </p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;margin-bottom:18px;">
+            ${animalsList.map(a => `
+              <div onclick="selectPetStageAnimal('${a.en}','${a.tr}','${a.icon}','${a.abilityEn}','${a.abilityTr}')" style="background:#1e293b;border:2px solid ${petStageAnimal.en===a.en?'#10b981':'rgba(16,185,129,0.35)'};border-radius:14px;padding:12px;text-align:center;cursor:pointer;">
+                <div style="font-size:36px;margin-bottom:4px;">${a.icon}</div>
+                <div style="font-size:15px;font-weight:900;color:#6ee7b7;">${a.en} 🔊</div>
+                <div style="font-size:12px;color:#fff;font-weight:700;">${a.tr}</div>
+                <div style="font-size:11px;color:#fde047;margin-top:4px;">It can ${a.abilityEn}</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- İNTERAKTİF IN / ON / UNDER KONUM SAHNESİ -->
+          <div style="background:#0f172a;padding:16px;border-radius:16px;border:2px solid #f59e0b;">
+            <h4 style="color:#fde047;margin:0 0 8px;font-size:16px;font-weight:900;">📦 İnteraktif "Where is the ${petStageAnimal.en}?" (In / On / Under) Sahnesi</h4>
+            <p style="font-size:12px;color:#cbd5e1;margin:0 0 12px;">
+              Aşağıdan bir konum seç (<strong>IN = İçinde</strong>, <strong>ON = Üstünde</strong>, <strong>UNDER = Altında</strong>) ve hayvanın kutuya göre yerini İngilizce dinle!
+            </p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+              <button class="action-btn" style="background:${petStagePrep.en==='in'?'#10b981':'#1e293b'};color:#fff;font-weight:900;padding:9px 16px;" onclick="selectPetStagePrep('in','içinde','Kutunun İÇİNDE!','📦 Kutunun İçinde (IN the box)')">
+                📥 IN (İçinde)
+              </button>
+              <button class="action-btn" style="background:${petStagePrep.en==='on'?'#f59e0b':'#1e293b'};color:#fff;font-weight:900;padding:9px 16px;" onclick="selectPetStagePrep('on','üstünde','Kutunun ÜSTÜNDE!','📦 Kutunun Üstünde (ON the box)')">
+                ⬆️ ON (Üstünde)
+              </button>
+              <button class="action-btn" style="background:${petStagePrep.en==='under'?'#ec4899':'#1e293b'};color:#fff;font-weight:900;padding:9px 16px;" onclick="selectPetStagePrep('under','altında','Kutunun ALTINDA!','📦 Kutunun Altında (UNDER the box)')">
+                ⬇️ UNDER (Altında)
+              </button>
+            </div>
+
+            <div style="background:#1e293b;border-radius:14px;padding:16px;text-align:center;border:2px dashed #10b981;">
+              <div style="font-size:40px;margin-bottom:6px;">
+                ${petStagePrep.en === 'on' ? `${petStageAnimal.icon} ⬆️ 📦` : petStagePrep.en === 'in' ? `📦(${petStageAnimal.icon})` : `📦 ⬇️ ${petStageAnimal.icon}`}
+              </div>
+              <div style="font-size:18px;font-weight:900;color:#6ee7b7;">"${locSentenceEn}"</div>
+              <div style="font-size:15px;font-weight:800;color:#fde047;margin-top:4px;">"${abilitySentenceEn}"</div>
+              <div style="font-size:12px;color:#cbd5e1;margin-top:4px;">
+                🇹🇷 ${petStageAnimal.tr} nerede? Kutunun <strong>${petStagePrep.tr}</strong>! (${petStageAnimal.tr} ${petStageAnimal.abilityTr}.)
+              </div>
+              <div style="margin-top:12px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
+                <button class="action-btn" style="background:#2563eb;color:#fff;font-weight:900;padding:8px 16px;" onclick="speakText('${locSentenceEn} ${abilitySentenceEn}')">
+                  🔊 Cümleleri İngilizce Dinle
+                </button>
+                <button class="action-btn" style="background:#10b981;color:#fff;font-weight:900;padding:8px 16px;" onclick="openEngExtraTopic('eng_animals_pets','quiz')">
+                  🎯 10 Sorulu Hayvanlar Testine Geç ➔
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    /* --------------------------------------------------------
+       11. ÜNİTE: FRUITS, FOOD & DRINKS (MEYVELER & I LIKE / I DON'T LIKE)
+    -------------------------------------------------------- */
+    function selectFruitPlateChoice(type, en, tr, icon) {
+      if (type === 'like') {
+        fruitPlateLiked = { en, tr, icon };
+        speakText(`I like ${en}. Yummy!`);
+      } else {
+        fruitPlateDisliked = { en, tr, icon };
+        speakText(`I don't like ${en}. Yuck!`);
+      }
+      renderEngFruitsFoodModule();
+    }
+
+    function renderEngFruitsFoodModule() {
+      if (engExtraTopicMode === 'quiz') {
+        document.getElementById('appContent').innerHTML =
+          getEngExtraNavBarHtml('eng_fruits_food', 'Fruits & Likes', '#ec4899') +
+          renderEngExtraTopicQuizHtml('eng_fruits_food', '11. Ünite: Fruits, Food & Drinks (Meyveler ve Sevdiklerimiz)', '#ec4899');
+        return;
+      }
+
+      const fruitsVocab = [
+        { en: 'apples', single: 'apple', tr: 'Elma', icon: '🍎', ex: 'I like red apples!' },
+        { en: 'bananas', single: 'banana', tr: 'Muz', icon: '🍌', ex: 'Touch the yellow banana.' },
+        { en: 'strawberries', single: 'strawberry', tr: 'Çilek', icon: '🍓', ex: 'Sweet strawberries, yummy!' },
+        { en: 'oranges', single: 'orange', tr: 'Portakal', icon: '🍊', ex: 'Orange juice is yummy.' },
+        { en: 'watermelons', single: 'watermelon', tr: 'Karpuz', icon: '🍉', ex: 'A big green watermelon.' },
+        { en: 'cherries', single: 'cherry', tr: 'Kiraz', icon: '🍒', ex: 'I like cherries.' },
+        { en: 'grapes', single: 'grapes', tr: 'Üzüm', icon: '🍇', ex: 'Purple grapes.' },
+        { en: 'peaches', single: 'peach', tr: 'Şeftali', icon: '🍑', ex: 'A soft peach.' },
+        { en: 'lemons', single: 'lemon', tr: 'Limon', icon: '🍋', ex: 'I don\'t like sour lemons!' },
+        { en: 'milk', single: 'milk', tr: 'Süt', icon: '🥛', ex: 'Drink your milk!' },
+        { en: 'cake', single: 'cake', tr: 'Pasta / Kek', icon: '🎂', ex: 'Yummy birthday cake!' },
+        { en: 'ice cream', single: 'ice cream', tr: 'Dondurma', icon: '🍦', ex: 'Cold ice cream!' }
+      ];
+
+      const plateSentenceEn = `I like ${fruitPlateLiked.en}, yummy! But I don't like ${fruitPlateDisliked.en}, yuck!`;
+
+      const html = `
+        ${getEngExtraNavBarHtml('eng_fruits_food', 'Fruits & Likes', '#ec4899')}
+
+        <div class="card" style="border:2px solid #ec4899;background:linear-gradient(135deg,rgba(236,72,153,0.16),rgba(15,23,42,0.96));">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+            <div>
+              <span style="background:#ec4899;color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:999px;">MEB 2. SINIF • 11. ÜNİTE</span>
+              <h3 style="font-size:21px;color:#f9a8d4;font-weight:900;margin:4px 0 0;">🍓🍎 Fruits, Food &amp; Drinks (Meyveler, Yiyecekler &amp; I Like / Don't Like)</h3>
+            </div>
+            <button class="action-btn" style="background:#ec4899;color:#fff;font-weight:900;font-size:12px;" onclick="speakText('Unit eleven. Fruits and Food! Do you like strawberries? Yes, I do! Yummy!')">
+              🔊 Üniteyi Dinle
+            </button>
+          </div>
+          <p style="font-size:13px;color:#e2e8f0;margin:0 0 14px;">
+            Meyve ve yiyecek kartlarına tıklayarak telaffuzlarını dinle! Sevdiğimiz şeyler için <strong>"I like... Yummy! 😋"</strong>, sevmediklerimiz için <strong>"I don't like... Yuck! 😝"</strong> deriz.
+          </p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:18px;">
+            ${fruitsVocab.map(f => `
+              <div onclick="speakText('${f.single}. ${f.ex}')" style="background:#1e293b;border:1.5px solid rgba(236,72,153,0.4);border-radius:14px;padding:12px;text-align:center;cursor:pointer;">
+                <div style="font-size:36px;margin-bottom:4px;">${f.icon}</div>
+                <div style="font-size:15px;font-weight:900;color:#f9a8d4;">${f.single} 🔊</div>
+                <div style="font-size:12px;color:#fff;font-weight:700;">${f.tr}</div>
+                <div style="font-size:11px;color:#cbd5e1;margin-top:4px;font-style:italic;">"${f.ex}"</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- İNTERAKTİF MEYVE TABAĞI: YUMMY & YUCK ATÖLYESİ -->
+          <div style="background:#0f172a;padding:16px;border-radius:16px;border:2px solid #10b981;">
+            <h4 style="color:#6ee7b7;margin:0 0 8px;font-size:16px;font-weight:900;">🍽️ İnteraktif "Yummy 😋 &amp; Yuck 😝" Tabak Atölyesi</h4>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:14px;">
+              <div style="background:#1e293b;padding:12px;border-radius:12px;border:1.5px solid #10b981;">
+                <div style="font-size:13px;font-weight:900;color:#6ee7b7;margin-bottom:8px;">😋 1. Sevdiğin Meyveyi Seç (I LIKE...):</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  ${fruitsVocab.slice(0, 8).map(f => `
+                    <button class="action-btn" style="background:${fruitPlateLiked.en===f.en?'#10b981':'#0f172a'};color:#fff;padding:6px 10px;font-size:12px;font-weight:800;" onclick="selectFruitPlateChoice('like','${f.en}','${f.tr}','${f.icon}')">
+                      ${f.icon} ${f.en}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+              <div style="background:#1e293b;padding:12px;border-radius:12px;border:1.5px solid #ef4444;">
+                <div style="font-size:13px;font-weight:900;color:#fca5a5;margin-bottom:8px;">😝 2. Sevmediğin Yiyeceği Seç (I DON'T LIKE...):</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  ${fruitsVocab.map(f => `
+                    <button class="action-btn" style="background:${fruitPlateDisliked.en===f.en?'#ef4444':'#0f172a'};color:#fff;padding:6px 10px;font-size:12px;font-weight:800;" onclick="selectFruitPlateChoice('dislike','${f.en}','${f.tr}','${f.icon}')">
+                      ${f.icon} ${f.en}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+
+            <div style="background:#1e293b;border-radius:14px;padding:14px;text-align:center;border:2px dashed #ec4899;">
+              <div style="font-size:34px;margin-bottom:6px;">
+                😋 ${fruitPlateLiked.icon} ❤️ &nbsp;&nbsp;|&nbsp;&nbsp; 😝 ${fruitPlateDisliked.icon} ❌
+              </div>
+              <div style="font-size:18px;font-weight:900;color:#fde047;">"${plateSentenceEn}"</div>
+              <div style="font-size:13px;color:#cbd5e1;margin-top:4px;">
+                🇹🇷 Ben <strong>${fruitPlateLiked.tr}</strong> severim, çok lezzetli! Ama <strong>${fruitPlateDisliked.tr}</strong> sevmem!
+              </div>
+              <div style="margin-top:10px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
+                <button class="action-btn" style="background:#2563eb;color:#fff;font-weight:900;padding:8px 16px;" onclick="speakText(\`${plateSentenceEn}\`)">
+                  🔊 Cümleyi İngilizce Dinle
+                </button>
+                <button class="action-btn" style="background:#10b981;color:#fff;font-weight:900;padding:8px 16px;" onclick="openEngExtraTopic('eng_fruits_food','quiz')">
+                  🎯 10 Sorulu Meyveler Testine Geç ➔
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    /* --------------------------------------------------------
+       12. ÜNİTE: ACTIONS, ABILITIES (CAN / CAN'T) & WEATHER (HAVA DURUMU)
+    -------------------------------------------------------- */
+    function selectHeroAbility(type, en, tr, icon) {
+      if (type === 'can') {
+        heroAbilityCan = { en, tr, icon };
+        speakText(`I can ${en}.`);
+      } else {
+        heroAbilityCant = { en, tr, icon };
+        speakText(`I can't ${en}.`);
+      }
+      renderEngActionsWeatherModule();
+    }
+    function selectWeatherCard(en, tr, icon) {
+      selectedWeatherToday = { en, tr, icon };
+      speakText(`Today the weather is ${en}.`);
+      renderEngActionsWeatherModule();
+    }
+
+    function renderEngActionsWeatherModule() {
+      if (engExtraTopicMode === 'quiz') {
+        document.getElementById('appContent').innerHTML =
+          getEngExtraNavBarHtml('eng_actions_weather', 'Can/Can\'t & Weather', '#06b6d4') +
+          renderEngExtraTopicQuizHtml('eng_actions_weather', '12. Ünite: Actions (Can/Can\'t) & Weather (Hava Durumu)', '#06b6d4');
+        return;
+      }
+
+      const actionsList = [
+        { en: 'swim', tr: 'yüzebilirim', nameTr: 'Yüzmek', icon: '🏊' },
+        { en: 'ride a bike', tr: 'bisiklet sürebilirim', nameTr: 'Bisiklet Sürmek', icon: '🚴' },
+        { en: 'sing a song', tr: 'şarkı söyleyebilirim', nameTr: 'Şarkı Söylemek', icon: '🎤' },
+        { en: 'dance', tr: 'dans edebilirim', nameTr: 'Dans Etmek', icon: '💃' },
+        { en: 'run fast', tr: 'hızlı koşabilirim', nameTr: 'Hızlı Koşmak', icon: '🏃' },
+        { en: 'jump high', tr: 'yükseğe zıplayabilirim', nameTr: 'Zıplamak', icon: '🦘' },
+        { en: 'draw a picture', tr: 'resim çizebilirim', nameTr: 'Resim Çizmek', icon: '🎨' },
+        { en: 'play football', tr: 'futbol oynayabilirim', nameTr: 'Futbol Oynamak', icon: '⚽' },
+        { en: 'fly a kite', tr: 'uçurtma uçurabilirim', nameTr: 'Uçurtma Uçurmak', icon: '🪁' },
+        { en: 'climb a tree', tr: 'ağaca tırmanabilirim', nameTr: 'Ağaca Tırmanmak', icon: '🧗' }
+      ];
+
+      const weatherList = [
+        { en: 'sunny and hot', tr: 'Güneşli ve Sıcak', icon: '☀️' },
+        { en: 'rainy', tr: 'Yağmurlu', icon: '🌧️' },
+        { en: 'snowy and cold', tr: 'Karlı ve Soğuk', icon: '❄️' },
+        { en: 'windy', tr: 'Rüzgarlı', icon: '💨' },
+        { en: 'cloudy', tr: 'Bulutlu', icon: '⛅' }
+      ];
+
+      const fullSpeechEn = `Today it is ${selectedWeatherToday.en}. I can ${heroAbilityCan.en}, but I cannot ${heroAbilityCant.en}!`;
+
+      const html = `
+        ${getEngExtraNavBarHtml('eng_actions_weather', 'Can/Can\'t & Weather', '#06b6d4')}
+
+        <div class="card" style="border:2px solid #06b6d4;background:linear-gradient(135deg,rgba(6,182,212,0.16),rgba(15,23,42,0.96));">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+            <div>
+              <span style="background:#06b6d4;color:#0f172a;font-size:11px;font-weight:900;padding:3px 10px;border-radius:999px;">MEB 2. SINIF • 12. ÜNİTE</span>
+              <h3 style="font-size:21px;color:#67e8f9;font-weight:900;margin:4px 0 0;">🚴☀️ Actions, Abilities (Can / Can't) &amp; Weather (Hava Durumu)</h3>
+            </div>
+            <button class="action-btn" style="background:#06b6d4;color:#0f172a;font-weight:900;font-size:12px;" onclick="speakText('Unit twelve! I can ride a bike! Can you swim? Yes, I can! How is the weather? It is sunny!')">
+              🔊 Üniteyi Dinle
+            </button>
+          </div>
+
+          <h4 style="color:#fff;margin:0 0 8px;font-size:15px;font-weight:900;">🏃 1. Bölüm: Hareketler ve Yapabildiklerimiz (Actions &amp; "I can...")</h4>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:18px;">
+            ${actionsList.map(act => `
+              <div onclick="selectHeroAbility('can','${act.en}','${act.tr}','${act.icon}')" style="background:#1e293b;border:1.5px solid rgba(6,182,212,0.45);border-radius:14px;padding:11px;text-align:center;cursor:pointer;">
+                <div style="font-size:34px;margin-bottom:4px;">${act.icon}</div>
+                <div style="font-size:14px;font-weight:900;color:#67e8f9;">${act.en} 🔊</div>
+                <div style="font-size:12px;color:#fff;font-weight:700;">${act.nameTr}</div>
+                <div style="font-size:11px;color:#6ee7b7;margin-top:3px;">"I can ${act.en}!"</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <h4 style="color:#fde047;margin:0 0 8px;font-size:15px;font-weight:900;">☀️ 2. Bölüm: Hava Durumu (How is the weather today?)</h4>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px;">
+            ${weatherList.map(w => `
+              <div onclick="selectWeatherCard('${w.en}','${w.tr}','${w.icon}')" style="background:#1e293b;border:2px solid ${selectedWeatherToday.en===w.en?'#fde047':'rgba(253,224,71,0.3)'};border-radius:14px;padding:12px;text-align:center;cursor:pointer;">
+                <div style="font-size:34px;margin-bottom:4px;">${w.icon}</div>
+                <div style="font-size:14px;font-weight:900;color:#fde047;">It is ${w.en} 🔊</div>
+                <div style="font-size:12px;color:#cbd5e1;font-weight:700;">${w.tr}</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- SÜPER KAHRAMAN YETENEK VE HAVA DURUMU STÜDYOSU -->
+          <div style="background:#0f172a;padding:16px;border-radius:16px;border:2px solid #06b6d4;">
+            <h4 style="color:#67e8f9;margin:0 0 8px;font-size:16px;font-weight:900;">🦸 Süper Kahraman Yetenek &amp; Hava Durumu Konuşma Stüdyosu</h4>
+            <div style="background:#1e293b;border-radius:14px;padding:14px;text-align:center;border:2px dashed #06b6d4;">
+              <div style="font-size:34px;margin-bottom:6px;">
+                ${selectedWeatherToday.icon} &nbsp;|&nbsp; ✅ ${heroAbilityCan.icon} &nbsp;|&nbsp; ❌ ${heroAbilityCant.icon}
+              </div>
+              <div style="font-size:18px;font-weight:900;color:#fde047;">"${fullSpeechEn}"</div>
+              <div style="font-size:13px;color:#cbd5e1;margin-top:4px;">
+                🇹🇷 Bugün hava <strong>${selectedWeatherToday.tr}</strong>. Ben <strong>${heroAbilityCan.tr}</strong> ama <strong>${heroAbilityCant.tr}</strong>!
+              </div>
+              <div style="margin-top:10px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
+                <button class="action-btn" style="background:#2563eb;color:#fff;font-weight:900;padding:8px 16px;" onclick="speakText('${fullSpeechEn}')">
+                  🔊 Cümleyi İngilizce Dinle
+                </button>
+                <button class="action-btn" style="background:#10b981;color:#fff;font-weight:900;padding:8px 16px;" onclick="openEngExtraTopic('eng_actions_weather','quiz')">
+                  🎯 10 Sorulu Yetenek &amp; Hava Testine Geç ➔
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    /* --------------------------------------------------------
+       13. ÜNİTE: MAARİF KONUŞMA ATÖLYESİ, SAYILAR 1-20 & A-Z SESLİ ALFABE
+    -------------------------------------------------------- */
+    function selectMaarifRoleplay(idx) {
+      maarifSelectedRoleplayIdx = idx;
+      renderEngMaarifDialoguesModule();
+    }
+
+    function renderEngMaarifDialoguesModule() {
+      if (engExtraTopicMode === 'quiz') {
+        document.getElementById('appContent').innerHTML =
+          getEngExtraNavBarHtml('eng_maarif_dialogues', 'Maarif Konuşma & Alfabe', '#8b5cf6') +
+          renderEngExtraTopicQuizHtml('eng_maarif_dialogues', '13. Ünite: Maarif Konuşma, Sayılar (1-20) & Sesli Alfabe', '#8b5cf6');
+        return;
+      }
+
+      const roleplayScenarios = [
+        {
+          title: '🤝 1. Tanışma & Yaşı Sorma (Meeting & Age)',
+          lines: [
+            { speaker: '👧 Ayşe', en: 'Hello! Good morning! What is your name?', tr: 'Merhaba! Günaydın! Senin adın ne?' },
+            { speaker: '👦 Mert', en: 'Good morning! My name is Mert. Nice to meet you!', tr: 'Günaydın! Benim adım Mert. Tanıştığımıza memnun oldum!' },
+            { speaker: '👧 Ayşe', en: 'Nice to meet you, too! How old are you?', tr: 'Ben de memnun oldum! Kaç yaşındasın?' },
+            { speaker: '👦 Mert', en: 'I am eight years old!', tr: 'Ben sekiz yaşındayım!' }
+          ]
+        },
+        {
+          title: '🙏 2. Sınıf İçi Nezaket & İzin İsteme (Polite Requests)',
+          lines: [
+            { speaker: '👦 Can', en: 'Excuse me, teacher! May I come in, please?', tr: 'Affedersiniz öğretmenim! İçeri girebilir miyim lütfen?' },
+            { speaker: '👩‍🏫 Teacher', en: 'Yes, you may! Come in and sit down, please.', tr: 'Evet, girebilirsin! İçeri gel ve otur lütfen.' },
+            { speaker: '👦 Can', en: 'Give me the red pencil, please.', tr: 'Bana kırmızı kalemi verir misin lütfen?' },
+            { speaker: '👧 Elif', en: 'Here you are!', tr: 'Buyur, al bakalım!' },
+            { speaker: '👦 Can', en: 'Thank you very much! — You are welcome!', tr: 'Çok teşekkür ederim! — Rica ederim!' }
+          ]
+        },
+        {
+          title: '👨‍👩‍👧 3. Ailemi ve Evimi Tanıtıyorum (Family & Home)',
+          lines: [
+            { speaker: '👧 Zeynep', en: 'Look! Who is this?', tr: 'Bak! Bu kim?' },
+            { speaker: '👦 Kerem', en: 'This is my mother and this is my father.', tr: 'Bu benim annem ve bu da benim babam.' },
+            { speaker: '👧 Zeynep', en: 'Where is your little brother?', tr: 'Küçük erkek kardeşin nerede?' },
+            { speaker: '👦 Kerem', en: 'He is in the living room!', tr: 'O oturma odasında!' }
+          ]
+        }
+      ];
+
+      const numbers11to20 = [
+        { num: 11, en: 'eleven', tr: 'on bir' },
+        { num: 12, en: 'twelve', tr: 'on iki' },
+        { num: 13, en: 'thirteen', tr: 'on üç' },
+        { num: 14, en: 'fourteen', tr: 'on dört' },
+        { num: 15, en: 'fifteen', tr: 'on beş' },
+        { num: 16, en: 'sixteen', tr: 'on altı' },
+        { num: 17, en: 'seventeen', tr: 'on yedi' },
+        { num: 18, en: 'eighteen', tr: 'on sekiz' },
+        { num: 19, en: 'nineteen', tr: 'on dokuz' },
+        { num: 20, en: 'twenty', tr: 'yirmi' }
+      ];
+
+      const alphabetPhonics = [
+        { l: 'A a', w: 'Apple', tr: 'Elma', i: '🍎' },
+        { l: 'B b', w: 'Ball', tr: 'Top', i: '⚽' },
+        { l: 'C c', w: 'Cat', tr: 'Kedi', i: '🐱' },
+        { l: 'D d', w: 'Dog', tr: 'Köpek', i: '🐶' },
+        { l: 'E e', w: 'Elephant', tr: 'Fil', i: '🐘' },
+        { l: 'F f', w: 'Fish', tr: 'Balık', i: '🐟' },
+        { l: 'G g', w: 'Grapes', tr: 'Üzüm', i: '🍇' },
+        { l: 'H h', w: 'House', tr: 'Ev', i: '🏠' },
+        { l: 'I i', w: 'Ice cream', tr: 'Dondurma', i: '🍦' },
+        { l: 'J j', w: 'Jump', tr: 'Zıplamak', i: '🦘' },
+        { l: 'K k', w: 'Kite', tr: 'Uçurtma', i: '🪁' },
+        { l: 'L l', w: 'Lion', tr: 'Aslan', i: '🦁' },
+        { l: 'M m', w: 'Monkey', tr: 'Maymun', i: '🐒' },
+        { l: 'N n', w: 'Nose', tr: 'Burun', i: '👃' },
+        { l: 'O o', w: 'Orange', tr: 'Portakal', i: '🍊' },
+        { l: 'P p', w: 'Pencil', tr: 'Kalem', i: '✏️' },
+        { l: 'Q q', w: 'Queen', tr: 'Kraliçe', i: '👑' },
+        { l: 'R r', w: 'Rabbit', tr: 'Tavşan', i: '🐰' },
+        { l: 'S s', w: 'Sun', tr: 'Güneş', i: '☀️' },
+        { l: 'T t', w: 'Train', tr: 'Tren', i: '🚂' },
+        { l: 'U u', w: 'Umbrella', tr: 'Şemsiye', i: '☂️' },
+        { l: 'V v', w: 'Van', tr: 'Minibüs', i: '🚐' },
+        { l: 'W w', w: 'Watermelon', tr: 'Karpuz', i: '🍉' },
+        { l: 'X x', w: 'Xylophone', tr: 'Ksilofon', i: '🎼' },
+        { l: 'Y y', w: 'Yo-yo', tr: 'Yoyo', i: '🪀' },
+        { l: 'Z z', w: 'Zebra', tr: 'Zebra', i: '🦓' }
+      ];
+
+      const activeDialog = roleplayScenarios[maarifSelectedRoleplayIdx] || roleplayScenarios[0];
+
+      const html = `
+        ${getEngExtraNavBarHtml('eng_maarif_dialogues', 'Maarif Konuşma & Alfabe', '#8b5cf6')}
+
+        <div class="card" style="border:2px solid #8b5cf6;background:linear-gradient(135deg,rgba(139,92,246,0.18),rgba(15,23,42,0.96));">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+            <div>
+              <span style="background:#8b5cf6;color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:999px;">TÜRKİYE YÜZYILI MAARİF MODELİ • 13. ÜNİTE</span>
+              <h3 style="font-size:21px;color:#c4b5fd;font-weight:900;margin:4px 0 0;">🗣️🔤 Maarif Günlük Diyaloglar, Sayılar (11-20) &amp; A-Z Sesli Alfabe</h3>
+            </div>
+            <button class="action-btn" style="background:#10b981;color:#fff;font-weight:900;font-size:12px;" onclick="openEngExtraTopic('eng_maarif_dialogues','quiz')">
+              🎯 10 Sorulu Maarif Testine Geç ➔
+            </button>
+          </div>
+
+          <!-- 1. BÖLÜM: KARŞILIKLI KONUŞMA (ROLE-PLAY) SAHNESİ -->
+          <div style="background:#0f172a;padding:16px;border-radius:16px;border:2px solid #8b5cf6;margin-bottom:18px;">
+            <h4 style="color:#c4b5fd;margin:0 0 10px;font-size:16px;font-weight:900;">🎭 1. Bölüm: Maarif Karşılıklı Konuşma (Role-Play) Atölyesi</h4>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+              ${roleplayScenarios.map((sc, idx) => `
+                <button class="action-btn" style="background:${maarifSelectedRoleplayIdx===idx?'#8b5cf6':'#1e293b'};color:#fff;font-size:12px;font-weight:800;padding:8px 12px;" onclick="selectMaarifRoleplay(${idx})">
+                  ${sc.title}
+                </button>
+              `).join('')}
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              ${activeDialog.lines.map(line => `
+                <div onclick="speakText('${line.en.replace(/'/g, "\\'")}')" style="background:#1e293b;border-left:4px solid #38bdf8;padding:10px 14px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+                  <div>
+                    <div style="font-size:12px;font-weight:900;color:#38bdf8;">${line.speaker}</div>
+                    <div style="font-size:15px;font-weight:900;color:#fff;margin-top:2px;">"${line.en}"</div>
+                    <div style="font-size:12px;color:#cbd5e1;margin-top:2px;">🇹🇷 ${line.tr}</div>
+                  </div>
+                  <span style="background:#2563eb;color:#fff;padding:6px 10px;border-radius:10px;font-size:12px;font-weight:900;white-space:nowrap;">🔊 Dinle</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- 2. BÖLÜM: 11'DEN 20'YE KADAR İNGİLİZCE SAYILAR -->
+          <div style="background:#0f172a;padding:16px;border-radius:16px;border:2px solid #f59e0b;margin-bottom:18px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+              <h4 style="color:#fde047;margin:0;font-size:16px;font-weight:900;">🔢 2. Bölüm: 11'den 20'ye Kadar İngilizce Sayılar (Numbers 11–20)</h4>
+              <button class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:11px;font-weight:900;padding:6px 12px;" onclick="speakText('eleven, twelve, thirteen, fourteen, fifteen, sixteen, seventeen, eighteen, nineteen, twenty')">
+                🔊 11'den 20'ye Hepsini Say!
+              </button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;">
+              ${numbers11to20.map(n => `
+                <div onclick="speakText('${n.en}')" style="background:#1e293b;border:1.5px solid rgba(245,158,11,0.45);border-radius:12px;padding:10px;text-align:center;cursor:pointer;">
+                  <div style="font-size:24px;font-weight:900;color:#fde047;">${n.num}</div>
+                  <div style="font-size:15px;font-weight:900;color:#fff;">${n.en} 🔊</div>
+                  <div style="font-size:11px;color:#94a3b8;">${n.tr}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- 3. BÖLÜM: A-Z İNGİLİZCE SESLİ ALFABE VE FONETİK KARTLARI -->
+          <div style="background:#0f172a;padding:16px;border-radius:16px;border:2px solid #10b981;">
+            <h4 style="color:#6ee7b7;margin:0 0 10px;font-size:16px;font-weight:900;">🔤 3. Bölüm: A–Z İngilizce Sesli Alfabe &amp; Kelime Kartları (Phonics)</h4>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:8px;">
+              ${alphabetPhonics.map(item => `
+                <div onclick="speakText('${item.l.split(' ')[0]} is for ${item.w}')" style="background:#1e293b;border:1px solid rgba(16,185,129,0.4);border-radius:12px;padding:9px;text-align:center;cursor:pointer;">
+                  <div style="font-size:18px;font-weight:900;color:#6ee7b7;">${item.l} <span style="font-size:22px;">${item.i}</span></div>
+                  <div style="font-size:13px;font-weight:800;color:#fff;margin-top:3px;">${item.w} 🔊</div>
+                  <div style="font-size:11px;color:#94a3b8;">${item.tr}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    /* ========================================================
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.9.4';
+    const CURRENT_APP_VERSION = '2.9.5';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
