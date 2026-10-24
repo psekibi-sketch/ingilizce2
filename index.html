@@ -975,7 +975,7 @@
           📲 Ana Ekrana Ekle
         </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
-          🔄 Sürümü Yenile (v2.9.0)
+          🔄 Sürümü Yenile (v2.9.1)
         </button>
         <button onclick="switchMainTab('pet_hub')" class="action-btn" style="background:#ec4899;color:#fff;font-size:11px;padding:7px 12px;font-weight:900;">
           🐾 Dostum &amp; Çark
@@ -1108,6 +1108,7 @@
         unlocked.push(badgeId);
         try {
           localStorage.setItem('lingoday_badges', JSON.stringify(unlocked));
+          if (typeof scheduleMemoryMirrorSync === 'function') scheduleMemoryMirrorSync();
         } catch (e) {}
         const badge = BADGE_DEFINITIONS.find(b => b.id === badgeId);
         if (badge) {
@@ -1415,7 +1416,459 @@
         const trimmed = {};
         keys.slice(0, 45).forEach(k => { trimmed[k] = allLogs[k]; });
         localStorage.setItem(PARENT_LOGS_STORAGE_KEY, JSON.stringify(trimmed));
+        if (typeof scheduleMemoryMirrorSync === 'function') scheduleMemoryMirrorSync();
       } catch (e) {}
+    }
+
+    /* ========================================================
+       ÇİFT KATMANLI KALICI HAFIZA SİSTEMİ
+       (LOCALSTORAGE + INDEXEDDB + PERSISTENT STORAGE KORUMASI)
+       & YEDEKLEME / YEDEKTEN DÖNME MOTORU
+    ======================================================== */
+    const LINGO_IDB_NAME = 'LingoKaliciHafizaDB';
+    const LINGO_IDB_VERSION = 1;
+    const LINGO_IDB_STORE = 'app_memory_store';
+    const LINGO_LAST_SAVED_KEY = 'lingo_last_saved_at';
+    let lingoIdbInstance = null;
+    let lingoMirrorSyncTimer = null;
+    let isPersistentStorageGranted = false;
+
+    function openLingoIndexedDB() {
+      return new Promise((resolve) => {
+        if (lingoIdbInstance) {
+          resolve(lingoIdbInstance);
+          return;
+        }
+        if (!window.indexedDB) {
+          resolve(null);
+          return;
+        }
+        try {
+          const req = window.indexedDB.open(LINGO_IDB_NAME, LINGO_IDB_VERSION);
+          req.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(LINGO_IDB_STORE)) {
+              db.createObjectStore(LINGO_IDB_STORE, { keyPath: 'id' });
+            }
+          };
+          req.onsuccess = (e) => {
+            lingoIdbInstance = e.target.result;
+            resolve(lingoIdbInstance);
+          };
+          req.onerror = () => resolve(null);
+        } catch (err) {
+          resolve(null);
+        }
+      });
+    }
+
+    function collectCurrentMemorySnapshot() {
+      let parentLogs = {};
+      let petState = null;
+      let badges = [];
+      let best60s = 0;
+      try {
+        const rawLogs = localStorage.getItem(PARENT_LOGS_STORAGE_KEY);
+        if (rawLogs) parentLogs = JSON.parse(rawLogs);
+      } catch (e) {}
+      try {
+        const rawPet = localStorage.getItem('lingo_pet_and_stars_v1');
+        if (rawPet) petState = JSON.parse(rawPet);
+      } catch (e) {}
+      try {
+        const rawBadges = localStorage.getItem('lingoday_badges');
+        if (rawBadges) badges = JSON.parse(rawBadges);
+      } catch (e) {}
+      try {
+        best60s = parseInt(localStorage.getItem('lingo_best_60s') || '0', 10) || 0;
+      } catch (e) {}
+
+      const nowIso = new Date().toISOString();
+      try {
+        localStorage.setItem(LINGO_LAST_SAVED_KEY, nowIso);
+      } catch (e) {}
+
+      return {
+        id: 'full_snapshot',
+        backupSchema: 'LINGO_BACKUP_V1',
+        appVersion: typeof CURRENT_APP_VERSION !== 'undefined' ? CURRENT_APP_VERSION : '2.9.1',
+        savedAt: nowIso,
+        parentLogs: (parentLogs && typeof parentLogs === 'object') ? parentLogs : {},
+        petState: (petState && typeof petState === 'object') ? petState : null,
+        badges: Array.isArray(badges) ? badges : [],
+        best60s: best60s
+      };
+    }
+
+    async function syncAllDataToIndexedDB() {
+      try {
+        const db = await openLingoIndexedDB();
+        if (!db) return;
+        const snapshot = collectCurrentMemorySnapshot();
+        const tx = db.transaction(LINGO_IDB_STORE, 'readwrite');
+        const store = tx.objectStore(LINGO_IDB_STORE);
+        store.put(snapshot);
+      } catch (e) {}
+    }
+
+    function scheduleMemoryMirrorSync() {
+      if (lingoMirrorSyncTimer) clearTimeout(lingoMirrorSyncTimer);
+      lingoMirrorSyncTimer = setTimeout(() => {
+        syncAllDataToIndexedDB();
+      }, 350);
+    }
+
+    async function initPersistentMemorySystem() {
+      try {
+        if (navigator.storage && navigator.storage.persist) {
+          isPersistentStorageGranted = await navigator.storage.persist();
+        }
+      } catch (e) {}
+
+      try {
+        const db = await openLingoIndexedDB();
+        if (!db) return;
+        const tx = db.transaction(LINGO_IDB_STORE, 'readonly');
+        const store = tx.objectStore(LINGO_IDB_STORE);
+        const getReq = store.get('full_snapshot');
+        getReq.onsuccess = () => {
+          const idbSnap = getReq.result;
+          if (idbSnap && typeof idbSnap === 'object') {
+            let restoredAnything = false;
+
+            // 1. Ebeveyn günlük kayıtları LocalStorage'da yoksa veya boşsa IndexedDB'den geri yükle
+            const localLogsRaw = localStorage.getItem(PARENT_LOGS_STORAGE_KEY);
+            let localLogsEmpty = true;
+            if (localLogsRaw) {
+              try {
+                const parsed = JSON.parse(localLogsRaw);
+                if (parsed && Object.keys(parsed).length > 0) {
+                  // Sadece bugünün 0 saniyelik boş kaydı varsa ve IDB'de daha fazla veri varsa kontrol et
+                  const keys = Object.keys(parsed);
+                  const totalSecLocal = keys.reduce((acc, k) => acc + (parsed[k]?.activeSeconds || 0), 0);
+                  const totalCorrLocal = keys.reduce((acc, k) => acc + (parsed[k]?.totalCorrect || 0), 0);
+                  if (keys.length > 1 || totalSecLocal > 5 || totalCorrLocal > 0) {
+                    localLogsEmpty = false;
+                  }
+                }
+              } catch (e) {}
+            }
+            if (localLogsEmpty && idbSnap.parentLogs && Object.keys(idbSnap.parentLogs).length > 0) {
+              localStorage.setItem(PARENT_LOGS_STORAGE_KEY, JSON.stringify(idbSnap.parentLogs));
+              restoredAnything = true;
+            }
+
+            // 2. Yıldızlar ve Lingo Dostum verisi LocalStorage'da yoksa IndexedDB'den geri yükle
+            const localPetRaw = localStorage.getItem('lingo_pet_and_stars_v1');
+            if (!localPetRaw && idbSnap.petState) {
+              localStorage.setItem('lingo_pet_and_stars_v1', JSON.stringify(idbSnap.petState));
+              restoredAnything = true;
+            }
+
+            // 3. Rozetler LocalStorage'da yoksa IndexedDB'den geri yükle
+            const localBadgesRaw = localStorage.getItem('lingoday_badges');
+            if ((!localBadgesRaw || localBadgesRaw === '[]') && Array.isArray(idbSnap.badges) && idbSnap.badges.length > 0) {
+              localStorage.setItem('lingoday_badges', JSON.stringify(idbSnap.badges));
+              restoredAnything = true;
+            }
+
+            // 4. 60 Saniye rekoru
+            const localBest = parseInt(localStorage.getItem('lingo_best_60s') || '0', 10) || 0;
+            if (localBest === 0 && (idbSnap.best60s || 0) > 0) {
+              localStorage.setItem('lingo_best_60s', String(idbSnap.best60s));
+              if (typeof time60State !== 'undefined') time60State.bestScore = idbSnap.best60s;
+              restoredAnything = true;
+            }
+
+            if (restoredAnything) {
+              syncTodayTimerFromStorage();
+              updateBadgeCountDisplay();
+              if (typeof updateHeaderStarUI === 'function') updateHeaderStarUI();
+              if (currentMainTab === 'menu' && typeof renderUnitsOverview === 'function') {
+                renderUnitsOverview();
+              }
+              if (typeof showUpdateToast === 'function') {
+                showUpdateToast('🛡️ Kalıcı Hafıza: İlerlemeniz ve yıldızlarınız yedek hafızadan geri yüklendi!');
+              }
+            }
+          }
+          // Mevcut durumu her halükarda IndexedDB ile eşitle
+          syncAllDataToIndexedDB();
+        };
+      } catch (e) {}
+    }
+
+    function getLastSavedTimeLabel() {
+      try {
+        const raw = localStorage.getItem(LINGO_LAST_SAVED_KEY);
+        if (!raw) return 'Az önce otomatik kaydedildi';
+        const dt = new Date(raw);
+        if (isNaN(dt.getTime())) return 'Az önce otomatik kaydedildi';
+        return dt.toLocaleString('tr-TR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+      } catch (e) {
+        return 'Az önce otomatik kaydedildi';
+      }
+    }
+
+    function applyRestoredBackupSnapshot(data, mergeMode = true) {
+      if (!data || typeof data !== 'object') {
+        throw new Error('Geçersiz yedek verisi.');
+      }
+      const hasValidFields = data.parentLogs || data.petState || data.badges || data.backupSchema === 'LINGO_BACKUP_V1';
+      if (!hasValidFields) {
+        throw new Error('Bu dosya veya kod Lingo Ders Arkadaşım yedeği değil.');
+      }
+
+      // 1. Günlük Ebeveyn Kayıtlarını Birleştir veya Yükle
+      if (data.parentLogs && typeof data.parentLogs === 'object') {
+        const currentLogs = mergeMode ? loadAllParentLogs() : {};
+        Object.keys(data.parentLogs).forEach(dateKey => {
+          const incomingDay = data.parentLogs[dateKey];
+          const existingDay = currentLogs[dateKey];
+          if (!existingDay) {
+            currentLogs[dateKey] = incomingDay;
+          } else {
+            // Aynı gün varsa en yüksek süreyi ve doğru/yanlış kayıtlarını koru
+            const incSec = incomingDay.activeSeconds || 0;
+            const exSec = existingDay.activeSeconds || 0;
+            const incCorr = incomingDay.totalCorrect || 0;
+            const exCorr = existingDay.totalCorrect || 0;
+            if (incCorr >= exCorr && incSec >= exSec) {
+              currentLogs[dateKey] = incomingDay;
+            } else {
+              existingDay.activeSeconds = Math.max(exSec, incSec);
+              existingDay.totalCorrect = Math.max(exCorr, incCorr);
+              existingDay.totalWrong = Math.max(existingDay.totalWrong || 0, incomingDay.totalWrong || 0);
+            }
+          }
+        });
+        localStorage.setItem(PARENT_LOGS_STORAGE_KEY, JSON.stringify(currentLogs));
+      }
+
+      // 2. Yıldız Kumbarası & Lingo Dostum Durumunu Yükle
+      if (data.petState && typeof data.petState === 'object') {
+        if (mergeMode) {
+          const curPet = getPetState();
+          const incPet = data.petState;
+          const mergedPet = {
+            ...curPet,
+            ...incPet,
+            stars: Math.max(curPet.stars || 0, incPet.stars || 0),
+            xp: Math.max(curPet.xp || 0, incPet.xp || 0),
+            level: Math.max(curPet.level || 1, incPet.level || 1),
+            accessories: Array.from(new Set([...(curPet.accessories || []), ...(incPet.accessories || [])])),
+            unlockedAvatars: Array.from(new Set([...(curPet.unlockedAvatars || ['hero']), ...(incPet.unlockedAvatars || ['hero'])]))
+          };
+          localStorage.setItem('lingo_pet_and_stars_v1', JSON.stringify(mergedPet));
+        } else {
+          localStorage.setItem('lingo_pet_and_stars_v1', JSON.stringify(data.petState));
+        }
+      }
+
+      // 3. Rozetleri Birleştir veya Yükle
+      if (Array.isArray(data.badges)) {
+        const curBadges = mergeMode ? getUnlockedBadges() : [];
+        const mergedBadges = Array.from(new Set([...curBadges, ...data.badges]));
+        localStorage.setItem('lingoday_badges', JSON.stringify(mergedBadges));
+      }
+
+      // 4. 60 Saniye Rekoru
+      if (typeof data.best60s === 'number' || typeof data.best60s === 'string') {
+        const incBest = parseInt(data.best60s, 10) || 0;
+        const curBest = parseInt(localStorage.getItem('lingo_best_60s') || '0', 10) || 0;
+        const finalBest = mergeMode ? Math.max(curBest, incBest) : incBest;
+        localStorage.setItem('lingo_best_60s', String(finalBest));
+        if (typeof time60State !== 'undefined') time60State.bestScore = finalBest;
+      }
+
+      // Güncel zamanı ve sayacı senkronize et
+      syncTodayTimerFromStorage();
+      updateBadgeCountDisplay();
+      if (typeof updateHeaderStarUI === 'function') updateHeaderStarUI();
+      syncAllDataToIndexedDB();
+      if (currentMainTab === 'menu' && typeof renderUnitsOverview === 'function') {
+        renderUnitsOverview();
+      }
+    }
+
+    function exportParentBackupFile() {
+      recordActivity();
+      persistCurrentSecondsToStorage();
+      const snapshot = collectCurrentMemorySnapshot();
+      const jsonStr = JSON.stringify(snapshot, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `lingo-yedek-${getTodayDateKey()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      playChimeSound('correct');
+      if (typeof showUpdateToast === 'function') {
+        showUpdateToast('📥 Yedek dosyası indirildi! (lingo-yedek-' + getTodayDateKey() + '.json)');
+      }
+      const statusBox = document.getElementById('parentBackupActionStatus');
+      if (statusBox) {
+        statusBox.style.display = 'block';
+        statusBox.style.background = 'rgba(16,185,129,0.18)';
+        statusBox.style.borderColor = '#10b981';
+        statusBox.style.color = '#6ee7b7';
+        statusBox.innerHTML = `✅ <strong>Yedek dosyası başarıyla indirildi!</strong> (<code>lingo-yedek-${getTodayDateKey()}.json</code>) Bu dosyayı telefonunuzda veya Google Drive/WhatsApp'ta saklayabilirsiniz.`;
+      }
+    }
+
+    function triggerImportParentBackupFile() {
+      recordActivity();
+      const fileInput = document.getElementById('parentBackupFileInput');
+      if (fileInput) {
+        fileInput.value = '';
+        fileInput.click();
+      }
+    }
+
+    function handleParentBackupFileSelected(event) {
+      recordActivity();
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const content = e.target.result;
+          const parsed = JSON.parse(content);
+          applyRestoredBackupSnapshot(parsed, true);
+          playChimeSound('fanfare');
+          if (typeof showUpdateToast === 'function') {
+            showUpdateToast('🎉 Yedek başarıyla geri yüklendi! Tüm puanlar ve ilerlemeler aktarıldı.');
+          }
+          openParentDashboardModal(getTodayDateKey());
+          setTimeout(() => {
+            const statusBox = document.getElementById('parentBackupActionStatus');
+            if (statusBox) {
+              statusBox.style.display = 'block';
+              statusBox.style.background = 'rgba(16,185,129,0.2)';
+              statusBox.style.borderColor = '#10b981';
+              statusBox.style.color = '#6ee7b7';
+              statusBox.innerHTML = '🎉 <strong>Yedek Dosyası Başarıyla Geri Yüklendi!</strong> Tüm yıldızlar, rozetler, Lingo Dostu ve günlük çalışma geçmişi güncellendi.';
+            }
+          }, 80);
+        } catch (err) {
+          playChimeSound('wrong');
+          const statusBox = document.getElementById('parentBackupActionStatus');
+          if (statusBox) {
+            statusBox.style.display = 'block';
+            statusBox.style.background = 'rgba(239,68,68,0.2)';
+            statusBox.style.borderColor = '#ef4444';
+            statusBox.style.color = '#fca5a5';
+            statusBox.innerHTML = '❌ <strong>Yedek dosyası okunamadı!</strong> Lütfen geçerli bir <code>.json</code> yedek dosyası seçtiğinizden emin olun.';
+          }
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function generateCompactBackupCode() {
+      persistCurrentSecondsToStorage();
+      const snap = collectCurrentMemorySnapshot();
+      const jsonStr = JSON.stringify(snap);
+      const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+      return 'LINGO-YEDEK-V1:' + encoded;
+    }
+
+    function copyParentBackupCode() {
+      recordActivity();
+      try {
+        const code = generateCompactBackupCode();
+        const onCopied = () => {
+          playChimeSound('correct');
+          if (typeof showUpdateToast === 'function') {
+            showUpdateToast('📋 Yedek kodu panoya kopyalandı!');
+          }
+          const statusBox = document.getElementById('parentBackupActionStatus');
+          if (statusBox) {
+            statusBox.style.display = 'block';
+            statusBox.style.background = 'rgba(56,189,248,0.18)';
+            statusBox.style.borderColor = '#38bdf8';
+            statusBox.style.color = '#bae6fd';
+            statusBox.innerHTML = '📋 <strong>Yedek Kodu Panoya Kopyalandı!</strong> Bu kodu WhatsApp\'ta kendinize gönderebilir veya Notlar uygulamasına yapıştırıp saklayabilirsiniz. Başka bir cihazda "Yedek Kodu Yapıştır" butonuna basarak anında geri yükleyebilirsiniz.';
+          }
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(onCopied).catch(() => fallbackCopyText(code, onCopied));
+        } else {
+          fallbackCopyText(code, onCopied);
+        }
+      } catch (e) {}
+    }
+
+    function toggleRestoreCodeBox() {
+      recordActivity();
+      const box = document.getElementById('parentRestoreCodeContainer');
+      if (!box) return;
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function restoreFromParentBackupCode() {
+      recordActivity();
+      const inputEl = document.getElementById('parentRestoreCodeInput');
+      const statusBox = document.getElementById('parentBackupActionStatus');
+      if (!inputEl) return;
+      let rawText = (inputEl.value || '').trim();
+      if (!rawText) {
+        if (statusBox) {
+          statusBox.style.display = 'block';
+          statusBox.style.background = 'rgba(239,68,68,0.2)';
+          statusBox.style.borderColor = '#ef4444';
+          statusBox.style.color = '#fca5a5';
+          statusBox.innerHTML = '⚠️ Lütfen önce kopyaladığınız yedek kodunu kutuya yapıştırın.';
+        }
+        return;
+      }
+      try {
+        if (rawText.includes('LINGO-YEDEK-V1:')) {
+          rawText = rawText.split('LINGO-YEDEK-V1:')[1].trim();
+        }
+        let parsed = null;
+        if (rawText.startsWith('{')) {
+          parsed = JSON.parse(rawText);
+        } else {
+          const decoded = decodeURIComponent(escape(atob(rawText)));
+          parsed = JSON.parse(decoded);
+        }
+        applyRestoredBackupSnapshot(parsed, true);
+        playChimeSound('fanfare');
+        if (typeof showUpdateToast === 'function') {
+          showUpdateToast('🎉 Yedek kodu başarıyla geri yüklendi!');
+        }
+        openParentDashboardModal(getTodayDateKey());
+        setTimeout(() => {
+          const newStatus = document.getElementById('parentBackupActionStatus');
+          if (newStatus) {
+            newStatus.style.display = 'block';
+            newStatus.style.background = 'rgba(16,185,129,0.2)';
+            newStatus.style.borderColor = '#10b981';
+            newStatus.style.color = '#6ee7b7';
+            newStatus.innerHTML = '🎉 <strong>Yedek Kodu Başarıyla Geri Yüklendi!</strong> Tüm puanlar, yıldızlar, rozetler ve ilerlemeler aktarıldı.';
+          }
+        }, 80);
+      } catch (err) {
+        playChimeSound('wrong');
+        if (statusBox) {
+          statusBox.style.display = 'block';
+          statusBox.style.background = 'rgba(239,68,68,0.2)';
+          statusBox.style.borderColor = '#ef4444';
+          statusBox.style.color = '#fca5a5';
+          statusBox.innerHTML = '❌ <strong>Yedek kodu geçersiz veya eksik kopyalanmış!</strong> Lütfen kodun tamamını kopyaladığınızdan emin olun.';
+        }
+      }
     }
 
     function getOrCreateTodayLog() {
@@ -1654,58 +2107,49 @@
     function generateUniqueParentGateQuestion() {
       const questionGenerators = [
         () => {
-          const a = Math.floor(Math.random() * 7) + 7; // 7..13
-          const b = Math.floor(Math.random() * 6) + 6; // 6..11
-          const c = Math.floor(Math.random() * 14) + 5; // 5..18
-          const ans = a * b + c;
+          const pairs = [
+            [10, 5], [10, 8], [12, 8], [15, 5], [10, 15],
+            [20, 10], [14, 6], [20, 5], [15, 10], [25, 5]
+          ];
+          const [a, b] = pairs[Math.floor(Math.random() * pairs.length)];
           return {
-            prompt: `(${a} × ${b}) + ${c} işleminin sonucu kaçtır?`,
-            hint: 'Önce çarpma, sonra toplama işlemini yapınız.',
-            correct: ans
+            prompt: `${a} + ${b} işleminin sonucu kaçtır?`,
+            hint: 'Hızlı ebeveyn doğrulaması için basit toplama işlemi.',
+            correct: a + b
           };
         },
         () => {
-          const a = Math.floor(Math.random() * 6) + 8; // 8..13
-          const b = Math.floor(Math.random() * 5) + 6; // 6..10
-          const c = Math.floor(Math.random() * 15) + 6; // 6..20
-          const ans = a * b - c;
+          const pairs = [
+            [20, 5], [15, 5], [30, 10], [25, 5], [18, 8],
+            [20, 10], [16, 6], [24, 4], [40, 10]
+          ];
+          const [a, b] = pairs[Math.floor(Math.random() * pairs.length)];
           return {
-            prompt: `(${a} × ${b}) - ${c} işleminin sonucu kaçtır?`,
-            hint: 'Önce çarpma, sonra çıkarma işlemini yapınız.',
-            correct: ans
+            prompt: `${a} - ${b} işleminin sonucu kaçtır?`,
+            hint: 'Hızlı ebeveyn doğrulaması için basit çıkarma işlemi.',
+            correct: a - b
           };
         },
         () => {
-          const divisor = Math.floor(Math.random() * 5) + 4; // 4..8
-          const quotient = Math.floor(Math.random() * 12) + 11; // 11..22
-          const dividend = divisor * quotient;
-          const add = Math.floor(Math.random() * 15) + 7;
-          const ans = quotient + add;
+          const pairs = [
+            [2, 6], [2, 8], [3, 4], [3, 5], [4, 4],
+            [5, 3], [5, 4], [2, 9], [3, 6], [4, 5]
+          ];
+          const [a, b] = pairs[Math.floor(Math.random() * pairs.length)];
           return {
-            prompt: `(${dividend} ÷ ${divisor}) + ${add} işleminin sonucu kaçtır?`,
-            hint: 'Önce bölme, sonra toplama işlemini yapınız.',
-            correct: ans
+            prompt: `${a} × ${b} işleminin sonucu kaçtır?`,
+            hint: 'Hızlı ebeveyn doğrulaması için basit çarpma işlemi.',
+            correct: a * b
           };
         },
         () => {
-          const hours = Math.floor(Math.random() * 3) + 2; // 2..4 saat
-          const extraMins = [15, 20, 25, 35, 40, 45][Math.floor(Math.random() * 6)];
-          const ans = hours * 60 + extraMins;
-          return {
-            prompt: `${hours} saat ${extraMins} dakika toplam kaç dakikadır?`,
-            hint: `1 saat = 60 dakikadır (${hours} × 60 + ${extraMins}).`,
-            correct: ans
-          };
-        },
-        () => {
-          const dozens = Math.floor(Math.random() * 5) + 4; // 4..8 düzine
-          const extra = Math.floor(Math.random() * 9) + 4;
-          const ans = dozens * 12 + extra;
-          return {
-            prompt: `${dozens} düzine kalemin ${extra} fazlası kaç kalem eder?`,
-            hint: `1 düzine = 12 adettir (${dozens} × 12 + ${extra}).`,
-            correct: ans
-          };
+          const dailyQuestions = [
+            { prompt: '1 haftada toplam kaç gün vardır?', hint: 'Pazartesi\'den Pazar\'a kadar gün sayısı.', correct: 7 },
+            { prompt: '1 yılda toplam kaç ay vardır?', hint: 'Ocak\'tan Aralık\'a kadar ay sayısı.', correct: 12 },
+            { prompt: '1 günde toplam kaç saat vardır?', hint: 'Bir tam gündeki saat sayısı.', correct: 24 },
+            { prompt: 'İki elimizde toplam kaç parmak vardır?', hint: '5 + 5 işleminin sonucu.', correct: 10 }
+          ];
+          return dailyQuestions[Math.floor(Math.random() * dailyQuestions.length)];
         }
       ];
 
@@ -1720,11 +2164,11 @@
       lastParentQuestionSignature = candidate.prompt;
 
       const choicesSet = new Set([candidate.correct]);
-      const offsets = [-12, -10, -8, -6, -4, -3, -2, 2, 3, 4, 6, 8, 10, 12, 14];
+      const offsets = [-5, -4, -3, -2, 2, 3, 4, 5, 6];
       while (choicesSet.size < 4) {
         const off = offsets[Math.floor(Math.random() * offsets.length)];
         const val = candidate.correct + off;
-        if (val > 10) choicesSet.add(val);
+        if (val > 1) choicesSet.add(val);
       }
       candidate.options = Array.from(choicesSet).sort((a, b) => a - b);
       return candidate;
@@ -1858,7 +2302,7 @@
           </div>
 
           <!-- GENEL TOPLAM BİLGİ ÇUBUĞU -->
-          <div style="background:linear-gradient(135deg, rgba(99,102,241,0.18), rgba(6,182,212,0.15));border:1px solid rgba(99,102,241,0.4);border-radius:14px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;">
+          <div style="background:linear-gradient(135deg, rgba(99,102,241,0.18), rgba(6,182,212,0.15));border:1px solid rgba(99,102,241,0.4);border-radius:14px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;">
             <div>
               📊 <strong>Kayıtlı Gün Sayısı:</strong> <span style="color:#38bdf8;font-weight:900;">${availableDates.length} Gün</span>
             </div>
@@ -1872,6 +2316,65 @@
             <div>
               🏆 <strong>Rozetler:</strong> <span style="color:#fde047;font-weight:900;">${unlockedBadges.length} / ${BADGE_DEFINITIONS.length}</span>
             </div>
+          </div>
+
+          <!-- KALICI HAFIZA SİSTEMİ & YEDEKLEME / YEDEKTEN DÖNME MERKEZİ -->
+          <div style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(15,23,42,0.95));border:2px solid rgba(16,185,129,0.45);border-radius:16px;padding:14px 16px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:22px;">💾</span>
+                <div>
+                  <div style="font-size:14px;font-weight:900;color:#34d399;">
+                    Çift Katmanlı Kalıcı Hafıza &amp; Yedekleme Merkezi
+                  </div>
+                  <div style="font-size:11px;color:#94a3b8;">
+                    🟢 Durum: <strong style="color:#6ee7b7;">Aktif (LocalStorage + IndexedDB Otomatik Kayıt)</strong> • Son Kayıt: <span style="color:#cbd5e1;">${getLastSavedTimeLabel()}</span>
+                  </div>
+                </div>
+              </div>
+              <span style="background:rgba(16,185,129,0.2);border:1px solid #10b981;color:#6ee7b7;font-size:10px;font-weight:900;padding:3px 9px;border-radius:999px;">
+                🛡️ VERİ KORUMASI AÇIK
+              </span>
+            </div>
+
+            <div style="font-size:11px;color:#cbd5e1;line-height:1.5;background:rgba(15,23,42,0.7);border-radius:10px;padding:8px 12px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.07);">
+              ✨ <strong>Bilgi:</strong> Linke her girdiğinizde uygulama <strong>sıfırlanmaz, kaldığı yerden devam eder</strong>. Ana ekrandaki kısayolu silseniz bile aynı telefon ve tarayıcı hafızasında puanlar, yıldızlar ve karneler korunur. Başka bir telefona/tablete geçmek veya verileri kendi elinizde saklamak için aşağıdaki <strong>Yedekleme</strong> butonlarını kullanabilirsiniz:
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+              <button onclick="exportParentBackupFile()" class="action-btn" style="background:#10b981;color:#0f172a;font-size:12px;font-weight:900;padding:9px 14px;border-radius:10px;cursor:pointer;">
+                📥 Yedek Dosyası İndir (.json)
+              </button>
+              <button onclick="triggerImportParentBackupFile()" class="action-btn" style="background:#3b82f6;color:#fff;font-size:12px;font-weight:900;padding:9px 14px;border-radius:10px;cursor:pointer;">
+                📤 Yedek Dosyasından Yükle (.json)
+              </button>
+              <button onclick="copyParentBackupCode()" class="action-btn" style="background:#0284c7;color:#fff;font-size:12px;font-weight:900;padding:9px 14px;border-radius:10px;cursor:pointer;">
+                📋 Yedek Kodunu Kopyala
+              </button>
+              <button onclick="toggleRestoreCodeBox()" class="action-btn" style="background:#475569;color:#fff;border:1px solid #64748b;font-size:12px;font-weight:900;padding:9px 14px;border-radius:10px;cursor:pointer;">
+                🔑 Yedek Kodu Yapıştır &amp; Dön
+              </button>
+              <input type="file" id="parentBackupFileInput" accept=".json,application/json" style="display:none;" onchange="handleParentBackupFileSelected(event)" />
+            </div>
+
+            <!-- YEDEK KODU YAPIŞTIRMA KUTUSU -->
+            <div id="parentRestoreCodeContainer" style="display:none;margin-top:10px;background:#0f172a;border:1px solid #38bdf8;border-radius:12px;padding:12px;">
+              <div style="font-size:12px;font-weight:800;color:#38bdf8;margin-bottom:6px;">
+                🔑 Daha Önce Kopyaladığınız Yedek Kodunu Aşağıya Yapıştırın:
+              </div>
+              <textarea id="parentRestoreCodeInput" rows="3" placeholder="LINGO-YEDEK-V1:... ile başlayan yedek kodunu buraya yapıştırın" style="width:100%;background:#1e293b;color:#fff;border:1px solid #475569;border-radius:8px;padding:8px;font-size:11px;font-family:monospace;resize:vertical;margin-bottom:8px;"></textarea>
+              <div style="display:flex;gap:8px;justify-content:flex-end;">
+                <button onclick="toggleRestoreCodeBox()" style="background:#334155;color:#cbd5e1;border:none;border-radius:8px;padding:7px 12px;font-size:11px;font-weight:800;cursor:pointer;">
+                  İptal
+                </button>
+                <button onclick="restoreFromParentBackupCode()" style="background:#10b981;color:#0f172a;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:900;cursor:pointer;">
+                  ✅ Kodu Doğrula ve Yedeği Geri Yükle
+                </button>
+              </div>
+            </div>
+
+            <!-- İŞLEM DURUM MESAJI -->
+            <div id="parentBackupActionStatus" style="display:none;margin-top:10px;border:1px solid #10b981;border-radius:10px;padding:8px 12px;font-size:12px;line-height:1.4;"></div>
           </div>
 
           <!-- GÜN SEÇİCİ SEKMELER (GÜNLÜK OLARAK AYRILMIŞ HAFIZA) -->
@@ -7240,6 +7743,7 @@
       try {
         localStorage.setItem(LINGO_PET_STORAGE_KEY, JSON.stringify(state));
         updateHeaderStarUI();
+        if (typeof scheduleMemoryMirrorSync === 'function') scheduleMemoryMirrorSync();
       } catch (e) {}
     }
 
@@ -7717,6 +8221,7 @@
           if (time60State.score > time60State.bestScore) {
             time60State.bestScore = time60State.score;
             localStorage.setItem('lingo_best_60s', String(time60State.bestScore));
+            if (typeof scheduleMemoryMirrorSync === 'function') scheduleMemoryMirrorSync();
           }
           unlockBadge('duel_champion');
           recordParentMilestone('fun_games', '60 Saniye Şampiyonu', `${time60State.score} Puan`);
@@ -12749,7 +13254,7 @@
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.9.0';
+    const CURRENT_APP_VERSION = '2.9.1';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
@@ -13145,7 +13650,8 @@
       showPwaInstallModal();
     }
 
-    // Başlangıçta kayıt, denetim ve Ana Ekrana Ekle kontrolü
+    // Başlangıçta Çift Katmanlı Kalıcı Hafıza, Service Worker ve Ana Ekrana Ekle kontrolü
+    initPersistentMemorySystem();
     registerServiceWorker();
     checkVersionManifest(true);
     checkAutoInstallPrompt();
