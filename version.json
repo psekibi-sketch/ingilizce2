@@ -1,5 +1,5 @@
 {
-  "version": "2.9.8",
+  "version": "3.0.0",
   "releaseDate": "2026-10-24",
-  "notes": "İngilizce 20 Soruluk Büyük Sınav ve Konu Testleri merkezindeki Matematik (Ritmik Sayma ve 4 İşlem) kartları kaldırılarak Matematik ve İngilizce derslerinin birbirine karışması tamamen engellendi. Tüm ders ve ünite ekranlarına kendi ana dersine dönüş butonları eklendi."
+  "notes": "2. Sınıf Türkçe Kütüphanesi Eklendi: Ağaç yapısında Türkçe -> Hikayeler altında Astrobot, Dinazorlar (Boni & Tobi), Yıldız Savaşçıları ve Matematikçi Bilge Baykuş kitapları. Büyük fontlu akıcı okuma, canlı okuma hızı ve süre puanlaması, her hikaye sonu çoktan seçmeli anlama sınavı ve Ebeveyn Ekranında detaylı Okuma Karnesi hafıza sistemi."
 }

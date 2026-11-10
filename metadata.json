@@ -1,6 +1,6 @@
 {
   "name": "Lingo Ders Arkadaşım",
-  "description": "2. Sınıf İngilizce (1-6. Üniteler) ve Matematik (Ritmik Sayma, Toplama, Çıkarma) Paketi",
+  "description": "2. Sınıf Türkçe (Okuma & Anlama Hikaye Kitapları), Matematik ve İngilizce Tam Müfredat Paketi",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

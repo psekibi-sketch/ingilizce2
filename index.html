@@ -599,6 +599,13 @@
       transition: all 0.2s ease;
     }
 
+    .subject-pill-btn.active-turkish {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+      border-color: #fde047;
+      box-shadow: 0 6px 18px rgba(245, 158, 11, 0.4);
+    }
+
     .subject-pill-btn.active-math {
       background: linear-gradient(135deg, #8b5cf6, #ec4899);
       color: #fff;
@@ -950,7 +957,7 @@
         <div class="logo-icon" onclick="selectHomeSubject('home')" style="cursor:pointer;" title="Ana Menüye Dön">📚</div>
         <div class="title-area" onclick="selectHomeSubject('home')" style="cursor:pointer;">
           <h1 id="headerMainTitle">Lingo Ders Arkadaşım</h1>
-          <p id="subHeaderTitle">2. Sınıf • İngilizce & Matematik Paketi</p>
+          <p id="subHeaderTitle">2. Sınıf • Türkçe, Matematik &amp; İngilizce Paketi</p>
         </div>
       </div>
       <div class="header-widgets">
@@ -979,15 +986,15 @@
   <footer id="appFooter" style="margin-top:auto;padding:24px 16px 16px;text-align:center;border-top:1px solid rgba(255,255,255,0.08);background:rgba(15,23,42,0.7);font-size:12px;color:#94a3b8;">
     <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
       <div>
-        📚 <strong>Lingo Ders Arkadaşım</strong> • 2. Sınıf İngilizce & Matematik Paketi
-        <div style="font-size:11px;color:#64748b;margin-top:2px;">Önce Öğretir, Çocuk Sayar, Sınav Yapar • MEB Müfredatına Uygun</div>
+        📚 <strong>Lingo Ders Arkadaşım</strong> • 2. Sınıf Türkçe, Matematik &amp; İngilizce Paketi
+        <div style="font-size:11px;color:#64748b;margin-top:2px;">Hikaye Kitapları, Problem Çözme, Sesli Anlatım &amp; Sınavlar • MEB Müfredatına Uygun</div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
         <button id="installAppFooterBtn" onclick="triggerPwaInstallPrompt(true)" class="action-btn" style="display:none;background:#10b981;color:#fff;font-size:11px;padding:7px 12px;font-weight:900;" title="Telefonunuza uygulama olarak ekleyin">
           📲 Ana Ekrana Ekle
         </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
-          🔄 Sürümü Yenile (v2.9.8)
+          🔄 Sürümü Yenile (v3.0.0)
         </button>
         <button onclick="switchMainTab('pet_hub')" class="action-btn" style="background:#ec4899;color:#fff;font-size:11px;padding:7px 12px;font-weight:900;">
           🐾 Dostum &amp; Çark
@@ -999,7 +1006,7 @@
           👨‍👩‍👧 Ebeveyn Ekranı
         </button>
         <button onclick="openBadgesModal()" class="action-btn" style="background:#f59e0b;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;">
-          🏆 Rozet Vitrini (<span id="unlockedBadgesCount">0</span>/18)
+          🏆 Rozet Vitrini (<span id="unlockedBadgesCount">0</span>/20)
         </button>
       </div>
     </div>
@@ -1102,7 +1109,9 @@
       { id: 'geometry_master', title: "Geometri Mimarı", icon: '🔺', desc: "Geometrik Şekiller ve Cisimler ödev testini başarıyla tamamladı!", color: '#a855f7' },
       { id: 'clock_money_hero', title: "Zaman ve Kumbara Ustası", icon: '⏰', desc: "Saatler ve Paralarımız (TL Market) görevlerini başarıyla çözdü!", color: '#eab308' },
       { id: 'duel_champion', title: "Oyun & Düello Şampiyonu", icon: '🏅', desc: "Balon Patlatma, 60 Saniye veya 2 Kişilik Düello yarışmasını tamamladı!", color: '#ec4899' },
-      { id: 'pet_caretaker', title: "Süper Dost Bakıcısı", icon: '🐾', desc: "Lingo Dostunu besledi veya Günlük Şans Çarkını çevirdi!", color: '#14b8a6' }
+      { id: 'pet_caretaker', title: "Süper Dost Bakıcısı", icon: '🐾', desc: "Lingo Dostunu besledi veya Günlük Şans Çarkını çevirdi!", color: '#14b8a6' },
+      { id: 'book_worm_star', title: "Kitap Kurdu & Anlama Yıldızı", icon: '📖', desc: "Türkçe hikaye kitabını okudu ve anlama sınavını başarıyla çözdü!", color: '#f59e0b' },
+      { id: 'speed_reader_star', title: "Süper Okuyucu & Kaşif", icon: '⚡', desc: "Hikaye okuma süresi ve anlama testinde harika puanlar elde etti!", color: '#38bdf8' }
     ];
 
     function getUnlockedBadges() {
@@ -1360,6 +1369,7 @@
       math_problems: { title: '🧠 Hikayeli Problemler', color: '#f59e0b' },
       english_quiz: { title: '🇬🇧 İngilizce Test & Telaffuz', color: '#ec4899' },
       english_units: { title: '📘 İngilizce Ünite Alıştırmaları', color: '#14b8a6' },
+      turkish_reading: { title: '📖 Türkçe Okuma & Anlama Kitapları', color: '#f59e0b' },
       fun_games: { title: '🎈 Eğitsel Oyunlar & 2 Kişilik Düello', color: '#f43f5e' }
     };
 
@@ -2518,6 +2528,28 @@
             </div>
           ` : ''}
 
+          <!-- TÜRKÇE OKUMA & ANLAMA GELİŞİM KARNESİ (EBEVEYN & ÖĞRETMEN RAPORU) -->
+          <div style="background:linear-gradient(135deg, rgba(245,158,11,0.14), rgba(15,23,42,0.95));border:2px solid #f59e0b;border-radius:16px;padding:16px;margin-bottom:18px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:26px;">📖</span>
+                <div>
+                  <span style="background:#f59e0b;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">ÖĞRETMEN &amp; OKUMA GELİŞİM RAPORU</span>
+                  <h4 style="font-size:16px;color:#fff;font-weight:900;margin:3px 0 0;">Türkçe Hikaye Kitapları Okuma &amp; Anlama Karnesi</h4>
+                </div>
+              </div>
+              <button class="whatsapp-share-btn" style="padding:7px 12px;font-size:11px;border-radius:10px;" onclick="shareTurkishAllBooksReportWhatsApp()">
+                📲 Tüm Okuma Karnesini WhatsApp'ta Paylaş
+              </button>
+            </div>
+            <p style="font-size:12px;color:#cbd5e1;margin:0 0 12px;line-height:1.5;">
+              Çocuğunuzun okuduğu kitaplar, her kitaptaki <strong>Okuma Hızı &amp; Süresi Skoru</strong> ile 4 soruluk <strong>Okuduğunu Anlama Sınavı</strong> başarıları:
+            </p>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              ${typeof renderParentReadingBooksListHtml === 'function' ? renderParentReadingBooksListHtml() : ''}
+            </div>
+          </div>
+
           <!-- DETAYLI 2 SÜTUN: NELERİ BAŞARDI vs NELERİ BAŞARAMADI / ZORLANDI -->
           <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:14px;">
             <!-- 1. NELERİ BAŞARDI / DOĞRU ÇÖZDÜ -->
@@ -2655,8 +2687,14 @@
       }
 
       if (tabId === 'menu') {
-        document.getElementById('subHeaderTitle').textContent = '2. Sınıf • İngilizce & Matematik Paketi';
+        document.getElementById('subHeaderTitle').textContent = '2. Sınıf • Türkçe, Matematik & İngilizce Paketi';
         renderUnitsOverview();
+      } else if (tabId === 'turkish_stories') {
+        document.getElementById('subHeaderTitle').textContent = '📖 2. Sınıf Türkçe • Okuma & Anlama Hikaye Kitapları';
+        renderTurkishStoriesHub();
+      } else if (tabId === 'turkish_reader') {
+        document.getElementById('subHeaderTitle').textContent = '📖 Türkçe Hikaye Okuma & Anlama Testi';
+        renderTurkishReaderScreen();
       } else if (tabId === 'rhythmic') {
         document.getElementById('subHeaderTitle').textContent = '🔢 2, 3, 4 ve 5\'er Ritmik Sayma • Çarpım Tablosuna Hazırlık';
         openRhythmicCountingModule();
@@ -2825,6 +2863,7 @@
         { mode: 5, icon: '⭐', title: "5'er Ritmik Sayma", range: "5'ten 50'ye Kadar", mult: "5 × 1 = 5 ... 10 × 5 = 50", color: "#f59e0b", badge: "5'er Sayma" }
       ];
 
+      const showTurkish = currentHomeSubject === 'turkish';
       const showMath = currentHomeSubject === 'math';
       const showEnglish = currentHomeSubject === 'english';
       const isHomeOnly = currentHomeSubject === 'home';
@@ -2860,7 +2899,7 @@
           </div>
         </div>
 
-        <!-- EN ÜST: 2 ANA BAŞLIK SEÇİCİ HUB (İNGİLİZCE & MATEMATİK) -->
+        <!-- EN ÜST: 3 ANA BAŞLIK SEÇİCİ HUB (TÜRKÇE, MATEMATİK & İNGİLİZCE) -->
         <div style="margin-bottom:20px;">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
             <div>
@@ -2872,6 +2911,9 @@
               <button class="subject-pill-btn ${currentHomeSubject === 'home' ? 'active-all' : ''}" onclick="selectHomeSubject('home')">
                 🏠 Ana Ders Menüsü
               </button>
+              <button class="subject-pill-btn ${currentHomeSubject === 'turkish' ? 'active-turkish' : ''}" onclick="selectHomeSubject('turkish')">
+                📖 Türkçe (Hikayeler)
+              </button>
               <button class="subject-pill-btn ${currentHomeSubject === 'math' ? 'active-math' : ''}" onclick="selectHomeSubject('math')">
                 🔢 Matematik
               </button>
@@ -2881,9 +2923,22 @@
             </div>
           </div>
 
-          <!-- 2 BÜYÜK DERS KARTI (PORTALLAR) -->
+          <!-- 3 BÜYÜK DERS KARTI (PORTALLAR) -->
           <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:14px;">
-            <!-- MATEMATİK DERSİ BÜYÜK KARTI -->
+            <!-- 1. TÜRKÇE DERSİ BÜYÜK KARTI -->
+            <div class="card" style="margin-bottom:0;border:2px solid ${currentHomeSubject === 'turkish' ? '#fde047' : '#f59e0b'};background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(234,88,12,0.18));cursor:pointer;transition:all 0.2s;" onclick="selectHomeSubject('turkish')">
+              <div style="display:flex;align-items:center;gap:14px;">
+                <div style="font-size:42px;background:rgba(255,255,255,0.12);padding:10px;border-radius:16px;">📖</div>
+                <div style="flex:1;">
+                  <span style="background:#f59e0b;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">2. SINIF MEB • OKUDUĞUNU ANLAMA &amp; PROBLEM ÇÖZME</span>
+                  <h3 style="font-size:20px;font-weight:900;color:#fff;margin:3px 0;">TÜRKÇE DERSİ</h3>
+                  <p style="font-size:12px;color:#fef3c7;margin:0;">Astrobot Galaksi Macerası • Dinozorlar Vadisi • Yıldız Muhafızı (Star Wars) • Büyük Fontlar • Okuma Hızı &amp; Anlama Sınavı</p>
+                </div>
+                <div style="font-size:20px;color:#fde047;">➔</div>
+              </div>
+            </div>
+
+            <!-- 2. MATEMATİK DERSİ BÜYÜK KARTI -->
             <div class="card" style="margin-bottom:0;border:2px solid ${currentHomeSubject === 'math' ? '#ec4899' : '#8b5cf6'};background:linear-gradient(135deg, rgba(139,92,246,0.22), rgba(236,72,153,0.18));cursor:pointer;transition:all 0.2s;" onclick="selectHomeSubject('math')">
               <div style="display:flex;align-items:center;gap:14px;">
                 <div style="font-size:42px;background:rgba(255,255,255,0.12);padding:10px;border-radius:16px;">🔢</div>
@@ -2896,7 +2951,7 @@
               </div>
             </div>
 
-            <!-- İNGİLİZCE DERSİ BÜYÜK KARTI -->
+            <!-- 3. İNGİLİZCE DERSİ BÜYÜK KARTI -->
             <div class="card" style="margin-bottom:0;border:2px solid ${currentHomeSubject === 'english' ? '#38bdf8' : '#2563eb'};background:linear-gradient(135deg, rgba(37,99,235,0.22), rgba(6,182,212,0.18));cursor:pointer;transition:all 0.2s;" onclick="selectHomeSubject('english')">
               <div style="display:flex;align-items:center;gap:14px;">
                 <div style="font-size:42px;background:rgba(255,255,255,0.12);padding:10px;border-radius:16px;">🇬🇧</div>
@@ -2910,6 +2965,13 @@
             </div>
           </div>
         </div>
+        ` : ''}
+
+        ${showTurkish ? `
+          <!-- ========================================================
+               TÜRKÇE DERSİ: OKUDUĞUNU ANLAMA & HİKAYE KİTAPLARI AĞACI
+          ======================================================== -->
+          ${renderTurkishStoriesOverviewHtml()}
         ` : ''}
 
         ${showMath ? `
@@ -15812,10 +15874,926 @@
     }
 
     /* ========================================================
+       TÜRKÇE DERSİ: HİKAYE KİTAPLARI, OKUMA HIZI & ANLAMA SINAVLARI
+       (2. Sınıf MEB Müfredatına Uygun Okuma-Anlama & Problem Çözme Desteği)
+    ======================================================== */
+    const turkishBooksBank = [
+      {
+        id: 'book_astrobot',
+        title: 'Astrobot ve Kayıp Enerji Kristali',
+        subtitle: 'Gökkuşağı Galaksisi & Uzay İstasyonu Macerası',
+        badge: '🚀 UZAY & ROBOT MACERASI',
+        badgeColor: '#3b82f6',
+        themeColor: '#2563eb',
+        coverImg: 'book_astrobot.jpg',
+        icon: '🤖',
+        wordsCount: 145,
+        targetDurationSec: 120,
+        desc: 'Sevimli küçük robot Astro ve mini-bot Piko, uzay istasyonunun sönen ışıklarını kurtarmak için neşeli bir dedektiflik macerasına atılıyor.',
+        pages: [
+          {
+            pageNum: 1,
+            title: '1. Bölüm: İstasyonda Işıklar Söndü!',
+            text: `Gökkuşağı Galaksisi'nde pırıl pırıl bir sabah başladı. Sevimli küçük robot Astro, neşeyle parlak mavi gözlerini açtı.\n\nBugün uzay istasyonunda rengarenk uçan arabaların ve sevimli mini-botların büyük yarış günüydü! Astro hemen sırtındaki minik jet çantasını taktı ve hızla yarış pistine doğru uçtu.\n\nTam o sırada beklenmedik bir şey oldu! İstasyonun tüm lambaları aniden 'çıt' diye kapandı ve her yer karanlığa büründü.`
+          },
+          {
+            pageNum: 2,
+            title: '2. Bölüm: Mavi Ayak İzleri',
+            text: `Astro'nun en yakın arkadaşı minik robot Piko, telaşla yanına koştu:\n\n'Astro yardım et! İstasyonu aydınlatan sarı enerji kristali yuvasından kaybolmuş! Trenler ve yarış pisti kristal olmadan çalışamaz!' dedi.\n\nAstro sakin bir sesle gülümsedi ve göğsündeki parlak beyaz feneri açtı:\n\n'Korkma Piko! Biz harika bir takımız. Dikkatle etrafa bakarsak mutlaka bir ipucu buluruz,' dedi. Yerde minicik, parıldayan mavi pati izleri gördüler ve neşeyle izleri takip ettiler.`
+          },
+          {
+            pageNum: 3,
+            title: '3. Bölüm: Tatlı Paylaşım ve Zafer',
+            text: `Koridorun sonunda minik, tüylü bir uzay sincabı kristali yuvarlak bir ceviz zannedip kucaklamıştı!\n\nAstro sincaba nazikçe yaklaştı. Cebinden sincabın çok sevdiği parlak tatlı uzay fındığını çıkardı ve uzattı. Sincap fındığı görünce sevinçle zıpladı ve kristali Astro'ya bıraktı.\n\nAstro kristali jeneratöre taktı. İstasyon gökkuşağı gibi parladı! Herkes Astro ve Piko'yu alkışladı. Paylaşmak ve dostluk günü kurtarmıştı.`
+          }
+        ],
+        questions: [
+          {
+            q: 'Hikayedeki sevimli küçük robotun adı nedir?',
+            options: ['Astro Bot', 'Demir Dev', 'Hızlı Roket'],
+            correct: 0,
+            explanation: 'Hikayemizin kahramanı mavi gözlü sevimli robot Astro Bot\'tur.'
+          },
+          {
+            q: 'Uzay istasyonunun ışıklarının sönme sebebi neydi?',
+            options: ['Elektrik faturasının ödenmemesi', 'Sarı enerji kristalinin kaybolması', 'Lambaların kırılması'],
+            correct: 1,
+            explanation: 'İstasyonu aydınlatan sarı enerji kristali yerinden kaybolduğu için ışıklar söndü.'
+          },
+          {
+            q: 'Astro ve Piko kayıp kristali nerede ve kimin yanında buldular?',
+            options: ['Gemi mutfağında aşçının yanında', 'Koridorun sonunda minik bir uzay sincabının yanında', 'Derin bir kuyu dibinde'],
+            correct: 1,
+            explanation: 'Pati izlerini takip ederek koridorun sonunda minik uzay sincabını buldular.'
+          },
+          {
+            q: 'Astro kristali sincaptan geri alabilmek için ne yaptı?',
+            options: ['Ona kızdı ve bağırdı', 'Ona cebindeki tatlı uzay fındığını verdi', 'Sincaptan kaçtı'],
+            correct: 1,
+            explanation: 'Astro paylaşımcı davranarak sincaba tatlı uzay fındığı verdi ve kristali tatlılıkla aldı.'
+          }
+        ]
+      },
+      {
+        id: 'book_dinosaurs',
+        title: 'Sevimli Dinozorlar Vadisi ve Gizemli Şelale',
+        subtitle: 'Boni ve Tobi\'nin Doğa ve Arkadaşlık Keşfi',
+        badge: '🌿 DİNOZORLAR & DOĞA KEŞFİ',
+        badgeColor: '#10b981',
+        themeColor: '#059669',
+        coverImg: 'book_dinosaurs.jpg',
+        icon: '🦖',
+        wordsCount: 148,
+        targetDurationSec: 125,
+        desc: 'Küçük maceracı T-Rex Boni ile çiçek taçlı Triceratops Tobi\'nin nehri zıplayarak geçip şelalenin arkasındaki gizemi çözme hikayesi.',
+        pages: [
+          {
+            pageNum: 1,
+            title: '1. Bölüm: Vadide Güzel Bir Sabah',
+            text: `Mavi Şelale Vadisi'nde güneş sıcacık parıldıyordu. Ağaçların arasında rengarenk dev kelebekler uçuşuyordu.\n\nKüçük T-Rex Boni, keşif yapmayı ve yeni şeyler öğrenmeyi çok severdi. Boynuna taktığı minik kahverengi sırt çantası ve keşif gözlüğüyle patikadan neşeyle koştu.\n\nYolda en iyi dostu Triceratops Tobi ile karşılaştı. Tobi, üç boynuzunu rengarenk kır çiçekleriyle süslemiş çok tatlı bir dinozordu.`
+          },
+          {
+            pageNum: 2,
+            title: '2. Bölüm: Şelaleden Gelen Müzik',
+            text: `Boni arkadaşına heyecanla seslendi:\n\n'Tobi dinle! Şelalenin arkasından neşeli bir ses geliyor! Tıkır tıkır, şıkır şıkır diye bir şarkı çalıyor gibi! Hadi gidip bakalım mı?'\n\nTobi önce şelalenin gürültüsünden biraz çekindi ama Boni elini sımsıkı tutunca gülümsedi. Nehrin üzerindeki dev nilüfer yapraklarından sırayla zıpladılar:\n\n'Bir, iki, üç ve dört!' Dört yaprağa basarak ıslanmadan karşı kıyıya geçtiler.`
+          },
+          {
+            pageNum: 3,
+            title: '3. Bölüm: Gizemli Müzisyen',
+            text: `Şelalenin arkasındaki saklı mağaraya girdiklerinde hayretle gözleri açıldı.\n\nSesin sebebi dev bir canavar değil, minik mavi bir kuştu! Kuş, tavandan damlayan su damlacıklarını parlak renkli çakıl taşlarına denk getirerek harika bir müzik yapıyordu.\n\nBoni ve Tobi alkış tuttular ve kuşun melodisine eşlik ettiler. Korkunun yerini neşeli bir konser almıştı!`
+          }
+        ],
+        questions: [
+          {
+            q: 'Keşif yapmayı çok seven gözlüklü küçük T-Rex\'in adı nedir?',
+            options: ['Boni', 'Kaya', 'Devdiş'],
+            correct: 0,
+            explanation: 'Hikayedeki küçük sevimli T-Rex kahramanımızın adı Boni\'dir.'
+          },
+          {
+            q: 'Triceratops Tobi boynuzlarında ne taşıyordu?',
+            options: ['Rengarenk kır çiçekleri', 'Ağır taşlar', 'Meyve sepeti'],
+            correct: 0,
+            explanation: 'Tobi neşeli bir dinozordu ve boynuzlarını rengarenk kır çiçekleriyle süslemişti.'
+          },
+          {
+            q: 'İki dost nehrin karşısına geçerken neyin üzerinden zıpladılar?',
+            options: ['Büyük bir tahta köprüden', '4 adet dev nilüfer yaprağının üzerinden', 'Bir filin sırtından'],
+            correct: 1,
+            explanation: 'Sırayla 4 adet dev nilüfer yaprağının üzerinden zıplayarak karşıya geçtiler.'
+          },
+          {
+            q: 'Şelalenin arkasındaki müzik sesini kim çıkarıyordu?',
+            options: ['Taşların üzerine su damlatarak müzik yapan minik mavi bir kuş', 'Uyuyan yaşlı bir dinozor', 'Rüzgarda sallanan ağaç dalları'],
+            correct: 0,
+            explanation: 'Minik mavi kuş su damlalarını parlak taşlara damlatarak güzel bir ritim çalıyordu.'
+          }
+        ]
+      },
+      {
+        id: 'book_starwars',
+        title: 'Yıldız Muhafızı Kaan ve Sevimli Droid Bip-Bip',
+        subtitle: 'Yıldız Gemisi Kartal & Asteroid Bilmecesi',
+        badge: '✨ STAR WARS & GALAKSİ MACERASI',
+        badgeColor: '#8b5cf6',
+        themeColor: '#7c3aed',
+        coverImg: 'book_starwars.jpg',
+        icon: '⚔️',
+        wordsCount: 155,
+        targetDurationSec: 130,
+        desc: 'Küçük Jedi çırağı Kaan ile sevimli yuvarlak droid Bip-Bip\'in geminin matematik bilmecesini çözerek kalkanları açtığı cesaret dolu uzay öyküsü.',
+        pages: [
+          {
+            pageNum: 1,
+            title: '1. Bölüm: Işık Kılıcı Alıştırması',
+            text: `Yıldız Gemisi Kartal, uzayın mor bulutları arasında sessizce yol alıyordu. Milyonlarca yıldız camdan elmas gibi parlıyordu.\n\nKüçük Yıldız Muhafızı Kaan, kaptan köşkünde ışık kılıcıyla dikkat alıştırması yapıyordu. Mavi kılıç 'vıjjjj' sesiyle parıldayıp etrafa cesaret dolu mavi bir ışık yayıyordu.\n\nKaan'ın hemen yanında yuvarlak gövdeli turuncu droid Bip-Bip neşeyle dönüp duruyordu: 'Bip bip vuuuv!'`
+          },
+          {
+            pageNum: 2,
+            title: '2. Bölüm: Gemide Alarm!',
+            text: `Birdenbire geminin kırmızı alarm lambası yanıp sönmeye başladı: 'Dıt! Dıt! Dıt!'\n\nKaptan ekrandan seslendi:\n'Kaan, dev asteroid taşlarının olduğu bölgeye giriyoruz! Fakat koruyucu kalkan bilgisayarı kilitlendi. Kilidi açmak için ekrandaki matematik bilmecesini çözmeliyiz!'\n\nEkranda şöyle yazıyordu: '20 sayısından başla, 4'er geri say. 3. adımda hangi sayıya ulaşırsın?'`
+          },
+          {
+            pageNum: 3,
+            title: '3. Bölüm: Doğru Sayı ve Koruyucu Kalkan',
+            text: `Kaan hemen derin bir nefes aldı ve zihnini topladı. Parmaklarıyla saydı:\n'Başlangıç 20... Birinci adım 16... İkinci adım 12! Cevap 12 Kaptan!' diye bağırdı.\n\nDroid Bip-Bip minik anteniyle ekrana 12 sayısını tuşladı. 'Bip!' Kilit açıldı ve geminin etrafında masmavi parlak bir kalkan parladı. Taşlar kalkana çarpıp güvenle dağıldı.\n\nKaptan Kaan'ın omzunu sıvazladı: 'Aferin Kaan! Okuduğunu anladın, problemi çözdün ve gemimizi kurtardın!' dedi.`
+          }
+        ],
+        questions: [
+          {
+            q: 'Kaan\'ın alıştırma yaptığı ışık kılıcı hangi renkte parlıyordu?',
+            options: ['Masmavi ışık', 'Kıpkırmızı ışık', 'Sapsarı ışık'],
+            correct: 0,
+            explanation: 'Kaan mavi ışık kılıcıyla alıştırma yapıyor ve etrafa mavi ışık saçıyordu.'
+          },
+          {
+            q: 'Gemi tehlikeye girdiğinde kalkan bilgisayarındaki bilmece neydi?',
+            options: ['20\'den 4\'er geri sayınca 3. adımdaki sayıyı bulmak', 'İngilizce bir kelimeyi ezberlemek', 'Gemiye yeni bir renk seçmek'],
+            correct: 0,
+            explanation: 'Bilmece: 20 sayısından başlayıp 4\'er geri sayarak 3. adımdaki sayıyı bulmaktı.'
+          },
+          {
+            q: 'Kaan bilmecenin cevabını kaç olarak buldu?',
+            options: ['12 sayısı', '8 sayısı', '16 sayısı'],
+            correct: 0,
+            explanation: '20 -> 16 (1. adım) -> 12 (2. adım)... Doğru cevap 12\'dir!'
+          },
+          {
+            q: 'Kalkanlar açılınca uzay gemisine ne oldu?',
+            options: ['Asteroid taşlarından güvenle kurtuldu ve korundu', 'Geriye dönmek zorunda kaldı', 'Işıkları tamamen kapandı'],
+            correct: 0,
+            explanation: 'Mavi kalkan devreye girdi ve taşlar kalkana çarpıp dağılarak gemi güvenliğe kavuştu.'
+          }
+        ]
+      },
+      {
+        id: 'book_lingo_math',
+        title: 'Robot Arkadaşım Lingo ve Elma Bahçesi Problemi',
+        subtitle: 'Ali ve Lingo\'nun Çiftlikte Problem Çözme Başarısı',
+        badge: '🍎 PROBLEM ÇÖZME & PAYLAŞMA',
+        badgeColor: '#ec4899',
+        themeColor: '#db2777',
+        coverImg: '',
+        icon: '🤖',
+        wordsCount: 140,
+        targetDurationSec: 115,
+        desc: 'Ali ve sevimli robot Lingo\'nun elma toplayarak toplama ve bölme problemlerini eğlenceyle çözdüğü sıcacık bir başarı hikayesi.',
+        pages: [
+          {
+            pageNum: 1,
+            title: '1. Bölüm: Bahçede Hasat Zamanı',
+            text: `Ilık bir sonbahar sabahı Ali ve sevimli robot dostu Lingo, dedelerinin elma bahçesine gittiler. Bahçedeki ağaçlar sulu, kıpkırmızı elmalarla dolup taşıyordu.\n\nDede elindeki sepetleri uzattı:\n'Hoş geldiniz çocuklar! Bugün pazara götürmek üzere elma toplayacağız. Bana yardım etmek ister misiniz?' diye sordu.\n\nRobot Lingo neşeyle metal kollarını kaldırdı: 'Görevi kabul ediyorum! Meyve toplamak en sevdiğim spordur!' dedi.`
+          },
+          {
+            pageNum: 2,
+            title: '2. Bölüm: Toplama İşlemi Hesabı',
+            text: `Ali ağacın alt dallarından tam 15 tane kırmızı elma topladı.\nRobot Lingo ise uzun boyuyla yukarı uzanıp 25 tane olgun elma topladı.\n\nDede gülümseyerek sordu:\n'Harikasınız! Peki ikinizin topladığı elmaların toplamı kaç eder?'\n\nAli eline bir çubuk aldı ve toprağa yazdı: '15 artı 25... Önce birler basamağı: 5 artı 5 eşittir 10. Sıfırı yazarız, elde var 1 onluk! Onlukları toplayınca 1 artı 2 artı elde 1 eşittir 4. Toplam 40 elma dedeciğim!' dedi.`
+          },
+          {
+            pageNum: 3,
+            title: '3. Bölüm: Eşit Paylaşım ve Afiyet',
+            text: `Dede Ali'nin saçlarını okşadı: 'Aferin benim akıllı torunuma! Eldeli toplamayı adım adım ne kadar güzel yaptın!' dedi.\n\nSonra bu 40 elmayı 4 eşit sepete paylaştırdılar. Her sepete 10'ar elma koydular.\n\nİşleri bitince verandada oturup taze sıkılmış tatlı elma sularını yudumladılar. Ali okumanın, düşünmenin ve problem çözmenin ne kadar eğlenceli olduğunu bir kez daha anladı.`
+          }
+        ],
+        questions: [
+          {
+            q: 'Ali ve Robot Lingo kime yardım etmek için bahçeye gittiler?',
+            options: ['Dedelerine yardım etmek için', 'Öğretmenlerine yardım etmek için', 'Komşunun kedisini aramak için'],
+            correct: 0,
+            explanation: 'Ali ve Lingo dedelerine pazara götüreceği elmaları toplamak için yardım ettiler.'
+          },
+          {
+            q: 'Ali 15, Robot Lingo 25 elma toplayınca ikisi toplam kaç elma toplamış oldu?',
+            options: ['40 elma', '35 elma', '50 elma'],
+            correct: 0,
+            explanation: '15 + 25 = 40 elma eder.'
+          },
+          {
+            q: 'Toplanan 40 elma 4 sepete eşit paylaştırılınca bir sepette kaç elma oldu?',
+            options: ['10 elma', '5 elma', '15 elma'],
+            correct: 0,
+            explanation: '40 elma 4 sepete eşit paylaştırıldığında (40 ÷ 4) her sepete 10 elma düşer.'
+          },
+          {
+            q: 'Hikayenin sonunda yorgunluklarını atmak için ne içtiler?',
+            options: ['Taze sıkılmış elma suyu', 'Sıcak çikolata', 'Soğuk limonata'],
+            correct: 0,
+            explanation: 'Verandada oturup taze sıkılmış tatlı elma sularını afiyetle içtiler.'
+          }
+        ]
+      }
+    ];
+
+    // OKUMA SİSTEMİ DURUM DEĞİŞKENLERİ
+    let turkishReaderBookId = 'book_astrobot';
+    let turkishReaderPage = 1;
+    let turkishReaderFontSize = 24; // Varsayılan 2. sınıf büyük font
+    let turkishReaderTimerInterval = null;
+    let turkishReaderElapsedSeconds = 0;
+    let turkishReaderQuizActive = false;
+    let turkishQuizCurrentQuestion = 0;
+    let turkishQuizScore = 0;
+    let turkishQuizAnswers = [];
+    let turkishQuizAnswered = false;
+    let turkishReaderSpeechActive = false;
+
+    function getTurkishReadingRecords() {
+      try {
+        const raw = localStorage.getItem('lingo_turkish_reading_records');
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveTurkishReadingRecord(bookId, durationSec, speedScore, compScore, correctCount) {
+      try {
+        const records = getTurkishReadingRecords();
+        const existing = records[bookId] || {
+          bookId,
+          readCount: 0,
+          bestSpeedScore: 0,
+          bestCompScore: 0,
+          lastReadDate: '',
+          lastDurationSec: 0,
+          history: []
+        };
+        existing.readCount = (existing.readCount || 0) + 1;
+        existing.lastReadDate = getTodayDateKey();
+        existing.lastDurationSec = durationSec;
+        existing.bestSpeedScore = Math.max(existing.bestSpeedScore || 0, speedScore);
+        existing.bestCompScore = Math.max(existing.bestCompScore || 0, compScore);
+        if (!Array.isArray(existing.history)) existing.history = [];
+        existing.history.unshift({
+          date: getTodayDateKey(),
+          time: getCurrentTimeHHMM(),
+          durationSec,
+          speedScore,
+          compScore,
+          correctCount
+        });
+        if (existing.history.length > 25) existing.history.pop();
+        records[bookId] = existing;
+        localStorage.setItem('lingo_turkish_reading_records', JSON.stringify(records));
+        if (typeof scheduleMemoryMirrorSync === 'function') scheduleMemoryMirrorSync();
+      } catch (e) {}
+    }
+
+    function calculateReadingSpeedScore(wordsCount, elapsedSeconds) {
+      const s = Math.max(1, Math.floor(elapsedSeconds || 1));
+      const wpm = Math.round((wordsCount / s) * 60);
+      let score = 90;
+      let label = 'Dengeli & Harika Okuma Hızı';
+      if (s < 18) {
+        score = 65;
+        label = 'Çok Hızlı Geçtin (Lütfen Sindirerek Oku)';
+      } else if (wpm >= 45 && wpm <= 95) {
+        score = 100;
+        label = '2. Sınıf İçin İdeal & Akıcı Hız (Mükemmel)';
+      } else if (wpm > 95 && wpm <= 130) {
+        score = 95;
+        label = 'Hızlı ve Atik Okuma';
+      } else if (wpm < 45 && wpm >= 25) {
+        score = 90;
+        label = 'Tane Tane & Dikkatli Okuma';
+      } else {
+        score = 82;
+        label = 'Sabırlı ve Dikkatli Okuma';
+      }
+      return { score, wpm, label, durationSec: s };
+    }
+
+    // 1. TÜRKÇE ANA MENÜ GÖRÜNÜMÜ (AĞAÇ YAPISI: TÜRKÇE ➔ HİKAYELER ➔ KİTAP İSİMLERİ)
+    function renderTurkishStoriesOverviewHtml() {
+      const records = getTurkishReadingRecords();
+      return `
+        <div style="margin-bottom:28px;">
+          <!-- ÜST DÖNÜŞ & RAPOR BUTONLARI -->
+          <div style="margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:8px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="selectHomeSubject('home')">
+              ⬅️ Ana Ders Menüsüne Dön
+            </button>
+            <button class="action-btn" style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#0f172a;font-size:13px;font-weight:900;padding:8px 16px;display:inline-flex;align-items:center;gap:6px;" onclick="openParentGateModal()">
+              👨‍👩‍👧 Ebeveyn Okuma Karnesi ➔
+            </button>
+          </div>
+
+          <!-- BÜYÜK BAŞLIK KARTI -->
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid rgba(245,158,11,0.3);flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:32px;">📖</span>
+              <div>
+                <h3 style="font-size:20px;color:#fff;font-weight:900;margin:0;">1. ANA BAŞLIK: TÜRKÇE DERSİ (HİKAYE KİTAPLARI &amp; OKUDUĞUNU ANLAMA)</h3>
+                <p style="font-size:12px;color:#fde047;margin:0;">Astrobot, Dinozorlar ve Yıldız Muhafızı ile Büyük Fontlu Kolay Okuma, Hız Puanı ve Anlama Sınavı</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ÖĞRETMEN TAVSİYESİ VURGU KARTI -->
+          <div class="card" style="margin-bottom:18px;border:2px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,0.18),rgba(15,23,42,0.95));padding:16px;">
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+              <div style="font-size:36px;line-height:1;">💡</div>
+              <div>
+                <div style="font-size:14px;font-weight:900;color:#fde047;margin-bottom:4px;">
+                  Öğretmen Tavsiyesi: Okuduğunu Anlamak Matematik Problemlerini Çözmenin Anahtarıdır!
+                </div>
+                <p style="font-size:12px;color:#e2e8f0;margin:0;line-height:1.5;">
+                  Kitap okurken olay sırasını, sebep-sonuç ilişkilerini ve karakterlerin bulduğu çözümleri kavrayan öğrenciler; <strong>Matematik'teki hikayeli toplama, çıkarma ve bölme problemlerini ilk okuyuşta çok rahat çözer</strong>. Sevdiği karakterlerle okuma alışkanlığı kazanması için tasarlandı!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- AĞAÇ YAPISI BAŞLIĞI -->
+          <div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <span style="font-size:11px;font-weight:900;background:rgba(245,158,11,0.2);color:#fde047;padding:4px 12px;border-radius:999px;border:1px solid rgba(245,158,11,0.4);">
+              📚 AĞAÇ YAPISI: TÜRKÇE ➔ HİKAYELER ➔ KİTAP İSİMLERİ (Tıklayarak Açın)
+            </span>
+            <span style="font-size:12px;color:#94a3b8;font-weight:800;">4 Macera Kitabı Hazır</span>
+          </div>
+
+          <!-- KİTAPLAR LİSTESİ (İSİM İSİM KARTLAR) -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px;">
+            ${turkishBooksBank.map(book => {
+              const rec = records[book.id] || null;
+              const hasRead = rec && rec.readCount > 0;
+              return `
+                <div class="card" style="margin-bottom:0;padding:16px;border:2px solid ${book.themeColor};background:linear-gradient(135deg, rgba(30,41,59,0.95), rgba(15,23,42,0.98));cursor:pointer;transition:transform 0.2s;" onclick="openTurkishBookReader('${book.id}')">
+                  <!-- KAPAK RESMİ -->
+                  ${book.coverImg ? `
+                    <div style="width:100%;height:160px;border-radius:12px;overflow:hidden;margin-bottom:12px;border:1px solid rgba(255,255,255,0.1);background:#0f172a;">
+                      <img src="${book.coverImg}" alt="${book.title}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'" />
+                    </div>
+                  ` : `
+                    <div style="width:100%;height:120px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:52px;background:linear-gradient(135deg,rgba(236,72,153,0.25),rgba(15,23,42,0.9));margin-bottom:12px;border:1px dashed #ec4899;">
+                      🍎 🤖 🧺
+                    </div>
+                  `}
+
+                  <div style="display:inline-block;background:${book.badgeColor};color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;margin-bottom:6px;">
+                    ${book.badge}
+                  </div>
+                  <h4 style="font-size:17px;color:#fff;font-weight:900;margin:0 0 4px;">${book.title}</h4>
+                  <p style="font-size:11px;color:#fde047;font-weight:800;margin:0 0 6px;">${book.subtitle}</p>
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin:0 0 12px;">${book.desc}</p>
+
+                  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 10px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-size:11px;">
+                    <span>📝 <strong>${book.wordsCount} Kelime</strong> • 3 Sayfa</span>
+                    <span>⏱️ <strong>~2-3 Dakika</strong></span>
+                  </div>
+
+                  <!-- PUAN ROZETLERİ -->
+                  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+                    ${hasRead ? `
+                      <span style="background:rgba(56,189,248,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.4);font-size:11px;font-weight:900;padding:3px 8px;border-radius:6px;">
+                        ⏱️ Okuma Hızı: ★ ${rec.bestSpeedScore} P
+                      </span>
+                      <span style="background:rgba(16,185,129,0.2);color:#34d399;border:1px solid rgba(16,185,129,0.4);font-size:11px;font-weight:900;padding:3px 8px;border-radius:6px;">
+                        🎯 Anlama Testi: %${rec.bestCompScore} (${rec.readCount} Kez Okundu)
+                      </span>
+                    ` : `
+                      <span style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;">
+                        ⭐ Henüz Okunmadı (İlk Puanını Kazan!)
+                      </span>
+                    `}
+                  </div>
+
+                  <button class="action-btn" style="width:100%;background:${book.themeColor};color:#fff;font-weight:900;font-size:13px;padding:10px;border-radius:10px;">
+                    📖 Kitabı Aç ve Oku ➔
+                  </button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTurkishStoriesHub() {
+      selectHomeSubject('turkish');
+    }
+
+    // 2. KİTABI OKUYUCUDA AÇMA (READER VIEW)
+    function openTurkishBookReader(bookId) {
+      recordActivity();
+      turkishReaderBookId = bookId;
+      turkishReaderPage = 1;
+      turkishReaderElapsedSeconds = 0;
+      turkishReaderQuizActive = false;
+      turkishQuizCurrentQuestion = 0;
+      turkishQuizScore = 0;
+      turkishQuizAnswers = [];
+      turkishQuizAnswered = false;
+      turkishReaderSpeechActive = false;
+
+      if (turkishReaderTimerInterval) clearInterval(turkishReaderTimerInterval);
+      turkishReaderTimerInterval = setInterval(() => {
+        if (!turkishReaderQuizActive) {
+          turkishReaderElapsedSeconds++;
+          const timerEl = document.getElementById('turkishLiveTimerDisplay');
+          if (timerEl) timerEl.textContent = formatTimerClock(turkishReaderElapsedSeconds);
+        }
+      }, 1000);
+
+      switchMainTab('turkish_reader');
+    }
+
+    // FONT BOYUTUNU BÜYÜT/KÜÇÜLT (BÜYÜK VE KOLAY OKUNABİLİR FONTLAR)
+    function changeTurkishReaderFontSize(delta) {
+      recordActivity();
+      turkishReaderFontSize = Math.min(34, Math.max(18, turkishReaderFontSize + delta));
+      const textContainer = document.getElementById('turkishStoryTextContainer');
+      if (textContainer) {
+        textContainer.style.fontSize = `${turkishReaderFontSize}px`;
+      }
+      const labelEl = document.getElementById('turkishFontSizeLabel');
+      if (labelEl) labelEl.textContent = `${turkishReaderFontSize}px`;
+    }
+
+    // SESLİ OKUMA (TÜRKÇE TTS)
+    function toggleTurkishReaderSpeech() {
+      recordActivity();
+      const book = turkishBooksBank.find(b => b.id === turkishReaderBookId) || turkishBooksBank[0];
+      const page = book.pages.find(p => p.pageNum === turkishReaderPage) || book.pages[0];
+      const btn = document.getElementById('turkishSpeechToggleBtn');
+
+      if (turkishReaderSpeechActive) {
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        turkishReaderSpeechActive = false;
+        if (btn) btn.innerHTML = '🔊 Sesli Oku';
+      } else {
+        turkishReaderSpeechActive = true;
+        if (btn) btn.innerHTML = '⏹️ Durdur';
+        speakTurkish(page.text, 0.88, () => {
+          turkishReaderSpeechActive = false;
+          if (btn) btn.innerHTML = '🔊 Sesli Oku';
+        });
+      }
+    }
+
+    function selectTurkishReaderPage(pNum) {
+      recordActivity();
+      if (turkishReaderSpeechActive && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        turkishReaderSpeechActive = false;
+      }
+      turkishReaderPage = pNum;
+      renderTurkishReaderScreen();
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    // 3. İNTERAKTİF OKUYUCU EKRANI
+    function renderTurkishReaderScreen() {
+      const book = turkishBooksBank.find(b => b.id === turkishReaderBookId) || turkishBooksBank[0];
+
+      if (turkishReaderQuizActive) {
+        renderTurkishComprehensionQuiz();
+        return;
+      }
+
+      const curPage = book.pages.find(p => p.pageNum === turkishReaderPage) || book.pages[0];
+      const isLastPage = turkishReaderPage === book.pages.length;
+      const isFirstPage = turkishReaderPage === 1;
+
+      // Paragraflara bölüp büyük ve ferah gösterelim
+      const paragraphs = curPage.text.split('\n\n').filter(Boolean);
+
+      const html = `
+        <div style="max-width:760px;margin:0 auto;padding-bottom:30px;">
+          <!-- ÜST KONTROL ÇUBUĞU (KİTAPLIK DÖNÜŞ, FONT AYARI, SAYAÇ & SESLİ OKUMA) -->
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;background:#1e293b;border:1px solid #334155;border-radius:14px;padding:10px 14px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button class="action-btn" style="background:#334155;color:#fff;font-size:12px;padding:7px 12px;font-weight:800;" onclick="selectHomeSubject('turkish')">
+                ⬅️ Kitaplığa Dön
+              </button>
+              <div style="background:rgba(255,255,255,0.06);color:#fde047;border-radius:8px;padding:4px 10px;font-size:12px;font-weight:900;">
+                ⏱️ <span id="turkishLiveTimerDisplay">${formatTimerClock(turkishReaderElapsedSeconds)}</span>
+              </div>
+            </div>
+
+            <!-- BÜYÜK FONT SEÇİCİ VE SES BUTONU -->
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <div style="display:inline-flex;align-items:center;gap:4px;background:#0f172a;border:1px solid #475569;border-radius:10px;padding:2px 6px;">
+                <span style="font-size:11px;color:#94a3b8;font-weight:800;padding-left:4px;">Yazı:</span>
+                <button onclick="changeTurkishReaderFontSize(-2)" style="background:#334155;color:#fff;border:none;border-radius:6px;width:28px;height:28px;font-size:13px;font-weight:900;cursor:pointer;">A-</button>
+                <span id="turkishFontSizeLabel" style="font-size:11px;font-weight:900;color:#38bdf8;min-width:28px;text-align:center;">${turkishReaderFontSize}px</span>
+                <button onclick="changeTurkishReaderFontSize(2)" style="background:#334155;color:#fff;border:none;border-radius:6px;width:28px;height:28px;font-size:13px;font-weight:900;cursor:pointer;">A+</button>
+              </div>
+
+              <button id="turkishSpeechToggleBtn" class="action-btn" style="background:#0284c7;color:#fff;font-size:12px;font-weight:900;padding:7px 12px;" onclick="toggleTurkishReaderSpeech()">
+                🔊 Sesli Oku
+              </button>
+            </div>
+          </div>
+
+          <!-- KİTAP KAPAK & BÖLÜM ÇUBUĞU -->
+          <div class="card" style="border:2px solid ${book.themeColor};background:linear-gradient(135deg, rgba(30,41,59,0.95), rgba(15,23,42,0.98));padding:20px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:12px;">
+              ${book.coverImg ? `
+                <img src="${book.coverImg}" alt="${book.title}" style="width:72px;height:72px;border-radius:14px;object-fit:cover;border:2px solid ${book.themeColor};" onerror="this.style.display='none'" />
+              ` : `
+                <div style="width:68px;height:68px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:36px;background:rgba(236,72,153,0.2);border:2px solid #ec4899;">
+                  ${book.icon}
+                </div>
+              `}
+              <div style="flex:1;min-width:220px;">
+                <span style="background:${book.badgeColor};color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">
+                  ${book.badge} • 2. SINIF OKUMA KİTABI
+                </span>
+                <h2 style="font-size:22px;color:#fff;font-weight:900;margin:4px 0 2px;">${book.title}</h2>
+                <div style="font-size:12px;color:#fde047;font-weight:800;">${curPage.title}</div>
+              </div>
+            </div>
+
+            <!-- SAYFA / BÖLÜM SEKMELERİ -->
+            <div style="display:flex;gap:8px;margin-bottom:18px;overflow-x:auto;padding-bottom:4px;">
+              ${book.pages.map(p => `
+                <button onclick="selectTurkishReaderPage(${p.pageNum})" style="flex:1;min-width:110px;background:${p.pageNum === turkishReaderPage ? book.themeColor : '#1e293b'};color:#fff;border:2px solid ${p.pageNum === turkishReaderPage ? '#fde047' : '#334155'};border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer;transition:all 0.2s;">
+                  📖 ${p.pageNum}. Bölüm ${p.pageNum === turkishReaderPage ? '✓' : ''}
+                </button>
+              `).join('')}
+            </div>
+
+            <!-- HİKAYE METNİ (BÜYÜK FONT, RAHAT OKUMA, YÜKSEK SATIR ARALIĞI) -->
+            <div id="turkishStoryTextContainer" style="background:#0f172a;border:2px solid #334155;border-radius:16px;padding:24px 20px;margin-bottom:20px;font-size:${turkishReaderFontSize}px;line-height:1.9;color:#f8fafc;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;box-shadow:inset 0 2px 10px rgba(0,0,0,0.5);">
+              ${paragraphs.map(pText => `
+                <p style="margin:0 0 16px;text-indent:24px;letter-spacing:0.3px;">
+                  ${pText}
+                </p>
+              `).join('')}
+            </div>
+
+            <!-- SAYFA DEĞİŞTİRME & BİTİRME BUTONLARI -->
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+              <button class="action-btn" style="background:#334155;color:#fff;font-size:13px;font-weight:800;padding:10px 16px;opacity:${isFirstPage ? '0.5' : '1'};" ${isFirstPage ? 'disabled' : ''} onclick="selectTurkishReaderPage(${turkishReaderPage - 1})">
+                ◀ Önceki Bölüm
+              </button>
+
+              <span style="font-size:13px;color:#94a3b8;font-weight:800;">
+                Bölüm ${turkishReaderPage} / ${book.pages.length}
+              </span>
+
+              ${!isLastPage ? `
+                <button class="action-btn" style="background:${book.themeColor};color:#fff;font-size:13px;font-weight:900;padding:10px 20px;" onclick="selectTurkishReaderPage(${turkishReaderPage + 1})">
+                  Sonraki Bölüm ➔
+                </button>
+              ` : `
+                <button class="action-btn" style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#0f172a;font-size:14px;font-weight:900;padding:12px 22px;border-radius:12px;box-shadow:0 8px 24px rgba(245,158,11,0.35);animation:pulse 2s infinite;" onclick="finishTurkishReadingAndStartQuiz()">
+                  🏆 Okumayı Bitirdim! ➔ Anlama Testine Başla (4 Soru)
+                </button>
+              `}
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    // 4. OKUMAYI TAMAMLAYIP SINAVA GEÇME
+    function finishTurkishReadingAndStartQuiz() {
+      recordActivity();
+      if (turkishReaderTimerInterval) {
+        clearInterval(turkishReaderTimerInterval);
+        turkishReaderTimerInterval = null;
+      }
+      if (turkishReaderSpeechActive && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        turkishReaderSpeechActive = false;
+      }
+      playChimeSound('correct');
+      turkishReaderQuizActive = true;
+      turkishQuizCurrentQuestion = 0;
+      turkishQuizScore = 0;
+      turkishQuizAnswers = [];
+      turkishQuizAnswered = false;
+      renderTurkishComprehensionQuiz();
+      window.scrollTo({ top: 80, behavior: 'smooth' });
+    }
+
+    // 5. OKUDUĞUNU ANLAMA SINAVI EKRANI (4 SORU)
+    function renderTurkishComprehensionQuiz() {
+      const book = turkishBooksBank.find(b => b.id === turkishReaderBookId) || turkishBooksBank[0];
+      const questions = book.questions;
+
+      // TÜM SORULAR BİTTİĞİNDE: DİJİTAL KARNE VE ÇİFT PUAN SKOR KARTI
+      if (turkishQuizCurrentQuestion >= questions.length) {
+        finishTurkishComprehensionQuiz();
+        return;
+      }
+
+      const q = questions[turkishQuizCurrentQuestion];
+      const qNum = turkishQuizCurrentQuestion + 1;
+      const speedResult = calculateReadingSpeedScore(book.wordsCount, turkishReaderElapsedSeconds);
+
+      const html = `
+        <div style="max-width:680px;margin:0 auto;padding-bottom:30px;">
+          <div class="card" style="border:2px solid #f59e0b;background:linear-gradient(135deg, rgba(30,41,59,0.95), rgba(15,23,42,0.98));padding:22px;">
+            <!-- ÜST BİLGİ VE OKUMA HIZI BİLDİRİMİ -->
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:12px;">
+              <div>
+                <span style="background:#f59e0b;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">
+                  ${book.title.toUpperCase()} • ANLAMA SINAVI
+                </span>
+                <h3 style="font-size:18px;color:#fff;font-weight:900;margin:4px 0 0;">Kitabı Ne Kadar İyi Anladın?</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <span style="background:rgba(56,189,248,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.4);font-size:11px;font-weight:900;padding:4px 10px;border-radius:999px;">
+                  ⏱️ Okuma Süresi: ${formatTimerClock(turkishReaderElapsedSeconds)}
+                </span>
+                <span style="background:rgba(250,204,21,0.2);color:#fde047;border:1px solid rgba(250,204,21,0.4);font-size:11px;font-weight:900;padding:4px 10px;border-radius:999px;">
+                  ⭐ Okuma Skoru: ${speedResult.score} Puan
+                </span>
+              </div>
+            </div>
+
+            <!-- SORU İLERLEME ÇUBUĞU -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:12px;color:#cbd5e1;font-weight:800;">
+              <span>Soru ${qNum} / ${questions.length}</span>
+              <span style="color:#34d399;">Doğru Cevap: +25 Puan</span>
+            </div>
+            <div style="width:100%;height:8px;background:#1e293b;border-radius:999px;overflow:hidden;margin-bottom:20px;">
+              <div style="width:${(qNum / questions.length) * 100}%;height:100%;background:linear-gradient(90deg, #f59e0b, #10b981);transition:width 0.3s ease;"></div>
+            </div>
+
+            <!-- SORU METNİ -->
+            <div style="background:#0f172a;border:2px solid #38bdf8;border-radius:16px;padding:18px;margin-bottom:18px;text-align:left;">
+              <div style="font-size:13px;color:#38bdf8;font-weight:800;margin-bottom:4px;">SORU ${qNum}:</div>
+              <div style="font-size:19px;font-weight:900;color:#fff;line-height:1.5;">
+                ${q.q}
+              </div>
+            </div>
+
+            <!-- ŞIKLAR -->
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px;">
+              ${q.options.map((opt, idx) => `
+                <button id="trQuizOptBtn_${idx}" class="action-btn" style="background:#1e293b;border:2px solid #334155;color:#f8fafc;font-size:16px;font-weight:800;padding:14px 18px;text-align:left;border-radius:14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s;" onclick="submitTurkishQuizAnswer(${idx})">
+                  <span style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-weight:900;color:#fde047;border:1px solid rgba(255,255,255,0.15);">
+                    ${String.fromCharCode(65 + idx)}
+                  </span>
+                  <span style="flex:1;">${opt}</span>
+                </button>
+              `).join('')}
+            </div>
+
+            <!-- GERİ BİLDİRİM VE AÇIKLAMA ALANI -->
+            <div id="turkishQuizFeedbackBox" style="min-height:24px;"></div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('appContent').innerHTML = html;
+      turkishQuizAnswered = false;
+    }
+
+    function submitTurkishQuizAnswer(choiceIdx) {
+      if (turkishQuizAnswered) return;
+      turkishQuizAnswered = true;
+      recordActivity();
+
+      const book = turkishBooksBank.find(b => b.id === turkishReaderBookId) || turkishBooksBank[0];
+      const q = book.questions[turkishQuizCurrentQuestion];
+      const isCorrect = choiceIdx === q.correct;
+      const fbBox = document.getElementById('turkishQuizFeedbackBox');
+      const clickedBtn = document.getElementById('trQuizOptBtn_' + choiceIdx);
+      const correctBtn = document.getElementById('trQuizOptBtn_' + q.correct);
+
+      turkishQuizAnswers.push({
+        questionIndex: turkishQuizCurrentQuestion,
+        choiceIdx,
+        isCorrect
+      });
+
+      if (isCorrect) {
+        turkishQuizScore += 25;
+        playChimeSound('correct');
+        if (clickedBtn) {
+          clickedBtn.style.borderColor = '#10b981';
+          clickedBtn.style.background = 'rgba(16,185,129,0.25)';
+        }
+        if (fbBox) {
+          fbBox.innerHTML = `
+            <div class="feedback-banner success" style="margin-top:12px;padding:14px;border-radius:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+              <div>
+                <div style="font-size:15px;font-weight:900;color:#34d399;">🎉 Harika! Doğru Cevap (+25 Puan)</div>
+                <div style="font-size:12px;color:#e2e8f0;margin-top:2px;">💡 ${q.explanation}</div>
+              </div>
+              <button class="action-btn" style="background:#10b981;color:#052e16;font-size:13px;font-weight:900;padding:9px 18px;" onclick="nextTurkishQuizQuestion()">
+                Sonraki Soru ➔
+              </button>
+            </div>
+          `;
+        }
+        recordParentActivityLog('turkish_reading', true, `${book.title} (Soru ${turkishQuizCurrentQuestion + 1})`, `Doğru cevaplandı: "${q.options[choiceIdx]}"`);
+      } else {
+        playChimeSound('wrong');
+        if (clickedBtn) {
+          clickedBtn.style.borderColor = '#ef4444';
+          clickedBtn.style.background = 'rgba(239,68,68,0.22)';
+        }
+        if (correctBtn) {
+          correctBtn.style.borderColor = '#10b981';
+        }
+        if (fbBox) {
+          fbBox.innerHTML = `
+            <div class="feedback-banner error" style="margin-top:12px;padding:14px;border-radius:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+              <div>
+                <div style="font-size:14px;font-weight:900;color:#fca5a5;">❌ Dikkat! Doğru cevap: ${String.fromCharCode(65 + q.correct)}) ${q.options[q.correct]}</div>
+                <div style="font-size:12px;color:#e2e8f0;margin-top:2px;">💡 ${q.explanation}</div>
+              </div>
+              <button class="action-btn" style="background:#38bdf8;color:#0f172a;font-size:13px;font-weight:900;padding:9px 18px;" onclick="nextTurkishQuizQuestion()">
+                Devam Et ➔
+              </button>
+            </div>
+          `;
+        }
+        recordParentActivityLog('turkish_reading', false, `${book.title} (Soru ${turkishQuizCurrentQuestion + 1})`, `Doğru "${q.options[q.correct]}" iken "${q.options[choiceIdx]}" seçti`);
+      }
+    }
+
+    function nextTurkishQuizQuestion() {
+      recordActivity();
+      turkishQuizCurrentQuestion++;
+      renderTurkishComprehensionQuiz();
+    }
+
+    // 6. SINAV SONUCU VE ÇİFT KATMANLI PUAN RAPORU
+    function finishTurkishComprehensionQuiz() {
+      const book = turkishBooksBank.find(b => b.id === turkishReaderBookId) || turkishBooksBank[0];
+      const speedResult = calculateReadingSpeedScore(book.wordsCount, turkishReaderElapsedSeconds);
+      const comprehensionScore = Math.min(100, Math.max(0, turkishQuizScore));
+      const correctCount = turkishQuizAnswers.filter(a => a.isCorrect).length;
+
+      // Rozetleri ve kalıcı puanları kaydet
+      saveTurkishReadingRecord(book.id, turkishReaderElapsedSeconds, speedResult.score, comprehensionScore, correctCount);
+      unlockBadge('book_worm_star');
+      if (speedResult.score >= 95 && comprehensionScore === 100) {
+        unlockBadge('speed_reader_star');
+      }
+      if (typeof addStarCoins === 'function') {
+        addStarCoins(30, true);
+      }
+      recordParentMilestone('turkish_reading', `📖 ${book.title}`, `Okuma Skoru: ${speedResult.score} P • Anlama: ${comprehensionScore} P (${correctCount}/4 Doğru)`);
+      playChimeSound('fanfare');
+
+      let starRating = '⭐⭐⭐⭐⭐';
+      if (comprehensionScore < 50) starRating = '⭐⭐⭐';
+      else if (comprehensionScore < 80) starRating = '⭐⭐⭐⭐';
+
+      const html = `
+        <div style="max-width:580px;margin:20px auto;padding-bottom:30px;">
+          <div class="card" style="border:2px solid #f59e0b;background:linear-gradient(135deg, rgba(30,41,59,0.98), rgba(15,23,42,0.98));padding:26px;text-align:center;">
+            <div style="font-size:54px;margin-bottom:8px;">🏆 📖 🌟</div>
+            <span style="background:#f59e0b;color:#0f172a;font-size:11px;font-weight:900;padding:4px 12px;border-radius:999px;">
+              ${book.title.toUpperCase()} TAMAMLANDI!
+            </span>
+            <h2 style="font-size:24px;color:#fff;font-weight:900;margin:10px 0 4px;">Harika Bir Okuma Başarısı!</h2>
+            <div style="font-size:28px;margin-bottom:14px;">${starRating}</div>
+
+            <!-- ÇİFT PUAN KUTUSU (1. OKUMA HIZI & SÜRESİ + 2. ANLAMA SINAVI SKORU) -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+              <div style="background:#0f172a;border:2px solid #38bdf8;border-radius:14px;padding:14px;text-align:center;">
+                <div style="font-size:24px;margin-bottom:2px;">⏱️ ⚡</div>
+                <div style="font-size:11px;color:#94a3b8;font-weight:800;">1. OKUMA HIZI &amp; SÜRE SKORU</div>
+                <div style="font-size:22px;font-weight:900;color:#38bdf8;margin:4px 0;">
+                  ${speedResult.score} Puan
+                </div>
+                <div style="font-size:10px;color:#cbd5e1;">${formatTimerClock(turkishReaderElapsedSeconds)} sürede okundu (${speedResult.wpm} Kelime/Dk)</div>
+                <div style="font-size:10px;color:#34d399;font-weight:800;margin-top:3px;">${speedResult.label}</div>
+              </div>
+
+              <div style="background:#0f172a;border:2px solid #10b981;border-radius:14px;padding:14px;text-align:center;">
+                <div style="font-size:24px;margin-bottom:2px;">🎯 📝</div>
+                <div style="font-size:11px;color:#94a3b8;font-weight:800;">2. OKUDUĞUNU ANLAMA SKORU</div>
+                <div style="font-size:22px;font-weight:900;color:#34d399;margin:4px 0;">
+                  ${comprehensionScore} Puan
+                </div>
+                <div style="font-size:10px;color:#cbd5e1;">4 Sorudan ${correctCount} Doğru Cevap</div>
+                <div style="font-size:10px;color:#fde047;font-weight:800;margin-top:3px;">+30 Yıldız Kumbaraya Eklendi ⭐</div>
+              </div>
+            </div>
+
+            <p style="font-size:13px;color:#cbd5e1;line-height:1.5;margin-bottom:18px;">
+              Hem hikayeyi çok güzel okudun hem de soruları dikkatle çözdün. Okuma alışkanlığın sayesinde Matematik problemlerini çözmek artık senin için çok daha kolay olacak!
+            </p>
+
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <button class="whatsapp-share-btn" style="width:100%;justify-content:center;font-size:13px;padding:12px;" onclick="shareTurkishBookReportWhatsApp('${book.id}')">
+                📲 Okuma Karnesini Öğretmene WhatsApp'tan Gönder
+              </button>
+              <div style="display:flex;gap:10px;">
+                <button class="action-btn" style="flex:1;background:#f59e0b;color:#0f172a;font-weight:900;" onclick="openTurkishBookReader('${book.id}')">
+                  Tekrar Oku 🔄
+                </button>
+                <button class="action-btn" style="flex:1;background:#2563eb;color:#fff;font-weight:900;" onclick="selectHomeSubject('turkish')">
+                  Diğer Kitaplar 📚
+                </button>
+              </div>
+              <button class="action-btn" style="background:#334155;color:#fff;font-weight:800;" onclick="selectHomeSubject('home')">
+                🏠 Ana Ders Menüsüne Dön
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('appContent').innerHTML = html;
+    }
+
+    // 7. EBEVEYN VE ÖĞRETMEN WHATSAPP PAYLAŞIMLARI
+    function shareTurkishBookReportWhatsApp(bookId) {
+      recordActivity();
+      const book = turkishBooksBank.find(b => b.id === bookId) || turkishBooksBank[0];
+      const records = getTurkishReadingRecords();
+      const rec = records[bookId] || {};
+      const speed = rec.bestSpeedScore || 90;
+      const comp = rec.bestCompScore !== undefined ? rec.bestCompScore : 100;
+      const reads = rec.readCount || 1;
+      const text = `📖 *Lingo Ders Arkadaşım - Türkçe Okuma & Anlama Raporu* 📖\n\nÖğrencimiz *${book.title}* kitabını başarıyla tamamladı!\n\n⏱️ *Okuma Hızı & Süresi Skoru:* ${speed} Puan\n🎯 *Okuduğunu Anlama Sınavı:* ${comp} Puan (%${comp})\n📚 *Toplam Okunma:* ${reads} kez\n\nÖğretmenimize sunulmak üzere gelişim raporu olarak kaydedilmiştir. 🌟`;
+      openWhatsAppShare(text);
+    }
+
+    function shareTurkishAllBooksReportWhatsApp() {
+      recordActivity();
+      const records = getTurkishReadingRecords();
+      let lines = [];
+      turkishBooksBank.forEach(b => {
+        const r = records[b.id];
+        if (r && r.readCount > 0) {
+          lines.push(`• *${b.title}:* Okuma Hızı: ${r.bestSpeedScore} P | Anlama: ${r.bestCompScore} P (${r.readCount} kez)`);
+        } else {
+          lines.push(`• *${b.title}:* Henüz okunmadı`);
+        }
+      });
+      const text = `📚 *Lingo Ders Arkadaşım - Türkçe Kitap Okuma Gelişim Karnesi* 📚\n\nÖğrencimizin 2. Sınıf Türkçe Hikaye Okuma ve Anlama Sonuçları:\n\n${lines.join('\n')}\n\nOkuma alışkanlığı ve problem anlama takibi için hazırlanmıştır. 🌟`;
+      openWhatsAppShare(text);
+    }
+
+    function renderParentReadingBooksListHtml() {
+      const records = getTurkishReadingRecords();
+      return turkishBooksBank.map(book => {
+        const rec = records[book.id] || null;
+        const hasRead = rec && rec.readCount > 0;
+        return `
+          <div style="background:#0f172a;border:1px solid ${hasRead ? '#f59e0b' : '#334155'};border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+            <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:240px;">
+              <div style="font-size:28px;background:rgba(255,255,255,0.06);padding:8px;border-radius:10px;">
+                ${book.icon}
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:900;color:#fff;">${book.title}</div>
+                <div style="font-size:11px;color:#94a3b8;margin-top:2px;">
+                  ${hasRead ? `
+                    <span style="color:#38bdf8;font-weight:800;">⏱️ Hız: ${rec.bestSpeedScore} Puan</span> •
+                    <span style="color:#34d399;font-weight:800;">🎯 Anlama: %${rec.bestCompScore}</span> •
+                    <span style="color:#fde047;">${rec.readCount} Kez Okundu</span>
+                    <span style="color:#64748b;margin-left:4px;">(${rec.lastReadDate || ''})</span>
+                  ` : `
+                    <span style="color:#94a3b8;">Henüz okunmadı</span>
+                  `}
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <button onclick="openTurkishBookReader('${book.id}');document.getElementById('parentDashboardModal')?.remove();" style="background:#334155;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer;">
+                📖 Kitabı Aç
+              </button>
+              ${hasRead ? `
+                <button onclick="shareTurkishBookReportWhatsApp('${book.id}')" style="background:#10b981;color:#052e16;border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:900;cursor:pointer;">
+                  📲 Paylaş
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /* ========================================================
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '2.9.8';
+    const CURRENT_APP_VERSION = '3.0.0';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
