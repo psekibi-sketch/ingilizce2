@@ -1,5 +1,5 @@
 {
-  "version": "3.0.0",
+  "version": "3.1.0",
   "releaseDate": "2026-10-24",
-  "notes": "2. Sınıf Türkçe Kütüphanesi Eklendi: Ağaç yapısında Türkçe -> Hikayeler altında Astrobot, Dinazorlar (Boni & Tobi), Yıldız Savaşçıları ve Matematikçi Bilge Baykuş kitapları. Büyük fontlu akıcı okuma, canlı okuma hızı ve süre puanlaması, her hikaye sonu çoktan seçmeli anlama sınavı ve Ebeveyn Ekranında detaylı Okuma Karnesi hafıza sistemi."
+  "notes": "2. Sınıf Türkçe Kütüphanesi Genişletildi (v3.1.0): Hikayeler zenginleştirilerek 4 bölümlü uzun formatta hazırlandı. Yeni karakterler eklendi: Süper Mario, Sackboy (LittleBigPlanet), Cody & May (It Takes Two), Örümcek Adam (Spider-Man) ve Batman. Her kitapta büyük puntolu okuma, canlı okuma hızı skoru, 4 soruluk anlama sınavı ve ebeveyn okuma karnesi."
 }
