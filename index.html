@@ -929,7 +929,92 @@
       from { transform: translateY(0) rotate(-5deg); }
       to { transform: translateY(-20px) rotate(5deg); }
     }
-  </style>
+  
+    /* ========================================================
+       BARTU'NUN SÜPER OKUMA & OYUNLAŞTIRMA SİSTEMİ STİLLERİ
+    ======================================================== */
+    .golden-word-chip {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(234,88,12,0.2));
+      color: #fde047;
+      font-weight: 900;
+      padding: 1px 7px;
+      margin: 0 2px;
+      border-radius: 8px;
+      border: 1px dashed #f59e0b;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0 8px rgba(245,158,11,0.25);
+    }
+    .golden-word-chip:hover {
+      transform: scale(1.08);
+      background: #f59e0b;
+      color: #0f172a;
+      box-shadow: 0 0 16px rgba(245,158,11,0.6);
+    }
+    .golden-word-chip.collected {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border: 1px solid #34d399;
+      box-shadow: 0 0 12px rgba(16,185,129,0.5);
+      animation: pulse 1.5s infinite;
+    }
+    .bartu-choice-btn {
+      background: linear-gradient(135deg, rgba(30,41,59,0.9), rgba(15,23,42,0.95));
+      border: 2px solid #38bdf8;
+      border-radius: 14px;
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      width: 100%;
+    }
+    .bartu-choice-btn:hover {
+      transform: translateY(-2px);
+      border-color: #fde047;
+      background: linear-gradient(135deg, rgba(56,189,248,0.25), rgba(15,23,42,0.98));
+    }
+    .bartu-card-holo {
+      position: relative;
+      border-radius: 18px;
+      padding: 16px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 2px solid #475569;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+    .bartu-card-holo.unlocked {
+      border: 2px solid #f59e0b;
+      background: linear-gradient(135deg, rgba(30,41,59,0.95), rgba(15,23,42,0.98));
+      box-shadow: 0 8px 24px rgba(245,158,11,0.35);
+    }
+    .bartu-card-holo.unlocked::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 40%, rgba(253,224,71,0.15) 50%, transparent 60%);
+      transform: rotate(35deg);
+      pointer-events: none;
+      animation: holoShine 4s linear infinite;
+    }
+    @keyframes holoShine {
+      0% { transform: translateY(-100%) rotate(35deg); }
+      100% { transform: translateY(100%) rotate(35deg); }
+    }
+
+    </style>
 </head>
 <body>
 
@@ -15873,6 +15958,566 @@
       document.getElementById('appContent').innerHTML = html;
     }
 
+    
+    /* ========================================================
+       BARTU'NUN SÜPER OKUMA & OYUNLAŞTIRMA MOTORU
+    ======================================================== */
+    function getStudentName() {
+      return localStorage.getItem('lingo_student_name') || 'Bartu';
+    }
+
+    function setStudentName(name) {
+      if (!name || !name.trim()) name = 'Bartu';
+      localStorage.setItem('lingo_student_name', name.trim());
+      if (typeof scheduleMemoryMirrorSync === 'function') scheduleMemoryMirrorSync();
+    }
+
+    // 1. DAHİLİ OYUN SESLERİ (Web Audio API Synthesizer - Sıfır Dış Bağımlılık)
+    function playGameAudio(type) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+
+        if (type === 'coin') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(987.77, now); // B5
+          osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'powerup') {
+          [330, 392, 659, 523, 587, 784].forEach((f, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(f, now + idx * 0.06);
+            gain.gain.setValueAtTime(0.16, now + idx * 0.06);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + (idx + 1) * 0.06);
+            osc.start(now + idx * 0.06);
+            osc.stop(now + (idx + 1) * 0.06);
+          });
+        } else if (type === 'star') {
+          [523.25, 659.25, 783.99, 1046.50].forEach((f, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(f, now + idx * 0.08);
+            gain.gain.setValueAtTime(0.18, now + idx * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.2);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.2);
+          });
+        } else if (type === 'fanfare') {
+          [523, 659, 784, 1046].forEach((f, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(f, now + idx * 0.12);
+            gain.gain.setValueAtTime(0.15, now + idx * 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.3);
+            osc.start(now + idx * 0.12);
+            osc.stop(now + idx * 0.12 + 0.3);
+          });
+        } else if (type === 'click') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(600, now);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        }
+      } catch (e) {}
+    }
+
+    // 2. ALTIN KELİME AVI (GOLDEN WORD HUNT)
+    function getBartuGoldenWordsCount() {
+      return parseInt(localStorage.getItem('lingo_bartu_golden_words') || '0', 10);
+    }
+
+    function addBartuGoldenWords(count) {
+      const current = getBartuGoldenWordsCount() + count;
+      localStorage.setItem('lingo_bartu_golden_words', current.toString());
+      const el = document.getElementById('bartuGoldWordCounter');
+      if (el) el.textContent = current;
+      const hubEl = document.getElementById('bartuHubGoldCounter');
+      if (hubEl) hubEl.textContent = current;
+      return current;
+    }
+
+    function collectBartuGoldenWord(spanEl, word) {
+      if (spanEl.classList.contains('collected')) return;
+      spanEl.classList.add('collected');
+      playGameAudio('coin');
+      addBartuGoldenWords(10);
+
+      // Ekranda sevimli uçan altın puan balonu
+      const rect = spanEl.getBoundingClientRect();
+      const floater = document.createElement('div');
+      floater.textContent = '+10 ⭐ ' + word.toUpperCase();
+      floater.style.position = 'fixed';
+      floater.style.left = (rect.left + 10) + 'px';
+      floater.style.top = (rect.top - 20) + 'px';
+      floater.style.background = 'linear-gradient(135deg,#f59e0b,#ea580c)';
+      floater.style.color = '#fff';
+      floater.style.fontWeight = '900';
+      floater.style.fontSize = '12px';
+      floater.style.padding = '3px 10px';
+      floater.style.borderRadius = '999px';
+      floater.style.boxShadow = '0 4px 12px rgba(245,158,11,0.5)';
+      floater.style.zIndex = '9999';
+      floater.style.pointerEvents = 'none';
+      floater.style.transition = 'all 0.8s ease-out';
+      document.body.appendChild(floater);
+
+      requestAnimationFrame(() => {
+        floater.style.transform = 'translateY(-35px) scale(1.15)';
+        floater.style.opacity = '0';
+      });
+      setTimeout(() => floater.remove(), 850);
+    }
+
+    function highlightGoldenWords(text) {
+      if (!text) return '';
+      // 2. sınıf anahtar kazanım kelimeleri
+      const keywords = [
+        'Dostluk', 'Cesaret', 'Şifre', 'Problem', 'Başarı', 'Galaksi', 'Yıldız',
+        'Güven', 'Zeka', 'Keşif', 'Takım', 'Süper', 'Kahraman', 'Birlik',
+        'Toplama', 'Çıkarma', 'Ritmik', 'İpucu', 'Akıl', 'Sabır', 'Yardımlaşma', 'Paylaşmak'
+      ];
+      const regex = new RegExp('(\\b(?:' + keywords.join('|') + ')\\b)', 'gi');
+      return text.replace(regex, (match) => {
+        return '<span class="golden-word-chip" onclick="collectBartuGoldenWord(this, \'' + match + '\')" title="Bartu dokun ve +10 Altın Puan kazan! ⭐">✨ ' + match + ' ✨</span>';
+      });
+    }
+
+    // 3. KENDİ MACERANI KENDİN SEÇ (CHOOSE YOUR PATH)
+    function chooseBartuPath(choiceIndex, choiceText) {
+      playGameAudio('powerup');
+      const book = turkishBooksBank.find(b => b.id === turkishReaderBookId) || turkishBooksBank[0];
+      const nextP = turkishReaderPage + 1;
+      
+      // Bildirim göster
+      const toast = document.createElement('div');
+      toast.innerHTML = '🌟 <strong>Harika Karar ' + getStudentName() + '!</strong><br><span style="font-size:12px;">' + choiceText + '</span>';
+      toast.style.position = 'fixed';
+      toast.style.top = '40%';
+      toast.style.left = '50%';
+      toast.style.transform = 'translate(-50%, -50%) scale(0.9)';
+      toast.style.background = 'linear-gradient(135deg,#0284c7,#2563eb)';
+      toast.style.color = '#fff';
+      toast.style.padding = '16px 24px';
+      toast.style.borderRadius = '16px';
+      toast.style.boxShadow = '0 12px 32px rgba(0,0,0,0.6)';
+      toast.style.zIndex = '99999';
+      toast.style.textAlign = 'center';
+      toast.style.fontWeight = '900';
+      toast.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      document.body.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.style.transform = 'translate(-50%, -50%) scale(1.05)';
+      });
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+        if (nextP <= book.pages.length) {
+          selectTurkishReaderPage(nextP);
+        } else {
+          finishTurkishReadingAndStartQuiz();
+        }
+      }, 1200);
+    }
+
+    // 4. DEDEKTİF BARTU'NUN KARALAMA TAHTASI (CANVAS SCRATCHPAD)
+    let isDrawing = false;
+    let canvasColor = '#fde047';
+    let canvasLineWidth = 3;
+
+    function toggleBartuScratchpad() {
+      playGameAudio('click');
+      const pad = document.getElementById('bartuScratchpadArea');
+      const btn = document.getElementById('bartuScratchpadToggleBtn');
+      if (!pad) return;
+      if (pad.style.display === 'none' || !pad.style.display) {
+        pad.style.display = 'block';
+        if (btn) btn.innerHTML = '✏️ Not Defterini Kapat';
+        initBartuScratchpadCanvas();
+      } else {
+        pad.style.display = 'none';
+        if (btn) btn.innerHTML = '✏️ Dedektif Defteri (Karala &amp; Çöz)';
+      }
+    }
+
+    function initBartuScratchpadCanvas() {
+      const canvas = document.getElementById('bartuCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      // Set actual resolution matching displayed width
+      canvas.width = canvas.parentElement.clientWidth - 40;
+      canvas.height = 180;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = canvasColor;
+      ctx.lineWidth = canvasLineWidth;
+
+      function getPos(e) {
+        const r = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - r.left,
+          y: clientY - r.top
+        };
+      }
+
+      function startDraw(e) {
+        e.preventDefault();
+        isDrawing = true;
+        const p = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+      }
+
+      function moveDraw(e) {
+        if (!isDrawing) return;
+        e.preventDefault();
+        const p = getPos(e);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+      }
+
+      function stopDraw(e) {
+        if (isDrawing) {
+          isDrawing = false;
+          ctx.closePath();
+        }
+      }
+
+      canvas.onmousedown = startDraw;
+      canvas.onmousemove = moveDraw;
+      window.onmouseup = stopDraw;
+
+      canvas.ontouchstart = startDraw;
+      canvas.ontouchmove = moveDraw;
+      window.ontouchend = stopDraw;
+    }
+
+    function setCanvasDrawColor(color) {
+      playGameAudio('click');
+      canvasColor = color;
+      const canvas = document.getElementById('bartuCanvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        ctx.strokeStyle = color;
+      }
+    }
+
+    function clearBartuCanvas() {
+      playGameAudio('click');
+      const canvas = document.getElementById('bartuCanvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    // 5. BARTU'NUN SES KAYIT STÜDYOSU (VOICE RECORDING)
+    let bartuMediaRecorder = null;
+    let bartuAudioChunks = [];
+    let bartuRecordedBlobUrl = null;
+    let bartuRecordingTimer = null;
+    let bartuRecordingSecs = 0;
+
+    function toggleBartuVoiceRecording() {
+      const btn = document.getElementById('bartuRecordVoiceBtn');
+      const statusEl = document.getElementById('bartuRecordStatus');
+      const player = document.getElementById('bartuRecordedAudioPlayer');
+
+      if (bartuMediaRecorder && bartuMediaRecorder.state === 'recording') {
+        // Durdur
+        bartuMediaRecorder.stop();
+        if (btn) btn.innerHTML = '🎤 Yeniden Kaydet';
+        if (statusEl) statusEl.innerHTML = '✅ Kayıt tamamlandı!';
+        clearInterval(bartuRecordingTimer);
+        playGameAudio('star');
+      } else {
+        // Başlat
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          alert('Tarayıcınız mikrofon kaydını desteklemiyor veya izin verilmedi.');
+          return;
+        }
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+          bartuAudioChunks = [];
+          bartuMediaRecorder = new MediaRecorder(stream);
+          bartuMediaRecorder.ondataavailable = e => {
+            if (e.data.size > 0) bartuAudioChunks.push(e.data);
+          };
+          bartuMediaRecorder.onstop = () => {
+            const blob = new Blob(bartuAudioChunks, { type: 'audio/webm' });
+            if (bartuRecordedBlobUrl) URL.revokeObjectURL(bartuRecordedBlobUrl);
+            bartuRecordedBlobUrl = URL.createObjectURL(blob);
+            if (player) {
+              player.src = bartuRecordedBlobUrl;
+              player.style.display = 'block';
+            }
+            stream.getTracks().forEach(t => t.stop());
+          };
+
+          bartuMediaRecorder.start();
+          bartuRecordingSecs = 0;
+          if (btn) btn.innerHTML = '⏹️ Kaydı Bitir (' + getStudentName() + ')';
+          if (statusEl) statusEl.innerHTML = '🔴 Kaydediliyor... 00:00';
+          bartuRecordingTimer = setInterval(() => {
+            bartuRecordingSecs++;
+            if (statusEl) statusEl.innerHTML = '🔴 Kaydediliyor... ' + formatTimerClock(bartuRecordingSecs);
+          }, 1000);
+          playGameAudio('powerup');
+        }).catch(err => {
+          alert('Mikrofon erişimi açılamadı. Lütfen mikrofon izni veriniz.');
+        });
+      }
+    }
+
+    // 6. BARTU'NUN SÜPER KAHRAMAN KOLEKSİYON ALBÜMÜ (MODAL & CARDS)
+    const bartuHeroCardsData = [
+      {
+        id: 'book_epic_hero_alliance',
+        title: 'Bartu & Süper İttifak',
+        hero: 'Mario, Örümcek Adam & Batman',
+        icon: '⭐',
+        tier: 'EFSANEVİ ROMAN KARTI',
+        cardColor: '#f59e0b',
+        image: 'scene_hero_crossover.jpg',
+        stats: { 'Liderlik': 100, 'Zeka': 99, 'Birlik': 100 },
+        desc: 'Tarihi saat kulesindeki 600 sayılık bilmeceyi çözen üç büyük kahramanın lideri!'
+      },
+      {
+        id: 'book_epic_galactic_creativity',
+        title: 'Bartu & Galaktik Birlik',
+        hero: 'Astrobot, Sackboy & Bip-Bip',
+        icon: '🌌',
+        tier: 'EFSANEVİ ROMAN KARTI',
+        cardColor: '#8b5cf6',
+        image: 'scene_space_alliance.jpg',
+        stats: { 'El Emeği': 98, 'Teknoloji': 99, 'Cesaret': 100 },
+        desc: 'Uzay fırtınasında kopan iletişim köprüsünü ipek ipliklerle tamir eden galaksi kahramanı!'
+      },
+      {
+        id: 'book_mario',
+        title: 'Bartu & Süper Mario',
+        hero: 'Mario & Luigi',
+        icon: '🍄',
+        tier: 'ALTIN YILDIZ KARTI',
+        cardColor: '#ef4444',
+        image: 'book_mario.jpg',
+        stats: { 'Zıplama': 98, 'Hız': 95, 'Refleks': 96 },
+        desc: 'Mantar Krallığı\'nın 10\'ar ritmik sayma taş kapısını açıp sarı yıldızı göklere taşıdı!'
+      },
+      {
+        id: 'book_spiderman',
+        title: 'Bartu & Örümcek Adam',
+        hero: 'Peter Parker',
+        icon: '🕷️',
+        tier: 'CESUR MUHAFIZ KARTI',
+        cardColor: '#e11d48',
+        image: 'book_spiderman.jpg',
+        stats: { 'Çeviklik': 100, 'Şefkat': 99, 'Cesaret': 98 },
+        desc: 'Yüksek çınar ağacında mahsur kalan kedi Tarçın için ağ trambolini kuran merhametli kahraman!'
+      },
+      {
+        id: 'book_batman',
+        title: 'Bartu & Batman',
+        hero: 'Bruce Wayne & Alfred',
+        icon: '🦇',
+        tier: 'BİLGE DEDEKTİF KARTI',
+        cardColor: '#475569',
+        image: 'book_batman.jpg',
+        stats: { 'Mantık': 100, 'Dedektiflik': 99, 'Sabır': 98 },
+        desc: 'Kas gücü yerine 5\'er ritmik sayma akıl yürütmesiyle tarihi saat teleskobunu çalıştıran usta!'
+      },
+      {
+        id: 'book_astrobot',
+        title: 'Bartu & Astrobot',
+        hero: 'Astro & Piko',
+        icon: '🤖',
+        tier: 'GALAKSİ KAŞİFİ KARTI',
+        cardColor: '#3b82f6',
+        image: 'book_astrobot.jpg',
+        stats: { 'Merak': 98, 'Paylaşma': 100, 'Hız': 94 },
+        desc: 'Uzay istasyonunun sönen lambalarını minik sincaba tatlı fındık ikram ederek aydınlattı!'
+      },
+      {
+        id: 'book_dinosaurs',
+        title: 'Bartu & Dinozorlar',
+        hero: 'Boni & Tobi',
+        icon: '🦖',
+        tier: 'DOĞA KAŞİFİ KARTI',
+        cardColor: '#10b981',
+        image: 'book_dinosaurs.jpg',
+        stats: { 'Doğa Sevgisi': 99, 'Ritim': 96, 'Dostluk': 98 },
+        desc: 'Şelalenin arkasındaki mağarada taşlara su damlatarak müzik yapan kuşa alkış tutan kaşif!'
+      },
+      {
+        id: 'book_starwars',
+        title: 'Bartu & Yıldız Muhafızı',
+        hero: 'Kaan & Bip-Bip',
+        icon: '⚔️',
+        tier: 'IŞIK GÜCÜ KARTI',
+        cardColor: '#7c3aed',
+        image: 'book_starwars.jpg',
+        stats: { 'Odaklanma': 100, 'Kalkan': 98, 'Sayı Gücü': 97 },
+        desc: 'Geriye dörder ritmik sayarak 18 şifresiyle masmavi kalkanı açıp gemiyi fırtınadan kurtardı!'
+      },
+      {
+        id: 'book_sackboy',
+        title: 'Bartu & Sackboy',
+        hero: 'Sackboy & Örgü Köyü',
+        icon: '🧶',
+        tier: 'EL EMEĞİ USTASI KARTI',
+        cardColor: '#d97706',
+        image: 'book_sackboy.jpg',
+        stats: { 'Yaratıcılık': 100, 'Sabır': 97, 'El Becerisi': 99 },
+        desc: '12 makarayı ikişer ikişer sayıp gökyüzüne devasa gülen yüz uçurtması uçuran usta terzi!'
+      },
+      {
+        id: 'book_ittakestwo',
+        title: 'Bartu & Cody-May',
+        hero: 'Cody & May',
+        icon: '🤝',
+        tier: 'BİRLİK ŞAMPİYONU KARTI',
+        cardColor: '#0891b2',
+        image: 'book_ittakestwo.jpg',
+        stats: { 'Takım Ruhu': 100, 'Dayanışma': 100, 'Kuvvet': 96 },
+        desc: 'Dev bahçe atölyesinde dişlileri el ele verip çalıştıran, karahindiba paraşütçüsü!'
+      },
+      {
+        id: 'book_lingo_math',
+        title: 'Bartu & Robot Lingo',
+        hero: 'Ali & Lingo',
+        icon: '🍎',
+        tier: 'MATEMATİK DEDEKTİFİ KARTI',
+        cardColor: '#ec4899',
+        image: 'scene_hero_crossover.jpg',
+        stats: { 'Problem Çözme': 100, 'Eldeli Toplama': 100, 'Adil Paylaşım': 99 },
+        desc: 'Elma bahçesinde eldeli toplama ve eşit bölme problemlerini adım adım düşünerek çözen şampiyon!'
+      }
+    ];
+
+    function openBartuCollectionModal() {
+      recordActivity();
+      playGameAudio('star');
+      const records = getTurkishReadingRecords();
+      let unlockedCount = 0;
+      bartuHeroCardsData.forEach(c => {
+        if (records[c.id] && records[c.id].readCount > 0) unlockedCount++;
+      });
+
+      const cardsHtml = bartuHeroCardsData.map(c => {
+        const isUnlocked = records[c.id] && records[c.id].readCount > 0;
+        const rec = records[c.id];
+        return `
+          <div class="bartu-card-holo ${isUnlocked ? 'unlocked' : ''}">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:10px;font-weight:900;background:${isUnlocked ? c.cardColor : '#475569'};color:#fff;padding:2px 8px;border-radius:6px;">
+                ${c.tier}
+              </span>
+              <span style="font-size:12px;font-weight:900;color:${isUnlocked ? '#fde047' : '#64748b'};">
+                ${isUnlocked ? '🔓 KAZANILDI' : '🔒 KİLİTLİ'}
+              </span>
+            </div>
+
+            <div style="width:100%;height:130px;border-radius:12px;overflow:hidden;margin-bottom:10px;position:relative;background:#0f172a;border:1px solid rgba(255,255,255,0.1);">
+              <img src="${c.image}" alt="${c.title}" style="width:100%;height:100%;object-fit:cover;filter:${isUnlocked ? 'none' : 'grayscale(100%) opacity(0.35)'};" />
+              ${!isUnlocked ? `
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);font-size:32px;">
+                  🔒
+                </div>
+              ` : `
+                <div style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.7);padding:2px 6px;border-radius:6px;font-size:14px;">
+                  ${c.icon}
+                </div>
+              `}
+            </div>
+
+            <h4 style="font-size:15px;color:#fff;font-weight:900;margin:0 0 2px;">${c.title}</h4>
+            <div style="font-size:11px;color:#94a3b8;font-weight:800;margin-bottom:6px;">Kahramanlar: ${c.hero}</div>
+            <p style="font-size:11px;color:#cbd5e1;line-height:1.35;margin:0 0 10px;">${c.desc}</p>
+
+            <!-- STATS -->
+            <div style="background:rgba(0,0,0,0.4);border-radius:10px;padding:8px;font-size:11px;margin-bottom:8px;">
+              ${Object.entries(c.stats).map(([k, v]) => `
+                <div style="display:flex;justify-content:space-between;margin-bottom:2px;">
+                  <span style="color:#94a3b8;">${k}:</span>
+                  <strong style="color:${isUnlocked ? '#fde047' : '#64748b'};">${isUnlocked ? v : '???'}</strong>
+                </div>
+              `).join('')}
+            </div>
+
+            ${isUnlocked ? `
+              <div style="font-size:11px;color:#34d399;font-weight:800;text-align:center;background:rgba(16,185,129,0.15);padding:4px;border-radius:6px;">
+                ⭐ Okuma Skoru: ${rec.bestSpeedScore} P • %100 Anlama
+              </div>
+            ` : `
+              <button class="action-btn" style="width:100%;background:#334155;color:#fde047;font-size:11px;font-weight:900;padding:6px;border-radius:8px;" onclick="closeModal('bartuCollectionModal');openTurkishBookReader('${c.id}')">
+                📖 Bu Kitabı Oku ve Kartı Aç ➔
+              </button>
+            `}
+          </div>
+        `;
+      }).join('');
+
+      const modalHtml = `
+        <div id="bartuCollectionModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;">
+          <div style="background:#0f172a;border:2px solid #f59e0b;border-radius:22px;max-width:850px;width:100%;max-height:90vh;overflow-y:auto;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,0.8);position:relative;">
+            <!-- KAPAT BUTONU -->
+            <button onclick="closeModal('bartuCollectionModal')" style="position:absolute;top:16px;right:16px;background:#334155;border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:16px;font-weight:900;cursor:pointer;">✕</button>
+
+            <!-- BAŞLIK -->
+            <div style="text-align:center;margin-bottom:20px;">
+              <span style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#0f172a;font-size:11px;font-weight:900;padding:4px 14px;border-radius:999px;">
+                👑 ${getStudentName().toUpperCase()}'NUN ÖZEL SÜPER KAHRAMAN ALBÜMÜ
+              </span>
+              <h2 style="font-size:24px;color:#fff;font-weight:900;margin:8px 0 4px;">🃏 Efsanevi Koleksiyon Kartları</h2>
+              <p style="font-size:13px;color:#fde047;font-weight:800;margin:0;">
+                Toplam ${unlockedCount} / ${bartuHeroCardsData.length} Kart Açıldı • Her kitap bitirdiğinde yeni parlayan kart senin olur!
+              </p>
+            </div>
+
+            <!-- KARTLAR GRID -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:16px;">
+              ${cardsHtml}
+            </div>
+          </div>
+        </div>
+      `;
+
+      const existing = document.getElementById('bartuCollectionModal');
+      if (existing) existing.remove();
+      const div = document.createElement('div');
+      div.innerHTML = modalHtml;
+      document.body.appendChild(div.firstElementChild);
+    }
+
+
     /* ========================================================
        TÜRKÇE DERSİ: HİKAYE KİTAPLARI, OKUMA HIZI & ANLAMA SINAVLARI
        (2. Sınıf MEB Müfredatına Uygun Okuma-Anlama & Problem Çözme Desteği)
@@ -16877,6 +17522,31 @@
             </button>
           </div>
 
+          <!-- KAHRAMANIMIZ BARTU VIP PANELİ & KOLEKSİYON ALBÜMÜ BUTONU -->
+          <div style="background:linear-gradient(135deg,rgba(245,158,11,0.22),rgba(15,23,42,0.98));border:2px solid #f59e0b;border-radius:18px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;box-shadow:0 8px 24px rgba(245,158,11,0.25);">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="width:58px;height:58px;border-radius:16px;background:linear-gradient(135deg,#f59e0b,#ea580c);display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 4px 14px rgba(245,158,11,0.4);">
+                👑
+              </div>
+              <div>
+                <span style="background:#f59e0b;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">
+                  2. SINIF BAŞKAHRAMANI
+                </span>
+                <h2 style="font-size:22px;color:#fff;font-weight:900;margin:3px 0 1px;">Kahramanımız ${getStudentName()}'nun Kitaplığı</h2>
+                <div style="font-size:12px;color:#fde047;font-weight:800;">
+                  ⭐ Toplanan Altın Kelimeler: <span id="bartuHubGoldCounter">${getBartuGoldenWordsCount()}</span> Puan
+                </div>
+              </div>
+            </div>
+
+            <!-- BUTONLAR -->
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="action-btn" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-size:13px;font-weight:900;padding:10px 18px;display:inline-flex;align-items:center;gap:8px;border-radius:12px;box-shadow:0 4px 14px rgba(139,92,246,0.4);" onclick="openBartuCollectionModal()">
+                🃏 ${getStudentName()}'nun Kart Albümü ➔
+              </button>
+            </div>
+          </div>
+
           <!-- BÜYÜK BAŞLIK KARTI -->
           <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid rgba(245,158,11,0.3);flex-wrap:wrap;">
             <div style="display:flex;align-items:center;gap:10px;">
@@ -17065,6 +17735,44 @@
 
       const html = `
         <div style="max-width:760px;margin:0 auto;padding-bottom:30px;">
+          <!-- BARTU KAHRAMAN STATÜ ÇUBUĞU & ETKİLEŞİM ARAÇLARI -->
+          <div style="background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(15,23,42,0.95));border:1px solid #f59e0b;border-radius:14px;padding:8px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:900;color:#fde047;">
+              <span>👑 Kahramanımız: <strong>${getStudentName()}</strong></span>
+              <span style="color:#64748b;">•</span>
+              <span style="color:#38bdf8;">⭐ Altın Kelimeler: <span id="bartuGoldWordCounter">${getBartuGoldenWordsCount()}</span></span>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button id="bartuScratchpadToggleBtn" class="action-btn" style="background:#475569;color:#fde047;font-size:11px;font-weight:900;padding:5px 10px;border-radius:8px;" onclick="toggleBartuScratchpad()">
+                ✏️ Dedektif Defteri (Çiz &amp; Çöz)
+              </button>
+              <button class="action-btn" style="background:#7c3aed;color:#fff;font-size:11px;font-weight:900;padding:5px 10px;border-radius:8px;" onclick="openBartuCollectionModal()">
+                🃏 Kart Albümüm
+              </button>
+            </div>
+          </div>
+
+          <!-- DEDEKTİF KARALAMA VE HESAPLAMA TAHTASI (CANVAS) -->
+          <div id="bartuScratchpadArea" style="display:none;background:#0f172a;border:2px dashed #f59e0b;border-radius:16px;padding:14px;margin-bottom:14px;box-shadow:inset 0 2px 8px rgba(0,0,0,0.6);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+              <div style="font-size:12px;font-weight:900;color:#fde047;display:flex;align-items:center;gap:6px;">
+                <span>✏️ ${getStudentName()}'nun Problem Çözme &amp; Karalama Tahtası</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:4px;">
+                <button onclick="setCanvasDrawColor('#fde047')" style="background:#fde047;width:22px;height:22px;border-radius:50%;border:none;cursor:pointer;" title="Sarı"></button>
+                <button onclick="setCanvasDrawColor('#38bdf8')" style="background:#38bdf8;width:22px;height:22px;border-radius:50%;border:none;cursor:pointer;" title="Mavi"></button>
+                <button onclick="setCanvasDrawColor('#34d399')" style="background:#34d399;width:22px;height:22px;border-radius:50%;border:none;cursor:pointer;" title="Yeşil"></button>
+                <button onclick="setCanvasDrawColor('#ef4444')" style="background:#ef4444;width:22px;height:22px;border-radius:50%;border:none;cursor:pointer;" title="Kırmızı"></button>
+                <button onclick="setCanvasDrawColor('#ffffff')" style="background:#ffffff;width:22px;height:22px;border-radius:50%;border:none;cursor:pointer;" title="Beyaz"></button>
+                <button onclick="clearBartuCanvas()" style="background:#334155;color:#fff;font-size:10px;font-weight:800;border:none;padding:3px 8px;border-radius:6px;margin-left:6px;cursor:pointer;">🗑️ Temizle</button>
+              </div>
+            </div>
+            <canvas id="bartuCanvas" style="background:#1e293b;border-radius:12px;display:block;width:100%;height:180px;touch-action:none;cursor:crosshair;"></canvas>
+            <div style="font-size:11px;color:#94a3b8;margin-top:6px;text-align:center;">
+              💡 İpucu: Hikayedeki elma, taş veya sayıları buraya parmağınla çizerek kolayca hesaplayabilirsin!
+            </div>
+          </div>
+
           <!-- ÜST KONTROL ÇUBUĞU (KİTAPLIK DÖNÜŞ, FONT AYARI, SAYAÇ & SESLİ OKUMA) -->
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;background:#1e293b;border:1px solid #334155;border-radius:14px;padding:10px 14px;">
             <div style="display:flex;align-items:center;gap:8px;">
@@ -17085,9 +17793,14 @@
                 <button onclick="changeTurkishReaderFontSize(2)" style="background:#334155;color:#fff;border:none;border-radius:6px;width:28px;height:28px;font-size:13px;font-weight:900;cursor:pointer;">A+</button>
               </div>
 
-              <button id="turkishSpeechToggleBtn" class="action-btn" style="background:#0284c7;color:#fff;font-size:12px;font-weight:900;padding:7px 12px;" onclick="toggleTurkishReaderSpeech()">
-                🔊 Sesli Oku
-              </button>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <button id="bartuRecordVoiceBtn" class="action-btn" style="background:#ec4899;color:#fff;font-size:12px;font-weight:900;padding:7px 12px;" onclick="toggleBartuVoiceRecording()">
+                  🎤 Sesimi Kaydet
+                </button>
+                <button id="turkishSpeechToggleBtn" class="action-btn" style="background:#0284c7;color:#fff;font-size:12px;font-weight:900;padding:7px 12px;" onclick="toggleTurkishReaderSpeech()">
+                  🔊 Sesli Oku
+                </button>
+              </div>
             </div>
           </div>
 
@@ -17138,9 +17851,33 @@
             <div id="turkishStoryTextContainer" style="background:#0f172a;border:2px solid #334155;border-radius:16px;padding:24px 20px;margin-bottom:20px;font-size:${turkishReaderFontSize}px;line-height:1.9;color:#f8fafc;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;box-shadow:inset 0 2px 10px rgba(0,0,0,0.5);">
               ${paragraphs.map(pText => `
                 <p style="margin:0 0 16px;text-indent:24px;letter-spacing:0.3px;">
-                  ${pText}
+                  ${highlightGoldenWords(pText)}
                 </p>
               `).join('')}
+            <!-- SES KAYIT OYNATICI -->
+            <div id="bartuVoicePlayerBox" style="background:rgba(236,72,153,0.1);border:1px dashed #ec4899;border-radius:12px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+              <div style="font-size:12px;font-weight:800;color:#f472b6;" id="bartuRecordStatus">
+                🎙️ Kendi sesini kaydet, çizgi film kahramanı gibi dinle!
+              </div>
+              <audio id="bartuRecordedAudioPlayer" controls style="display:none;height:34px;border-radius:8px;"></audio>
+            </div>
+
+            <!-- 🎮 KENDİ MACERANI KENDİN SEÇ (INTERACTIVE PATH DECISIONS) -->
+            ${!isLastPage ? `
+              <div style="background:linear-gradient(135deg,rgba(2,132,199,0.15),rgba(15,23,42,0.95));border:2px solid #0284c7;border-radius:16px;padding:16px;margin-bottom:20px;">
+                <div style="font-size:13px;font-weight:900;color:#38bdf8;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+                  <span>🎮</span> <span>BARTU ŞİMDİ NE YAPSIN? (Seçimini Yap ➔)</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr;gap:8px;">
+                  <button class="bartu-choice-btn" onclick="chooseBartuPath(1, 'Cesurca öne atıl ve ipuçlarını takip et!')">
+                    <span>⚡</span> <span><strong>A Seçeneği:</strong> Kahramanlarla birlikte öne atılıp problemi hemen çözsün!</span>
+                  </button>
+                  <button class="bartu-choice-btn" onclick="chooseBartuPath(2, 'Dedektif gibi dikkatle incele ve plan yap!')">
+                    <span>🔍</span> <span><strong>B Seçeneği:</strong> Bir dedektif gibi sakin olup çevredeki sayı ipuçlarını incelesin!</span>
+                  </button>
+                </div>
+              </div>
+            ` : ''}
             </div>
 
             <!-- SAYFA DEĞİŞTİRME & BİTİRME BUTONLARI -->
@@ -17436,7 +18173,7 @@
 
       const text = 
 `📖 *2. Sınıf Türkçe Kitap Okuma Raporu* 📖
-Öğrencimiz *"${book.title}"* kitabını başarıyla tamamladı!
+Öğrencimiz *${getStudentName()}*, *"${book.title}"* kitabını başarıyla tamamladı!
 
 • 📝 *Metin Uzunluğu:* ${book.wordsCount} Kelime (${book.pages.length} Bölüm)
 • ⏱️ *Okuma Süresi:* ${durationStr}
@@ -17486,7 +18223,7 @@
 
       const summaryText = 
 `📚 *2. Sınıf Türkçe Kitap Okuma Gelişim Karnesi* 📚
-Sayın Öğretmenim, öğrencimizin tamamladığı kitaplar ve anlama sonuçları aşağıdadır:
+Sayın Öğretmenim, öğrencimiz *${getStudentName()}* nun tamamladığı kitaplar ve anlama karnesi aşağıdadır:
 
 ${readBooks.join('\n\n')}
 

@@ -1,5 +1,5 @@
 {
-  "version": "3.3.0",
+  "version": "3.4.0",
   "releaseDate": "2026-10-24",
-  "notes": "2. Sınıf Türkçe Kütüphanesi v3.3.0: Her kitabın her bölümüne özel sahneleri gösteren kesintisiz görsel akışı sağlandı (artık her sayfa geçişinde resimler dinamik olarak değişir). Sayfa geçişlerinde ekranın en başa fırlaması veya kaymaması sorunu çözüldü; yeni bölüme geçildiğinde ekran pürüzsüzce doğrudan okuma kartının başına odaklanır."
+  "notes": "Bartu Süper Kahraman Okuma & Oyunlaştırma Paketi (v3.4.0): Öğrencimiz Bartu adına özel kişiselleştirilmiş kütüphane, metin içi parlayan Altın Kelime Avı (+10 ⭐ puan), Kendi Maceranı Kendin Seç etkileşimli karar butonları, Dedektif Bartu Karalama Tahtası (çizerek problem çözme tuvali), Kendi Sesini Kaydet ve Dinle stüdyosu, 11 adet efsanevi parlak Koleksiyon Kartı Albümü ve dahili oyun ses efektleri eklendi."
 }

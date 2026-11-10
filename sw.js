@@ -1,5 +1,5 @@
 // Lingo Ders Arkadaşım - Service Worker (Otomatik Güncelleme & Çevrimdışı Destek)
-const CACHE_NAME = 'lingo-ders-arkadasim-v3.3.0';
+const CACHE_NAME = 'lingo-ders-arkadasim-v3.4.0';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
@@ -56,7 +56,7 @@ self.addEventListener('activate', (event) => {
       // Açık sayfalara güncelleme bildirimi gönder
       return self.clients.matchAll({ type: 'window' }).then((clients) => {
         clients.forEach((client) => {
-          client.postMessage({ type: 'SW_ACTIVATED', cache: CACHE_NAME, version: '3.3.0' });
+          client.postMessage({ type: 'SW_ACTIVATED', cache: CACHE_NAME, version: '3.4.0' });
         });
       });
     })
