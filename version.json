@@ -1,5 +1,5 @@
 {
-  "version": "3.1.0",
+  "version": "3.2.0",
   "releaseDate": "2026-10-24",
-  "notes": "2. Sınıf Türkçe Kütüphanesi Genişletildi (v3.1.0): Hikayeler zenginleştirilerek 4 bölümlü uzun formatta hazırlandı. Yeni karakterler eklendi: Süper Mario, Sackboy (LittleBigPlanet), Cody & May (It Takes Two), Örümcek Adam (Spider-Man) ve Batman. Her kitapta büyük puntolu okuma, canlı okuma hızı skoru, 4 soruluk anlama sınavı ve ebeveyn okuma karnesi."
+  "notes": "2. Sınıf Türkçe Kütüphanesi v3.2.0: 600 kelimelik büyük boy romanlar eklendi (Süper Kahramanlar İttifakı & Galaktik Dostluk Destanı). Her sayfa değiştiğinde bölümü anlatan canlı resim bannerı eklendi. WhatsApp öğretmen paylaşımı sadece okunan kitapları, kelime sayısını ve okuma dakikasını listeleyen sade, derli toplu ve bilgilendirici rapora dönüştürüldü."
 }
