@@ -1,5 +1,5 @@
 // Lingo Ders Arkadaşım - Service Worker (Otomatik Güncelleme & Çevrimdışı Destek)
-const CACHE_NAME = 'lingo-ders-arkadasim-v3.2.0';
+const CACHE_NAME = 'lingo-ders-arkadasim-v3.3.0';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
@@ -20,7 +20,10 @@ const ASSETS_TO_CACHE = [
   'scene_hero_crossover.jpg',
   'scene_batman_clocktower.jpg',
   'scene_space_alliance.jpg',
-  'scene_ittakestwo_dino.jpg'
+  'scene_ittakestwo_dino.jpg',
+  'scene_dino_waterfall.jpg',
+  'scene_mario_castle.jpg',
+  'scene_sackboy_kite.jpg'
 ];
 
 // 1. Kurulum: Varlıkları önbelleğe al ve beklemeden hemen devreye gir
@@ -53,7 +56,7 @@ self.addEventListener('activate', (event) => {
       // Açık sayfalara güncelleme bildirimi gönder
       return self.clients.matchAll({ type: 'window' }).then((clients) => {
         clients.forEach((client) => {
-          client.postMessage({ type: 'SW_ACTIVATED', cache: CACHE_NAME, version: '3.2.0' });
+          client.postMessage({ type: 'SW_ACTIVATED', cache: CACHE_NAME, version: '3.3.0' });
         });
       });
     })

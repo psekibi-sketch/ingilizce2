@@ -1,5 +1,5 @@
 {
-  "version": "3.2.0",
+  "version": "3.3.0",
   "releaseDate": "2026-10-24",
-  "notes": "2. Sınıf Türkçe Kütüphanesi v3.2.0: 600 kelimelik büyük boy romanlar eklendi (Süper Kahramanlar İttifakı & Galaktik Dostluk Destanı). Her sayfa değiştiğinde bölümü anlatan canlı resim bannerı eklendi. WhatsApp öğretmen paylaşımı sadece okunan kitapları, kelime sayısını ve okuma dakikasını listeleyen sade, derli toplu ve bilgilendirici rapora dönüştürüldü."
+  "notes": "2. Sınıf Türkçe Kütüphanesi v3.3.0: Her kitabın her bölümüne özel sahneleri gösteren kesintisiz görsel akışı sağlandı (artık her sayfa geçişinde resimler dinamik olarak değişir). Sayfa geçişlerinde ekranın en başa fırlaması veya kaymaması sorunu çözüldü; yeni bölüme geçildiğinde ekran pürüzsüzce doğrudan okuma kartının başına odaklanır."
 }
