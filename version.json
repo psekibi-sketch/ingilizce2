@@ -1,5 +1,5 @@
 {
-  "version": "3.8.0",
+  "version": "3.9.0",
   "releaseDate": "2026-11-12",
-  "notes": "Özel Kung Fu Panda Görselleri & Kitap Okunma Sayısı Takip Güncellemesi (v3.8.0): Kung Fu Panda hikayesi için tapınakta kung fu üniformalı özel sevimli panda görselleri (book_kungfupanda.jpg ve scene_kungfupanda_temple.jpg) tanımlandı; hikaye açılmadan önce kutularda çocuğun hangi kitabı kaç defa okuduğu altın rozetle gösterildi; ebeveyn ekranına ve öğretmene giden WhatsApp gelişim raporuna kitapların kaçar defa okunduğu bilgisi eklendi."
+  "notes": "Türkiye Yüzyılı Maarif Modeli Okuma Hızı Puanlaması & Karışık Şıklar Paketi (v3.9.0): Tüm Türkçe hikaye anlama sınavlarında doğru cevaplar A, B ve C şıkları arasında dengeli dağıtıldı; MEB & Türkiye Maarif Modeli 2. Sınıf okuma normlarına göre (45 kelime/dk = 68 P, 65 kelime/dk = 89 P, 75-80 kelime/dk = 96-100 P) hassas ve gerçekçi okuma hızı puanlaması getirildi."
 }
