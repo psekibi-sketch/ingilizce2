@@ -1,5 +1,5 @@
 {
-  "version": "3.7.0",
+  "version": "3.8.0",
   "releaseDate": "2026-11-12",
-  "notes": "Kung Fu Panda 550 Kelimelik Büyük Roman & Gelişmiş Anlama Paketi (v3.7.0): Yeni eklenen kitaplar en üstte sıralandı; Türkçe hikaye kutuları derli toplu ve kompakt hale getirildi; her hikaye için en az 6 soru, uzunluk arttıkça 8-9 soruya çıkan kapsamlı anlama sınavı ve yeni 'Kung Fu Panda: Barış Vadisi ve Altın Mantı Şenliği' eklendi."
+  "notes": "Özel Kung Fu Panda Görselleri & Kitap Okunma Sayısı Takip Güncellemesi (v3.8.0): Kung Fu Panda hikayesi için tapınakta kung fu üniformalı özel sevimli panda görselleri (book_kungfupanda.jpg ve scene_kungfupanda_temple.jpg) tanımlandı; hikaye açılmadan önce kutularda çocuğun hangi kitabı kaç defa okuduğu altın rozetle gösterildi; ebeveyn ekranına ve öğretmene giden WhatsApp gelişim raporuna kitapların kaçar defa okunduğu bilgisi eklendi."
 }
