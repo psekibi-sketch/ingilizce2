@@ -1528,10 +1528,18 @@
     let lastParentQuestionSignature = '';
     let currentParentGateQuestion = null;
     let selectedParentDashboardDateKey = '';
+    let selectedParentMonthKey = '';
+    let selectedParentSubjectFilter = 'all';
 
     // ⚠️ KURAL: Yeni kategori eklendiğinde DAİMA bu nesnenin EN ÜSTÜNE (ilk anahtar) eklenir!
     const PARENT_CATEGORY_LABELS = {
       turkish_reading: { title: '📖 Türkçe Okuma & Anlama Kitapları', color: '#f59e0b' },
+      math_data_graphs: { title: '📊 Tablo ve Grafik Okuma', color: '#6366f1' },
+      math_measurement: { title: '📏 Uzunluk, Tartma & Sıvı Ölçme', color: '#22c55e' },
+      math_patterns_symmetry: { title: '🦋 Örüntüler, Simetri & Yön', color: '#14b8a6' },
+      math_fractions: { title: '🍕 Kesirler: Bütün, Yarım, Çeyrek', color: '#ec4899' },
+      math_numbers: { title: '🔟 Doğal Sayılar & Yuvarlama', color: '#38bdf8' },
+      english_extra: { title: '🌟 İngilizce 9-13. Üniteler & Maarif', color: '#8b5cf6' },
       fun_games: { title: '🎈 Eğitsel Oyunlar & 2 Kişilik Düello', color: '#f43f5e' },
       math_clock_money: { title: '⏰🪙 Saatler & Paralarımız (TL)', color: '#eab308' },
       math_geometry: { title: '🔺📦 Geometrik Şekiller ve Cisimler', color: '#a855f7' },
@@ -1541,9 +1549,389 @@
       math_subtraction: { title: '➖ 2. Sınıf Çıkarma İşlemi & Testi', color: '#ef4444' },
       math_addition: { title: '➕ 2. Sınıf Toplama İşlemi & Testi', color: '#10b981' },
       math_rhythm: { title: '🔢 Ritmik Sayma (2, 3, 4, 5\'er)', color: '#38bdf8' },
+      math_quiz: { title: '🧮 Matematik Konu Testleri', color: '#6366f1' },
       english_units: { title: '📘 İngilizce Ünite Alıştırmaları', color: '#14b8a6' },
       english_quiz: { title: '🇬🇧 İngilizce Test & Telaffuz', color: '#ec4899' }
     };
+
+    /* ========================================================
+       TÜM DERSLER & HİKAYELER ORTAK PUANLAMA, ZAMAN VE AYLIK TAKİP MOTORU
+       ⚠️ KURAL: Yeni eklenecek her ders/ünite/oyun için bu katalogda
+       en üste bir kayıt ekleyin ve kartında renderLessonCoverStatsHtml(id) kullanın!
+    ======================================================== */
+    const LESSON_PROGRESS_STORAGE_KEY = 'lingo_lesson_records_v1';
+    const TURKISH_READING_STORAGE_KEY = 'lingo_turkish_reading_records';
+
+    const CORE_LESSON_CATALOG = [
+      // EĞİTSEL OYUNLAR (EN YENİDEN ESKİYE)
+      { id: 'game_duel', subject: 'games', icon: '⚔️', title: '2 Kişilik Düello Maçı', subtitle: 'Kardeş / Arkadaş Yarışması', color: '#ec4899', openAction: "switchMainTab('fun_games');renderFunGamesHub('duel');" },
+      { id: 'game_time60', subject: 'games', icon: '⏱️', title: '60 Saniye Şampiyonu', subtitle: 'Zamana Karşı Hızlı Yarışma', color: '#f59e0b', openAction: "switchMainTab('fun_games');renderFunGamesHub('time60');" },
+      { id: 'game_balloon', subject: 'games', icon: '🎈', title: 'Balon Patlatma Oyunu', subtitle: 'Hızlı Soru & Balon Yakalama', color: '#0284c7', openAction: "switchMainTab('fun_games');renderFunGamesHub('balloon');" },
+
+      // MATEMATİK KONULARI (EN SON EKLENENLER EN ÜSTTE)
+      { id: 'math_data_graphs', subject: 'math', icon: '📊', title: 'Tablo ve Grafik Okuma', subtitle: 'Çetele, Sıklık & Şekil Grafiği', color: '#6366f1', openAction: "switchMainTab('math_data_graphs')" },
+      { id: 'math_measurement', subject: 'math', icon: '📏⚖️', title: 'Uzunluk, Tartma & Sıvı Ölçme', subtitle: 'Metre, cm, kg & Bardak', color: '#22c55e', openAction: "switchMainTab('math_measurement')" },
+      { id: 'math_patterns_symmetry', subject: 'math', icon: '🦋', title: 'Örüntüler, Simetri & Yön', subtitle: 'Simetri Doğrusu & Örüntü Kuralı', color: '#14b8a6', openAction: "switchMainTab('math_patterns_symmetry')" },
+      { id: 'math_fractions', subject: 'math', icon: '🍕', title: 'Kesirler: Bütün, Yarım, Çeyrek', subtitle: 'Pizza & Şekil Dilimleme', color: '#ec4899', openAction: "switchMainTab('math_fractions')" },
+      { id: 'math_numbers', subject: 'math', icon: '🔟', title: 'Doğal Sayılar & Yuvarlama', subtitle: 'Basamak, Deste, Düzine, Tek/Çift', color: '#38bdf8', openAction: "switchMainTab('math_numbers')" },
+      { id: 'math_money', subject: 'math', icon: '🪙', title: 'Paralarımız (TL & Kuruş)', subtitle: 'Kırtasiye Market Kasası', color: '#f97316', openAction: "switchMainTab('math_money')" },
+      { id: 'math_clock', subject: 'math', icon: '⏰', title: 'Saatleri Öğreniyorum', subtitle: 'Tam, Buçuk ve Çeyrek Saatler', color: '#eab308', openAction: "switchMainTab('math_clock')" },
+      { id: 'math_geometry', subject: 'math', icon: '🔺📦', title: 'Geometrik Şekiller ve Cisimler', subtitle: '2B Şekiller, 3B Cisimler & Testi', color: '#a855f7', openAction: "switchMainTab('math_geometry')" },
+      { id: 'math_division', subject: 'math', icon: '➗', title: 'Bölme İşlemi & Testi', subtitle: 'Eşit Paylaştırma & Tahta', color: '#06b6d4', openAction: "switchMainTab('math_division')" },
+      { id: 'math_multiplication', subject: 'math', icon: '✖️', title: 'Çarpma İşlemi & Testi', subtitle: 'Tekrarlı Toplama & Tahta', color: '#8b5cf6', openAction: "switchMainTab('math_multiplication')" },
+      { id: 'math_problems', subject: 'math', icon: '🧠', title: 'Hikayeli Problem Atölyesi', subtitle: '10 MEB Maarif Modeli Problemi', color: '#f59e0b', openAction: "switchMainTab('math_problems')" },
+      { id: 'math_subtraction', subject: 'math', icon: '➖', title: 'Çıkarma İşlemi & Testi', subtitle: 'Onluk Bozmalı/Bozmasız Tahta', color: '#ef4444', openAction: "switchMainTab('math_subtraction')" },
+      { id: 'math_addition', subject: 'math', icon: '➕', title: 'Toplama İşlemi & Testi', subtitle: 'Eldeli/Eldesiz İşlem Tahtası', color: '#10b981', openAction: "switchMainTab('math_addition')" },
+      { id: 'rhythm_exam', subject: 'math', icon: '🏆', title: 'Ritmik Sayma Sınavı (10 Soru)', subtitle: '2, 3, 4 ve 5\'er Çarpım Sınavı', color: '#f59e0b', openAction: "selectRhythmStepAndOpen(5,'exam');initRhythmExam('all');" },
+      { id: 'rhythm_5', subject: 'math', icon: '⭐', title: '5\'er Ritmik Sayma', subtitle: '5\'ten 50\'ye İleri & Geri', color: '#f59e0b', openAction: "selectRhythmStepAndOpen(5,'practice')" },
+      { id: 'rhythm_2', subject: 'math', icon: '🎈', title: '2\'şer Ritmik Sayma', subtitle: '2\'den 20\'ye İleri & Geri', color: '#38bdf8', openAction: "selectRhythmStepAndOpen(2,'practice')" },
+      { id: 'rhythm_4', subject: 'math', icon: '🚗', title: '4\'er Ritmik Sayma', subtitle: '4\'ten 40\'a İleri & Geri', color: '#06b6d4', openAction: "selectRhythmStepAndOpen(4,'practice')" },
+      { id: 'rhythm_3', subject: 'math', icon: '🍓', title: '3\'er Ritmik Sayma', subtitle: '3\'ten 30\'a İleri & Geri', color: '#ec4899', openAction: "selectRhythmStepAndOpen(3,'practice')" },
+
+      // İNGİLİZCE KONU VE ÜNİTELER (EN SON EKLENENLER EN ÜSTTE)
+      { id: 'eng_maarif_dialogues', subject: 'english', icon: '🗣️🔤', title: '13. Ünite: Maarif Konuşma & Alfabe', subtitle: 'Diyaloglar, 1-20 & A-Z Testi', color: '#8b5cf6', openAction: "openEngExtraTopic('eng_maarif_dialogues','lesson')" },
+      { id: 'eng_actions_weather', subject: 'english', icon: '🚴☀️', title: '12. Ünite: Actions & Weather', subtitle: 'Can/Can\'t & Hava Durumu', color: '#06b6d4', openAction: "openEngExtraTopic('eng_actions_weather','lesson')" },
+      { id: 'eng_fruits_food', subject: 'english', icon: '🍓🍎', title: '11. Ünite: Fruits, Food & Likes', subtitle: 'Yiyecekler & I like/don\'t like', color: '#ec4899', openAction: "openEngExtraTopic('eng_fruits_food','lesson')" },
+      { id: 'eng_animals_pets', subject: 'english', icon: '🐾🐶', title: '10. Ünite: Animals & Pets', subtitle: 'In/On/Under & Hayvanlar', color: '#10b981', openAction: "openEngExtraTopic('eng_animals_pets','lesson')" },
+      { id: 'eng_toys_games', subject: 'english', icon: '🧸🪁', title: '9. Ünite: Toys & Games', subtitle: 'Oyuncaklar & How Many?', color: '#f59e0b', openAction: "openEngExtraTopic('eng_toys_games','lesson')" },
+      { id: 'eng_quiz_grand', subject: 'english', icon: '🏆', title: '20 Sorulu Büyük İngilizce Sınavı', subtitle: 'Tüm Ünitelerden Karma Sınav', color: '#3b82f6', openAction: "switchMainTab('quiz');startTopicQuiz('grand');" },
+      { id: 'eng_quiz_speaking', subject: 'english', icon: '🎙️', title: 'İngilizce Sesli Telaffuz Sınavı', subtitle: 'Mikrofonlu Konuşma Pratiği', color: '#10b981', openAction: "switchMainTab('quiz');startTopicQuiz('speaking');" },
+      { id: 'unit8', subject: 'english', icon: '🚗', title: '8. Ünite: In the City', subtitle: 'Şehir Mekanları & Taşıtlar', color: '#06b6d4', openAction: "switchMainTab('unit8')" },
+      { id: 'unit7', subject: 'english', icon: '🏠', title: '7. Ünite: In My House', subtitle: 'Evimiz, Odalar & Eşyalar', color: '#ec4899', openAction: "switchMainTab('unit7')" },
+      { id: 'unit6', subject: 'english', icon: '🌆', title: '6. Ünite: Life in the City', subtitle: 'Sayfa 49-56 & Şehir Testi', color: '#06b6d4', openAction: "switchMainTab('unit6')" },
+      { id: 'unit5', subject: 'english', icon: '🏡', title: '5. Ünite: Homes & Houses', subtitle: 'Sayfa 41-48 & Ev Testi', color: '#ec4899', openAction: "switchMainTab('unit5')" },
+      { id: 'unit4', subject: 'english', icon: '👨‍👩‍👧‍👦', title: '4. Ünite: Family Life', subtitle: 'Sayfa 33-40 & Aile Testi', color: '#f59e0b', openAction: "switchMainTab('unit4')" },
+      { id: 'unit3', subject: 'english', icon: '👤', title: '3. Ünite: Personal Life', subtitle: 'Sayfa 25-32 & Vücut/Giysi Testi', color: '#8b5cf6', openAction: "switchMainTab('unit3')" },
+      { id: 'unit2', subject: 'english', icon: '🏫', title: '2. Ünite: Classroom Life', subtitle: 'Sayfa 17-24 & Sınıf Testi', color: '#10b981', openAction: "switchMainTab('unit2')" },
+      { id: 'unit1', subject: 'english', icon: '👋', title: '1. Ünite: Words & Greetings', subtitle: 'Sayfa 9-16 & Selamlaşma Testi', color: '#3b82f6', openAction: "switchMainTab('unit1')" },
+      { id: 'listen_match', subject: 'english', icon: '🎧', title: 'Dinle ve Resmi Yakala', subtitle: 'Sesli İngilizce Eşleştirme', color: '#f43f5e', openAction: "switchMainTab('listen_match')" },
+      { id: 'flashcards', subject: 'english', icon: '🃏', title: 'Sesli Kelime Kartları', subtitle: 'Resimli İngilizce Flaş Kartlar', color: '#8b5cf6', openAction: "switchMainTab('flashcards')" },
+      { id: 'days_sort', subject: 'english', icon: '📅', title: 'Haftanın Günleri Sıralama', subtitle: 'Monday ➔ Sunday & Testi', color: '#3b82f6', openAction: "switchMainTab('days_sort')" },
+      { id: 'guide', subject: 'english', icon: '📖', title: 'Günler Telaffuz Rehberi', subtitle: '7 Günün Sesli Okunuşları', color: '#10b981', openAction: "switchMainTab('guide')" }
+    ];
+
+    function getFullLessonCatalog() {
+      const books = (typeof turkishBooksBank !== 'undefined' && Array.isArray(turkishBooksBank))
+        ? turkishBooksBank.map(b => ({
+            id: b.id,
+            subject: 'turkish',
+            icon: b.icon || '📖',
+            title: b.title,
+            subtitle: `${b.wordsCount || 0} Kelime • ${b.questions ? b.questions.length : 6} Soru`,
+            color: b.themeColor || '#f59e0b',
+            openAction: `openTurkishBookReader('${b.id}')`
+          }))
+        : [];
+      const baseIds = new Set([...books, ...CORE_LESSON_CATALOG].map(x => x.id));
+      const allRecords = loadAllLessonRecords();
+      const dynamicExtras = Object.keys(allRecords)
+        .filter(id => !baseIds.has(id))
+        .map(id => {
+          const r = allRecords[id];
+          return {
+            id,
+            subject: r.subject || 'other',
+            icon: r.icon || '📘',
+            title: r.title || id,
+            subtitle: 'Eklenen Modül / Etkinlik',
+            color: '#38bdf8',
+            openAction: ''
+          };
+        });
+      // En son eklenenler (Türkçe hikayeler, Matematik yeni konular, İngilizce, Oyunlar)
+      return [...books, ...CORE_LESSON_CATALOG, ...dynamicExtras];
+    }
+
+    function getMonthKey(dateObj = new Date()) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      return `${y}-${m}`;
+    }
+
+    function getTurkishMonthLabel(monthKey) {
+      try {
+        const [yStr, mStr] = String(monthKey).split('-');
+        const dt = new Date(parseInt(yStr, 10), parseInt(mStr, 10) - 1, 1);
+        return dt.toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' });
+      } catch (e) {
+        return monthKey;
+      }
+    }
+
+    function getTurkishDateTimeShort(dateObj = new Date()) {
+      try {
+        const d = String(dateObj.getDate()).padStart(2, '0');
+        const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const y = dateObj.getFullYear();
+        const hh = String(dateObj.getHours()).padStart(2, '0');
+        const mm = String(dateObj.getMinutes()).padStart(2, '0');
+        return `${d}.${m}.${y} ${hh}:${mm}`;
+      } catch (e) {
+        return `${getTodayDateKey()} ${getCurrentTimeHHMM()}`;
+      }
+    }
+
+    function loadAllLessonRecords() {
+      try {
+        const raw = localStorage.getItem(LESSON_PROGRESS_STORAGE_KEY);
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        return (parsed && typeof parsed === 'object') ? parsed : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveAllLessonRecords(recordsMap) {
+      try {
+        localStorage.setItem(LESSON_PROGRESS_STORAGE_KEY, JSON.stringify(recordsMap || {}));
+        if (typeof scheduleMemoryMirrorSync === 'function') scheduleMemoryMirrorSync();
+      } catch (e) {}
+    }
+
+    // Canlı oturum doğru/yanlış sayaçları (Tahta/alıştırma derslerinde gerçekçi 0-100 başarı hesabı için)
+    const lessonSessionTally = {};
+    const sessionUnitPracticeLogged = new Set();
+
+    function trackEnglishUnitWordPractice(unitId, detailLabel = '') {
+      recordActivity();
+      const firstInSession = !sessionUnitPracticeLogged.has(unitId);
+      sessionUnitPracticeLogged.add(unitId);
+      recordLessonProgress(unitId, 100, detailLabel ? `${detailLabel} Telaffuz Pratiği` : 'Sesli Kelime Pratiği', {
+        incrementCount: firstInSession
+      });
+    }
+
+    function recordLessonInteractiveAttempt(lessonId, isCorrect, summaryText = '', meta = {}) {
+      recordActivity();
+      if (!lessonSessionTally[lessonId]) {
+        lessonSessionTally[lessonId] = { correct: 0, wrong: 0 };
+      }
+      if (isCorrect) lessonSessionTally[lessonId].correct++;
+      else lessonSessionTally[lessonId].wrong++;
+      const t = lessonSessionTally[lessonId];
+      const tot = t.correct + t.wrong;
+      const pct = tot > 0 ? Math.round((t.correct / tot) * 100) : (isCorrect ? 100 : 0);
+      const countInc = !!isCorrect; // Doğru çözülen her alıştırma çalışmayı +1 sayar
+      recordLessonProgress(lessonId, pct, summaryText || `${t.correct}/${tot} Doğru (%${pct})`, {
+        ...meta,
+        incrementCount: countInc
+      });
+    }
+
+    function recordLessonProgress(lessonId, scorePct, summaryText = '', options = {}) {
+      try {
+        if (!lessonId) return;
+        const now = new Date();
+        const monthKey = getMonthKey(now);
+        const todayKey = getTodayDateKey();
+        const timeLabel = getTurkishDateTimeShort(now);
+        const clampedScore = Math.max(0, Math.min(100, Math.round(Number(scorePct) || 0)));
+
+        const all = loadAllLessonRecords();
+        const catalogHit = CORE_LESSON_CATALOG.find(c => c.id === lessonId) ||
+          ((typeof turkishBooksBank !== 'undefined' && Array.isArray(turkishBooksBank))
+            ? turkishBooksBank.find(b => b.id === lessonId)
+            : null);
+
+        const existing = all[lessonId] || {
+          id: lessonId,
+          subject: options.subject || (catalogHit ? (catalogHit.subject || 'turkish') : 'other'),
+          icon: options.icon || (catalogHit ? catalogHit.icon : '📘'),
+          title: options.title || (catalogHit ? catalogHit.title : lessonId),
+          totalCount: 0,
+          monthlyCounts: {},
+          lastScore: 0,
+          bestScore: 0,
+          lastAt: '',
+          lastDateKey: '',
+          lastTimeLabel: '',
+          lastSummary: '',
+          history: []
+        };
+
+        if (options.title) existing.title = options.title;
+        if (options.subject) existing.subject = options.subject;
+        if (options.icon) existing.icon = options.icon;
+        if (!existing.monthlyCounts || typeof existing.monthlyCounts !== 'object') {
+          existing.monthlyCounts = {};
+        }
+
+        const shouldIncrement = options.incrementCount !== false;
+        if (shouldIncrement) {
+          existing.totalCount = (existing.totalCount || 0) + 1;
+          existing.monthlyCounts[monthKey] = (existing.monthlyCounts[monthKey] || 0) + 1;
+        } else if (existing.totalCount === 0) {
+          existing.totalCount = 1;
+          existing.monthlyCounts[monthKey] = (existing.monthlyCounts[monthKey] || 0) + 1;
+        }
+
+        existing.lastScore = clampedScore;
+        existing.bestScore = Math.max(existing.bestScore || 0, clampedScore);
+        existing.lastAt = now.toISOString();
+        existing.lastDateKey = todayKey;
+        existing.lastTimeLabel = timeLabel;
+        if (summaryText) existing.lastSummary = summaryText;
+
+        if (!Array.isArray(existing.history)) existing.history = [];
+        if (shouldIncrement || existing.history.length === 0) {
+          existing.history.unshift({
+            at: now.toISOString(),
+            monthKey,
+            dateKey: todayKey,
+            timeLabel,
+            score: clampedScore,
+            summary: summaryText || `${clampedScore} Puan`
+          });
+          if (existing.history.length > 30) existing.history.pop();
+        } else {
+          existing.history[0] = {
+            ...existing.history[0],
+            at: now.toISOString(),
+            timeLabel,
+            score: clampedScore,
+            summary: summaryText || existing.history[0].summary
+          };
+        }
+
+        all[lessonId] = existing;
+        saveAllLessonRecords(all);
+      } catch (e) {}
+    }
+
+    function getUnifiedLessonStat(lessonId, monthKey = getMonthKey()) {
+      const all = loadAllLessonRecords();
+      const rec = all[lessonId] || null;
+      // Türkçe hikayeler için eski reading records ile otomatik köprü (geriye dönük uyumluluk)
+      let trRec = null;
+      if (String(lessonId).startsWith('book_') && typeof getTurkishReadingRecords === 'function') {
+        const tMap = getTurkishReadingRecords();
+        trRec = tMap[lessonId] || null;
+      }
+
+      if (!rec && (!trRec || !trRec.readCount)) {
+        return {
+          hasActivity: false,
+          totalCount: 0,
+          monthCount: 0,
+          lastScore: 0,
+          bestScore: 0,
+          lastTimeLabel: '',
+          lastAt: '',
+          lastSummary: ''
+        };
+      }
+
+      const trLatestHist = (trRec && Array.isArray(trRec.history) && trRec.history[0]) ? trRec.history[0] : null;
+      const trLastTime = trRec
+        ? (trRec.lastReadTimeLabel || (trLatestHist ? `${trLatestHist.date} ${trLatestHist.time}` : (trRec.lastReadDate || '')))
+        : '';
+      const trLastScore = trLatestHist ? Math.round(((trLatestHist.speedScore || 0) + (trLatestHist.compScore || 0)) / 2) : 0;
+      const trBestScore = trRec ? Math.round(((trRec.bestSpeedScore || 0) + (trRec.bestCompScore || 0)) / 2) : 0;
+      const trMonthCount = (trRec && Array.isArray(trRec.history))
+        ? trRec.history.filter(h => String(h.date || '').startsWith(monthKey)).length
+        : 0;
+
+      const totalCount = Math.max(rec?.totalCount || 0, trRec?.readCount || 0);
+      const monthCount = Math.max((rec?.monthlyCounts && rec.monthlyCounts[monthKey]) || 0, trMonthCount);
+      const lastScore = rec ? (rec.lastScore ?? trLastScore) : trLastScore;
+      const bestScore = Math.max(rec?.bestScore || 0, trBestScore);
+      const lastTimeLabel = (rec && rec.lastTimeLabel) ? rec.lastTimeLabel : trLastTime;
+      const lastAt = (rec && rec.lastAt) ? rec.lastAt : (trRec?.lastReadDate || '');
+
+      return {
+        hasActivity: totalCount > 0,
+        totalCount,
+        monthCount,
+        lastScore,
+        bestScore,
+        lastTimeLabel,
+        lastAt,
+        lastSummary: (rec && rec.lastSummary) || (trLatestHist ? `Okuma: ${trLatestHist.speedScore}P • Anlama: ${trLatestHist.compScore}P` : '')
+      };
+    }
+
+    function getSubjectAggregateStats(subject, monthKey = getMonthKey()) {
+      const catalog = getFullLessonCatalog().filter(item => item.subject === subject);
+      let monthStudies = 0;
+      let totalStudies = 0;
+      let studiedLessonCount = 0;
+      let scoreSum = 0;
+      let latestAt = '';
+      let latestTimeLabel = '';
+
+      catalog.forEach(item => {
+        const st = getUnifiedLessonStat(item.id, monthKey);
+        if (st.hasActivity) {
+          studiedLessonCount++;
+          totalStudies += st.totalCount;
+          monthStudies += st.monthCount;
+          scoreSum += st.lastScore;
+          if (st.lastAt && (!latestAt || st.lastAt > latestAt)) {
+            latestAt = st.lastAt;
+            latestTimeLabel = st.lastTimeLabel;
+          } else if (!latestTimeLabel && st.lastTimeLabel) {
+            latestTimeLabel = st.lastTimeLabel;
+          }
+        }
+      });
+
+      return {
+        lessonTotal: catalog.length,
+        studiedLessonCount,
+        monthStudies,
+        totalStudies,
+        avgScore: studiedLessonCount > 0 ? Math.round(scoreSum / studiedLessonCount) : 0,
+        latestTimeLabel
+      };
+    }
+
+    function renderLessonCoverStatsHtml(lessonId, accentColor = '#38bdf8', compact = false) {
+      const monthKey = getMonthKey();
+      const st = getUnifiedLessonStat(lessonId, monthKey);
+      if (!st.hasActivity) {
+        return `
+          <div style="margin:${compact ? '6px 0' : '8px 0 10px'};padding:5px 9px;border-radius:9px;background:rgba(15,23,42,0.72);border:1px dashed rgba(148,163,184,0.35);display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;font-size:10px;line-height:1.3;">
+            <span style="color:#94a3b8;font-weight:800;">📘 <strong style="color:#cbd5e1;">0 Kez</strong> • Henüz çalışılmadı</span>
+            <span style="color:#fde047;font-weight:900;">⭐ İlk Puanını Kazan!</span>
+          </div>
+        `;
+      }
+      const scoreColor = st.lastScore >= 80 ? '#34d399' : (st.lastScore >= 55 ? '#fde047' : '#fb7185');
+      return `
+        <div style="margin:${compact ? '6px 0' : '8px 0 10px'};padding:6px 9px;border-radius:9px;background:rgba(15,23,42,0.82);border:1px solid ${accentColor}55;font-size:10px;line-height:1.35;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-bottom:2px;">
+            <span style="background:rgba(245,158,11,0.18);color:#fde047;font-weight:900;padding:1px 6px;border-radius:5px;border:1px solid rgba(245,158,11,0.35);">
+              🔄 ${st.totalCount} Kez <span style="opacity:0.85;">(Bu ay: ${st.monthCount})</span>
+            </span>
+            <span style="color:#94a3b8;font-weight:700;">🕒 ${st.lastTimeLabel || 'Bugün'}</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;">
+            <span style="color:${scoreColor};font-weight:900;">🎯 Son Puan: ${st.lastScore}/100</span>
+            <span style="color:#38bdf8;font-weight:900;">🏆 En İyi: ${st.bestScore}/100</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSubjectPortalStatsHtml(subject, accentColor = '#38bdf8') {
+      const monthKey = getMonthKey();
+      const agg = getSubjectAggregateStats(subject, monthKey);
+      if (agg.totalStudies === 0) {
+        return `
+          <div style="margin-top:8px;padding:5px 9px;border-radius:8px;background:rgba(15,23,42,0.65);border:1px dashed rgba(255,255,255,0.2);font-size:10px;color:#cbd5e1;font-weight:700;">
+            📅 Bu ay: <strong>0</strong> çalışma • Henüz puan yok • ⭐ Hemen başla!
+          </div>
+        `;
+      }
+      return `
+        <div style="margin-top:8px;padding:6px 10px;border-radius:9px;background:rgba(15,23,42,0.78);border:1px solid ${accentColor}66;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:10px;">
+          <span style="color:#fde047;font-weight:900;">📅 Bu Ay: ${agg.monthStudies} • 🔄 Toplam: ${agg.totalStudies} Kez</span>
+          <span style="color:#34d399;font-weight:900;">🎯 Ort: ${agg.avgScore} P</span>
+          ${agg.latestTimeLabel ? `<span style="color:#cbd5e1;font-weight:700;">🕒 Son: ${agg.latestTimeLabel}</span>` : ''}
+        </div>
+      `;
+    }
 
     function getTodayDateKey() {
       const now = new Date();
@@ -1605,10 +1993,10 @@
 
     function saveAllParentLogs(allLogs) {
       try {
-        // En fazla son 45 günü tutarak hafızayı temiz ve hızlı koru
+        // En fazla son 120 günü tutarak aylık geçmişin korunmasını sağla
         const keys = Object.keys(allLogs).sort().reverse();
         const trimmed = {};
-        keys.slice(0, 45).forEach(k => { trimmed[k] = allLogs[k]; });
+        keys.slice(0, 120).forEach(k => { trimmed[k] = allLogs[k]; });
         localStorage.setItem(PARENT_LOGS_STORAGE_KEY, JSON.stringify(trimmed));
         if (typeof scheduleMemoryMirrorSync === 'function') scheduleMemoryMirrorSync();
       } catch (e) {}
@@ -1658,12 +2046,22 @@
 
     function collectCurrentMemorySnapshot() {
       let parentLogs = {};
+      let lessonRecords = {};
+      let turkishReadingRecords = {};
       let petState = null;
       let badges = [];
       let best60s = 0;
       try {
         const rawLogs = localStorage.getItem(PARENT_LOGS_STORAGE_KEY);
         if (rawLogs) parentLogs = JSON.parse(rawLogs);
+      } catch (e) {}
+      try {
+        const rawLessons = localStorage.getItem(LESSON_PROGRESS_STORAGE_KEY);
+        if (rawLessons) lessonRecords = JSON.parse(rawLessons);
+      } catch (e) {}
+      try {
+        const rawTr = localStorage.getItem(TURKISH_READING_STORAGE_KEY);
+        if (rawTr) turkishReadingRecords = JSON.parse(rawTr);
       } catch (e) {}
       try {
         const rawPet = localStorage.getItem('lingo_pet_and_stars_v1');
@@ -1685,9 +2083,11 @@
       return {
         id: 'full_snapshot',
         backupSchema: 'LINGO_BACKUP_V1',
-        appVersion: typeof CURRENT_APP_VERSION !== 'undefined' ? CURRENT_APP_VERSION : '2.9.2',
+        appVersion: typeof CURRENT_APP_VERSION !== 'undefined' ? CURRENT_APP_VERSION : '4.3.0',
         savedAt: nowIso,
         parentLogs: (parentLogs && typeof parentLogs === 'object') ? parentLogs : {},
+        lessonRecords: (lessonRecords && typeof lessonRecords === 'object') ? lessonRecords : {},
+        turkishReadingRecords: (turkishReadingRecords && typeof turkishReadingRecords === 'object') ? turkishReadingRecords : {},
         petState: (petState && typeof petState === 'object') ? petState : null,
         badges: Array.isArray(badges) ? badges : [],
         best60s: best60s
@@ -1771,6 +2171,20 @@
             if (localBest === 0 && (idbSnap.best60s || 0) > 0) {
               localStorage.setItem('lingo_best_60s', String(idbSnap.best60s));
               if (typeof time60State !== 'undefined') time60State.bestScore = idbSnap.best60s;
+              restoredAnything = true;
+            }
+
+            // 5. Tüm Dersler Puanlama & Aylık Çalışma Kayıtları
+            const localLessonsRaw = localStorage.getItem(LESSON_PROGRESS_STORAGE_KEY);
+            if ((!localLessonsRaw || localLessonsRaw === '{}') && idbSnap.lessonRecords && Object.keys(idbSnap.lessonRecords).length > 0) {
+              localStorage.setItem(LESSON_PROGRESS_STORAGE_KEY, JSON.stringify(idbSnap.lessonRecords));
+              restoredAnything = true;
+            }
+
+            // 6. Türkçe Kitap Okuma Kayıtları
+            const localTrRaw = localStorage.getItem(TURKISH_READING_STORAGE_KEY);
+            if ((!localTrRaw || localTrRaw === '{}') && idbSnap.turkishReadingRecords && Object.keys(idbSnap.turkishReadingRecords).length > 0) {
+              localStorage.setItem(TURKISH_READING_STORAGE_KEY, JSON.stringify(idbSnap.turkishReadingRecords));
               restoredAnything = true;
             }
 
@@ -1880,6 +2294,56 @@
         const finalBest = mergeMode ? Math.max(curBest, incBest) : incBest;
         localStorage.setItem('lingo_best_60s', String(finalBest));
         if (typeof time60State !== 'undefined') time60State.bestScore = finalBest;
+      }
+
+      // 5. Tüm Dersler Puan & Aylık Çalışma Kayıtları
+      if (data.lessonRecords && typeof data.lessonRecords === 'object') {
+        const curLessons = mergeMode ? loadAllLessonRecords() : {};
+        Object.keys(data.lessonRecords).forEach(lid => {
+          const inc = data.lessonRecords[lid];
+          const ex = curLessons[lid];
+          if (!ex) {
+            curLessons[lid] = inc;
+          } else {
+            const mergedMonths = { ...(ex.monthlyCounts || {}) };
+            Object.keys(inc.monthlyCounts || {}).forEach(mk => {
+              mergedMonths[mk] = Math.max(mergedMonths[mk] || 0, inc.monthlyCounts[mk] || 0);
+            });
+            const pickIncoming = (inc.lastAt || '') >= (ex.lastAt || '');
+            curLessons[lid] = {
+              ...ex,
+              ...(pickIncoming ? inc : {}),
+              totalCount: Math.max(ex.totalCount || 0, inc.totalCount || 0),
+              bestScore: Math.max(ex.bestScore || 0, inc.bestScore || 0),
+              monthlyCounts: mergedMonths
+            };
+          }
+        });
+        saveAllLessonRecords(curLessons);
+      }
+
+      // 6. Türkçe Kitap Okuma Kayıtları
+      if (data.turkishReadingRecords && typeof data.turkishReadingRecords === 'object') {
+        let curTr = {};
+        try {
+          if (mergeMode) curTr = JSON.parse(localStorage.getItem(TURKISH_READING_STORAGE_KEY) || '{}') || {};
+        } catch (e) {}
+        Object.keys(data.turkishReadingRecords).forEach(bid => {
+          const inc = data.turkishReadingRecords[bid];
+          const ex = curTr[bid];
+          if (!ex) {
+            curTr[bid] = inc;
+          } else {
+            curTr[bid] = {
+              ...ex,
+              ...inc,
+              readCount: Math.max(ex.readCount || 0, inc.readCount || 0),
+              bestSpeedScore: Math.max(ex.bestSpeedScore || 0, inc.bestSpeedScore || 0),
+              bestCompScore: Math.max(ex.bestCompScore || 0, inc.bestCompScore || 0)
+            };
+          }
+        });
+        localStorage.setItem(TURKISH_READING_STORAGE_KEY, JSON.stringify(curTr));
       }
 
       // Güncel zamanı ve sayacı senkronize et
@@ -2230,6 +2694,13 @@
     // GÜNLÜK EBEVEYN KAYIT FONKSİYONLARI (ÇÖZDÜKLERİ, BAŞARDIKLARI VE ZORLANDIKLARI)
     function recordParentActivityLog(categoryKey, isSuccess, itemTitle, detailText) {
       try {
+        // Eski çağrılarda (itemTitle, isSuccess) sırası karışmışsa savunmacı normalize
+        if (typeof isSuccess === 'string' && typeof itemTitle === 'boolean') {
+          const fixedTitle = isSuccess;
+          isSuccess = itemTitle;
+          itemTitle = fixedTitle;
+          detailText = detailText || (isSuccess ? 'Doğru cevaplandı' : 'Hatalı deneme');
+        }
         const { todayKey, todayLog, allLogs } = getOrCreateTodayLog();
         todayLog.activeSeconds = totalSeconds;
         const catInfo = PARENT_CATEGORY_LABELS[categoryKey] || { title: '📚 Genel Çalışma' };
@@ -2241,7 +2712,7 @@
           categoryKey,
           categoryTitle: catInfo.title,
           item: itemTitle,
-          detail: detailText
+          detail: detailText || ''
         };
         if (isSuccess) {
           todayLog.totalCorrect = (todayLog.totalCorrect || 0) + 1;
@@ -2443,6 +2914,108 @@
       }
     }
 
+    function getAvailableParentMonths() {
+      const monthSet = new Set([getMonthKey()]);
+      const allLessonRecs = loadAllLessonRecords();
+      Object.values(allLessonRecs).forEach(r => {
+        if (r && r.monthlyCounts) {
+          Object.keys(r.monthlyCounts).forEach(mk => { if (mk) monthSet.add(mk); });
+        }
+      });
+      if (typeof getTurkishReadingRecords === 'function') {
+        const trMap = getTurkishReadingRecords();
+        Object.values(trMap).forEach(r => {
+          if (r && Array.isArray(r.history)) {
+            r.history.forEach(h => {
+              if (h && h.date && h.date.length >= 7) monthSet.add(h.date.slice(0, 7));
+            });
+          }
+        });
+      }
+      const allLogs = loadAllParentLogs();
+      Object.keys(allLogs).forEach(dk => {
+        if (dk && dk.length >= 7) monthSet.add(dk.slice(0, 7));
+      });
+      return Array.from(monthSet).sort().reverse();
+    }
+
+    function setParentDashboardMonthAndSubject(monthKey, subjectFilter) {
+      if (monthKey) selectedParentMonthKey = monthKey;
+      if (subjectFilter) selectedParentSubjectFilter = subjectFilter;
+      openParentDashboardModal(selectedParentDashboardDateKey || getTodayDateKey());
+    }
+
+    function renderParentAllLessonsMonthlyHtml(monthKey = getMonthKey(), subjectFilter = 'all') {
+      const catalog = getFullLessonCatalog();
+      const filtered = (!subjectFilter || subjectFilter === 'all') ? catalog : catalog.filter(c => c.subject === subjectFilter);
+      const subjectLabelMap = {
+        turkish: { name: 'Türkçe', bg: 'rgba(245,158,11,0.2)', color: '#fde047' },
+        math: { name: 'Matematik', bg: 'rgba(139,92,246,0.2)', color: '#c4b5fd' },
+        english: { name: 'İngilizce', bg: 'rgba(56,189,248,0.2)', color: '#7dd3fc' },
+        games: { name: 'Oyunlar', bg: 'rgba(244,63,94,0.2)', color: '#fda4af' },
+        other: { name: 'Diğer', bg: 'rgba(148,163,184,0.2)', color: '#cbd5e1' }
+      };
+
+      // Çalışılanları üstte (son çalışma zamanına göre), ardından çalışılmayanları müfredat sırasıyla göster
+      const enriched = filtered.map((item, idx) => ({
+        item,
+        idx,
+        stat: getUnifiedLessonStat(item.id, monthKey)
+      }));
+      enriched.sort((a, b) => {
+        if (a.stat.hasActivity && !b.stat.hasActivity) return -1;
+        if (!a.stat.hasActivity && b.stat.hasActivity) return 1;
+        if (a.stat.hasActivity && b.stat.hasActivity) {
+          if (b.stat.lastAt !== a.stat.lastAt) return (b.stat.lastAt || '').localeCompare(a.stat.lastAt || '');
+        }
+        return a.idx - b.idx;
+      });
+
+      return enriched.map(({ item, stat }) => {
+        const sMeta = subjectLabelMap[item.subject] || subjectLabelMap.other;
+        const scoreColor = stat.lastScore >= 80 ? '#34d399' : (stat.lastScore >= 55 ? '#fde047' : '#fb7185');
+        return `
+          <div style="background:#0f172a;border:1px solid ${stat.hasActivity ? (item.color || '#38bdf8') : '#334155'};border-radius:12px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:220px;">
+              <div style="font-size:24px;background:rgba(255,255,255,0.06);padding:7px;border-radius:10px;">${item.icon}</div>
+              <div style="min-width:0;">
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                  <span style="background:${sMeta.bg};color:${sMeta.color};font-size:9px;font-weight:900;padding:1px 6px;border-radius:5px;">${sMeta.name}</span>
+                  <span style="font-size:13px;font-weight:900;color:#fff;">${item.title}</span>
+                </div>
+                ${stat.hasActivity ? `
+                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px;font-size:11px;">
+                    <span style="background:rgba(245,158,11,0.2);color:#fde047;font-weight:900;padding:1px 7px;border-radius:5px;border:1px solid rgba(245,158,11,0.35);">
+                      📅 Bu Ay: <strong>${stat.monthCount} Kez</strong> • 🔄 Toplam: ${stat.totalCount}
+                    </span>
+                    <span style="color:#cbd5e1;font-weight:700;">🕒 ${stat.lastTimeLabel || 'Kayıtlı'}</span>
+                  </div>
+                  ${stat.lastSummary ? `<div style="font-size:10px;color:#94a3b8;margin-top:2px;">📝 ${stat.lastSummary}</div>` : ''}
+                ` : `
+                  <div style="font-size:11px;color:#64748b;margin-top:3px;">
+                    📘 Bu ay: <strong>0 Kez</strong> • Henüz çalışılmadı
+                  </div>
+                `}
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              ${stat.hasActivity ? `
+                <div style="text-align:right;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:5px 10px;">
+                  <div style="font-size:12px;font-weight:900;color:${scoreColor};">🎯 Son: ${stat.lastScore}/100</div>
+                  <div style="font-size:10px;font-weight:800;color:#38bdf8;">🏆 En İyi: ${stat.bestScore}/100</div>
+                </div>
+              ` : ''}
+              ${item.openAction ? `
+                <button onclick="document.getElementById('parentDashboardModal')?.remove();${item.openAction};" style="background:#334155;color:#fff;border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:800;cursor:pointer;">
+                  Aç ➔
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     function openParentDashboardModal(dateKeyParam) {
       recordActivity();
       const existing = document.getElementById('parentDashboardModal');
@@ -2460,6 +3033,30 @@
       const totalAttempts = (dayData.totalCorrect || 0) + (dayData.totalWrong || 0);
       const accuracyRate = totalAttempts > 0 ? Math.round(((dayData.totalCorrect || 0) / totalAttempts) * 100) : 0;
       const unlockedBadges = getUnlockedBadges();
+
+      const availableMonths = getAvailableParentMonths();
+      const activeMonthKey = (selectedParentMonthKey && availableMonths.includes(selectedParentMonthKey))
+        ? selectedParentMonthKey
+        : getMonthKey();
+      selectedParentMonthKey = activeMonthKey;
+      const activeSubjFilter = selectedParentSubjectFilter || 'all';
+
+      // Seçili ay genel özet hesaplaması
+      const catalogAll = getFullLessonCatalog();
+      let monthTotalRuns = 0;
+      let monthActiveLessons = 0;
+      let monthScoreSum = 0;
+      let monthScoredLessons = 0;
+      catalogAll.forEach(item => {
+        const st = getUnifiedLessonStat(item.id, activeMonthKey);
+        if (st.monthCount > 0) {
+          monthTotalRuns += st.monthCount;
+          monthActiveLessons++;
+          monthScoreSum += st.lastScore;
+          monthScoredLessons++;
+        }
+      });
+      const monthAvgScore = monthScoredLessons > 0 ? Math.round(monthScoreSum / monthScoredLessons) : 0;
 
       // Tüm günlerin genel toplam özeti
       let allTimeSeconds = 0;
@@ -2484,9 +3081,9 @@
                 <span style="font-size:10px;font-weight:900;background:#38bdf8;color:#0f172a;padding:2px 8px;border-radius:6px;">
                   EBEVEYN KONTROL & GELİŞİM MERKEZİ
                 </span>
-                <h3 style="font-size:20px;color:#fff;font-weight:900;margin:4px 0 2px;">Günlük Kullanım ve Başarı Karnesi</h3>
+                <h3 style="font-size:20px;color:#fff;font-weight:900;margin:4px 0 2px;">Aylık Çalışma, Puan Karnesi & Günlük Rapor</h3>
                 <p style="font-size:12px;color:#94a3b8;margin:0;">
-                  Çocuğunuzun gün gün ekran süresi, çözdüğü konular, başardıkları ve zorlandığı noktalar
+                  Tüm derslerin ayda kaç defa çalışıldığı, en son okuma/çözüm zamanı ve puan bilgileri
                 </p>
               </div>
             </div>
@@ -2498,17 +3095,78 @@
           <!-- GENEL TOPLAM BİLGİ ÇUBUĞU -->
           <div style="background:linear-gradient(135deg, rgba(99,102,241,0.18), rgba(6,182,212,0.15));border:1px solid rgba(99,102,241,0.4);border-radius:14px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;">
             <div>
-              📊 <strong>Kayıtlı Gün Sayısı:</strong> <span style="color:#38bdf8;font-weight:900;">${availableDates.length} Gün</span>
+              📊 <strong>Kayıtlı Gün:</strong> <span style="color:#38bdf8;font-weight:900;">${availableDates.length} Gün</span>
             </div>
             <div>
-              ⏱️ <strong>Toplam Çalışma:</strong> <span style="color:#fde047;font-weight:900;">${formatDurationHuman(allTimeSeconds)}</span>
+              ⏱️ <strong>Toplam Süre:</strong> <span style="color:#fde047;font-weight:900;">${formatDurationHuman(allTimeSeconds)}</span>
             </div>
             <div>
-              ✅ <strong>Toplam Doğru:</strong> <span style="color:#34d399;font-weight:900;">${allTimeCorrect}</span> •
-              ❌ <strong>Toplam Hata:</strong> <span style="color:#f87171;font-weight:900;">${allTimeWrong}</span>
+              ✅ <strong>Doğru:</strong> <span style="color:#34d399;font-weight:900;">${allTimeCorrect}</span> •
+              ❌ <strong>Hata:</strong> <span style="color:#f87171;font-weight:900;">${allTimeWrong}</span>
             </div>
             <div>
               🏆 <strong>Rozetler:</strong> <span style="color:#fde047;font-weight:900;">${unlockedBadges.length} / ${BADGE_DEFINITIONS.length}</span>
+            </div>
+          </div>
+
+          <!-- AYLIK ÇALIŞMA SAYISI & TÜM DERSLER PUAN KARNESİ -->
+          <div style="background:linear-gradient(135deg, rgba(56,189,248,0.12), rgba(15,23,42,0.98));border:2px solid #38bdf8;border-radius:16px;padding:16px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+              <div>
+                <span style="background:#38bdf8;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">TÜM DERSLER • AYLIK TAKİP</span>
+                <h4 style="font-size:16px;color:#fff;font-weight:900;margin:4px 0 0;">📅 Aylık Çalışma Sayısı & Tüm Dersler Puan Karnesi</h4>
+              </div>
+              <button class="whatsapp-share-btn" style="padding:7px 12px;font-size:11px;border-radius:10px;" onclick="shareParentMonthlyReportWhatsApp('${activeMonthKey}')">
+                📲 Aylık Karneni WhatsApp'ta Paylaş
+              </button>
+            </div>
+
+            <!-- AY SEÇİCİ -->
+            <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px;">
+              ${availableMonths.map(mk => {
+                const isSel = mk === activeMonthKey;
+                return `
+                  <button onclick="setParentDashboardMonthAndSubject('${mk}', null)" style="background:${isSel ? '#38bdf8' : '#1e293b'};color:${isSel ? '#0f172a' : '#cbd5e1'};border:1.5px solid ${isSel ? '#7dd3fc' : '#334155'};border-radius:10px;padding:6px 12px;font-size:11px;font-weight:900;cursor:pointer;white-space:nowrap;">
+                    📆 ${getTurkishMonthLabel(mk)}
+                  </button>
+                `;
+              }).join('')}
+            </div>
+
+            <!-- AYLIK ÖZET KPI -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:8px;margin-bottom:12px;">
+              <div style="background:#1e293b;border:1px solid #38bdf8;border-radius:10px;padding:10px;text-align:center;">
+                <div style="font-size:10px;color:#94a3b8;font-weight:700;">Bu Ay Çalışma Sayısı</div>
+                <div style="font-size:18px;font-weight:900;color:#fde047;">🔄 ${monthTotalRuns} Defa</div>
+              </div>
+              <div style="background:#1e293b;border:1px solid #10b981;border-radius:10px;padding:10px;text-align:center;">
+                <div style="font-size:10px;color:#94a3b8;font-weight:700;">Çalışılan Farklı Ders</div>
+                <div style="font-size:18px;font-weight:900;color:#34d399;">📘 ${monthActiveLessons} / ${catalogAll.length}</div>
+              </div>
+              <div style="background:#1e293b;border:1px solid #f59e0b;border-radius:10px;padding:10px;text-align:center;">
+                <div style="font-size:10px;color:#94a3b8;font-weight:700;">Aylık Ortalama Puan</div>
+                <div style="font-size:18px;font-weight:900;color:#38bdf8;">🎯 ${monthScoredLessons > 0 ? monthAvgScore + '/100' : '-'}</div>
+              </div>
+            </div>
+
+            <!-- DERS FİLTRE BUTONLARI -->
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+              ${[
+                { k: 'all', label: '📚 Tümü' },
+                { k: 'turkish', label: '📖 Türkçe' },
+                { k: 'math', label: '🔢 Matematik' },
+                { k: 'english', label: '🇬🇧 İngilizce' },
+                { k: 'games', label: '🎈 Oyunlar' }
+              ].map(f => `
+                <button onclick="setParentDashboardMonthAndSubject(null, '${f.k}')" style="background:${activeSubjFilter === f.k ? '#f59e0b' : '#1e293b'};color:${activeSubjFilter === f.k ? '#0f172a' : '#cbd5e1'};border:1px solid ${activeSubjFilter === f.k ? '#fde047' : '#475569'};border-radius:999px;padding:5px 12px;font-size:11px;font-weight:900;cursor:pointer;">
+                  ${f.label}
+                </button>
+              `).join('')}
+            </div>
+
+            <!-- TÜM DERSLER LİSTESİ -->
+            <div style="display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto;padding-right:4px;">
+              ${renderParentAllLessonsMonthlyHtml(activeMonthKey, activeSubjFilter)}
             </div>
           </div>
 
@@ -2788,6 +3446,26 @@
       const tot = (d.totalCorrect || 0) + (d.totalWrong || 0);
       const pct = tot > 0 ? Math.round((d.totalCorrect / tot) * 100) : 0;
       const msg = `📊 *Lingo Ders Arkadaşım - Günlük Ebeveyn Raporu*\n📅 Tarih: ${d.dateLabel}\n⏱️ Günlük Kullanım Süresi: ${formatDurationHuman(d.activeSeconds || 0)}\n✅ Başardığı (Doğru): ${d.totalCorrect || 0}\n⚠️ Zorlandığı (Hata): ${d.totalWrong || 0}\n🎯 Başarı Oranı: %${pct}`;
+      openWhatsAppShare(msg);
+    }
+
+    function shareParentMonthlyReportWhatsApp(monthKey) {
+      const mk = monthKey || getMonthKey();
+      const catalog = getFullLessonCatalog();
+      const lines = [];
+      let totalRuns = 0;
+      catalog.forEach(item => {
+        const st = getUnifiedLessonStat(item.id, mk);
+        if (st.monthCount > 0) {
+          totalRuns += st.monthCount;
+          lines.push(`• *${item.title}*: ${st.monthCount} kez (Son: ${st.lastTimeLabel || '-'} • Son Puan: ${st.lastScore}/100 • En İyi: ${st.bestScore}/100)`);
+        }
+      });
+      if (lines.length === 0) {
+        openWhatsAppShare(`📊 *${getStudentName()} - ${getTurkishMonthLabel(mk)} Aylık Çalışma Karnesi*\nBu ay henüz kayıtlı ders çalışması bulunmuyor. 🌟`);
+        return;
+      }
+      const msg = `📊 *${getStudentName()} - ${getTurkishMonthLabel(mk)} Aylık Ders Karnesi* 📊\n🔄 *Toplam Çalışma:* ${totalRuns} Defa (${lines.length} farklı ders)\n\n${lines.slice(0, 22).join('\n')}\n\nDüzenli takip edilmektedir. 🏆`;
       openWhatsAppShare(msg);
     }
 
@@ -3412,6 +4090,7 @@
       const isHomeOnly = currentHomeSubject === 'home';
       const petSummary = typeof getPetSummaryForMenu === 'function' ? getPetSummaryForMenu() : { petEmoji: '🐱', petName: 'Pamuk Kedi', level: 1, stars: 20, questsDone: 0, avatarEmoji: '🦸' };
 
+      const gamePortalAgg = typeof getSubjectAggregateStats === 'function' ? getSubjectAggregateStats('games') : { totalStudies: 0, monthStudies: 0, avgScore: 0, latestTimeLabel: '' };
       const html = `
         ${isHomeOnly ? `
         <!-- EĞLENCE, DİJİTAL DOSTUM, GÜNLÜK ÇARK VE OYUN MERKEZİ ÜST BANNER (EN SON EKLENEN MERKEZ) -->
@@ -3426,6 +4105,7 @@
                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                   <span style="background:rgba(245,158,11,0.25);color:#fde047;font-size:11px;font-weight:900;padding:2px 9px;border-radius:999px;">${petSummary.avatarEmoji} Yıldız Kumbarası: ⭐ ${petSummary.stars}</span>
                   <span style="background:rgba(16,185,129,0.22);color:#6ee7b7;font-size:11px;font-weight:900;padding:2px 9px;border-radius:999px;">🎁 Günlük Görev: ${petSummary.questsDone}/3</span>
+                  ${gamePortalAgg.totalStudies > 0 ? `<span style="background:rgba(236,72,153,0.22);color:#fbcfe8;font-size:10px;font-weight:900;padding:2px 8px;border-radius:999px;">🎮 Oyun: Bu ay ${gamePortalAgg.monthStudies} • Ort ${gamePortalAgg.avgScore} P</span>` : ''}
                 </div>
                 <div style="font-size:17px;font-weight:900;color:#fff;margin-top:3px;">${petSummary.petName} Seni Bekliyor! 🎡</div>
                 <div style="font-size:12px;color:#cbd5e1;">Ders çalışarak ⭐ kazan, dostunu büyüt, şans çarkını çevir ve 2 kişilik düello yap!</div>
@@ -3472,10 +4152,11 @@
               <div class="card" style="margin-bottom:0;border:2px solid ${currentHomeSubject === p.id ? p.activeBorderColor : p.borderColor};background:${p.bg};cursor:pointer;transition:all 0.2s;" onclick="selectHomeSubject('${p.id}')">
                 <div style="display:flex;align-items:center;gap:14px;">
                   <div style="font-size:42px;background:rgba(255,255,255,0.12);padding:10px;border-radius:16px;">${p.icon}</div>
-                  <div style="flex:1;">
+                  <div style="flex:1;min-width:0;">
                     <span style="background:${p.badgeBg};color:${p.badgeColor};font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">${p.badge}</span>
                     <h3 style="font-size:20px;font-weight:900;color:#fff;margin:3px 0;">${p.title}</h3>
                     <p style="font-size:12px;color:${p.descColor};margin:0;">${p.desc}</p>
+                    ${renderSubjectPortalStatsHtml(p.id, p.borderColor)}
                   </div>
                   <div style="font-size:20px;color:${p.arrowColor};">➔</div>
                 </div>
@@ -3535,9 +4216,10 @@
                       </div>
                     </div>
                   </div>
-                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:12px;">
+                  <p style="font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:8px;">
                     ${c.desc}
                   </p>
+                  ${renderLessonCoverStatsHtml(c.id, c.borderColor, true)}
                   ${c.buttons.length === 1 && c.buttons[0].full ? `
                     <button class="action-btn" style="width:100%;background:${c.buttons[0].bg};color:${c.buttons[0].color};font-size:12px;font-weight:900;padding:9px;" onclick="event.stopPropagation();${c.buttons[0].action}">
                       ${c.buttons[0].label}
@@ -3591,9 +4273,10 @@
                         </div>
                       </div>
                     </div>
-                    <div style="font-size:11px;color:#cbd5e1;background:rgba(255,255,255,0.04);padding:6px 10px;border-radius:8px;margin-bottom:12px;">
+                    <div style="font-size:11px;color:#cbd5e1;background:rgba(255,255,255,0.04);padding:6px 10px;border-radius:8px;margin-bottom:6px;">
                       ✖️ <strong>Çarpım:</strong> ${m.mult}
                     </div>
+                    ${renderLessonCoverStatsHtml('rhythm_' + m.mode, m.color, true)}
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
                       <button class="action-btn" style="background:${m.color};color:#0f172a;font-weight:900;font-size:12px;padding:8px 6px;" onclick="selectRhythmStepAndOpen(${m.mode}, 'learn')">
                         🎧 1. Aşama: Öğren
@@ -3609,14 +4292,15 @@
               <!-- MATEMATİK RİTMİK SAYMA SINAVI VURGULU KART -->
               <div class="card" style="margin-bottom:0;background:linear-gradient(135deg, rgba(245,158,11,0.18), rgba(30,41,59,0.95));border:2px solid #f59e0b;">
                 <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-                  <div style="display:flex;align-items:center;gap:14px;">
+                  <div style="display:flex;align-items:center;gap:14px;flex:1;min-width:250px;">
                     <div style="font-size:40px;">🏆</div>
-                    <div>
+                    <div style="flex:1;">
                       <div style="display:inline-block;background:#f59e0b;color:#0f172a;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;margin-bottom:4px;">
                         MATEMATİK PUANLI SINAVI
                       </div>
                       <h4 style="font-size:18px;color:#fde047;margin:0 0 4px;font-weight:900;">10 Soruluk Ritmik Sayma &amp; Çarpım Tablosu Sınavı</h4>
                       <p style="font-size:12px;color:#cbd5e1;margin:0;">5'er, 2'şer, 4'er veya 3'er ritmik sayma sorularıyla hızını ve puanını ölç!</p>
+                      ${renderLessonCoverStatsHtml('rhythm_exam', '#f59e0b', true)}
                     </div>
                   </div>
                   <div style="display:flex;gap:6px;flex-wrap:wrap;">
@@ -3689,7 +4373,8 @@
                       <h4 style="font-size:16px;color:${eu.titleColor};margin:3px 0 0;font-weight:900;">${eu.title}</h4>
                     </div>
                   </div>
-                  <p style="font-size:12px;color:#cbd5e1;margin:0 0 10px;">${eu.desc}</p>
+                  <p style="font-size:12px;color:#cbd5e1;margin:0 0 8px;">${eu.desc}</p>
+                  ${renderLessonCoverStatsHtml(eu.id, eu.borderColor, true)}
                   <div style="display:flex;gap:8px;flex-wrap:wrap;">
                     <button class="action-btn" style="flex:1;background:${eu.lessonBtn.bg};color:#fff;font-size:12px;font-weight:800;padding:8px;" onclick="event.stopPropagation();openEngExtraTopic('${eu.id}','lesson');">${eu.lessonBtn.label}</button>
                     <button class="action-btn" style="flex:1;background:${eu.quizBtn.bg};color:#fff;font-size:12px;font-weight:800;padding:8px;" onclick="event.stopPropagation();openEngExtraTopic('${eu.id}','quiz');">${eu.quizBtn.label}</button>
@@ -3701,12 +4386,13 @@
             <!-- 20 SORULU BÜYÜK İNGİLİZCE SINAVI KARTI -->
             <div class="card" style="margin-bottom:20px;background:linear-gradient(135deg, rgba(37,99,235,0.18), rgba(30,41,59,0.95));border:2px solid #3b82f6;cursor:pointer;" onclick="switchMainTab('quiz')">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-                <div style="display:flex;align-items:center;gap:14px;">
+                <div style="display:flex;align-items:center;gap:14px;flex:1;min-width:250px;">
                   <div style="font-size:40px;">📝</div>
-                  <div>
+                  <div style="flex:1;">
                     <div style="display:inline-block;background:#3b82f6;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;margin-bottom:4px;">İNGİLİZCE BÜYÜK SINAVI VE ÜNİTE TESTLERİ</div>
                     <h4 style="font-size:18px;color:#93c5fd;margin:0 0 4px;font-weight:900;">20 Sorulu Puanlı Büyük Sınav &amp; Ünite Testleri</h4>
                     <p style="font-size:12px;color:#cbd5e1;margin:0;">Tüm İngilizce ünitelerinden oluşan 20 soruluk genel sınav (+10 Puan, 🔥 Seri) ve ünite bazlı konu testleri.</p>
+                    ${renderLessonCoverStatsHtml('eng_quiz_grand', '#3b82f6', true)}
                   </div>
                 </div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -3725,7 +4411,7 @@
             <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:14px;margin-bottom:22px;">
               ${unitsData.map(u => `
                 <div class="card" style="margin-bottom:0;border:1px solid var(--border);transition:all 0.2s;cursor:pointer;" onclick="switchMainTab('${u.id}')">
-                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;">
                     <div style="display:flex;align-items:center;gap:10px;">
                       <div style="font-size:32px;background:rgba(255,255,255,0.05);padding:8px;border-radius:12px;">${u.icon}</div>
                       <div>
@@ -3734,7 +4420,8 @@
                       </div>
                     </div>
                   </div>
-                  <p style="font-size:12px;color:var(--muted);line-height:1.4;margin-bottom:12px;min-height:34px;">${u.desc}</p>
+                  <p style="font-size:12px;color:var(--muted);line-height:1.4;margin-bottom:8px;min-height:34px;">${u.desc}</p>
+                  ${renderLessonCoverStatsHtml(u.id, u.color, true)}
                   <button class="action-btn" style="width:100%;background:${u.color};font-size:13px;padding:8px;" onclick="event.stopPropagation();switchMainTab('${u.id}');">
                     Derslere &amp; Etkinliklere Başla ➔
                   </button>
@@ -3748,13 +4435,18 @@
                 🎧 3. BÖLÜM: DİNLEME, KELİME KARTLARI &amp; GÜNLER OYUNLARI
               </span>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));gap:12px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(215px, 1fr));gap:12px;">
               ${englishPracticeToolsMenu.map(t => `
-                <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;border:${t.border};" onclick="switchMainTab('${t.tab}')">
-                  <div style="font-size:32px;margin-bottom:6px;">${t.icon}</div>
-                  <div style="font-weight:700;color:#fff;font-size:14px;">${t.title}</div>
-                  <p style="font-size:11px;color:var(--muted);margin:4px 0 10px;">${t.desc}</p>
-                  <button class="action-btn" style="font-size:11px;padding:6px 12px;background:${t.btnBg};">${t.btnLabel}</button>
+                <div class="card" style="margin-bottom:0;text-align:center;cursor:pointer;border:${t.border};display:flex;flex-direction:column;justify-content:space-between;" onclick="switchMainTab('${t.tab}')">
+                  <div>
+                    <div style="font-size:32px;margin-bottom:6px;">${t.icon}</div>
+                    <div style="font-weight:700;color:#fff;font-size:14px;">${t.title}</div>
+                    <p style="font-size:11px;color:var(--muted);margin:4px 0 8px;">${t.desc}</p>
+                  </div>
+                  <div>
+                    <div style="text-align:left;">${renderLessonCoverStatsHtml(t.tab, t.btnBg, true)}</div>
+                    <button class="action-btn" style="width:100%;font-size:11px;padding:6px 12px;background:${t.btnBg};">${t.btnLabel}</button>
+                  </div>
                 </div>
               `).join('')}
             </div>
@@ -4176,6 +4868,7 @@
           renderRhythmicCounting();
           const stats = calculateRhythmPracticeScore(rhythmPracticeDuration, rhythmPracticeTotalMistakes);
           recordParentMilestone('math_rhythm', `${info.stepSize}'er ${rhythmCountDirection === 'backward' ? 'Geriye' : 'İleriye'} Ritmik Sayma`, `${stats.totalScore}/100 Puan • Süre: ${rhythmPracticeDuration} sn • Hata: ${rhythmPracticeTotalMistakes} (${stats.fingerCountingStatus})`);
+          recordLessonProgress('rhythm_' + rhythmActiveMode, stats.totalScore, `${stats.totalScore}/100 Puan • ${rhythmPracticeDuration} sn • Hata: ${rhythmPracticeTotalMistakes}`);
           speakTurkish(`${currentItem.tr}! Harikasın şampiyon, tamamladın! Süren ${rhythmPracticeDuration} saniye, puanın 100 üzerinden ${stats.totalScore}! ${stats.voiceFeedback}`, 0.94);
         } else {
           rhythmPracticeTargetStep++;
@@ -4770,7 +5463,7 @@
         } else {
           rhythmExamScore += 5;
         }
-        recordParentActivityLog('rhythm', `${q.stepSize}'er Ritmik Sınav: "${q.question}" ➔ ${q.correct}`, true);
+        recordParentActivityLog('math_rhythm', true, `${q.badge || 'Ritmik Sınav'}: ${q.prompt || ''}`, `Doğru: ${q.correct}`);
         renderRhythmicCounting();
         speakTurkish(`Harika! Doğru cevap ${q.correct.split(' ')[0]}!`, 0.95);
       } else {
@@ -4779,7 +5472,7 @@
         }
         rhythmExamWrongCurrent++;
         rhythmExamStreak = 0;
-        recordParentActivityLog('rhythm', `${q.stepSize}'er Ritmik Sınav: "${q.question}" (Seçilen: ${selectedOption}, Doğru: ${q.correct})`, false);
+        recordParentActivityLog('math_rhythm', false, `${q.badge || 'Ritmik Sınav'}: ${q.prompt || ''}`, `Seçilen: ${selectedOption} | Doğru: ${q.correct}`);
         renderRhythmicCounting();
         speakTurkish("Tekrar dikkatlice sayalım!", 0.95);
       }
@@ -4796,7 +5489,10 @@
       if (q) {
         speakTurkish(q.speakPrompt, 0.94);
       } else {
-        recordParentMilestone(`🏆 Ritmik Sayma Sınavı Tamamlandı (${rhythmExamScore} Puan)`);
+        const examTotal = (rhythmExamQuestions.length || 1) * 10;
+        const examPct = Math.min(100, Math.round((rhythmExamScore / examTotal) * 100));
+        recordParentMilestone('math_rhythm', '🏆 Ritmik Sayma Sınavı (10 Soru)', `${rhythmExamScore}/${examTotal} Puan (%${examPct})`);
+        recordLessonProgress('rhythm_exam', examPct, `${rhythmExamScore}/${examTotal} Puan • İlk Denemede: ${rhythmExamFirstTry}/${rhythmExamQuestions.length}`);
         speakTurkish(`Tebrikler! Ritmik sayma sınavını ${rhythmExamScore} puanla tamamladın!`, 0.94);
       }
     }
@@ -5903,6 +6599,7 @@
         } else {
           playChimeSound('wrong');
           recordParentActivityLog('math_addition', false, `${prob.n1} + ${prob.n2} İşlemi (Birler Basamağı)`, `${prob.ones1} + ${prob.ones2} için doğru rakam ${prob.onesDigit} iken ${val} seçti`);
+          recordLessonInteractiveAttempt('math_addition', false, `${prob.n1} + ${prob.n2} Birler Basamağı Hatalı Deneme`);
           speakTurkish("Tekrar dene! " + prob.ones1 + " ile " + prob.ones2 + " toplanırsa kaç eder?");
         }
       } else if (additionCurrentStep === 'tens') {
@@ -5914,6 +6611,7 @@
           additionStreak++;
           unlockBadge('math_addition_hero');
           recordParentActivityLog('math_addition', true, `${prob.n1} + ${prob.n2} = ${prob.sum} (${prob.carry ? 'Eldeli' : 'Eldesiz'} Toplama)`, `Birler ve onlar basamağını adım adım doğru topladı (+10 Puan)`);
+          recordLessonInteractiveAttempt('math_addition', true, `${prob.n1} + ${prob.n2} = ${prob.sum} Toplama İşlemi`);
           speakTurkish("Tebrikler! Sonuç " + prob.sum + "! Harika topladın.");
           const boardEl = document.getElementById('interactiveAdditionSection');
           if (boardEl) boardEl.innerHTML = buildAdditionBoardHtml();
@@ -5921,6 +6619,7 @@
         } else {
           playChimeSound('wrong');
           recordParentActivityLog('math_addition', false, `${prob.n1} + ${prob.n2} İşlemi (Onlar Basamağı)`, `Onlukların toplamı ${prob.tensSum} iken ${val} seçti`);
+          recordLessonInteractiveAttempt('math_addition', false, `${prob.n1} + ${prob.n2} Onlar Basamağı Hatalı Deneme`);
           speakTurkish("Onlukları tekrar topla: " + (additionCarryActive ? "1 elde artı " : "") + prob.tens1 + " artı " + prob.tens2 + " kaç eder?");
         }
       }
@@ -6285,6 +6984,7 @@
           playChimeSound('wrong');
           const topOnes = subtractionHasBorrowed ? prob.borrowedOnes1 : prob.ones1;
           recordParentActivityLog('math_subtraction', false, `${prob.n1} - ${prob.n2} İşlemi (Birler Basamağı)`, `${topOnes} - ${prob.ones2} için doğru fark ${prob.onesDiff} iken ${val} seçti`);
+          recordLessonInteractiveAttempt('math_subtraction', false, `${prob.n1} - ${prob.n2} Birler Basamağı Hatalı Deneme`);
           speakTurkish("Tekrar dene! " + topOnes + " sayısından " + prob.ones2 + " çıkarsa kaç kalır?");
         }
       } else if (subtractionCurrentStep === 'tens') {
@@ -6296,6 +6996,7 @@
           subtractionStreak++;
           unlockBadge('math_subtraction_hero');
           recordParentActivityLog('math_subtraction', true, `${prob.n1} - ${prob.n2} = ${prob.diff} (${prob.needsBorrow ? 'Onluk Bozmalı' : 'Onluk Bozmasız'} Çıkarma)`, `Çıkarma işlemini adım adım doğru çözdü (+10 Puan)`);
+          recordLessonInteractiveAttempt('math_subtraction', true, `${prob.n1} - ${prob.n2} = ${prob.diff} Çıkarma İşlemi`);
           speakTurkish("Tebrikler! Çıkarma işleminin farkı " + prob.diff + "! Çok güzel çözdün.");
           const boardEl = document.getElementById('interactiveSubtractionSection');
           if (boardEl) boardEl.innerHTML = buildSubtractionBoardHtml();
@@ -6304,6 +7005,7 @@
           playChimeSound('wrong');
           const topTens = subtractionHasBorrowed ? prob.borrowedTens1 : prob.tens1;
           recordParentActivityLog('math_subtraction', false, `${prob.n1} - ${prob.n2} İşlemi (Onlar Basamağı)`, `${topTens} - ${prob.tens2} için doğru fark ${prob.tensDiff} iken ${val} seçti`);
+          recordLessonInteractiveAttempt('math_subtraction', false, `${prob.n1} - ${prob.n2} Onlar Basamağı Hatalı Deneme`);
           speakTurkish("Onlukları tekrar çıkar: " + topTens + " eksi " + prob.tens2 + " kaç eder?");
         }
       }
@@ -6442,10 +7144,12 @@
         playChimeSound('correct');
         storyProblemScore += 10;
         recordParentActivityLog('math_problems', true, `Hikayeli Problem: ${p.title}`, `İşlem: ${p.operation} • Doğru Cevap: ${p.answer}`);
+        recordLessonInteractiveAttempt('math_problems', true, `Hikayeli Problem: ${p.title}`);
         speakTurkish("Tebrikler, doğru cevap! " + p.solution);
       } else {
         playChimeSound('wrong');
         recordParentActivityLog('math_problems', false, `Hikayeli Problem: ${p.title}`, `Doğru cevap ${p.answer} iken ${selectedOpt} seçti (${p.operation})`);
+        recordLessonInteractiveAttempt('math_problems', false, `Hikayeli Problem Hatalı Deneme: ${p.title}`);
         speakTurkish("Dikkat et! Doğru cevap " + p.answer + ". Çözüm adımlarına bakalım.");
       }
       renderMathProblems();
@@ -6455,6 +7159,12 @@
       storyProblemIndex++;
       storyProblemUserChoice = null;
       storyProblemShowSolution = false;
+      if (storyProblemIndex >= mathStoryProblems.length) {
+        const fullScore = (mathStoryProblems.length || 1) * 10;
+        const pct = Math.min(100, Math.round((storyProblemScore / fullScore) * 100));
+        recordParentMilestone('math_problems', '🧠 Hikayeli Problem Atölyesi', `${storyProblemScore}/${fullScore} Puan (%${pct})`);
+        recordLessonProgress('math_problems', pct, `${storyProblemScore}/${fullScore} Puan (%${pct}) • ${mathStoryProblems.length} Problem`);
+      }
       renderMathProblems();
     }
 
@@ -6691,8 +7401,6 @@
         if (accuracy < 60) note = "Konu anlatımını tekrar inceleyip testi baştan çözmen faydalı olacaktır.";
         else if (accuracy < 85) note = "Çok iyi! Birkaç küçük dikkat hatası dışında harika bir başarı.";
 
-        recordParentMilestone('math_' + type, typeMeta.title, `${mathQuizScore}/${fullScore} Puan • İlk Denemede Doğru: ${mathQuizFirstTry}/${mathQuizQuestions.length}`);
-
         const html = `
           <div style="margin-bottom:14px;">
             <button class="action-btn" style="background:#334155;color:#f8fafc;font-size:13px;font-weight:800;padding:8px 16px;" onclick="switchMainTab('${typeMeta.backTab}')">
@@ -6845,6 +7553,19 @@
       mathQuizWrongCurrent = 0;
       mathQuizWrongClicked = [];
       mathQuizAnswered = false;
+      if (mathQuizCurrentIndex >= mathQuizQuestions.length) {
+        const fullScore = (mathQuizQuestions.length || 1) * 10;
+        const pct = Math.min(100, Math.round((mathQuizScore / fullScore) * 100));
+        const quizTitleMap = {
+          addition: '➕ 2. Sınıf Toplama İşlemi Testi',
+          subtraction: '➖ 2. Sınıf Çıkarma İşlemi Testi',
+          multiplication: '✖️ 2. Sınıf Çarpma İşlemi Testi',
+          division: '➗ 2. Sınıf Bölme İşlemi Testi'
+        };
+        const tLabel = quizTitleMap[mathQuizActiveType] || 'Matematik Testi';
+        recordParentMilestone('math_' + mathQuizActiveType, tLabel, `${mathQuizScore}/${fullScore} Puan • İlk Denemede Doğru: ${mathQuizFirstTry}/${mathQuizQuestions.length}`);
+        recordLessonProgress('math_' + mathQuizActiveType, pct, `${mathQuizScore}/${fullScore} Puan • İlk Denemede: ${mathQuizFirstTry}/${mathQuizQuestions.length}`);
+      }
       renderMathQuizScreen(mathQuizActiveType);
     }
 
@@ -6976,6 +7697,7 @@
         playChimeSound('fanfare');
         unlockBadge('math_mult_hero');
         recordParentActivityLog('math_multiplication', true, `${prob.groups} × ${prob.itemsPerGroup} = ${prob.product}`, `Doğru cevaplandı (+10 Puan)`);
+        recordLessonInteractiveAttempt('math_multiplication', true, `${prob.groups} × ${prob.itemsPerGroup} = ${prob.product} Çarpma`);
         speakTurkish(`Harika! ${prob.groups} tane ${prob.itemsPerGroup} eşittir ${prob.product}!`);
         alert(`🎉 Tebrikler! Doğru cevap: ${prob.groups} × ${prob.itemsPerGroup} = ${prob.product}!\nTekrarlı toplaması: ${prob.repeatedSumText} = ${prob.product}`);
         multInteractiveProblem = generateMultiplicationProblem();
@@ -6983,6 +7705,7 @@
       } else {
         playChimeSound('wrong');
         recordParentActivityLog('math_multiplication', false, `${prob.groups} × ${prob.itemsPerGroup}`, `Doğru ${prob.product} iken ${chosenVal} seçti`);
+        recordLessonInteractiveAttempt('math_multiplication', false, `${prob.groups} × ${prob.itemsPerGroup} Çarpma Hatalı Deneme`);
         speakTurkish(`Tekrar dene! ${prob.groups} tane ${prob.itemsPerGroup} kaç eder?`);
       }
     }
@@ -7105,6 +7828,7 @@
         playChimeSound('fanfare');
         unlockBadge('math_div_hero');
         recordParentActivityLog('math_division', true, `${prob.dividend} ÷ ${prob.divisor} = ${prob.quotient}`, `Doğru paylaştırıldı (+10 Puan)`);
+        recordLessonInteractiveAttempt('math_division', true, `${prob.dividend} ÷ ${prob.divisor} = ${prob.quotient} Bölme`);
         speakTurkish(`Aferin! ${prob.dividend} bölü ${prob.divisor} eşittir ${prob.quotient}!`);
         alert(`🎉 Harika! ${prob.dividend} ÷ ${prob.divisor} = ${prob.quotient}!\nHer tabağa ${prob.quotient} adet fındık düşer.`);
         divInteractiveProblem = generateDivisionProblem();
@@ -7112,6 +7836,7 @@
       } else {
         playChimeSound('wrong');
         recordParentActivityLog('math_division', false, `${prob.dividend} ÷ ${prob.divisor}`, `Doğru ${prob.quotient} iken ${chosenVal} seçti`);
+        recordLessonInteractiveAttempt('math_division', false, `${prob.dividend} ÷ ${prob.divisor} Bölme Hatalı Deneme`);
         speakTurkish(`Tekrar düşün! ${prob.dividend} fındık ${prob.divisor} tabağa paylaştırılırsa kaçar düşer?`);
       }
     }
@@ -7345,7 +8070,7 @@
           <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Evin bölümlerini öğrenelim. Hoparlöre dokunarak telaffuzlarını dinleyin.</p>
           <div class="word-grid">
             ${u7Rooms.map(item => `
-              <div class="word-tile" onclick="speakText('${item.en}')">
+              <div class="word-tile" onclick="speakText('${item.en}');trackEnglishUnitWordPractice('unit7','${item.en.replace(/'/g, "\\'")}')">
                 <span class="speaker-icon">🔊</span>
                 <div class="tile-icon">${item.icon}</div>
                 <div class="en-text">${item.en}</div>
@@ -7363,7 +8088,7 @@
           <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Evdeki temel eşyaların İngilizcelerini öğrenelim.</p>
           <div class="word-grid">
             ${u7Furniture.map(item => `
-              <div class="word-tile" onclick="speakText('${item.en}')">
+              <div class="word-tile" onclick="speakText('${item.en}');trackEnglishUnitWordPractice('unit7','${item.en.replace(/'/g, "\\'")}')">
                 <span class="speaker-icon">🔊</span>
                 <div class="tile-icon">${item.icon}</div>
                 <div class="en-text">${item.en}</div>
@@ -7420,7 +8145,7 @@
           <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Şehirdeki önemli mekanları öğrenelim. Telaffuzları dinlemek için dokunun.</p>
           <div class="word-grid">
             ${u8Places.map(item => `
-              <div class="word-tile" onclick="speakText('${item.en}')">
+              <div class="word-tile" onclick="speakText('${item.en}');trackEnglishUnitWordPractice('unit8','${item.en.replace(/'/g, "\\'")}')">
                 <span class="speaker-icon">🔊</span>
                 <div class="tile-icon">${item.icon}</div>
                 <div class="en-text">${item.en}</div>
@@ -7438,7 +8163,7 @@
           <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Ulaşım araçlarını öğrenelim.</p>
           <div class="word-grid">
             ${u8Vehicles.map(item => `
-              <div class="word-tile" onclick="speakText('${item.en}')">
+              <div class="word-tile" onclick="speakText('${item.en}');trackEnglishUnitWordPractice('unit8','${item.en.replace(/'/g, "\\'")}')">
                 <span class="speaker-icon">🔊</span>
                 <div class="tile-icon">${item.icon}</div>
                 <div class="en-text">${item.en}</div>
@@ -7837,6 +8562,7 @@
         if (badge) badge.textContent = '🔥 Seri: ' + geometryHomeworkStreak;
         speakTurkish('Tebrikler, doğru cevap ' + geometryHomeworkCurrent.ans);
         recordParentActivityLog('math_geometry', true, `Geometri Ödev Tahtası: ${geometryHomeworkCurrent.q}`, `Doğru: ${selected}`);
+        recordLessonInteractiveAttempt('math_geometry', true, `Geometri Tahtası: ${geometryHomeworkCurrent.ans}`);
         setTimeout(() => { nextGeometryHomeworkTask(); }, 1300);
       } else {
         geometryHomeworkStreak = 0;
@@ -7849,6 +8575,7 @@
         const badge = document.getElementById('geoBoardStreakBadge');
         if (badge) badge.textContent = '🔥 Seri: 0';
         recordParentActivityLog('math_geometry', false, `Geometri Ödev Tahtası: ${geometryHomeworkCurrent.q}`, `Yanlış: ${selected} (Doğru: ${geometryHomeworkCurrent.ans})`);
+        recordLessonInteractiveAttempt('math_geometry', false, `Geometri Tahtası Hatalı Deneme`);
       }
     }
 
@@ -7928,7 +8655,6 @@
         const pct = Math.round((geoQuizState.score / (qList.length * 10)) * 100);
         playChimeSound('fanfare');
         if (pct >= 70) unlockBadge('geometry_master');
-        recordParentMilestone('math_geometry', `Geometrik Şekiller ve Cisimler Testi (${geoQuizState.level})`, `${geoQuizState.score} Puan (%${pct}) • ${durSec} sn`);
 
         document.getElementById('appContent').innerHTML = `
           <div class="card" style="text-align:center;padding:30px 20px;border:2px solid #a855f7;">
@@ -8027,6 +8753,13 @@
           geoQuizState.index += 1;
           geoQuizState.wrongInCurrent = 0;
           geoQuizState.answered = false;
+          if (geoQuizState.index >= geoQuizState.questions.length) {
+            const durSec = Math.max(1, Math.round((Date.now() - geoQuizState.startTime) / 1000));
+            const fullPts = (geoQuizState.questions.length || 1) * 10;
+            const pct = Math.min(100, Math.round((geoQuizState.score / fullPts) * 100));
+            recordParentMilestone('math_geometry', `Geometrik Şekiller ve Cisimler Testi (${geoQuizState.level})`, `${geoQuizState.score}/${fullPts} Puan (%${pct}) • ${durSec} sn`);
+            recordLessonProgress('math_geometry', pct, `${geoQuizState.score}/${fullPts} Puan (%${pct}) • ${durSec} sn`);
+          }
           renderActiveGeometryQuiz();
         }, 1400);
       } else {
@@ -8214,6 +8947,7 @@
         }
         speakTurkish('Tebrikler! ' + formatClockTurkishText(clockGameState.hour, clockGameState.minute));
         recordParentActivityLog('math_clock_money', true, `Saat Ayarlama: ${formatClockTurkishText(clockGameState.targetHour, clockGameState.targetMinute)}`, 'Doğru ayarlandı');
+        recordLessonInteractiveAttempt('math_clock', true, `Saat: ${formatClockTurkishText(clockGameState.targetHour, clockGameState.targetMinute)}`);
         setTimeout(() => {
           generateNewClockTarget();
           renderMathClock();
@@ -8225,6 +8959,7 @@
           fb.innerHTML = `❌ Şu an saat ${String(clockGameState.hour).padStart(2, '0')}:${String(clockGameState.minute).padStart(2, '0')}. İstenen: ${String(clockGameState.targetHour).padStart(2, '0')}:${String(clockGameState.targetMinute).padStart(2, '0')}!`;
         }
         recordParentActivityLog('math_clock_money', false, `Saat Ayarlama`, `Hedef ${clockGameState.targetHour}:${clockGameState.targetMinute}`);
+        recordLessonInteractiveAttempt('math_clock', false, `Saat Ayarlama Hatalı Deneme`);
       }
     }
 
@@ -8356,6 +9091,7 @@
         }
         speakTurkish('Harika! Tam ' + item.price + ' Türk Lirası ödedin.');
         recordParentActivityLog('math_clock_money', true, `Market Oyunu: ${item.name} (${item.price} TL)`, `Ödenen: ${moneyGameState.paidNotes.join('+')} TL`);
+        recordLessonInteractiveAttempt('math_money', true, `${item.name} (${item.price} TL) Ödeme`);
         setTimeout(() => {
           pickNewMoneyItem();
           renderMathMoney();
@@ -8363,6 +9099,8 @@
       } else if (moneyGameState.paidTotal < item.price) {
         playChimeSound('wrong');
         const diff = item.price - moneyGameState.paidTotal;
+        recordParentActivityLog('math_clock_money', false, `Market Oyunu: ${item.name} (${item.price} TL)`, `Eksik ödeme: ${moneyGameState.paidTotal} TL`);
+        recordLessonInteractiveAttempt('math_money', false, `${item.name} Eksik Ödeme`);
         if (fb) {
           fb.style.color = '#fde047';
           fb.innerHTML = `⚠️ ${diff} TL daha eklemelisin! (${moneyGameState.paidTotal} TL verdin, fiyat ${item.price} TL)`;
@@ -8370,6 +9108,8 @@
       } else {
         playChimeSound('wrong');
         const change = moneyGameState.paidTotal - item.price;
+        recordParentActivityLog('math_clock_money', false, `Market Oyunu: ${item.name} (${item.price} TL)`, `Fazla ödeme: ${moneyGameState.paidTotal} TL`);
+        recordLessonInteractiveAttempt('math_money', false, `${item.name} Fazla Ödeme`);
         if (fb) {
           fb.style.color = '#fca5a5';
           fb.innerHTML = `💡 Fazla para verdin (${moneyGameState.paidTotal} TL). Para üstü ${change} TL olur. Tam ${item.price} TL oluşturmayı dene!`;
@@ -8846,7 +9586,7 @@
         `;
       }
 
-      // ⚠️ KURAL: Yeni oyun modu eklendiğinde EN ÜSTE (0. sıraya) eklenir!
+      // ⚠️ KURAL: Yeni oyun modu eklendiğinde EN ÜSTE (0. sıraya) eklenir ve kapakta renderLessonCoverStatsHtml('game_' + id) gösterilir!
       const funGameTabsConfig = [
         { id: 'duel', label: '⚔️ 2 Kişilik Düello (Kardeş/Arkadaş)', activeBg: '#ec4899' },
         { id: 'time60', label: '⏱️ 60 Saniye Şampiyonu', activeBg: '#f59e0b' },
@@ -8861,11 +9601,12 @@
               <div class="card-title">2 Kişilik Düello, 60 Saniye Şampiyonu &amp; Balon Patlatma</div>
             </div>
           </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(205px, 1fr));gap:10px;margin-bottom:16px;">
             ${funGameTabsConfig.map(tab => `
-              <button class="action-btn" style="background:${funGamesTab === tab.id ? tab.activeBg : 'rgba(255,255,255,0.07)'};color:#fff;padding:10px 16px;font-size:13px;" onclick="renderFunGamesHub('${tab.id}')">
-                ${tab.label}
-              </button>
+              <div onclick="renderFunGamesHub('${tab.id}')" style="cursor:pointer;padding:10px;border-radius:12px;border:2px solid ${funGamesTab === tab.id ? tab.activeBg : 'rgba(255,255,255,0.12)'};background:${funGamesTab === tab.id ? tab.activeBg + '22' : 'rgba(15,23,42,0.75)'};">
+                <div style="font-size:13px;font-weight:900;color:#fff;margin-bottom:4px;">${tab.label}</div>
+                ${renderLessonCoverStatsHtml('game_' + tab.id, tab.activeBg, true)}
+              </div>
             `).join('')}
           </div>
           ${bodyHtml}
@@ -8887,10 +9628,13 @@
         }
         if (balloonGameState.score >= 30) unlockBadge('duel_champion');
         recordParentActivityLog('fun_games', true, `Balon Patlatma: ${balloonGameState.prompt}`, `Doğru: ${selected}`);
+        recordLessonInteractiveAttempt('game_balloon', true, `Balon Patlatma: ${balloonGameState.prompt}`);
         setTimeout(() => { renderFunGamesHub('balloon'); }, 800);
       } else {
         playChimeSound('wrong');
         btnEl.style.opacity = '0.4';
+        recordParentActivityLog('fun_games', false, `Balon Patlatma: ${balloonGameState.prompt}`, `Yanlış balon: ${selected} (Doğru: ${balloonGameState.correct})`);
+        recordLessonInteractiveAttempt('game_balloon', false, `Balon Patlatma Hatalı Seçim`);
         if (fb) {
           fb.style.color = '#fca5a5';
           fb.innerHTML = '❌ O balon değil, diğer balonlara dikkatli bak!';
@@ -8920,6 +9664,7 @@
           }
           unlockBadge('duel_champion');
           recordParentMilestone('fun_games', '60 Saniye Şampiyonu', `${time60State.score} Puan`);
+          recordLessonProgress('game_time60', Math.min(100, time60State.score), `${time60State.score} Puan (Rekor: ${time60State.bestScore})`);
           renderFunGamesHub('time60');
         }
       }, 1000);
@@ -8955,7 +9700,11 @@
         if (duelState.round > duelState.maxRounds) {
           playChimeSound('fanfare');
           unlockBadge('duel_champion');
+          const maxPossible = (duelState.maxRounds || 1) * 10;
+          const bestPlayerScore = Math.max(duelState.p1Score, duelState.p2Score);
+          const duelPct = Math.min(100, Math.round((bestPlayerScore / maxPossible) * 100));
           recordParentMilestone('fun_games', '2 Kişilik Düello Maçı', `Mavi: ${duelState.p1Score} - Kırmızı: ${duelState.p2Score}`);
+          recordLessonProgress('game_duel', duelPct, `Mavi ${duelState.p1Score} - ${duelState.p2Score} Kırmızı`);
         }
       }
       duelState.currentQ = generateQuickGameQuestion();
@@ -9053,6 +9802,8 @@
     function checkP15(qKey, val, isCorrect) {
       recordActivity();
       p15Answers[qKey] = val;
+      recordParentActivityLog('english_units', isCorrect, `1. Ünite Sayfa 15 (${qKey}): ${val}`, isCorrect ? 'Doğru cevap' : 'Yanlış cevap');
+      recordLessonInteractiveAttempt('unit1', isCorrect, `Sayfa 15 ${qKey}: ${val}`);
       if (isCorrect) {
         speakText('Great job! That is correct!');
       } else {
@@ -10327,6 +11078,8 @@
         }
       }
       const fb = document.getElementById('p50Feedback');
+      recordParentActivityLog('english_units', allRight, '6. Ünite Sayfa 50 Masadaki Yiyecekler', allRight ? 'Tamamı doğru' : 'Hatalı/eksik öğeler var');
+      recordLessonInteractiveAttempt('unit6', allRight, 'Sayfa 50 Masadaki Yiyecekler');
       if (fb) {
         if (allRight) {
           fb.style.color = 'var(--success)';
@@ -10344,7 +11097,10 @@
       recordActivity();
       p51OddAnswers[taskId] = word;
       renderUnit6();
-      if (p51OddCorrect[taskId] === word) {
+      const isRight = p51OddCorrect[taskId] === word;
+      recordParentActivityLog('english_units', isRight, `6. Ünite Sayfa 51 Farklı Kelime (${taskId}): ${word}`, isRight ? 'Doğru' : `Doğru: ${p51OddCorrect[taskId]}`);
+      recordLessonInteractiveAttempt('unit6', isRight, `Sayfa 51 Farklı Kelime: ${word}`);
+      if (isRight) {
         speakText('Correct! ' + word);
       } else {
         speakText('Try again!');
@@ -10355,6 +11111,8 @@
       recordActivity();
       const val = (p51OrderWords[key] || '').trim().toLowerCase();
       if (val === p51OrderCorrect[key]) {
+        recordParentActivityLog('english_units', true, `6. Ünite Sayfa 51 Harf Sıralama (${key}): ${val}`, 'Doğru');
+        recordLessonInteractiveAttempt('unit6', true, `Sayfa 51 Kelime: ${val}`);
         speakText('Well done! ' + val);
         renderUnit6();
       }
@@ -10364,7 +11122,10 @@
       recordActivity();
       p52Checked[id] = choice;
       renderUnit6();
-      if (p52Correct[id] === choice) {
+      const isRight = p52Correct[id] === choice;
+      recordParentActivityLog('english_units', isRight, `6. Ünite Sayfa 52 (${id}): ${choice}`, isRight ? 'Doğru' : `Doğru: ${p52Correct[id]}`);
+      recordLessonInteractiveAttempt('unit6', isRight, `Sayfa 52 Soru ${id}: ${choice}`);
+      if (isRight) {
         speakText('Correct answer!');
       } else {
         speakText('Try again!');
@@ -10375,7 +11136,10 @@
       recordActivity();
       p53Q5[id] = val;
       renderUnit6();
-      if (p53Q5Correct[id] === val) {
+      const isRight = p53Q5Correct[id] === val;
+      recordParentActivityLog('english_units', isRight, `6. Ünite Sayfa 53 Soru 5.${id}: ${val}`, isRight ? 'Doğru' : `Doğru: ${p53Q5Correct[id]}`);
+      recordLessonInteractiveAttempt('unit6', isRight, `Sayfa 53 Diyalog: ${val}`);
+      if (isRight) {
         speakText('Yes, correct!');
       } else {
         speakText('Think again!');
@@ -10386,7 +11150,10 @@
       recordActivity();
       p53Q6[id] = val;
       renderUnit6();
-      if (p53Q6Correct[id] === val) {
+      const isRight = p53Q6Correct[id] === val;
+      recordParentActivityLog('english_units', isRight, `6. Ünite Sayfa 53 Soru 6.${id}: ${val}`, isRight ? 'Doğru' : `Doğru: ${p53Q6Correct[id]}`);
+      recordLessonInteractiveAttempt('unit6', isRight, `Sayfa 53 Etkinlik: ${val}`);
+      if (isRight) {
         speakText('Great answer!');
       } else {
         speakText('Try again!');
@@ -11114,7 +11881,10 @@
       }
       renderUnit5();
       const fb = document.getElementById('p42Feedback');
-      if (wrong === 0) {
+      const isOk = wrong === 0;
+      recordParentActivityLog('english_units', isOk, '5. Ünite Sayfa 42 Eşleştirme', isOk ? '10/10 Doğru' : `${wrong} yanlış/boş`);
+      recordLessonInteractiveAttempt('unit5', isOk, 'Sayfa 42 Ev Eşyaları Eşleştirme');
+      if (isOk) {
         speakText('Excellent job! All rooms and objects are correct!');
         if (fb) fb.innerHTML = '<div class="feedback-banner success">🎉 TEBRİKLER! Tüm 10 eşleştirme de eksiksiz ve doğru!</div>';
       } else {
@@ -11141,7 +11911,10 @@
         if ((p43UserInputs[i] || '').trim() !== u5CipherKeys[i-1].word) wrong++;
       }
       const fb = document.getElementById('p43Feedback');
-      if (wrong === 0) {
+      const isOk = wrong === 0;
+      recordParentActivityLog('english_units', isOk, '5. Ünite Sayfa 43 Şifre Çözme', isOk ? 'Tüm şifreler doğru' : `${wrong} eksik/yanlış`);
+      recordLessonInteractiveAttempt('unit5', isOk, 'Sayfa 43 Harf Şifre Tablosu');
+      if (isOk) {
         speakText('Wonderful! You solved all the secret codes!');
         if (fb) fb.innerHTML = '<div class="feedback-banner success">🎉 TEBRİKLER! Tüm şifreleri çözdünüz! Harikasınız!</div>';
       } else {
@@ -11160,7 +11933,10 @@
       let c5 = p44Crossword[5].replace(/\s+/g,'').trim() === 'DININGROOM';
       let c4 = p44Crossword[4].trim() === 'GARDEN';
       const fb = document.getElementById('p44Feedback');
-      if (c2 && c3 && c5 && c4) {
+      const isOk = c2 && c3 && c5 && c4;
+      recordParentActivityLog('english_units', isOk, '5. Ünite Sayfa 44 Bulmaca', isOk ? 'Tüm odalar doğru' : 'Eksik/yanlış oda');
+      recordLessonInteractiveAttempt('unit5', isOk, 'Sayfa 44 Ev Bulmacası');
+      if (isOk) {
         speakText('Congratulations! Crossword completed perfectly!');
         if (fb) fb.innerHTML = '<div class="feedback-banner success">🎉 TEBRİKLER! Bulmaca tamamen doğru çözüldü!</div>';
       } else {
@@ -11181,7 +11957,10 @@
                   p45Blanks.e.trim() === 'white';
       const rOK = p45Riddles.a === '3' && p45Riddles.b === '2';
       const fb = document.getElementById('p45Feedback');
-      if (bOK && rOK) {
+      const isOk = bOK && rOK;
+      recordParentActivityLog('english_units', isOk, '5. Ünite Sayfa 45 Cindy Okuma & Bilmeceler', isOk ? 'Kusursuz' : 'Eksik/hatalı cevap');
+      recordLessonInteractiveAttempt('unit5', isOk, 'Sayfa 45 Okuma ve Bilmeceler');
+      if (isOk) {
         speakText('Super! Cindy story questions and riddles are all correct!');
         if (fb) fb.innerHTML = '<div class="feedback-banner success">🎉 TEBRİKLER! Hem boşluklar hem de bilmeceler kusursuz!</div>';
       } else {
@@ -11204,7 +11983,10 @@
 
     function selectPupil(num) {
       p47SelectedPupil = num;
-      if (num === 2) {
+      const isRight = num === 2;
+      recordParentActivityLog('english_units', isRight, `5. Ünite Sayfa 47 Doğru Öğrenciyi Bul (Seçim: ${num})`, isRight ? 'Clara doğru seçildi' : 'Yanlış öğrenci seçildi');
+      recordLessonInteractiveAttempt('unit5', isRight, 'Sayfa 47 Doğru Öğrenci Seçimi');
+      if (isRight) {
         speakText('Correct! Clara has a lovely house with four rooms and a dog in the living room!');
       } else {
         speakText('Not quite. Look at the rooms in the picture carefully.');
@@ -11587,7 +12369,8 @@
 
     function checkP34(qNum, selectedWord, isCorrect) {
       const fb = document.getElementById(`p34_fb_${qNum}`);
-      recordParentActivityLog('english_units', `4. Ünite Sayfa 34 Soru ${qNum}: ${selectedWord}`, isCorrect);
+      recordParentActivityLog('english_units', isCorrect, `4. Ünite Sayfa 34 Soru ${qNum}: ${selectedWord}`, isCorrect ? 'Doğru' : 'Yanlış');
+      recordLessonInteractiveAttempt('unit4', isCorrect, `Sayfa 34 Soru ${qNum}: ${selectedWord}`);
       if (isCorrect) {
         speakText('Correct!');
         fb.innerHTML = `<span style="color:#34d399;font-size:12px;font-weight:bold;">🎉 Harika, doğru cevap!</span>`;
@@ -11605,11 +12388,13 @@
       const target = p36TargetSentence.join(' ');
       const fb = document.getElementById('p36Feedback');
       if (cur === target) {
-        recordParentActivityLog('english_units', `4. Ünite Sayfa 36 Cümle Kurma: "${target}"`, true);
+        recordParentActivityLog('english_units', true, `4. Ünite Sayfa 36 Cümle Kurma: "${target}"`, 'Doğru sıralandı');
+        recordLessonInteractiveAttempt('unit4', true, `Sayfa 36 Cümle: ${target}`);
         speakText(target);
         fb.innerHTML = `<div class="feedback-banner success"><span>🎉 Doğru Cümle: "He is my father."</span></div>`;
       } else {
-        recordParentActivityLog('english_units', `4. Ünite Sayfa 36 Cümle Kurma ("${cur}")`, false);
+        recordParentActivityLog('english_units', false, `4. Ünite Sayfa 36 Cümle Kurma ("${cur}")`, `Doğru: ${target}`);
+        recordLessonInteractiveAttempt('unit4', false, `Sayfa 36 Cümle Hatalı Sıralama`);
         speakText('Try again');
         fb.innerHTML = `<div class="feedback-banner error"><span>❌ Yanlış sıralama! Tekrar deneyin.</span><button class="action-btn retry" onclick="resetP36Sentence()">Sıfırla</button></div>`;
       }
@@ -11875,7 +12660,8 @@
 
     function checkPage26(isCorrect, word) {
       const fb = document.getElementById('page26Feedback');
-      recordParentActivityLog('english_units', `3. Ünite Sayfa 26 (Touch your nose): ${word}`, isCorrect);
+      recordParentActivityLog('english_units', isCorrect, `3. Ünite Sayfa 26 (Touch your nose): ${word}`, isCorrect ? 'Doğru' : 'Yanlış');
+      recordLessonInteractiveAttempt('unit3', isCorrect, `Sayfa 26 Dinle-Göster: ${word}`);
       if (isCorrect) {
         speakText('Correct! Well done!');
         fb.innerHTML = `<div class="feedback-banner success"><span>🎉 Doğru! "Nose" burun demektir!</span></div>`;
@@ -11902,11 +12688,13 @@
       const target = page28CorrectWords.join(' ');
       const fb = document.getElementById('p28Feedback');
       if (current === target) {
-        recordParentActivityLog('english_units', `3. Ünite Sayfa 28 Cümle Kurma: "${target}"`, true);
+        recordParentActivityLog('english_units', true, `3. Ünite Sayfa 28 Cümle Kurma: "${target}"`, 'Doğru');
+        recordLessonInteractiveAttempt('unit3', true, `Sayfa 28 Cümle: ${target}`);
         speakText(target);
         fb.innerHTML = `<div class="feedback-banner success"><span>🎉 Tebrikler! Doğru Cümle: "This is my hat."</span></div>`;
       } else {
-        recordParentActivityLog('english_units', `3. Ünite Sayfa 28 Cümle Kurma ("${current}")`, false);
+        recordParentActivityLog('english_units', false, `3. Ünite Sayfa 28 Cümle Kurma ("${current}")`, `Doğru: ${target}`);
+        recordLessonInteractiveAttempt('unit3', false, `Sayfa 28 Cümle Hatalı`);
         speakText('Try again');
         fb.innerHTML = `
           <div class="feedback-banner error">
@@ -11919,7 +12707,8 @@
 
     function alertGiraffe(isTall) {
       const fb = document.getElementById('p29Feedback');
-      recordParentActivityLog('english_units', `3. Ünite Sayfa 29 Zürafa Sorusu (${isTall ? 'Tall' : 'Short'})`, isTall);
+      recordParentActivityLog('english_units', isTall, `3. Ünite Sayfa 29 Zürafa Sorusu (${isTall ? 'Tall' : 'Short'})`, isTall ? 'Doğru' : 'Yanlış');
+      recordLessonInteractiveAttempt('unit3', isTall, `Sayfa 29 Zürafa Sorusu`);
       if (isTall) {
         speakText('The giraffe is tall. Great!');
         fb.innerHTML = `<div class="feedback-banner success"><span>🎉 Harika! Zürafa "tall" (uzun) dur.</span></div>`;
@@ -11931,8 +12720,10 @@
 
     function checkMelisAge(age) {
       const fb = document.getElementById('p31Feedback');
-      recordParentActivityLog('english_units', `3. Ünite Sayfa 31 Melis'in Yaşı (${age})`, age === 8);
-      if (age === 8) {
+      const isRight = age === 8;
+      recordParentActivityLog('english_units', isRight, `3. Ünite Sayfa 31 Melis'in Yaşı (${age})`, isRight ? 'Doğru (8)' : 'Yanlış');
+      recordLessonInteractiveAttempt('unit3', isRight, `Sayfa 31 Melis Yaşı: ${age}`);
+      if (isRight) {
         speakText('Correct! She is eight years old.');
         fb.innerHTML = `<div class="feedback-banner success"><span>🎉 Doğru! Melis 8 yaşında ("I am eight").</span></div>`;
       } else {
@@ -12117,7 +12908,8 @@
 
     function checkCount(val, isCorrect) {
       const fb = document.getElementById('p20Feedback');
-      recordParentActivityLog('english_units', `2. Ünite Sayfa 20 How many pencils? (${val})`, isCorrect);
+      recordParentActivityLog('english_units', isCorrect, `2. Ünite Sayfa 20 How many pencils? (${val})`, isCorrect ? 'Doğru (5)' : 'Yanlış');
+      recordLessonInteractiveAttempt('unit2', isCorrect, `Sayfa 20 Kalem Sayma: ${val}`);
       if (isCorrect) {
         speakText('Five pencils. Correct!');
         fb.innerHTML = `<div class="feedback-banner success"><span>🎉 Harika! 5 adet kalem var ("Five pencils").</span></div>`;
@@ -12129,7 +12921,8 @@
 
     function checkFlowerLetter(letter, isCorrect) {
       const fb = document.getElementById('p21Feedback');
-      recordParentActivityLog('english_units', `2. Ünite Sayfa 21 Çiçek Şifresi Harf: ${letter}`, isCorrect);
+      recordParentActivityLog('english_units', isCorrect, `2. Ünite Sayfa 21 Çiçek Şifresi Harf: ${letter}`, isCorrect ? 'Doğru (SCHOOL)' : 'Yanlış');
+      recordLessonInteractiveAttempt('unit2', isCorrect, `Sayfa 21 Çiçek Şifresi: ${letter}`);
       if (isCorrect) {
         speakText('School. Great job!');
         fb.innerHTML = `<div class="feedback-banner success"><span>🎉 Doğru! Gizli Kelime: SCHOOL (Okul).</span></div>`;
@@ -12251,15 +13044,18 @@
       }
 
       const fb = document.getElementById('daysSortFeedback');
+      const daysScore = isAllCorrect ? 100 : Math.max(10, Math.round(((7 - wrongCount) / 7) * 100));
       if (isAllCorrect) {
-        recordParentActivityLog('english_units', `Haftanın Günlerini Sıraya Dizme Ödevi (Monday ➔ Sunday)`, true);
-        recordParentMilestone(`📅 Haftanın Günlerini Sıraya Dizme Ödevini Hatasız Tamamladı`);
+        recordParentActivityLog('english_units', true, `Haftanın Günlerini Sıraya Dizme Ödevi (Monday ➔ Sunday)`, '100/100 Puan • Hatasız');
+        recordParentMilestone('english_units', '📅 Haftanın Günlerini Sıraya Dizme Ödevi', '100/100 Puan • Tam Sıra');
+        recordLessonProgress('days_sort', 100, '100/100 Puan • Monday ➔ Sunday Tam Sıra', { incrementCount: true });
         unlockBadge('days_expert');
         playChimeSound('fanfare');
         speakText('Excellent! Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday. Perfect order!');
         fb.innerHTML = `<div class="feedback-banner success"><span>🎉 TEBRİKLER! Tüm günler tam sırasında: Monday ... Sunday!</span></div>`;
       } else {
-        recordParentActivityLog('english_units', `Haftanın Günlerini Sıraya Dizme (${wrongCount} gün yanlış sırada)`, false);
+        recordParentActivityLog('english_units', false, `Haftanın Günlerini Sıraya Dizme (${wrongCount} gün yanlış sırada)`, `${7 - wrongCount}/7 Doğru Yer`);
+        recordLessonProgress('days_sort', daysScore, `${7 - wrongCount}/7 Doğru Yer (%${daysScore})`, { incrementCount: false });
         speakText('Some days are not in the right order. Try again.');
         fb.innerHTML = `<div class="feedback-banner error"><span>❌ Sıralamada ${wrongCount} gün yanlış yerde! Okları kullanarak düzeltin.</span></div>`;
       }
@@ -13334,20 +14130,25 @@
         const isGrand = key === 'grand';
         const isDays = key === 'days';
         const isSpeaking = key === 'speaking';
-        const best = quizBestScores[key] !== undefined ? quizBestScores[key] : null;
+        const quizLessonId = 'eng_quiz_' + key;
+        const quizStat = typeof getUnifiedLessonStat === 'function' ? getUnifiedLessonStat(quizLessonId) : { hasActivity: false, bestScore: 0 };
+        const best = quizBestScores[key] !== undefined ? quizBestScores[key] : (quizStat.hasActivity ? quizStat.bestScore : null);
 
         let borderStyle = 'border:1px solid var(--border);background:var(--card-bg);';
         let badgeColor = '#334155';
         let btnColor = '#2563eb;color:#fff;';
+        let statAccent = '#38bdf8';
 
         if (isSpeaking) {
           borderStyle = 'border:2px solid #10b981;background:linear-gradient(135deg, rgba(16,185,129,0.15), rgba(15,23,42,0.95));';
           badgeColor = '#059669';
           btnColor = '#10b981;color:#fff;font-weight:800;';
+          statAccent = '#10b981';
         } else if (isGrand) {
           borderStyle = 'border:2px solid #f59e0b;background:linear-gradient(135deg, rgba(245,158,11,0.16), rgba(15,23,42,0.95));box-shadow:0 8px 25px rgba(245,158,11,0.18);';
           badgeColor = '#d97706';
           btnColor = '#f59e0b;color:#0f172a;font-weight:900;';
+          statAccent = '#f59e0b';
         } else if (isDays) {
           borderStyle = 'border:2px solid #38bdf8;background:linear-gradient(135deg, rgba(56,189,248,0.1), rgba(15,23,42,0.9));';
           badgeColor = '#0284c7';
@@ -13361,7 +14162,7 @@
                 <div style="font-size:36px;line-height:1;background:rgba(255,255,255,0.05);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);">
                   ${t.icon}
                 </div>
-                <div>
+                <div style="flex:1;min-width:0;">
                   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
                     <h3 style="font-size:16px;color:#fff;margin:0;">${t.title}</h3>
                     <span style="background:${badgeColor};color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;">
@@ -13372,9 +14173,10 @@
                     </span>
                     ${best !== null ? `<span style="color:#fde047;font-size:11px;font-weight:700;">★ Rekor: ${best} Puan</span>` : ''}
                   </div>
-                  <p style="font-size:12px;color:var(--muted);margin:0;line-height:1.4;">
+                  <p style="font-size:12px;color:var(--muted);margin:0 0 6px;line-height:1.4;">
                     ${t.description}
                   </p>
+                  ${renderLessonCoverStatsHtml(quizLessonId, statAccent, true)}
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:8px;align-self:center;">
@@ -13405,11 +14207,13 @@
                 🌟 EN SON EKLENENLER
               </span>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(185px, 1fr));gap:8px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:10px;">
               ${engExtraQuizCards.map(ec => `
-                <button class="action-btn" style="background:${ec.bg};color:#fff;font-size:12px;font-weight:900;padding:10px;" onclick="openEngExtraTopic('${ec.id}','quiz')">
-                  ${ec.label}
-                </button>
+                <div onclick="openEngExtraTopic('${ec.id}','quiz')" style="cursor:pointer;background:rgba(15,23,42,0.85);border:1.5px solid ${ec.bg};border-radius:12px;padding:10px;display:flex;flex-direction:column;justify-content:space-between;">
+                  <div style="font-size:12px;font-weight:900;color:#fff;margin-bottom:4px;">${ec.label}</div>
+                  ${renderLessonCoverStatsHtml(ec.id, ec.bg, true)}
+                  <button class="action-btn" style="width:100%;background:${ec.bg};color:#fff;font-size:11px;font-weight:900;padding:7px;">▶ Testi Başlat</button>
+                </div>
               `).join('')}
             </div>
           </div>
@@ -13893,7 +14697,34 @@
       quizWrongClicked = [];
       quizAnsweredCorrectly = false;
       if (topic && currentQuizIndex >= topic.questions.length) {
-        recordParentMilestone('english_quiz', topic.title, `${quizScore}/${topic.maxScore} Puan • İlk Denemede Doğru: ${quizTotalFirstTryCorrect}/${topic.questions.length} • Hata: ${quizTotalMistakes}`);
+        const qCount = topic.questions.length || 1;
+        const maxPts = qCount * 10;
+        const pct = Math.min(100, Math.round((quizScore / maxPts) * 100));
+        if (!quizBestScores[activeTopicId] || quizScore > quizBestScores[activeTopicId]) {
+          quizBestScores[activeTopicId] = quizScore;
+        }
+        recordParentMilestone('english_quiz', topic.title, `${quizScore}/${maxPts} Puan (%${pct}) • İlk Denemede Doğru: ${quizTotalFirstTryCorrect}/${qCount} • Hata: ${quizTotalMistakes}`);
+        const quizLessonId = 'eng_quiz_' + activeTopicId;
+        if (typeof recordLessonProgress === 'function') {
+          recordLessonProgress(quizLessonId, pct, `${quizScore}/${maxPts} Puan (%${pct}) • İlk Denemede: ${quizTotalFirstTryCorrect}/${qCount}`, {
+            subject: 'english',
+            icon: topic.icon || '📝',
+            title: topic.title
+          });
+          const unitMirrorMap = {
+            greetings: ['unit1'],
+            school: ['unit2'],
+            body: ['unit3'],
+            family: ['unit4'],
+            house: ['unit7', 'unit5'],
+            city: ['unit8', 'unit6'],
+            days: ['days_sort']
+          };
+          const mirrorIds = unitMirrorMap[activeTopicId] || [];
+          mirrorIds.forEach(uid => {
+            recordLessonProgress(uid, pct, `Ünite Testi: ${quizScore}/${maxPts} Puan (%${pct})`);
+          });
+        }
       }
       renderActiveQuiz();
     }
@@ -13959,7 +14790,7 @@
 
           <div style="display:flex;justify-content:center;gap:12px;margin-top:14px;">
             <button class="sort-btn" style="width:44px;height:44px;" onclick="prevFlashcard()">◀</button>
-            <button class="action-btn" onclick="speakText('${card.en}')">🔊 Seslendir</button>
+            <button class="action-btn" onclick="speakText('${card.en}');trackEnglishUnitWordPractice('flashcards','${card.en.replace(/'/g, "\\'")}')">🔊 Seslendir</button>
             <button class="sort-btn" style="width:44px;height:44px;" onclick="nextFlashcard()">▶</button>
           </div>
         </div>
@@ -13970,12 +14801,16 @@
 
     function flipFlashcard() {
       flashcardFlipped = !flashcardFlipped;
+      const card = allFlashcards[flashcardIndex];
+      if (card) trackEnglishUnitWordPractice('flashcards', card.en);
       renderFlashcards();
     }
 
     function nextFlashcard() {
       flashcardIndex = (flashcardIndex + 1) % allFlashcards.length;
       flashcardFlipped = false;
+      const card = allFlashcards[flashcardIndex];
+      if (card) trackEnglishUnitWordPractice('flashcards', card.en);
       renderFlashcards();
     }
 
@@ -14004,7 +14839,7 @@
           <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Her güne tıklayarak doğru telaffuzunu dinleyebilir ve altındaki Türkçe okunuşunu okuyabilirsiniz.</p>
           <div class="word-grid">
             ${correctDaysOrder.map((d, idx) => `
-              <div class="word-tile" onclick="speakText('${d.en}')">
+              <div class="word-tile" onclick="speakText('${d.en}');trackEnglishUnitWordPractice('guide','${d.en}')">
                 <span class="speaker-icon">🔊</span>
                 <div class="tile-icon">📅</div>
                 <div class="en-text">${idx + 1}. ${d.en}</div>
@@ -14114,6 +14949,8 @@
         addStarPoints(10);
         playChimeSound('correct');
         speakText('Great! ' + chosen.en);
+        recordParentActivityLog('english_quiz', true, `Dinle ve Yakala: ${chosen.en}`, `Doğru resim (${chosen.tr})`);
+        recordLessonInteractiveAttempt('listen_match', true, `Dinle ve Yakala: ${chosen.en}`);
         if (btn) {
           btn.style.borderColor = '#10b981';
           btn.style.background = 'rgba(16,185,129,0.22)';
@@ -14127,6 +14964,8 @@
       } else {
         playChimeSound('wrong');
         speakText('Try again');
+        recordParentActivityLog('english_quiz', false, `Dinle ve Yakala: ${listenMatchTarget ? listenMatchTarget.en : ''}`, `Seçilen: ${chosen ? chosen.en : ''}`);
+        recordLessonInteractiveAttempt('listen_match', false, `Dinle ve Yakala Hatalı Seçim`);
         if (btn) {
           btn.style.borderColor = '#ef4444';
           btn.style.background = 'rgba(239,68,68,0.18)';
@@ -14277,11 +15116,6 @@
       const total = bank.questions.length;
 
       if (mebExtraQuizState.qIndex >= total) {
-        if (typeof awardStars === 'function') awardStars(15, bank.title);
-        if (typeof recordParentMilestone === 'function') {
-          recordParentMilestone('math_quiz', bank.title, `${mebExtraQuizState.score}/100 Puan • İlk Denemede Doğru: ${mebExtraQuizState.firstTryCount}/${total}`);
-        }
-        if (typeof launchConfetti === 'function') launchConfetti();
         document.getElementById('appContent').innerHTML = `
           ${renderMathModuleTopNav(bank.title, 'TEST TAMAMLANDI', '#10b981')}
           <div class="card" style="text-align:center;border:2px solid #10b981;padding:24px;">
@@ -14358,7 +15192,7 @@
                 <div style="font-weight:900;color:#6ee7b7;font-size:14px;">🎉 Harika! Doğru Cevap: ${item.ans}</div>
                 <div style="font-size:12px;color:#e2e8f0;margin-top:2px;">💡 ${item.exp}</div>
               </div>
-              <button class="action-btn" style="background:#10b981;color:#fff;font-weight:900;padding:9px 16px;" onclick="mebExtraQuizState.qIndex++;mebExtraQuizState.answered=false;mebExtraQuizState.wrongClicked=[];renderMebExtraQuizUI();">
+              <button class="action-btn" style="background:#10b981;color:#fff;font-weight:900;padding:9px 16px;" onclick="nextMebExtraQuizQuestion()">
                 Sıradaki Soru ➔
               </button>
             </div>
@@ -14368,10 +15202,43 @@
       document.getElementById('appContent').innerHTML = html;
     }
 
+    function getMebExtraCategoryId(topicKey) {
+      const catMap = {
+        numbers: 'math_numbers',
+        fractions: 'math_fractions',
+        measurement: 'math_measurement',
+        patterns: 'math_patterns_symmetry',
+        data_graphs: 'math_data_graphs'
+      };
+      return catMap[topicKey] || 'math_numbers';
+    }
+
+    function nextMebExtraQuizQuestion() {
+      mebExtraQuizState.qIndex++;
+      mebExtraQuizState.answered = false;
+      mebExtraQuizState.wrongClicked = [];
+      const bank = mebExtraQuizBanks[mebExtraQuizState.topicKey] || mebExtraQuizBanks.numbers;
+      const total = bank.questions.length || 10;
+      if (mebExtraQuizState.qIndex >= total) {
+        const catId = getMebExtraCategoryId(mebExtraQuizState.topicKey);
+        const pct = Math.min(100, Math.round((mebExtraQuizState.score / (total * 10)) * 100));
+        if (typeof awardStars === 'function') awardStars(15, bank.title);
+        if (typeof launchConfetti === 'function') launchConfetti();
+        if (typeof recordParentMilestone === 'function') {
+          recordParentMilestone(catId, bank.title, `${mebExtraQuizState.score}/${total * 10} Puan (%${pct}) • İlk Denemede Doğru: ${mebExtraQuizState.firstTryCount}/${total}`);
+        }
+        if (typeof recordLessonProgress === 'function') {
+          recordLessonProgress(catId, pct, `${mebExtraQuizState.score}/${total * 10} Puan (%${pct}) • İlk Denemede: ${mebExtraQuizState.firstTryCount}/${total}`);
+        }
+      }
+      renderMebExtraQuizUI();
+    }
+
     function answerMebExtraQuiz(choice) {
       if (mebExtraQuizState.answered) return;
       const bank = mebExtraQuizBanks[mebExtraQuizState.topicKey] || mebExtraQuizBanks.numbers;
       const item = bank.questions[mebExtraQuizState.qIndex];
+      const catId = getMebExtraCategoryId(mebExtraQuizState.topicKey);
       if (choice === item.ans) {
         mebExtraQuizState.answered = true;
         if (mebExtraQuizState.wrongClicked.length === 0) {
@@ -14383,7 +15250,7 @@
         if (typeof playSuccessTone === 'function') playSuccessTone();
         if (typeof speakTurkishText === 'function') speakTurkishText('Harika! Doğru cevap ' + item.ans);
         if (typeof recordParentActivityLog === 'function') {
-          recordParentActivityLog('math_quiz', true, `${bank.title}: ${item.q}`, `Doğru: ${item.ans}`);
+          recordParentActivityLog(catId, true, `${bank.title}: ${item.q}`, `Doğru: ${item.ans}`);
         }
       } else {
         if (!mebExtraQuizState.wrongClicked.includes(choice)) {
@@ -14392,7 +15259,7 @@
         if (typeof playErrorTone === 'function') playErrorTone();
         if (typeof speakTurkishText === 'function') speakTurkishText('Tekrar dene bakalım');
         if (typeof recordParentActivityLog === 'function') {
-          recordParentActivityLog('math_quiz', false, `${bank.title}: ${item.q}`, `Seçilen: ${choice} | Doğru: ${item.ans}`);
+          recordParentActivityLog(catId, false, `${bank.title}: ${item.q}`, `Seçilen: ${choice} | Doğru: ${item.ans}`);
         }
       }
       renderMebExtraQuizUI();
@@ -15196,7 +16063,7 @@
         speakTurkishText('Doğru cevap: ' + cur.ans + '. ' + cur.exp);
       }
       if (typeof recordParentActivityLog === 'function') {
-        recordParentActivityLog('english', isCorrect, cur.q, `Seçilen: ${chosen} | Doğru: ${cur.ans}`);
+        recordParentActivityLog('english_extra', isCorrect, cur.q, `Seçilen: ${chosen} | Doğru: ${cur.ans}`);
       }
       switchMainTab(topicId);
     }
@@ -15207,8 +16074,13 @@
       engExtraQuizState.selectedChoice = null;
       if (engExtraQuizState.qIndex >= engExtraQuizState.questions.length) {
         if (typeof launchConfetti === 'function') launchConfetti();
+        const totalQ = engExtraQuizState.questions.length || 1;
+        const pct = Math.min(100, Math.round((engExtraQuizState.score / totalQ) * 100));
         if (typeof recordParentMilestone === 'function') {
-          recordParentMilestone('quiz', `İngilizce Ünite Testi (${topicId})`, `${engExtraQuizState.score}/${engExtraQuizState.questions.length} Doğru`);
+          recordParentMilestone('english_extra', `İngilizce Ünite Testi (${topicId})`, `${engExtraQuizState.score}/${totalQ} Doğru (%${pct})`);
+        }
+        if (typeof recordLessonProgress === 'function') {
+          recordLessonProgress(topicId, pct, `${engExtraQuizState.score}/${totalQ} Doğru (%${pct})`);
         }
       }
       switchMainTab(topicId);
@@ -18020,6 +18892,9 @@
         };
         existing.readCount = (existing.readCount || 0) + 1;
         existing.lastReadDate = getTodayDateKey();
+        existing.lastReadTimeLabel = typeof getTurkishDateTimeShort === 'function' ? getTurkishDateTimeShort() : `${getTodayDateKey()} ${getCurrentTimeHHMM()}`;
+        existing.lastSpeedScore = speedScore;
+        existing.lastCompScore = compScore;
         existing.lastDurationSec = durationSec;
         existing.bestSpeedScore = Math.max(existing.bestSpeedScore || 0, speedScore);
         existing.bestCompScore = Math.max(existing.bestCompScore || 0, compScore);
@@ -18035,6 +18910,15 @@
         if (existing.history.length > 25) existing.history.pop();
         records[bookId] = existing;
         localStorage.setItem('lingo_turkish_reading_records', JSON.stringify(records));
+        if (typeof recordLessonProgress === 'function') {
+          const combinedScore = Math.round(((Number(speedScore) || 0) + (Number(compScore) || 0)) / 2);
+          recordLessonProgress(
+            bookId,
+            combinedScore,
+            `Okuma Hızı: ${speedScore} P • Anlama: %${compScore} (${correctCount} Doğru)`,
+            { subject: 'turkish' }
+          );
+        }
         if (typeof scheduleMemoryMirrorSync === 'function') scheduleMemoryMirrorSync();
       } catch (e) {}
     }
@@ -18130,6 +19014,11 @@
             ${turkishBooksBank.map(book => {
               const rec = records[book.id] || null;
               const hasRead = rec && rec.readCount > 0;
+              const uStat = typeof getUnifiedLessonStat === 'function' ? getUnifiedLessonStat(book.id) : { monthCount: 0, lastScore: 0, lastTimeLabel: '' };
+              const lastHist = (rec && Array.isArray(rec.history) && rec.history[0]) ? rec.history[0] : null;
+              const lastComp = lastHist ? lastHist.compScore : (rec ? rec.bestCompScore : 0);
+              const lastSpd = lastHist ? lastHist.speedScore : (rec ? rec.bestSpeedScore : 0);
+              const lastTime = (rec && rec.lastReadTimeLabel) || (lastHist ? `${lastHist.date} ${lastHist.time}` : (rec ? rec.lastReadDate : '')) || uStat.lastTimeLabel;
               return `
                 <div class="card" style="margin-bottom:0;padding:12px;border:1.5px solid ${book.themeColor};background:linear-gradient(135deg, rgba(30,41,59,0.92), rgba(15,23,42,0.96));border-radius:14px;cursor:pointer;display:flex;gap:12px;align-items:stretch;transition:transform 0.15s, box-shadow 0.15s;" onclick="openTurkishBookReader('${book.id}')" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform='none'">
                   <!-- SOL: KOMPAKT RESİM / İKON -->
@@ -18165,18 +19054,18 @@
                       </p>
                     </div>
 
-                    <!-- ALT ÇUBUK: OKUNMA SAYISI (KAÇ DEFA OKUNDU), PUAN & OKU BUTONU -->
+                    <!-- ALT ÇUBUK: OKUNMA SAYISI (BU AY / TOPLAM), SON ZAMAN, PUAN & OKU BUTONU -->
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;border-top:1px solid rgba(255,255,255,0.06);padding-top:6px;margin-top:2px;">
                       <div style="font-size:10px;line-height:1.3;">
                         ${hasRead ? `
                           <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:2px;">
                             <span style="background:rgba(245,158,11,0.22);color:#fde047;font-weight:900;padding:1px 6px;border-radius:4px;border:1px solid rgba(245,158,11,0.4);display:inline-flex;align-items:center;gap:3px;">
-                              🔄 <strong>${rec.readCount} Kez Okundu</strong>
+                              🔄 <strong>${rec.readCount} Kez</strong> <span style="opacity:0.85;">(Bu ay: ${uStat.monthCount})</span>
                             </span>
-                            <span style="color:#64748b;font-size:9px;">(${rec.lastReadDate || 'Bugün'})</span>
+                            <span style="color:#94a3b8;font-size:9px;">🕒 ${lastTime || 'Bugün'}</span>
                           </div>
                           <div>
-                            <span style="color:#34d399;font-weight:800;">🎯 %${rec.bestCompScore} Anlama</span> • <span style="color:#38bdf8;font-weight:800;">⏱️ ${rec.bestSpeedScore} P Hız</span>
+                            <span style="color:#34d399;font-weight:800;">🎯 Son: %${lastComp} (En İyi: %${rec.bestCompScore})</span> • <span style="color:#38bdf8;font-weight:800;">⏱️ ${lastSpd} P Hız</span>
                           </div>
                         ` : `
                           <div style="margin-bottom:2px;">
@@ -18187,7 +19076,7 @@
                           <span style="color:#fde047;font-weight:800;">⭐ İlk Puanını Kazan!</span>
                         `}
                       </div>
-                      <span style="background:${book.themeColor};;color:#fff;font-size:11px;font-weight:900;padding:4px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:3px;box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+                      <span style="background:${book.themeColor};color:#fff;font-size:11px;font-weight:900;padding:4px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:3px;box-shadow:0 2px 6px rgba(0,0,0,0.3);flex-shrink:0;">
                         Oku ➔
                       </span>
                     </div>
@@ -18817,6 +19706,11 @@ Okuduğunu anlama ve matematik problem çözme gelişimi için düzenli takip ed
       return turkishBooksBank.map(book => {
         const rec = records[book.id] || null;
         const hasRead = rec && rec.readCount > 0;
+        const uStat = typeof getUnifiedLessonStat === 'function' ? getUnifiedLessonStat(book.id) : { monthCount: 0, lastTimeLabel: '' };
+        const lastHist = (rec && Array.isArray(rec.history) && rec.history[0]) ? rec.history[0] : null;
+        const lastComp = lastHist ? lastHist.compScore : (rec ? (rec.lastCompScore ?? rec.bestCompScore) : 0);
+        const lastSpd = lastHist ? lastHist.speedScore : (rec ? (rec.lastSpeedScore ?? rec.bestSpeedScore) : 0);
+        const lastTime = (rec && rec.lastReadTimeLabel) || (lastHist ? `${lastHist.date} ${lastHist.time}` : (rec ? rec.lastReadDate : '')) || uStat.lastTimeLabel;
         return `
           <div style="background:#0f172a;border:1px solid ${hasRead ? '#f59e0b' : '#334155'};border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
             <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:240px;">
@@ -18829,11 +19723,13 @@ Okuduğunu anlama ve matematik problem çözme gelişimi için düzenli takip ed
                   ${hasRead ? `
                     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:3px;">
                       <span style="background:rgba(245,158,11,0.2);color:#fde047;font-weight:900;padding:2px 8px;border-radius:6px;border:1px solid rgba(245,158,11,0.4);">
-                        🔄 <strong>${rec.readCount} Kez Okundu</strong>
+                        📅 Bu Ay: <strong>${uStat.monthCount} Kez</strong> • 🔄 Toplam: ${rec.readCount} Kez
                       </span>
-                      <span style="color:#34d399;font-weight:800;">🎯 En İyi Anlama: %${rec.bestCompScore}</span>
-                      <span style="color:#38bdf8;font-weight:800;">⏱️ Hız: ${rec.bestSpeedScore} Puan</span>
-                      <span style="color:#94a3b8;font-size:10px;">(${rec.lastReadDate || ''})</span>
+                      <span style="color:#cbd5e1;font-size:10px;font-weight:700;">🕒 ${lastTime || ''}</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                      <span style="color:#34d399;font-weight:800;">🎯 Son Anlama: %${lastComp} (En İyi: %${rec.bestCompScore})</span>
+                      <span style="color:#38bdf8;font-weight:800;">⏱️ Son Hız: ${lastSpd} P (En İyi: ${rec.bestSpeedScore} P)</span>
                     </div>
                   ` : `
                     <span style="background:rgba(255,255,255,0.06);color:#94a3b8;font-weight:800;padding:2px 8px;border-radius:6px;">
@@ -18862,7 +19758,7 @@ Okuduğunu anlama ve matematik problem çözme gelişimi için düzenli takip ed
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '4.2.0';
+    const CURRENT_APP_VERSION = '4.3.0';
     let swRegistration = null;
     let updateBannerDismissed = false;
 
