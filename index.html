@@ -1164,7 +1164,7 @@
           📲 Ana Ekrana Ekle
         </button>
         <button onclick="manualCheckForUpdates(true)" class="action-btn" style="background:#06b6d4;color:#0f172a;font-size:11px;padding:7px 12px;font-weight:900;" title="Önbelleği temizle ve son sürümü yükle">
-          🔄 Sürümü Yenile (v4.1.0)
+          🔄 Sürümü Yenile (v4.2.0)
         </button>
         <button onclick="switchMainTab('fun_games')" class="action-btn" style="background:#8b5cf6;color:#fff;font-size:11px;padding:7px 12px;font-weight:900;">
           🎈 Oyun &amp; Düello
@@ -3023,7 +3023,7 @@
           id: 'turkish',
           icon: '📖',
           title: 'TÜRKÇE DERSİ',
-          badge: 'EN YENİ • 13 HİKAYE & OKUDUĞUNU ANLAMA',
+          badge: 'EN YENİ • 14 HİKAYE & OKUDUĞUNU ANLAMA',
           badgeBg: '#f59e0b',
           badgeColor: '#0f172a',
           borderColor: '#f59e0b',
@@ -3031,7 +3031,7 @@
           bg: 'linear-gradient(135deg, rgba(245,158,11,0.22), rgba(234,88,12,0.18))',
           descColor: '#fef3c7',
           arrowColor: '#fde047',
-          desc: 'Kung Fu Panda • Kirpi Sonic • Süper İttifak • Robot Lingo • Maarif Modeli Okuma Hızı & Anlama Sınavı'
+          desc: 'Sackboy, Vex & Astrobot (Yazar: Bartu) • Kung Fu Panda • Kirpi Sonic • Süper İttifak • Maarif Okuma Sınavı'
         },
         {
           id: 'math',
@@ -16270,6 +16270,17 @@
     // ⚠️ KURAL: Yeni hikaye/kahraman kartı eklendiğinde DAİMA bu dizinin EN ÜSTÜNE (0. sıraya) eklenir!
     const bartuHeroCardsData = [
       {
+        id: 'book_sackboy_vex_astrobot',
+        title: 'Bartu • Sackboy, Astrobot & Vex',
+        hero: 'Örgü Şövalye Sackboy & Astrobot',
+        icon: '🛡️',
+        tier: 'YAZAR: BARTU • YENİ MACERA KARTI',
+        cardColor: '#7c3aed',
+        image: 'book_sackboy_vex_astrobot.jpg',
+        stats: { 'Cesaret': 100, 'Takım Gücü': 100, 'Yazar': 'Bartu' },
+        desc: 'Beş Gezegen\'den gelen Astrobot ve Örgü Şövalye Sackboy ile güçlerini birleştirip Vex\'i yenen efsane!'
+      },
+      {
         id: 'book_kungfupanda',
         title: 'Bartu & Kung Fu Panda',
         hero: 'Ejderha Savaşçısı Po & Korkusuz Beşli',
@@ -16516,6 +16527,118 @@
        ⚠️ KURAL: Yeni hikaye kitabı eklendiğinde DAİMA bu dizinin EN ÜSTÜNE (0. sıraya) eklenir!
     ======================================================== */
     const turkishBooksBank = [
+      {
+            "id": "book_sackboy_vex_astrobot",
+            "title": "Örgü Şövalye Sackboy ve Astrobot: Vex'e Karşı Zafer",
+            "subtitle": "Yazar: Bartu • 4 Dakikalık Beş Gezegen Macerası",
+            "author": "Bartu",
+            "badge": "✍️ YAZAR: BARTU • MAX 4 DK",
+            "badgeColor": "#7c3aed",
+            "themeColor": "#8b5cf6",
+            "coverImg": "book_sackboy_vex_astrobot.jpg",
+            "icon": "🛡️",
+            "wordsCount": 228,
+            "targetDurationSec": 255,
+            "desc": "Örgü Şövalye Sackboy, dünyayı yok etmek isteyen kötü Vex'e karşı koyarken Beş Gezegen'den gelen süper kahraman Astrobot yardıma koşuyor!",
+            "pages": [
+                  {
+                        "pageNum": 1,
+                        "title": "1. Bölüm: Örgü Şövalye Sackboy ve Tehlikeli Vex",
+                        "image": "book_sackboy_vex_astrobot.jpg",
+                        "text": "Rengarenk El İşi Köyü’nde her yer yumuşacık ipliklerden ve neşeli renklerden oluşuyordu. Köyün cesur koruyucusu Örgü Şövalye Sackboy, gümüş örgülü miğferini takmış ve süslü kalkanıyla nöbet tutuyordu.\n\nBirdenbire gökyüzünde mor şimşekler çaktı! Kötü kalpli soytarı Vex, dev kara bulutların içinden çıkarak korkunç bir kahkaha attı: 'Ben Vex! Bütün bu dünyayı yok edeceğim! Kimse beni durduramaz!'"
+                  },
+                  {
+                        "pageNum": 2,
+                        "title": "2. Bölüm: Vex'in Mor Küpleri ve Sackboy'un Direnişi",
+                        "image": "scene_vex_invasion.jpg",
+                        "text": "Vex ellerini havaya kaldırıp gökyüzüne 45 adet mor karmaşa küpü savurdu. Köydeki rengarenk çiçekler solmaya, gökyüzü kararmaya başladı.\n\nÖrgü Şövalye Sackboy korkmadan kalkanını kaldırdı ama tek başına yetişemiyordu. Köyü koruyan Gökkuşağı Kalkanı’nı açmak için tam 100 ışık kıvılcımı gerekiyordu. Sackboy elindeki feneri saydı: sadece 45 kıvılcımı vardı! '100 olması için 55 kıvılcım daha lazım!' diye düşündü."
+                  },
+                  {
+                        "pageNum": 3,
+                        "title": "3. Bölüm: Beş Gezegen'den Gelen Astrobot",
+                        "image": "scene_astrobot_five_planets.jpg",
+                        "text": "Tam o sırada yıldızlı gökyüzünden masmavi bir roket ışığı süzüldü! Ta Beş Gezegen’den yardım çağrısını duyan minik süper kahraman Astrobot, mavi pelerini ve roket çizmeleriyle Sackboy’un yanına indi!\n\nAstrobot parlayan mavi gözleriyle gülümseyerek elini uzattı: 'Endişelenme Örgü Şövalye Sackboy! Beş Gezegen’den yardıma geldim! Bende tam 55 ışık kıvılcımı var. Senin 45 kıvılcımınla birleşince tam 100 eder!'"
+                  },
+                  {
+                        "pageNum": 4,
+                        "title": "4. Bölüm: Vex'in Yenilgisi ve Büyük Zafer",
+                        "image": "scene_sackboy_astrobot_victory.jpg",
+                        "text": "Örgü Şövalye Sackboy ve Astrobot sırt sırta verip kıvılcımları birleştirdiler. Ardından Beş Gezegen’in kutsal şifresini beşer beşer saydılar: '5... 10... 15... 20... 25!'\n\nGökkuşağı Kalkanı gökyüzüne dev bir ışık yaydı! Vex’in tüm mor küpleri renkli konfetilere dönüştü. Vex şaşkınlıkla dev bir altın baloncuğun içine hapsolup gökyüzüne doğru uçarak yenildi! Bartu’nun kahramanları Sackboy ve Astrobot el ele verip dünyayı kurtarmanın sevincini kutladılar."
+                  }
+            ],
+            "questions": [
+                  {
+                        "q": "Bu heyecanlı maceranın küçük kahraman yazarı kimdir?",
+                        "options": [
+                              "Usta Shifu",
+                              "Bartu",
+                              "Soytarı Vex"
+                        ],
+                        "correct": 1,
+                        "explanation": "Bu özgün hikayenin yazarı Bartu'dur."
+                  },
+                  {
+                        "q": "Köyün cesur koruyucusu Örgü Şövalye Sackboy'un karşısına çıkıp dünyayı yok etmekle tehdit eden kimdi?",
+                        "options": [
+                              "Kötü kalpli soytarı Vex",
+                              "Kirpi Sonic",
+                              "Küçük sincap Piko"
+                        ],
+                        "correct": 0,
+                        "explanation": "Vex kara bulutların arasından çıkıp bütün dünyayı yok edeceğini söyledi."
+                  },
+                  {
+                        "q": "Sackboy'un elinde 45 ışık kıvılcımı varken Gökkuşağı Kalkanı'nı 100'e tamamlamak için kaç kıvılcıma daha ihtiyacı vardı?",
+                        "options": [
+                              "35 kıvılcım",
+                              "65 kıvılcım",
+                              "55 kıvılcım"
+                        ],
+                        "correct": 2,
+                        "explanation": "100 - 45 = 55 ışık kıvılcımı gerekiyordu."
+                  },
+                  {
+                        "q": "Örgü Şövalye Sackboy'a yardım etmek için roket çizmeleriyle gelen Astrobot nereden geldi?",
+                        "options": [
+                              "Mantar Krallığı'ndan",
+                              "Beş Gezegen'den",
+                              "Yeşil Tepe Adası'ndan"
+                        ],
+                        "correct": 1,
+                        "explanation": "Astrobot yardım çağrısını duyup ta Beş Gezegen'den uçarak geldi."
+                  },
+                  {
+                        "q": "Sackboy ve Astrobot son güç olarak Beş Gezegen'in şifresini kaçar kaçar ritmik saydılar?",
+                        "options": [
+                              "İkişer ikişer",
+                              "Üçer üçer",
+                              "Beşer beşer (5, 10, 15, 20, 25)"
+                        ],
+                        "correct": 2,
+                        "explanation": "Sırt sırta verip 5, 10, 15, 20, 25 diye beşer beşer saydılar."
+                  },
+                  {
+                        "q": "Hikayenin sonunda kötü Vex'e ne oldu?",
+                        "options": [
+                              "Dev bir altın baloncuğun içine hapsolup gökyüzüne uçarak yenildi",
+                              "El İşi Köyü'nün kralı oldu",
+                              "Sackboy ile saklambaç oynadı"
+                        ],
+                        "correct": 0,
+                        "explanation": "Gökkuşağı Kalkanı açılınca Vex altın baloncuğun içine hapsolup yenildi."
+                  },
+                  {
+                        "q": "Bu hikayede Vex'i yenmeyi sağlayan en büyük güç neydi?",
+                        "options": [
+                              "Sadece tek başına saklanmak",
+                              "Sackboy ve Astrobot'un iş birliği yapması, matematik aklı ve cesareti",
+                              "Çok gürültü çıkarmak"
+                        ],
+                        "correct": 1,
+                        "explanation": "Örgü Şövalye Sackboy ve Astrobot güçlerini ve matematik aklını birleştirerek Vex'i yendiler."
+                  }
+            ]
+      },
       {
             "id": "book_kungfupanda",
             "title": "Kung Fu Panda: Barış Vadisi ve Altın Mantı Şenliği",
@@ -17862,7 +17985,7 @@
 ];
 
     // OKUMA SİSTEMİ DURUM DEĞİŞKENLERİ
-    let turkishReaderBookId = 'book_kungfupanda';
+    let turkishReaderBookId = 'book_sackboy_vex_astrobot';
     let turkishReaderPage = 1;
     let turkishReaderFontSize = 24; // Varsayılan 2. sınıf büyük font
     let turkishReaderTimerInterval = null;
@@ -18029,6 +18152,7 @@
                         <span style="background:${book.badgeColor || '#0284c7'};color:#fff;font-size:9px;font-weight:900;padding:2px 6px;border-radius:4px;white-space:nowrap;">
                           ${book.badge}
                         </span>
+                        ${book.author ? `<span style="background:rgba(245,158,11,0.22);color:#fde047;border:1px solid rgba(245,158,11,0.45);font-size:9px;font-weight:900;padding:2px 6px;border-radius:4px;white-space:nowrap;">✍️ Yazar: ${book.author}</span>` : ''}
                         <span style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;">
                           📝 ${book.wordsCount} Kelime • ❓ ${book.questions ? book.questions.length : 6} Soru
                         </span>
@@ -18258,6 +18382,7 @@
                 <span style="background:${book.badgeColor};color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;">
                   ${book.badge} • 2. SINIF OKUMA KİTABI
                 </span>
+                ${book.author ? `<span style="background:rgba(245,158,11,0.22);color:#fde047;border:1px solid rgba(245,158,11,0.45);font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;margin-left:4px;">✍️ Yazar: ${book.author}</span>` : ''}
                 <h2 style="font-size:22px;color:#fff;font-weight:900;margin:4px 0 2px;">${book.title}</h2>
                 <div style="font-size:12px;color:#fde047;font-weight:800;">${curPage.title}</div>
               </div>
@@ -18737,7 +18862,7 @@ Okuduğunu anlama ve matematik problem çözme gelişimi için düzenli takip ed
        PWA, SAFARI & CHROME OTOMATİK GÜNCELLEME SİSTEMİ
        (Ana ekrana eklenen ikonların güncel sürümü otomatik alması için)
     ======================================================== */
-    const CURRENT_APP_VERSION = '4.1.0';
+    const CURRENT_APP_VERSION = '4.2.0';
     let swRegistration = null;
     let updateBannerDismissed = false;
 

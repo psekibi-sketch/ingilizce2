@@ -1,5 +1,5 @@
 {
-  "version": "4.1.0",
-  "releaseDate": "2026-11-14",
-  "notes": "Daha Sade ve Ders Odaklı Arayüz (v4.1.0): Türkçe kitaplıktaki Öğretmen Tavsiyesi kutusu, Geometri ödev ipuçları, Saatler/Paralar/Kesirler bilgi metinleri ve İngilizce sınav merkezi üst açıklama kutuları kaldırılıp sadeleştirildi; hikaye kitapları ve interaktif ders tahtaları doğrudan ekranın en üstüne taşındı."
+  "version": "4.2.0",
+  "releaseDate": "2026-11-15",
+  "notes": "Yeni Hikaye Eklendi (v4.2.0): Yazar Bartu'nun kaleminden 'Örgü Şövalye Sackboy ve Astrobot: Vex'e Karşı Zafer' hikayesi eklendi! Beş Gezegen'den gelen Astrobot ve Örgü Şövalye Sackboy'un kötü kalpli Vex'i yendiği 4 bölümlük özgün görselli hikaye ve 7 anlama sorusu kitaplığın en üstüne yerleştirildi."
 }

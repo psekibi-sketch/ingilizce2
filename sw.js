@@ -1,5 +1,5 @@
 // Lingo Ders Arkadaşım - Service Worker (Otomatik Güncelleme & Çevrimdışı Destek)
-const CACHE_NAME = 'lingo-ders-arkadasim-v4.1.0';
+const CACHE_NAME = 'lingo-ders-arkadasim-v4.2.0';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
@@ -9,6 +9,7 @@ const ASSETS_TO_CACHE = [
   'icon-192.png',
   'icon-512.png',
   'apple-touch-icon.png',
+  'book_sackboy_vex_astrobot.jpg',
   'book_kungfupanda.jpg',
   'book_sonic.jpg',
   'book_batman.jpg',
@@ -20,6 +21,9 @@ const ASSETS_TO_CACHE = [
   'book_starwars.jpg',
   'book_dinosaurs.jpg',
   'book_astrobot.jpg',
+  'scene_vex_invasion.jpg',
+  'scene_astrobot_five_planets.jpg',
+  'scene_sackboy_astrobot_victory.jpg',
   'scene_kungfupanda_temple.jpg',
   'scene_panda_lanterns.jpg',
   'scene_panda_bell.jpg',
@@ -75,7 +79,7 @@ self.addEventListener('activate', (event) => {
       // Açık sayfalara güncelleme bildirimi gönder
       return self.clients.matchAll({ type: 'window' }).then((clients) => {
         clients.forEach((client) => {
-          client.postMessage({ type: 'SW_ACTIVATED', cache: CACHE_NAME, version: '4.1.0' });
+          client.postMessage({ type: 'SW_ACTIVATED', cache: CACHE_NAME, version: '4.2.0' });
         });
       });
     })
