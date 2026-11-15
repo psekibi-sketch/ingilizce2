@@ -1,5 +1,5 @@
 // Lingo Ders Arkadaşım - Service Worker (Otomatik Güncelleme & Çevrimdışı Destek)
-const CACHE_NAME = 'lingo-ders-arkadasim-v3.9.0';
+const CACHE_NAME = 'lingo-ders-arkadasim-v4.1.0';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
@@ -9,25 +9,40 @@ const ASSETS_TO_CACHE = [
   'icon-192.png',
   'icon-512.png',
   'apple-touch-icon.png',
-  'book_astrobot.jpg',
-  'book_dinosaurs.jpg',
-  'book_starwars.jpg',
-  'book_mario.jpg',
-  'book_sackboy.jpg',
-  'book_ittakestwo.jpg',
-  'book_spiderman.jpg',
-  'book_batman.jpg',
-  'book_sonic.jpg',
   'book_kungfupanda.jpg',
-  'scene_hero_crossover.jpg',
-  'scene_batman_clocktower.jpg',
-  'scene_space_alliance.jpg',
-  'scene_ittakestwo_dino.jpg',
-  'scene_dino_waterfall.jpg',
-  'scene_mario_castle.jpg',
-  'scene_sackboy_kite.jpg',
+  'book_sonic.jpg',
+  'book_batman.jpg',
+  'book_spiderman.jpg',
+  'book_mario.jpg',
+  'book_ittakestwo.jpg',
+  'book_sackboy.jpg',
+  'book_lingo_math.jpg',
+  'book_starwars.jpg',
+  'book_dinosaurs.jpg',
+  'book_astrobot.jpg',
+  'scene_kungfupanda_temple.jpg',
+  'scene_panda_lanterns.jpg',
+  'scene_panda_bell.jpg',
   'scene_sonic_emerald.jpg',
-  'scene_kungfupanda_temple.jpg'
+  'scene_sonic_rings.jpg',
+  'scene_sonic_celebration.jpg',
+  'scene_hero_crossover.jpg',
+  'scene_space_alliance.jpg',
+  'scene_batman_clocktower.jpg',
+  'scene_batman_detective.jpg',
+  'scene_batman_gotham.jpg',
+  'scene_spiderman_cat.jpg',
+  'scene_spiderman_sunset.jpg',
+  'scene_mario_castle.jpg',
+  'scene_mario_pipes.jpg',
+  'scene_ittakestwo_dino.jpg',
+  'scene_sackboy_kite.jpg',
+  'scene_lingo_sharing.jpg',
+  'scene_lingo_picnic.jpg',
+  'scene_starwars_crystal.jpg',
+  'scene_dino_waterfall.jpg',
+  'scene_astrobot_squirrel.jpg',
+  'scene_astrobot_party.jpg'
 ];
 
 // 1. Kurulum: Varlıkları önbelleğe al ve beklemeden hemen devreye gir
@@ -60,7 +75,7 @@ self.addEventListener('activate', (event) => {
       // Açık sayfalara güncelleme bildirimi gönder
       return self.clients.matchAll({ type: 'window' }).then((clients) => {
         clients.forEach((client) => {
-          client.postMessage({ type: 'SW_ACTIVATED', cache: CACHE_NAME, version: '3.9.0' });
+          client.postMessage({ type: 'SW_ACTIVATED', cache: CACHE_NAME, version: '4.1.0' });
         });
       });
     })
